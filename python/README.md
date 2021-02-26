@@ -53,15 +53,15 @@ which is less secure than keeping the credentials in a file that you control.
 
    * Print the critical variables.
 
-```
-$ . ../common/scripts/api_env
-$ env | grep PINTEREST_APP
-PINTEREST_APP_ID=<number>
-PINTEREST_APP_SECRET=<string>
-$ env | grep HTTPS
-HTTPS_KEY_FILE=<path to key file>
-HTTPS_CERT_FILE=<path to cert file>
-```
+   ```
+   $ . ../common/scripts/api_env
+   $ env | grep PINTEREST_APP
+   PINTEREST_APP_ID=<number>
+   PINTEREST_APP_SECRET=<string>
+   $ env | grep HTTPS
+   HTTPS_KEY_FILE=<path to key file>
+   HTTPS_CERT_FILE=<path to cert file>
+   ```
 
    * Start PyCharm.
    * Select Run/Edit Configurations...
