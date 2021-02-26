@@ -43,25 +43,25 @@ to configure the environment.
 
 1. Set up the environment and run PyCharm at the command line. This is the best way to keep your Pinterest API credentials secure. For example, on MacOS:
 
-```
-$ . ../common/scripts/api_env
-$ /Applications/PyCharm\ CE.app/Contents/MacOS/pycharm
-```
+   ```
+   $ . ../common/scripts/api_env
+   $ /Applications/PyCharm\ CE.app/Contents/MacOS/pycharm
+   ```
 
 2. Enter the environment variables into the PyCharm environment. Note that PyCharm will store your credentials in its workspace configuration,
 which is less secure than keeping the credentials in a file that you control.
 
    * Print the critical variables.
 
-   ```
-   $ . ../common/scripts/api_env
-   $ env | grep PINTEREST_APP
-   PINTEREST_APP_ID=<number>
-   PINTEREST_APP_SECRET=<string>
-   $ env | grep HTTPS
-   HTTPS_KEY_FILE=<path to key file>
-   HTTPS_CERT_FILE=<path to cert file>
-   ```
+     ```
+     $ . ../common/scripts/api_env
+     $ env | grep PINTEREST_APP
+     PINTEREST_APP_ID=<number>
+     PINTEREST_APP_SECRET=<string>
+     $ env | grep HTTPS
+     HTTPS_KEY_FILE=<path to key file>
+     HTTPS_CERT_FILE=<path to cert file>
+     ```
 
    * Start PyCharm.
    * Select Run/Edit Configurations...
