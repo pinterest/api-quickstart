@@ -9,23 +9,23 @@ your application ID, application secret, and https certificates.
 
 2. Set up your virtualenv.
 
-```
-$ python3 -m venv ./venv/api
-$ . ./venv/api/bin/activate
-$ pip install -r requirements.txt
-```
+   ```
+   $ python3 -m venv ./venv/api
+   $ . ./venv/api/bin/activate
+   $ pip install -r requirements.txt
+   ```
 
 3. Set up the shell environment.
 
-```
-$ . ../common/scripts/api_env
-```
+   ```
+   $ . ../common/scripts/api_env
+   ```
 
 4. Run the simplest sample script.
 
-```
-$ ./scripts/get_access_token.py
-```
+   ```
+   $ ./scripts/get_access_token.py
+   ```
 
 You should now be able to run any of the use cases in the scripts directory.
 
