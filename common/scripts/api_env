@@ -1,0 +1,12 @@
+# source this script to set environment variables required by
+# the code in this repo.
+
+# get the location of this script
+SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE[0]}); pwd)
+
+. ${SCRIPT_DIR}/api_app_credentials
+unset PINTEREST_API_URI
+unset PINTEREST_OAUTH_URI
+
+export HTTPS_KEY_FILE="${SCRIPT_DIR}/../certs/localhost-key.pem"
+export HTTPS_CERT_FILE="${SCRIPT_DIR}/../certs/localhost.pem"

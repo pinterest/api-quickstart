@@ -1,0 +1,11 @@
+# Set configuration variables for a Pinterest devapp
+# (internal use only).
+
+# get the location of this script
+SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE[0]}); pwd)
+
+. ${SCRIPT_DIR}/api_env
+
+# these are the two variables that need to change for internal development
+export PINTEREST_API_URI="http://dev-${USER}.ec2.pin220.com:10002"
+export PINTEREST_OAUTH_URI='https://www.pinterdev.com'
