@@ -27,7 +27,11 @@ your application ID, application secret, and https certificates.
    $ ./scripts/get_access_token.py
    ```
 
-You should now be able to run any of the use cases in the scripts directory.
+## Additional Functionality
+
+After running the Quick Start, you should be able to run any of the use cases in the scripts directory:
+  * `get_access_token.py`: Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v3/users/{user}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET).
+  * `refresh_example.py`: Demonstrates how to refresh an access token. Also tests the `/v3/users/{user}/businesses/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_linked_business_accounts_GET), which works for users with linked business acounts and applications with appropriate scope.
 
 In every new shell, you'll need to activate the virtualenv and configure the environment.
 
