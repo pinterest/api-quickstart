@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from os.path import dirname, abspath, join
 import sys
+import time
 
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
@@ -15,32 +16,37 @@ api_config = ApiConfig()
 # multiple access tokens, so these objects are kept separate.
 access_token = AccessToken(api_config)
 
+print('hashed access token: ' + access_token.hashed())
+
 # use the access token to get information about the user
 user_me = User('me', api_config, access_token)
 user_me_data = user_me.get()
 user_me.print_summary(user_me_data)
-
-print('trying /v3/users/me/businesses...')
-user_me_businesses = user_me.get_businesses()
-if user_me_businesses:
-    print(user_me_businesses)
 
 # refresh the access_token
 # Note that the AccessToken encapsulates the credentials,
 # so there is no need to refresh the User or other objects.
 access_token.refresh()
 
+# This call demonstrates that the access_token has changed
+# without printing the actual token.
+print('hashed access token: ' + access_token.hashed())
+
 print('accessing with refreshed access_token...')
 user_me_data = user_me.get()
 user_me.print_summary(user_me_data)
 
-print('trying /v3/users/me/businesses with new_access_token...')
-user_me_businesses = user_me.get_businesses()
-if user_me_businesses:
-    print(user_me_businesses)
+# Doing refreshes too quickly can result in the same access_token being generated.
+# In practice, this isn't a problem because tokens should be refreshed after
+# relatively long periods of time.
+print('wait a second to avoid getting the same token on the second refresh...')
+time.sleep(1)
 
 # refresh the access_token again
 access_token.refresh()
+
+# Verify that the access_token has changed again.
+print('hashed access token: ' + access_token.hashed())
 
 print('accessing with second refreshed access_token...')
 user_me_data = user_me.get()

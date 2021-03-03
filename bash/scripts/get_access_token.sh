@@ -27,14 +27,13 @@ B64AUTH=$(echo -n "${PINTEREST_APP_ID}:${PINTEREST_APP_SECRET}" | base64)
 # Get the authorization code by starting a browser session and handling the redirect.
 echo 'getting auth_code'
 
+# Specify the scopes for the user to authorize via OAuth.
+# This example requests typical read-only authorization.
+# For more information, see: https://developers.pinterest.com/docs/redoc/#section/User-Authorization/OAuth-scopes
+SCOPE=read_boards,read_pins,read_users,read_user_followers
+
 # This call opens the browser with the oauth information in the URI.
-# The open call is backgrounded, because there is a race condition between starting
-# the browser and starting the web server to handle the response. It is unlikely that
-# the human user will click the button in the browser before the web server starts.
-# This race condition can be avoided by storing the access token in a temporary file,
-# reversing the order of the browser and web server, and backgrounding the web server.
-# The extra complexity doesn't seem worthwhile for this simple script.
-open "${PINTEREST_OAUTH_URI}/oauth/?consumer_id=${PINTEREST_APP_ID}&redirect_uri=${REDIRECT_URI}&response_type=code" &
+open "${PINTEREST_OAUTH_URI}/oauth/?consumer_id=${PINTEREST_APP_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=code" &
 
 # 1. Use openssl to run the web browser to handle the redirect from the oauth call.
 # 2. Wait for the response.
@@ -64,6 +63,11 @@ OAUTH_RESPONSE=$(curl --silent -X PUT --header "Authorization:Basic ${B64AUTH}" 
 
 # Parse the JSON returned by the exchange call and retrieve the access token.
 ACCESS_TOKEN=$(echo "$OAUTH_RESPONSE" | jq -r '.["access_token"]')
+
+# The scope returned in the response includes all of the scopes that
+# have been approved now or in the past by the user.
+SCOPE=$(echo "$OAUTH_RESPONSE" | jq -r '.["scope"]')
+echo scope: $SCOPE
 
 # Demonstrate how to use the access token to get information about the associated user.
 echo 'getting user data using the access token'
