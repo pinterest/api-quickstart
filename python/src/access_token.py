@@ -8,7 +8,7 @@ import user_auth
 class AccessToken:
     def __init__(self, api_config, scopes=None, refreshable=True):
         print('getting auth_code...')
-        auth_code = user_auth.get_auth_code(api_config, scopes, refreshable)
+        auth_code = user_auth.get_auth_code(api_config, scopes=scopes, refreshable=refreshable)
 
         print('exchanging auth_code for access_token...')
         auth = api_config.app_id + ':' + api_config.app_secret

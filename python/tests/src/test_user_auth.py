@@ -3,6 +3,7 @@ import mock
 
 from src.user_auth import get_auth_code
 from src.user_auth import HTTPServerHandler
+from src.oauth_scope import Scope
 
 class UserAuthTest(unittest.TestCase):
 
@@ -32,7 +33,7 @@ class UserAuthTest(unittest.TestCase):
                            '?consumer_id=test-app-id' +
                            '&redirect_uri=test-redirect-uri' +
                            '&response_type=code' +
-                           '&refreshable=False')
+                           '&refreshable=True')
 
         mock_wrap_socket.return_value = 'test-wrapped-socket'
 
@@ -45,6 +46,32 @@ class UserAuthTest(unittest.TestCase):
                                                  server_side=True)
         self.assertEqual(mock_http_server_instance.socket, 'test-wrapped-socket')
         self.assertEqual(auth_code, 'test-auth-code')
+
+        # verify calling get_auth_code with non-default values
+        mock_open_new.reset_mock()
+        mock_access_uri = ('test-oauth-uri/oauth/' +
+                           '?consumer_id=test-app-id' +
+                           '&redirect_uri=test-redirect-uri' +
+                           '&response_type=code' +
+                           # non-default values appear in the URI here
+                           '&refreshable=False' +
+                           '&scope=read_users,read_advertisers')
+        auth_code = get_auth_code(mock_api_config,
+                                  scopes=[Scope.READ_USERS,Scope.READ_ADVERTISERS],
+                                  refreshable=False)
+        mock_open_new.assert_called_once_with(mock_access_uri)
+
+        # test clean exit when developer interrupts the web server on localhost with a KeyboardInterrupt
+        class MockHttpServerInterrupted:
+            def __init__(self):
+                self.socket = 'test-socket'
+
+            def handle_request(self):
+                raise KeyboardInterrupt
+
+        mock_http_server.return_value = MockHttpServerInterrupted()
+        with self.assertRaisesRegex(SystemExit, "\nSorry that the OAuth redirect didn't work out. :-/"):
+            auth_code = get_auth_code(mock_api_config)
 
     @mock.patch('src.user_auth.BaseHTTPRequestHandler.end_headers')
     @mock.patch('src.user_auth.BaseHTTPRequestHandler.send_header')
