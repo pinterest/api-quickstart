@@ -8,7 +8,7 @@ class ApiObjectTest(unittest.TestCase):
     def test_api_object(self, mock_requests_get):
         response = mock.Mock()
         response.ok = True
-        response.text = '{"data":"test_response_data"}'
+        response.json.return_value = {'data': 'test_response_data'}
         mock_requests_get.return_value = response
 
         api_config = mock.Mock()

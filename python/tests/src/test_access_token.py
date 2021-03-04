@@ -18,11 +18,11 @@ class AccessTokenTest(unittest.TestCase):
 
         mock_response = mock.MagicMock()
         mock_response.__str__.return_value = '<Response [200]>'
-        mock_response.text = ('{"status": "test-stats",' +
-                              ' "scope": "test-scope",' +
-                              ' "access_token": "test-access-token",' +
-                              ' "data": {"refresh_token": "test-refresh-token"}' +
-                              '}')
+        mock_response.json.return_value = {'status': 'test-stats',
+                                           'scope': 'test-scope',
+                                           'access_token': 'test-access-token',
+                                           'data': {'refresh_token': 'test-refresh-token'}
+                                           }
         mock_requests_put.return_value = mock_response
         
         access_token = AccessToken(mock_api_config)
@@ -56,7 +56,7 @@ class AccessTokenTest(unittest.TestCase):
 
         mock_response = mock.MagicMock()
         mock_response.__str__.return_value = '<Response [200]>'
-        mock_response.text = '{"access_token": "new-access-token"}'
+        mock_response.json.return_value = {'access_token': 'new-access-token'}
         mock_requests_put.reset_mock()
         mock_requests_put.return_value = mock_response
 
@@ -74,11 +74,11 @@ class AccessTokenTest(unittest.TestCase):
         # verify behavior with non-default arguments:
         # - scopes passed to get_auth_code
         # - refresh raises an exception
-        mock_response.text = ('{"status": "test-stats",' +
-                              ' "scope": "test-scope-1,test-scope-2",' +
-                              ' "access_token": "test-access-token",' +
-                              ' "data": {}' +
-                              '}')
+        mock_response.json.return_value = {'status': 'test-stats',
+                                           'scope': 'test-scope-1,test-scope-2',
+                                           'access_token': 'test-access-token',
+                                           'data': {}
+                                           }
         mock_get_auth_code.reset_mock()
         access_token = AccessToken(mock_api_config,
                                    scopes=['test-scope-1','test-scope-2'],

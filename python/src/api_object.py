@@ -1,4 +1,3 @@
-import json
 import requests
 
 class ApiObject:
@@ -10,7 +9,7 @@ class ApiObject:
         response = requests.get(self.api_uri + path, headers=self.access_token.header())
         print(response)
         if response.ok:
-            return json.loads(response.text)['data']
+            return response.json()['data']
         else:
             print('request failed with reason: ' + response.reason)
             return {}
