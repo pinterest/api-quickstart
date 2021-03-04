@@ -1,13 +1,14 @@
 import base64
+import hashlib
 import json
 import requests
 
 import user_auth
 
 class AccessToken:
-    def __init__(self, api_config, refreshable=True):
+    def __init__(self, api_config, scopes=None, refreshable=True):
         print('getting auth_code...')
-        auth_code = user_auth.get_auth_code(api_config, refreshable)
+        auth_code = user_auth.get_auth_code(api_config, scopes, refreshable)
 
         print('exchanging auth_code for access_token...')
         auth = api_config.app_id + ':' + api_config.app_secret
@@ -26,6 +27,10 @@ class AccessToken:
         print(response)
         respdict = json.loads(response.text)
         print('status: ' + respdict['status'])
+        """
+        The scope returned in the response includes all of the scopes that
+        have been approved now or in the past by the user.
+        """
         print('scope: ' + respdict['scope'])
         self.access_token = respdict['access_token']
         self.refresh_token = respdict['data'].get('refresh_token')
@@ -35,6 +40,14 @@ class AccessToken:
     def header(self, headers={}):
         headers['Authorization'] = 'Bearer ' + self.access_token
         return headers
+
+    def hashed(self):
+        """
+        Print the access code in a human-readable format that does not reveal
+        the actual access credential. The purpose of this method is for a developer
+        to verify that the access token has changed after a refresh.
+        """
+        return hashlib.sha256(self.access_token.encode()).hexdigest()
 
     def refresh(self):
         if not self.refresh_token:

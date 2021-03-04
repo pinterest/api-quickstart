@@ -27,7 +27,12 @@ your application ID, application secret, and https certificates.
    $ ./scripts/get_access_token.py
    ```
 
-You should now be able to run any of the use cases in the scripts directory.
+## Additional Functionality
+
+After running the Quick Start, you should be able to run any of the use cases in the scripts directory:
+  * `get_access_token.py`: Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v3/users/{user}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET).
+  * `refresh_example.py`: Demonstrates how to refresh an access token.
+  * `get_businesses.py`: Reads the `/v3/users/{user}/businesses/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_linked_business_accounts_GET). This script will generate a 400 error if your application does not have access to the `read_advertisers` scope. To see any data, the authorized account needs to have linked business acounts.
 
 In every new shell, you'll need to activate the virtualenv and configure the environment.
 
