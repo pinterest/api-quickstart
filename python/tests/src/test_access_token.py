@@ -24,7 +24,7 @@ class AccessTokenTest(unittest.TestCase):
                                            'data': {'refresh_token': 'test-refresh-token'}
                                            }
         mock_requests_put.return_value = mock_response
-        
+
         access_token = AccessToken(mock_api_config)
         mock_get_auth_code.assert_called_once_with(mock_api_config,
                                                    scopes=None,
