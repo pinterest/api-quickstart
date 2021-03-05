@@ -16,8 +16,10 @@ def main():
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config)
+    hashed = access_token.hashed()
+    access_token_hashes = [hashed]
 
-    print('hashed access token: ' + access_token.hashed())
+    print('hashed access token: ' + hashed)
 
     # use the access token to get information about the user
     user_me = User('me', api_config, access_token)
@@ -28,10 +30,13 @@ def main():
     # Note that the AccessToken encapsulates the credentials,
     # so there is no need to refresh the User or other objects.
     access_token.refresh()
+    hashed = access_token.hashed()
+    assert hashed not in access_token_hashes
+    access_token_hashes.append(hashed)
 
     # This call demonstrates that the access_token has changed
     # without printing the actual token.
-    print('hashed access token: ' + access_token.hashed())
+    print('hashed access token: ' + hashed)
 
     print('accessing with refreshed access_token...')
     user_me_data = user_me.get()
@@ -47,7 +52,10 @@ def main():
     access_token.refresh()
 
     # Verify that the access_token has changed again.
-    print('hashed access token: ' + access_token.hashed())
+    hashed = access_token.hashed()
+    assert hashed not in access_token_hashes
+    access_token_hashes.append(hashed)
+    print('hashed access token: ' + hashed)
 
     print('accessing with second refreshed access_token...')
     user_me_data = user_me.get()
