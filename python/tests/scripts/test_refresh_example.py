@@ -1,18 +1,8 @@
-import unittest
 import mock
-import os
-import requests
-import threading
-import time
-import webbrowser
 
-import monkey
+from integration_mocks import IntegrationMocks
 
-class RefreshExampleTest(unittest.TestCase):
-    def mock_open_new(self, uri):
-        print('mock_open_new: ' + uri)
-        return True
-
+class RefreshExampleTest(IntegrationMocks):
     def mock_requests_put(self, uri, headers=None, data=None):
         print('mock_requests_put', uri, headers, data)
         self.requests_put_calls += 1
@@ -39,49 +29,12 @@ class RefreshExampleTest(unittest.TestCase):
                                       }
         return response
 
-    def setUp(self):
-        print('setUp')
-        self.originals = monkey.patch([('webbrowser', 'open_new', self.mock_open_new),
-                                       ('requests', 'put', self.mock_requests_put),
-                                       ('requests', 'get', self.mock_requests_get)])
-
-    def tearDown(self):
-        print('tearDown')
-        monkey.patch(self.originals)
-    
-    mock_os_environ_minimal = {'PINTEREST_APP_ID': 'test-app-id',
-                               'PINTEREST_APP_SECRET': 'test-app-secret',
-                               'HTTPS_KEY_FILE': os.environ['HTTPS_KEY_FILE'],
-                               'HTTPS_CERT_FILE': os.environ['HTTPS_CERT_FILE']
-                               }
-
-    @mock.patch.dict('os.environ', mock_os_environ_minimal, clear=True)
     def test_get_access_token(self):
         from scripts.refresh_example import main # import here to see monkeypatches
-        webbrowser.open_new('http://oops') # test to make sure that the patch works
-
-        """
-        This function is used to emulate the redirect sent after OAuth 2.0
-        authorization in the browser.
-        """
-        def send_test_redirect():
-            while True:
-                response = requests.request('GET', # use requests.request to avoid monkey-patched function
-                                            'https://localhost:8085/?test-path&code=test-oauth-code',
-                                            allow_redirects=False)
-                print('response to redirect (301 expected): ' + str(response))
-                if response.ok:
-                    return
-                # if at first you don't succeed, try try again. but not too fast.
-                time.sleep(0.5)
-
-        redirect_thread = threading.Thread(name='redirect', target=send_test_redirect)
-        redirect_thread.start()
 
         self.requests_put_calls = 0
 
-        main() # run get_access_token
-        self.assertEqual(self.requests_put_calls, 3)
+        with self.mock_redirect():
+            main() # run refresh_example
 
-        print('waiting for child thread that sent the redirect to end...')
-        redirect_thread.join()
+        self.assertEqual(self.requests_put_calls, 3)
