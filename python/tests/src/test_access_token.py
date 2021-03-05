@@ -18,7 +18,7 @@ class AccessTokenTest(unittest.TestCase):
 
         mock_response = mock.MagicMock()
         mock_response.__str__.return_value = '<Response [200]>'
-        mock_response.json.return_value = {'status': 'test-stats',
+        mock_response.json.return_value = {'status': 'test-status',
                                            'scope': 'test-scope',
                                            'access_token': 'test-access-token',
                                            'data': {'refresh_token': 'test-refresh-token'}
