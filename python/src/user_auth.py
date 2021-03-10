@@ -1,5 +1,6 @@
 import requests
 import ssl # for implementing the https scheme for the redirect URI
+import sys
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse
@@ -26,7 +27,7 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
         if 'code' in self.path:
             self.server.auth_code = self.path.split('=')[1]
 
-def get_auth_code(api_config, scopes=None, refreshable=False):
+def get_auth_code(api_config, scopes=None, refreshable=True):
     """
     Executes the process required to obtain an OAuth user authentication code.
       1. Use the default web browser to send a request to the /oauth endpoint.
@@ -72,8 +73,7 @@ def get_auth_code(api_config, scopes=None, refreshable=False):
         For details, see:
          https://developers.pinterest.com/docs/redoc/#section/User-Authorization/Start-the-OAuth-flow-(explicit-server-side)
         """
-        print("\nSorry that the OAuth redirect didn't work out. :-/")
-        exit(2)
+        sys.exit("\nSorry that the OAuth redirect didn't work out. :-/")
 
     # Return the access token
     return httpServer.auth_code

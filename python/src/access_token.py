@@ -1,6 +1,5 @@
 import base64
 import hashlib
-import json
 import requests
 
 import user_auth
@@ -8,7 +7,7 @@ import user_auth
 class AccessToken:
     def __init__(self, api_config, scopes=None, refreshable=True):
         print('getting auth_code...')
-        auth_code = user_auth.get_auth_code(api_config, scopes, refreshable)
+        auth_code = user_auth.get_auth_code(api_config, scopes=scopes, refreshable=refreshable)
 
         print('exchanging auth_code for access_token...')
         auth = api_config.app_id + ':' + api_config.app_secret
@@ -25,7 +24,7 @@ class AccessToken:
         response = requests.put(self.api_uri + '/v3/oauth/access_token/',
                                 headers=self.auth_headers, data=put_data)
         print(response)
-        respdict = json.loads(response.text)
+        respdict = response.json()
         print('status: ' + respdict['status'])
         """
         The scope returned in the response includes all of the scopes that
@@ -58,5 +57,4 @@ class AccessToken:
         response = requests.put(self.api_uri + '/v3/oauth/access_token/',
                                 headers=self.auth_headers, data=put_data)
         print(response)
-        respdict = json.loads(response.text)
-        self.access_token = respdict['access_token']
+        self.access_token = response.json()['access_token']
