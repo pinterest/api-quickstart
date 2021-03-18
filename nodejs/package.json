@@ -1,0 +1,9 @@
+{
+  "name": "pinterest-api-quickstart",
+  "type": "module",
+  "version": "0.0.1",
+  "dependencies": {
+    "got": "^11.8.2",
+    "open": "^8.0.2"
+  }
+}
