@@ -7,19 +7,27 @@ async function main () {
   // get configuration from defaults and/or the environment
   const api_config = new ApiConfig();
 
-  // Note: It's possible to use the same API configuration with
-  // multiple access tokens, so these objects are kept separate.
+  // Note that the OAuth will fail if your application does not
+  // have access to the scope that is required to access
+  // linked business accounts.
   const access_token = await new AccessToken(api_config, {
-    scopes: [Scope.READ_USERS],
+    scopes: [Scope.READ_USERS, Scope.READ_ADVERTISERS],
     refreshable: true
   });
   await access_token.oauth();
-  console.log('hashed access token: ' + access_token.hashed());
 
   // use the access token to get information about the user
   const user_me = new User('me', api_config, access_token);
   const user_me_data = await user_me.get();
   user_me.print_summary(user_me_data);
+
+  console.log('trying /v3/users/me/businesses...')
+  const user_me_businesses = await user_me.get_businesses();
+  if (user_me_businesses && (user_me_businesses.length != 0)) {
+    console.log(user_me_businesses);
+  } else {
+    console.log('This account has no information on linked businesses.');
+  }
 }
 
 if (!process.env.TEST_ENV) {

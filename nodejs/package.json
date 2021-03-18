@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.0.1",
   "dependencies": {
+    "enum": "^3.0.4",
     "got": "^11.8.2",
     "open": "^8.0.2"
   }

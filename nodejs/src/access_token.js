@@ -60,4 +60,35 @@ export default class AccessToken {
   hashed() {
     return crypto.createHash('sha256').update(this.access_token).digest('hex')
   }
+
+  async refresh() {
+    // AccessToken must be initialized as refreshable.
+    if (!this.refreshable) {
+      throw 'Access Token is not refreshable.';
+    }
+
+    // There should be a refresh_token, but it is best to check.
+    if (!this.refresh_token) {
+      throw 'Refresh Token is not available.';
+    }
+
+    console.log('refreshing access_token...');
+    var response;
+    try {
+      response = await got.put(this.api_uri + '/v3/oauth/access_token/', {
+        headers: this.auth_headers,
+        json: {
+          'grant_type': 'refresh_token',
+          'refresh_token': this.refresh_token
+        },
+        responseType: 'json'
+      })
+    } catch (error) {
+      console.log(`<Response [${error.response.statusCode}]>`);
+      console.log('request failed with reason:', error.response.body.message);
+      throw 'AccessToken refresh failed because... ' + error.response.body.message;
+    }
+    console.log(`<Response [${response.statusCode}]>`);
+    this.access_token = response.body.access_token;
+  }
 }

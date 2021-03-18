@@ -48,7 +48,7 @@ export default async function get_auth_code(
                     '&refreshable=' + refreshable.toString())
 
   if (scopes) {
-    access_uri = access_uri + '&scope=' + scopes.join(',')
+    access_uri = access_uri + '&scope=' + scopes.map(s => s.value).join(',')
   }
 
   // open the default browser for user interaction
