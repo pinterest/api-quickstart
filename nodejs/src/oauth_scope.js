@@ -21,7 +21,7 @@ const Scope = new Enum({
   WRITE_MERCHANTS: 'write_merchants',
   READ_PIN_PROMOTIONS: 'read_pin_promotions',
   WRITE_PIN_PROMOTIONS: 'write_pin_promotions',
-  
+
   // composite scopes
   READ_ORGANIC: 'read_organic',
   WRITE_ORGANIC: 'write_organic',

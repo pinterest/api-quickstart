@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import AccessToken from '../src/access_token.js'
 import ApiConfig from '../src/api_config.js'
 import Scope from '../src/oauth_scope.js'

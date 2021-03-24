@@ -4,7 +4,7 @@ import got from 'got'
 import get_auth_code from './user_auth.js'
 
 export default class AccessToken {
-    
+
   constructor(api_config, {scopes = null, refreshable = true}) {
     const auth = api_config.app_id + ':' + api_config.app_secret;
     const b64auth = Buffer.from(auth).toString('base64');

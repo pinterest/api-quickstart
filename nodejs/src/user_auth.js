@@ -53,7 +53,7 @@ export default async function get_auth_code(
 
   // open the default browser for user interaction
   open(access_uri)
-  
+
   // Returns the promise that will eventually resolve into the auth_code.
   return auth_code;
 }

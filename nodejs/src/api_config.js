@@ -12,7 +12,7 @@ export default class ApiConfig {
     const DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/';
     const DEFAULT_KEY_FILE = 'localhost-key.pem';
     const DEFAULT_CERT_FILE = 'localhost.pem';
-    
+
     // Get Pinterest application ID and secret from the OS environment.
     // It is best practice not to store credentials in code.
     this.app_id = process.env.PINTEREST_APP_ID;

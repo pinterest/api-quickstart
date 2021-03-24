@@ -24,7 +24,7 @@ your application ID, application secret, and https certificates.
 5. Run the simplest sample script.
 
    ```
-   $ node ./scripts/get_access_token.js
+   $ ./scripts/get_access_token.js
    ```
 
 ## Additional Functionality
