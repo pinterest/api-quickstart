@@ -10,7 +10,7 @@ async function main () {
   // Note that the OAuth will fail if your application does not
   // have access to the scope that is required to access
   // linked business accounts.
-  const access_token = await new AccessToken(api_config, {
+  const access_token = new AccessToken(api_config, {
     scopes: [Scope.READ_USERS, Scope.READ_ADVERTISERS],
     refreshable: true
   });

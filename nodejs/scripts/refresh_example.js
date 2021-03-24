@@ -9,7 +9,7 @@ async function main () {
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
-  const access_token = await new AccessToken(api_config, {
+  const access_token = new AccessToken(api_config, {
     scopes: [Scope.READ_USERS],
     refreshable: true
   });
