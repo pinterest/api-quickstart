@@ -17,6 +17,7 @@ def main():
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config, scopes=[Scope.READ_USERS])
     print('hashed access token: ' + access_token.hashed())
+    print('hashed refresh token: ' + access_token.hashed_refresh_token())
 
     # use the access token to get information about the user
     user_me = User('me', api_config, access_token)

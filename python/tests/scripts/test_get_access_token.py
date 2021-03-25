@@ -31,7 +31,8 @@ class GetAccessTokenTest(IntegrationMocks):
                                       }
         return response
 
-    def test_get_access_token(self):
+    @mock.patch('builtins.print')
+    def test_get_access_token(self, mock_print):
         from scripts.get_access_token import main # import here to see monkeypatches
 
         self.requests_put_calls = 0
@@ -47,3 +48,9 @@ class GetAccessTokenTest(IntegrationMocks):
         # get called once for user data
         self.assertEqual(self.requests_get_calls, 1)
         self.assertEqual(self.get_uri, 'https://api.pinterest.com/v3/users/me/')
+
+        # verify expected values printed. see unit tests for values
+        mock_print.assert_any_call('hashed access token: ' +
+                                   '597480d4b62ca612193f19e73fe4cc3ad17f0bf9cfc16a7cbf4b5064131c4805')
+        mock_print.assert_any_call('hashed refresh token: ' +
+                                   '0a9b110d5e553bd98e9965c70a601c15c36805016ba60d54f20f5830c39edcde')

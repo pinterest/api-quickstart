@@ -38,7 +38,9 @@ class GetBusinessesTest(IntegrationMocks):
                                           }
         return response
 
-    def test_get_access_token(self):
+
+    @mock.patch('builtins.print')
+    def test_get_businesses(self, mock_print):
         from scripts.get_businesses import main # import here to see monkeypatches
 
         self.requests_put_calls = 0
@@ -51,3 +53,8 @@ class GetBusinessesTest(IntegrationMocks):
         self.assertEqual(self.requests_put_calls, 1)
         self.assertEqual(self.requests_get_users_me_calls, 1)
         self.assertEqual(self.requests_get_users_me_businesses_calls, 1)
+
+        # verify expected output
+        mock_print.assert_any_call('Full Name: test fullname')
+        mock_print.assert_any_call({'full_name': 'test business name',
+                                    'id': 'test-business-id-number'})

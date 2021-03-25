@@ -53,6 +53,9 @@ class AccessTokenTest(unittest.TestCase):
         # echo -n test-access-token | shasum -a 256
         self.assertEqual(access_token.hashed(),
                          '597480d4b62ca612193f19e73fe4cc3ad17f0bf9cfc16a7cbf4b5064131c4805')
+        # echo -n test-refresh-token | shasum -a 256
+        self.assertEqual(access_token.hashed_refresh_token(),
+                         '0a9b110d5e553bd98e9965c70a601c15c36805016ba60d54f20f5830c39edcde')
 
         mock_response = mock.MagicMock()
         mock_response.__str__.return_value = '<Response [200]>'
