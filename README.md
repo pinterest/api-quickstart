@@ -55,6 +55,7 @@ Access to Pinterest APIs via User Authorization requires following a flow based 
 * The `common` directory stores code and files that work with all of the language-specific directories.
 * Each language-specific directory is independent of the others:
   * `bash`: shell scripts
+  * `nodejs`: JavaScript code and demonstration scripts intended to be run with Node.js
   * `python`: structured python code and demonstration scripts
   * More languages are on the way. We're considering providing examples in nodejs/JavaScript, ruby, and Java.
 * Each language-specific directory (e.g. `python` or `bash`) has one or more of these subdirectories:
