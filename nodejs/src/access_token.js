@@ -58,7 +58,17 @@ export default class AccessToken {
   }
 
   hashed() {
-    return crypto.createHash('sha256').update(this.access_token).digest('hex')
+    return crypto.createHash('sha256').update(this.access_token).digest('hex');
+  }
+
+  hashed_refresh_token() {
+    // Print the refresh token in a human-readable format that does not reveal
+    // the actual access credential. The purpose of this method is for a developer
+    // to verify when the refresh token changes.
+    if (!this.refresh_token) {
+      throw 'AccessToken does not have a refresh token';
+    }
+    return crypto.createHash('sha256').update(this.refresh_token).digest('hex');
   }
 
   async refresh() {

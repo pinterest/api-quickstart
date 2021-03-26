@@ -42,11 +42,21 @@ class AccessToken:
 
     def hashed(self):
         """
-        Print the access code in a human-readable format that does not reveal
+        Print the access token in a human-readable format that does not reveal
         the actual access credential. The purpose of this method is for a developer
         to verify that the access token has changed after a refresh.
         """
         return hashlib.sha256(self.access_token.encode()).hexdigest()
+
+    def hashed_refresh_token(self):
+        """
+        Print the refresh token in a human-readable format that does not reveal
+        the actual access credential. The purpose of this method is for a developer
+        to verify when the refresh token changes.
+        """
+        if not self.refresh_token:
+            raise RuntimeError('AccessToken does not have a refresh token')
+        return hashlib.sha256(self.refresh_token.encode()).hexdigest()
 
     def refresh(self):
         if not self.refresh_token:

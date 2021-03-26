@@ -29,7 +29,8 @@ class RefreshExampleTest(IntegrationMocks):
                                       }
         return response
 
-    def test_get_access_token(self):
+    @mock.patch('builtins.print')
+    def test_refresh_example(self, mock_print):
         from scripts.refresh_example import main # import here to see monkeypatches
 
         self.requests_put_calls = 0
@@ -38,3 +39,17 @@ class RefreshExampleTest(IntegrationMocks):
             main() # run refresh_example
 
         self.assertEqual(self.requests_put_calls, 3)
+
+        # verify expected values printed.
+        # echo -n test-access-token-1 | shasum -a 256
+        mock_print.assert_any_call('hashed access token: ' +
+                                   '74e67193d034054f052777eb0b06d0d7fe72016282e2259d466afd6e9f8cc76a')
+        # echo -n test-refresh-token | shasum -a 256
+        mock_print.assert_any_call('hashed refresh token: ' +
+                                   '0a9b110d5e553bd98e9965c70a601c15c36805016ba60d54f20f5830c39edcde')
+        # echo -n test-access-token-2 | shasum -a 256
+        mock_print.assert_any_call('hashed access token: ' +
+                                   '53f55e6fc30e86f042340fe6deec5b3ab5d5d6da11e3e697d41c46143a9cbc2d')
+        # echo -n test-access-token-3 | shasum -a 256
+        mock_print.assert_any_call('hashed access token: ' +
+                                   'f7bba4838772249663c5967b48659745d782ad13bc3abc4a39580eda154ceb97')

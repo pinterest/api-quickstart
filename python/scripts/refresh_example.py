@@ -20,6 +20,7 @@ def main():
     access_token_hashes = [hashed]
 
     print('hashed access token: ' + hashed)
+    print('hashed refresh token: ' + access_token.hashed_refresh_token())
 
     # use the access token to get information about the user
     user_me = User('me', api_config, access_token)

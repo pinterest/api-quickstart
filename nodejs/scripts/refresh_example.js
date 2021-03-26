@@ -19,6 +19,7 @@ async function main () {
   var access_token_hashes = new Set();
   access_token_hashes.add(hashed)
   console.log('hashed access token:', hashed);
+  console.log('hashed refresh token:', access_token.hashed_refresh_token());
 
   // use the access token to get information about the user
   const user_me = new User('me', api_config, access_token);
