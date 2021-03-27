@@ -1,3 +1,4 @@
 *~
 *.pem
 common/scripts/api_app_credentials
+common/oauth_tokens

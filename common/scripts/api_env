@@ -8,5 +8,10 @@ SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE[0]}); pwd)
 unset PINTEREST_API_URI
 unset PINTEREST_OAUTH_URI
 
+# location of https certificates specified in the documentation
 export HTTPS_KEY_FILE="${SCRIPT_DIR}/../certs/localhost-key.pem"
 export HTTPS_CERT_FILE="${SCRIPT_DIR}/../certs/localhost.pem"
+
+# location to read and write OAuth tokens
+export PINTEREST_OAUTH_TOKEN_DIR="${SCRIPT_DIR}/../oauth_tokens/"
+mkdir -p "${PINTEREST_OAUTH_TOKEN_DIR}"
