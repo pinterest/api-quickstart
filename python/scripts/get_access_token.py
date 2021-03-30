@@ -12,7 +12,6 @@ from user import User
 
 def main(argv=[]):
     parser = argparse.ArgumentParser(description='Get Pinterest OAuth token')
-    parser.add_argument('-r', '--read', action='store_true', help='read access token from file')
     parser.add_argument('-w', '--write', action='store_true', help='write access token to file')
     args = parser.parse_args(argv)
 
@@ -22,12 +21,13 @@ def main(argv=[]):
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config)
-    if args.read:
-        access_token.read()
-    else:
-        access_token.oauth(scopes=[Scope.READ_USERS])
+    access_token.fetch(scopes=[Scope.READ_USERS])
+
     print('hashed access token: ' + access_token.hashed())
-    print('hashed refresh token: ' + access_token.hashed_refresh_token())
+    try:
+        print('hashed refresh token: ' + access_token.hashed_refresh_token())
+    except:
+        print('no refresh token')
 
     # save the token, if requested
     if args.write:

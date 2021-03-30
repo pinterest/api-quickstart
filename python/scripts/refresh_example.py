@@ -28,6 +28,12 @@ def main():
     user_me_data = user_me.get()
     user_me.print_summary(user_me_data)
 
+    # Doing refreshes too quickly can result in the same access_token being generated.
+    # In practice, this isn't a problem because tokens should be refreshed after
+    # relatively long periods of time.
+    print('wait a second to avoid getting the same token on the first refresh...')
+    time.sleep(1)
+
     # refresh the access_token
     # Note that the AccessToken encapsulates the credentials,
     # so there is no need to refresh the User or other objects.
@@ -44,9 +50,6 @@ def main():
     user_me_data = user_me.get()
     user_me.print_summary(user_me_data)
 
-    # Doing refreshes too quickly can result in the same access_token being generated.
-    # In practice, this isn't a problem because tokens should be refreshed after
-    # relatively long periods of time.
     print('wait a second to avoid getting the same token on the second refresh...')
     time.sleep(1)
 
