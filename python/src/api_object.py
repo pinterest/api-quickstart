@@ -5,11 +5,18 @@ class ApiObject:
         self.api_uri = api_config.api_uri
         self.access_token = access_token
 
-    def request_data(self, path):
-        response = requests.get(self.api_uri + path, headers=self.access_token.header())
+    def _unpack(self, response):
         print(response)
         if response.ok:
             return response.json()['data']
         else:
             print('request failed with reason: ' + response.reason)
             return {}
+
+    def request_data(self, path):
+        response = requests.get(self.api_uri + path, headers=self.access_token.header())
+        return self._unpack(response)
+
+    def post_data(self, path):
+        response = requests.post(self.api_uri + path, headers=self.access_token.header())
+        return self._unpack(response)
