@@ -43,13 +43,16 @@ class DeliveryMetrics(ApiObject):
                 f'?token={report_token}')
         return self.request_data(path)
 
-    # TODO: probably want to use a backoff algorithm for the delay...
-    def wait_report(self, advertiser_id, report_token, delay=10):
+    def wait_report(self, advertiser_id, report_token):
+        delay = 1 # for backoff algorithm
+        readable = 'a second' # for human-readable output of delay
         while True:
             report_data = self.poll_report(advertiser_id, report_token)
             status = report_data['report_status']
             if status == 'FINISHED':
                 return report_data['url']
 
-            print(f'Report status: {status}. Waiting {delay} seconds...')
+            print(f'Report status: {status}. Waiting {readable}...')
             time.sleep(delay)
+            delay = min(delay * 2, 10)
+            readable = f'{delay} seconds'

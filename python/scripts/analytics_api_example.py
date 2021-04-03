@@ -8,9 +8,11 @@ from access_token import AccessToken
 from advertisers import Advertisers
 from api_config import ApiConfig
 from delivery_metrics import DeliveryMetrics
+from generic_requests import download_file
 from oauth_scope import Scope
 from user import User
 from utils import input_number
+from utils import input_path_for_write
 
 def main():
     # get configuration from defaults and/or the environment
@@ -51,12 +53,12 @@ def main():
 
     print(f'Requesting report for advertiser id {advertiser_id}...')
     report_token = delivery_metrics.request_report(advertiser_id,
-                                                   '2021-03-15', '2021-03-30',
+                                                   '2021-01-01', '2021-04-02',
                                                    'PIN_PROMOTION',
                                                    ['IMPRESSION_1', 'CLICKTHROUGH_1'])
-    print(f'report token: {report_token}')
     report_url = delivery_metrics.wait_report(advertiser_id, report_token)
-    print(f'report url: {report_url}')
+    download_file(report_url, input_path_for_write('Please enter a file name for the report:',
+                                                   report_url.split('/')[-1].split('?')[0]))
 
 if __name__ == '__main__':
     main()
