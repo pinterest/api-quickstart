@@ -8,6 +8,7 @@ from access_token import AccessToken
 from advertisers import Advertisers
 from api_config import ApiConfig
 from delivery_metrics import DeliveryMetrics
+from delivery_metrics import DeliveryMetricsAsyncReport
 from generic_requests import download_file
 from oauth_scope import Scope
 from user import User
@@ -52,11 +53,13 @@ def main():
     # delivery_metrics.print_all(metrics)
 
     print(f'Requesting report for advertiser id {advertiser_id}...')
-    report_token = delivery_metrics.request_report(advertiser_id,
-                                                   '2021-01-01', '2021-04-02',
-                                                   'PIN_PROMOTION',
-                                                   ['IMPRESSION_1', 'CLICKTHROUGH_1'])
-    report_url = delivery_metrics.wait_report(advertiser_id, report_token)
+    report_url = DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id) \
+                 .start_date('2021-03-02') \
+                 .end_date('2021-04-30') \
+                 .level('PIN_PROMOTION') \
+                 .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'}) \
+                 .run_report()
+
     download_file(report_url, input_path_for_write('Please enter a file name for the report:',
                                                    report_url.split('/')[-1].split('?')[0]))
 
