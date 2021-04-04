@@ -24,7 +24,7 @@ def input_number(prompt, minimum, maximum, default=None):
             try:
                 intval = int(strval)
             except ValueError:
-                print(f'{strval} is not a number')
+                print(f'{strval} is not an integer')
                 continue
 
             if minimum <= intval and intval <= maximum:

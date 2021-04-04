@@ -1,6 +1,7 @@
-import time
+import datetime
 
 from api_object import ApiObject
+from async_report import AsyncReport
 
 class DeliveryMetrics(ApiObject):
     def __init__(self, api_config, access_token):
@@ -29,17 +30,14 @@ class DeliveryMetrics(ApiObject):
         for idx, metric in enumerate(delivery_metrics):
             print(f"[{idx + 1}] " + self.summary(metric))
 
-class DeliveryMetricsAsyncReport(ApiObject):
+class DeliveryMetricsAsyncReport(AsyncReport):
     def __init__(self, api_config, access_token, advertiser_id):
-        super().__init__(api_config, access_token)
-        self.advertiser_id = advertiser_id
+        super().__init__(api_config, access_token, advertiser_id)
+        self.kind_of = 'delivery_metrics' # override required by superclass
         self._start_date = None
         self._end_data = None
         self._level = None
         self._metrics = set()
-        self.token = None
-        self.status = None
-        self.url = None
 
     def start_date(self, start_date):
         self._start_date = start_date
@@ -49,9 +47,15 @@ class DeliveryMetricsAsyncReport(ApiObject):
         self._end_date = end_date
         return self
 
-    def date_range(self, date_range):
-        self._start_date = date_range[0]
-        self._end_date = date_range[1]
+    def date_range(self, start_date, end_date):
+        self._start_date = start_date
+        self._end_date = end_date
+        return self
+
+    def last_30_days(self):
+        today = datetime.date.today()
+        today_minus_30 = today - datetime.timedelta(days=30)
+        self.date_range(today_minus_30, today)
         return self
 
     def level(self, level):
@@ -78,37 +82,14 @@ class DeliveryMetricsAsyncReport(ApiObject):
         if not self._metrics:
             raise AttributeError('metrics not set')
 
-    def request_report(self):
+    def post_uri_attributes(self):
+        """
+        This override is required by the superclass AsyncReport.
+
+        Provides the attributes (everything after the '?') part of the URI
+        for the POST that initiates the report.
+        """
         self.verify_attributes()
-        # create path and set required attributes
-        path = (f'/ads/v3/reports/async/{self.advertiser_id}/delivery_metrics/' +
-                f'?start_date={self._start_date}&end_date={self._end_date}' +
+        return (f'?start_date={self._start_date}&end_date={self._end_date}' +
                 '&level=' + self._level +
                 '&metrics=' + ','.join(self._metrics))
-        print(path)
-        self.token = self.post_data(path)['token']
-
-    def poll_report(self):
-        path = (f'/ads/v3/reports/async/{self.advertiser_id}/delivery_metrics/' +
-                f'?token={self.token}')
-        poll_data = self.request_data(path)
-        self.status = poll_data['report_status']
-        self.url = poll_data.get('url')
-
-    def wait_report(self):
-        delay = 1 # for backoff algorithm
-        readable = 'a second' # for human-readable output of delay
-        while True:
-            self.poll_report()
-            if self.status == 'FINISHED':
-                return
-
-            print(f'Report status: {self.status}. Waiting {readable}...')
-            time.sleep(delay)
-            delay = min(delay * 2, 10)
-            readable = f'{delay} seconds'
-
-    def run_report(self):
-        self.request_report()
-        self.wait_report()
-        return self.url

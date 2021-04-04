@@ -19,6 +19,10 @@ def main():
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
 
+    # Set the API configuration verbosity to 2 to show all of requests
+    # and response statuses. To see the complete responses, set verbosity to 3.
+    api_config.verbosity = 2
+
     # Note that the OAuth will fail if your application does not
     # have access to the scope that is required to access
     # linked business accounts.
@@ -42,26 +46,48 @@ def main():
     index = input_number(prompt, 1, n_advertisers) - 1
     advertiser_id = advertisers_data[index]['id']
 
+    # the output of delivery_metrics.get() is too long to be printed
+    verbosity = api_config.verbosity
+    api_config.verbosity = min(verbosity, 2)
+
+    # get the full list of all delivery metrics
     delivery_metrics = DeliveryMetrics(api_config, access_token)
     metrics = delivery_metrics.get()
+
+    api_config.verbosity = verbosity # restore verbosity
 
     print('Here are a couple of interesting metrics...')
     for metric in metrics:
         if metric['name'] == 'CLICKTHROUGH_1' or metric['name'] == 'IMPRESSION_1':
             delivery_metrics.print(metric)
 
+    # To print the long list of all metrics, uncomment the next line.
     # delivery_metrics.print_all(metrics)
 
+    # For documentation on async reports, see:
+    #   https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
     print(f'Requesting report for advertiser id {advertiser_id}...')
-    report_url = DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id) \
-                 .start_date('2021-03-02') \
-                 .end_date('2021-04-30') \
-                 .level('PIN_PROMOTION') \
-                 .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'}) \
-                 .run_report()
+    # Configure the report. Request 30 days of data, up to the current date.
+    # For a complete set of options, see the report documentation,
+    # or the code in ../src/delivery_metrics.py
+    report = DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id) \
+             .last_30_days() \
+             .level('PIN_PROMOTION') \
+             .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'})
 
-    download_file(report_url, input_path_for_write('Please enter a file name for the report:',
-                                                   report_url.split('/')[-1].split('?')[0]))
+    # Request and wait for the report until it is ready.
+    # The code for this process is in ../src/async_report.py.
+    report.run()
+
+    # Download the report to a file.
+    # First, input the path from the command line.
+    path = input_path_for_write('Please enter a file name for the report:',
+                                report.filename())
+
+    # This download_file is generic, because the report URL contains all of the
+    # authentication information required to get the data. Note that the download
+    # is a request to Amazon S3, not to the Pinterest API itself.
+    download_file(report.url(), path)
 
 if __name__ == '__main__':
     main()

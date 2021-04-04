@@ -35,3 +35,6 @@ class ApiConfig:
         # swizzle oauth and api hosts, based on environment
         self.oauth_uri = os.environ.get('PINTEREST_OAUTH_URI') or DEFAULT_OAUTH_URI
         self.api_uri = os.environ.get('PINTEREST_API_URI') or DEFAULT_API_URI
+
+        # default level of verbosity, probably should switch to logging
+        self.verbosity = 1
