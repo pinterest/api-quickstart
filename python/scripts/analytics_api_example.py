@@ -29,7 +29,8 @@ def main():
     access_token = AccessToken(api_config)
     access_token.fetch(scopes=[Scope.READ_USERS,Scope.READ_ADVERTISERS])
 
-    # use the access token to get information about the user
+    # Sample: Get my user id
+    # For a future call we need to know the user id associated with the access token being used
     user_me = User('me', api_config, access_token)
     user_me_data = user_me.get()
     user_me.print_summary(user_me_data)
@@ -37,14 +38,27 @@ def main():
     user_id = user_me_data['id']
     print(f'User id: {user_id}')
 
+    # Sample: Get Advertiser IDs available to my access token
+    # One of the first challenges many developers run into is that the relationship between User and Advertiser is 1-to-many
+    # In house developers typically don't have login credentials for the main Pinterest account of their brand to OAuth against.
+    # We often reccomend that they set up a new "developer" Pinterest user, and then request that this new account is granted
+    # access to the advertiser account via https://help.pinterest.com/en/business/article/add-people-to-your-ad-account
+    # This process is also touched on in the API docs https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
     advertisers = Advertisers(user_id, api_config, access_token)
     advertisers_data = advertisers.get()
     advertisers.print_summary(advertisers_data)
 
+    # Prompt for the advertiser id to be used to pull a report.
     n_advertisers = len(advertisers_data)
     prompt = f'Please select an advertiser between 1 and {n_advertisers}:'
     index = input_number(prompt, 1, n_advertisers) - 1
     advertiser_id = advertisers_data[index]['id']
+
+    # Case: pulling a report about how my ads are doing. I want to pull a simple report showing paid impressions
+    # and clicks my ads got in the last 30 days.
+
+    # Step 1: Learn more about the metrics available
+    # https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_delivery_metrics_handler_GET
 
     # the output of delivery_metrics.get() is too long to be printed
     verbosity = api_config.verbosity
@@ -64,6 +78,7 @@ def main():
     # To print the long list of all metrics, uncomment the next line.
     # delivery_metrics.print_all(metrics)
 
+    # Step 2: Configure the options for the report report
     # For documentation on async reports, see:
     #   https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
     print(f'Requesting report for advertiser id {advertiser_id}...')
@@ -73,13 +88,16 @@ def main():
     report = DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id) \
              .last_30_days() \
              .level('PIN_PROMOTION') \
-             .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'})
+             .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'}) \
+             .tag_version(3)
 
-    # Request and wait for the report until it is ready.
+    # Request (POST) and wait (GET) for the report until it is ready.
+    # This is an async process with two API calls. The first is placing a request
+    # for Pinterest to generate a specific report. The second is waiting for report to generate.
     # The code for this process is in ../src/async_report.py.
     report.run()
 
-    # Download the report to a file.
+    # Step 3: Download the report to a file.
     # First, input the path from the command line.
     path = input_path_for_write('Please enter a file name for the report:',
                                 report.filename())

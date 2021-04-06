@@ -22,6 +22,9 @@ class AsyncReport(ApiObject):
         raise RuntimeError('subclass must override post_uri_attributes()')
 
     def request_report(self):
+        """
+        For documentation, see: https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST
+        """
         if not self.kind_of:
             raise RuntimeError('subclass must override the kind_of report')
 
