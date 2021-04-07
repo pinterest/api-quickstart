@@ -9,7 +9,9 @@ class DeliveryMetrics(ApiObject):
 
     def get(self):
         """
-        Get the available metrics.
+        Get the full list of all available delivery metrics.
+        This call is not used much in day-to-day API code, but is a useful endpoint
+        for learning about the metrics.
         """
         return self.request_data('/ads/v3/resources/delivery_metrics/').get('metrics')
 

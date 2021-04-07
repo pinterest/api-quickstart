@@ -47,9 +47,13 @@ def main():
     advertisers = Advertisers(user_id, api_config, access_token)
     advertisers_data = advertisers.get()
     advertisers.print_summary(advertisers_data)
+    n_advertisers = len(advertisers_data)
+
+    # An advertiser id is required to request an asynchronous report.
+    if not n_advertisers:
+        exit('This user id does not have any linked advertiser ids.')
 
     # Prompt for the advertiser id to be used to pull a report.
-    n_advertisers = len(advertisers_data)
     prompt = f'Please select an advertiser between 1 and {n_advertisers}:'
     index = input_number(prompt, 1, n_advertisers) - 1
     advertiser_id = advertisers_data[index]['id']
@@ -64,7 +68,9 @@ def main():
     verbosity = api_config.verbosity
     api_config.verbosity = min(verbosity, 2)
 
-    # get the full list of all delivery metrics
+    # Get the full list of all delivery metrics.
+    # This call is not used much in day-to-day API code, but is a useful endpoint
+    # for learning about the metrics.
     delivery_metrics = DeliveryMetrics(api_config, access_token)
     metrics = delivery_metrics.get()
 
@@ -78,7 +84,7 @@ def main():
     # To print the long list of all metrics, uncomment the next line.
     # delivery_metrics.print_all(metrics)
 
-    # Step 2: Configure the options for the report report
+    # Step 2: Configure the options for the report
     # For documentation on async reports, see:
     #   https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
     print(f'Requesting report for advertiser id {advertiser_id}...')
