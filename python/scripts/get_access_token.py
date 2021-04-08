@@ -13,6 +13,7 @@ from user import User
 def main(argv=[]):
     parser = argparse.ArgumentParser(description='Get Pinterest OAuth token')
     parser.add_argument('-w', '--write', action='store_true', help='write access token to file')
+    parser.add_argument('-ct', '--cleartext', action='store_true', help='print the token in clear text')
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
@@ -23,8 +24,13 @@ def main(argv=[]):
     access_token = AccessToken(api_config)
     access_token.fetch(scopes=[Scope.READ_USERS])
 
+    if args.cleartext:
+        print('Please keep clear text tokens secure!')
+        print('clear text access token: ' + access_token.access_token)
     print('hashed access token: ' + access_token.hashed())
     try:
+        if args.cleartext:
+            print('clear text refresh token: ' + access_token.refresh_token)
         print('hashed refresh token: ' + access_token.hashed_refresh_token())
     except:
         print('no refresh token')
