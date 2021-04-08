@@ -17,7 +17,7 @@ def main():
     # have access to the scope that is required to access
     # linked business accounts.
     access_token = AccessToken(api_config)
-    access_token.oauth(scopes=[Scope.READ_USERS,Scope.READ_ADVERTISERS])
+    access_token.fetch(scopes=[Scope.READ_USERS,Scope.READ_ADVERTISERS])
 
     # use the access token to get information about the user
     user_me = User('me', api_config, access_token)

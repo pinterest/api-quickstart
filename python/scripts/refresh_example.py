@@ -16,7 +16,7 @@ def main():
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config)
-    access_token.oauth()
+    access_token.fetch()
     hashed = access_token.hashed()
     access_token_hashes = [hashed]
 
