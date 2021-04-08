@@ -7,7 +7,9 @@ Python code that makes it easy to get started with the Pinterest API.
 1. Follow the directions at the top level of this repo for configuring
 your application ID, application secret, and https certificates.
 
-2. Set up your virtualenv.
+2. From the top of this repo, change your working directory to this directory: `cd python`
+
+3. Set up your virtualenv.
 
    ```
    $ python3 -m venv ./venv/api
@@ -15,13 +17,13 @@ your application ID, application secret, and https certificates.
    $ pip install -r requirements.txt
    ```
 
-3. Set up the shell environment.
+4. Set up the shell environment.
 
    ```
    $ . ../common/scripts/api_env
    ```
 
-4. Run the simplest sample script.
+5. Run the simplest sample script.
 
    ```
    $ ./scripts/get_access_token.py
@@ -38,6 +40,7 @@ After running the Quick Start, you should be able to run any of the use cases in
 In every new shell, you'll need to activate the virtualenv and configure the environment.
 
 ```
+$ cd python # from the top of this repository
 $ . ./venv/api/bin/activate
 $ . ../common/scripts/api_env
 ```

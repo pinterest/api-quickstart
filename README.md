@@ -42,7 +42,7 @@ This repository has code that is intended to provide a quick start for working w
      HTTPS_CERT_FILE=<this directory>/common/scripts/../certs/localhost.pem
      ```
 
-2. Pick one of the language directories (currently just bash and python) and follow the directions in the README file in the directory.
+2. Pick one of the language directories (currently bash, nodejs and python) and follow the directions in the README file in the directory.
 
 ## OAuth Authentication
 
