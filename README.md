@@ -18,6 +18,11 @@ This repository has code that is intended to provide a quick start for working w
      # edit api_app_credentials and enter your app id and secret in the specified locations
      $ cd ../..
      ```
+   * Configure the redirect URI required by this code.
+     1. Click on the name of your application at [https://developers.pinterest.com/manage/](https://developers.pinterest.com/manage/).
+     2. In the box labeled "Redirect URIs," enter `https://localhost:8085/`.
+     3. Hit the return (enter) key.
+     4. Hit the Save button next in the "You have unsaved changes" box that appears after hitting the return (enter) key.
    * Create a certificate so that your browser will trust https://localhost/. This configuration will streamline the OAuth process on your development machine. We recommend installing and using [mkcert](https://github.com/FiloSottile/mkcert) for this purpose.
      ```
      $ mkdir -p common/certs # create the directory
