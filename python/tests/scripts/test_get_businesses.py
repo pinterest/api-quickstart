@@ -47,8 +47,10 @@ class GetBusinessesTest(IntegrationMocks):
         self.requests_get_users_me_calls = 0
         self.requests_get_users_me_businesses_calls = 0
 
-        with self.mock_redirect():
-            main() # run get_businesses
+        with mock.patch('builtins.open') as mock_open:
+            mock_open.side_effect = FileNotFoundError # no access_token.json file
+            with self.mock_redirect():
+                main() # run get_businesses
 
         self.assertEqual(self.requests_put_calls, 1)
         self.assertEqual(self.requests_get_users_me_calls, 1)

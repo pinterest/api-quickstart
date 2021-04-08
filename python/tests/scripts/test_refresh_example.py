@@ -35,8 +35,10 @@ class RefreshExampleTest(IntegrationMocks):
 
         self.requests_put_calls = 0
 
-        with self.mock_redirect():
-            main() # run refresh_example
+        with mock.patch('builtins.open') as mock_open:
+            mock_open.side_effect = FileNotFoundError # no access_token.json file
+            with self.mock_redirect():
+                main() # run refresh_example
 
         self.assertEqual(self.requests_put_calls, 3)
 

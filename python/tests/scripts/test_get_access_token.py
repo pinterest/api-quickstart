@@ -39,7 +39,7 @@ class GetAccessTokenTest(IntegrationMocks):
         self.requests_get_calls = 0
 
         with mock.patch('builtins.open') as mock_open:
-            mock_open.side_effect = FileNotFoundError
+            mock_open.side_effect = FileNotFoundError # no access_token.json file
             with self.mock_redirect():
                 main() # run get_access_token
 
