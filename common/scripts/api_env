@@ -1,12 +1,33 @@
 # source this script to set environment variables required by
 # the code in this repo.
 
-# get the location of this script
-SCRIPT_DIR=$(cd $(dirname ${BASH_SOURCE[0]}); pwd)
+# figure out the location of this script, which is a shell-dependent process
+case "$(basename $0)" in
+  bash)
+    SCRIPT_NAME="${BASH_SOURCE[0]}"
+    ;;
+  *)
+    SCRIPT_NAME="$0"
+    ;;
+esac
 
+# get the location of this script
+SCRIPT_DIR=$(cd $(dirname ${SCRIPT_NAME}); pwd)
+
+if [ ! -f "${SCRIPT_DIR}/api_app_credentials" ] ; then
+  echo "Please create an application credentials file here:"
+  echo "  ${SCRIPT_DIR}/api_app_credentials"
+  echo 'For more information, see the "Put your app ID and secret" section of the top-level README in this repo.'
+  return
+fi
 . ${SCRIPT_DIR}/api_app_credentials
 unset PINTEREST_API_URI
 unset PINTEREST_OAUTH_URI
 
+# location of https certificates specified in the documentation
 export HTTPS_KEY_FILE="${SCRIPT_DIR}/../certs/localhost-key.pem"
 export HTTPS_CERT_FILE="${SCRIPT_DIR}/../certs/localhost.pem"
+
+# location to read and write OAuth tokens
+export PINTEREST_OAUTH_TOKEN_DIR="${SCRIPT_DIR}/../oauth_tokens/"
+mkdir -p "${PINTEREST_OAUTH_TOKEN_DIR}"

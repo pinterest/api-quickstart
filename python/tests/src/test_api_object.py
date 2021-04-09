@@ -13,6 +13,7 @@ class ApiObjectTest(unittest.TestCase):
 
         api_config = mock.Mock()
         api_config.api_uri = 'test_uri'
+        api_config.verbosity = 2
 
         access_token = mock.Mock()
         access_token.header.return_value = 'test_headers'

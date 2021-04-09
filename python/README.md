@@ -7,7 +7,9 @@ Python code that makes it easy to get started with the Pinterest API.
 1. Follow the directions at the top level of this repo for configuring
 your application ID, application secret, and https certificates.
 
-2. Set up your virtualenv.
+2. From the top of this repo, change your working directory to this directory: `cd python`
+
+3. Set up your virtualenv.
 
    ```
    $ python3 -m venv ./venv/api
@@ -15,13 +17,13 @@ your application ID, application secret, and https certificates.
    $ pip install -r requirements.txt
    ```
 
-3. Set up the shell environment.
+4. Set up the shell environment.
 
    ```
    $ . ../common/scripts/api_env
    ```
 
-4. Run the simplest sample script.
+5. Run the simplest sample script.
 
    ```
    $ ./scripts/get_access_token.py
@@ -30,13 +32,15 @@ your application ID, application secret, and https certificates.
 ## Additional Functionality
 
 After running the Quick Start, you should be able to run any of the use cases in the scripts directory:
-  * `get_access_token.py`: Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v3/users/{user}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET).
+  * `get_access_token.py`: Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v3/users/{user}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET). Running this script with the `-w` parameter (`./scripts/get_access_token -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use.
   * `refresh_example.py`: Demonstrates how to refresh an access token.
   * `get_businesses.py`: Reads the `/v3/users/{user}/businesses/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_linked_business_accounts_GET). This script will generate a 400 error if your application does not have access to the `read_advertisers` scope. To see any data, the authorized account needs to have linked business acounts.
+  * `analytics_api_example.py`: Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [request](https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST) and [get](https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_advertiser_delivery_metrics_report_handler_GET) endpoints.
 
 In every new shell, you'll need to activate the virtualenv and configure the environment.
 
 ```
+$ cd python # from the top of this repository
 $ . ./venv/api/bin/activate
 $ . ../common/scripts/api_env
 ```

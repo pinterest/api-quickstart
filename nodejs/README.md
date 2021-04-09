@@ -7,21 +7,23 @@ JavaScript code that makes it easy to get started with the Pinterest API.
 1. Follow the directions at the top level of this repo for configuring
 your application ID, application secret, and https certificates.
 
-2. Install [nodejs](https://nodejs.org/en/download/).
+2. From the top of this repo, change your working directory to this directory: `cd nodejs`
 
-3. Install the node packages.
+3. Install [nodejs](https://nodejs.org/en/download/).
+
+4. Install the node packages.
 
    ```
    $ npm install
    ```
 
-4. Set up the shell environment.
+5. Set up the shell environment.
 
    ```
    $ . ../common/scripts/api_env
    ```
 
-5. Run the simplest sample script.
+6. Run the simplest sample script.
 
    ```
    $ ./scripts/get_access_token.js
@@ -37,5 +39,6 @@ After running the Quick Start, you should be able to run any of the use cases in
 In every new shell, you'll need to configure the environment.
 
 ```
+$ cd nodejs # from the top of this repository
 $ . ../common/scripts/api_env
 ```

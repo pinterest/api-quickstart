@@ -12,6 +12,8 @@ DEFAULT_OAUTH_URI = 'https://www.pinterest.com'
 DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/'
 DEFAULT_KEY_FILE = 'localhost-key.pem'
 DEFAULT_CERT_FILE = 'localhost.pem'
+# OAuth tokens are in the current directory by default
+DEFAULT_OAUTH_TOKEN_DIR = '.'
 
 class ApiConfig:
     def __init__(self):
@@ -25,9 +27,14 @@ class ApiConfig:
         self.redirect_uri = DEFAULT_REDIRECT_URI
         self.landing_uri = os.environ.get('REDIRECT_LANDING_URI') or DEFAULT_LANDING_URI + self.app_id
 
+        # locations of credentials in the file system
         self.https_key_file = os.environ.get('HTTPS_KEY_FILE') or DEFAULT_KEY_FILE
         self.https_cert_file = os.environ.get('HTTPS_CERT_FILE') or DEFAULT_CERT_FILE
+        self.oauth_token_dir = os.environ.get('PINTEREST_OAUTH_TOKEN_DIR') or DEFAULT_OAUTH_TOKEN_DIR
 
         # swizzle oauth and api hosts, based on environment
         self.oauth_uri = os.environ.get('PINTEREST_OAUTH_URI') or DEFAULT_OAUTH_URI
         self.api_uri = os.environ.get('PINTEREST_API_URI') or DEFAULT_API_URI
+
+        # default level of verbosity, probably should switch to logging
+        self.verbosity = 1

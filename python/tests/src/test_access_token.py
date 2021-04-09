@@ -15,6 +15,7 @@ class AccessTokenTest(unittest.TestCase):
         mock_api_config.app_secret = 'test-app-secret'
         mock_api_config.api_uri = 'test-api-uri'
         mock_api_config.redirect_uri = 'test-redirect-uri'
+        mock_api_config.oauth_token_dir = 'test-token-dir'
 
         mock_response = mock.MagicMock()
         mock_response.__str__.return_value = '<Response [200]>'
@@ -26,6 +27,7 @@ class AccessTokenTest(unittest.TestCase):
         mock_requests_put.return_value = mock_response
 
         access_token = AccessToken(mock_api_config)
+        access_token.oauth()
         mock_get_auth_code.assert_called_once_with(mock_api_config,
                                                    scopes=None,
                                                    refreshable=True)
@@ -83,9 +85,9 @@ class AccessTokenTest(unittest.TestCase):
                                            'data': {}
                                            }
         mock_get_auth_code.reset_mock()
-        access_token = AccessToken(mock_api_config,
-                                   scopes=['test-scope-1','test-scope-2'],
-                                   refreshable=False)
+        access_token = AccessToken(mock_api_config)
+        access_token.oauth(scopes=['test-scope-1','test-scope-2'],
+                           refreshable=False)
         mock_get_auth_code.assert_called_once_with(mock_api_config,
                                                    scopes=['test-scope-1','test-scope-2'],
                                                    refreshable=False)
