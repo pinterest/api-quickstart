@@ -2,14 +2,13 @@
 # the code in this repo.
 
 # figure out the location of this script, which is a shell-dependent process
-case "$(basename $0)" in
-  bash)
+if [ "$0" = '-bash' ] || [ "$0" = '/bin/bash' ] ; then
     SCRIPT_NAME="${BASH_SOURCE[0]}"
-    ;;
-  *)
+else
     SCRIPT_NAME="$0"
-    ;;
-esac
+fi
+
+echo $SCRIPT_NAME
 
 # get the location of this script
 SCRIPT_DIR=$(cd $(dirname ${SCRIPT_NAME}); pwd)
