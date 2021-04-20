@@ -10,7 +10,7 @@ This repository has code that is intended to provide a quick start for working w
 
 1. Set up the environment with your credentials (app ID and secret, https://localhost certificates). This configuration works with the code in all of the language-specific directories.
 
-   * Get an application ID and secret by hitting the "Start building" button at [https://developers.pinterest.com/](https://developers.pinterest.com/). Currently, approval from a contact at Pinterest is required to see the application secret. We realize that this process isn't awesome right now, but we're working on it!
+   * Get an application ID and secret by hitting the "Start building" button at [https://developers.pinterest.com/](https://developers.pinterest.com/). Approval from a contact at Pinterest is required to see the application secret. (We're working on some updates to our program and are currently taking a pause in reviewing applications while we focus on what's next. If you'd still like to apply to our program we'll reach out to the email associated with your account once there's an update. We're excited to share with you what we've been working on.)
    * Put your app ID and secret in an environment script file.
      ```
      $ cd common/scripts
