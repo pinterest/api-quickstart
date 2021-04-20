@@ -18,6 +18,7 @@ def main(argv=[]):
 
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
+    api_config.verbosity = 2
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
