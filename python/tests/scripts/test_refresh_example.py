@@ -22,6 +22,7 @@ class RefreshExampleTest(IntegrationMocks):
         response.__str__.return_value = '<Response [200]>'
         response.json.return_value = {'data':
                                       {'full_name': 'test fullname',
+                                       'id': 'test user id',
                                        'about': 'test about',
                                        'profile_url': 'test profile url',
                                        'pin_count': 'pin count'

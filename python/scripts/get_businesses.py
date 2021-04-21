@@ -12,6 +12,7 @@ from user import User
 def main():
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
+    api_config.verbosity = 2
 
     # Note that the OAuth will fail if your application does not
     # have access to the scope that is required to access
