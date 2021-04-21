@@ -1,10 +1,10 @@
 import unittest
 import mock
-from src.api_object import ApiObject
+from src.v3.api_object import ApiObject
 
 class ApiObjectTest(unittest.TestCase):
 
-    @mock.patch('src.api_object.requests.get')
+    @mock.patch('src.v3.api_object.requests.get')
     def test_api_object(self, mock_requests_get):
         response = mock.Mock()
         response.ok = True

@@ -7,12 +7,14 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 from api_config import ApiConfig
 from access_token import AccessToken
 from oauth_scope import Scope
-from user import User
 
 def main():
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
     api_config.verbosity = 2
+
+    # imports that depend on the version of the API
+    from user import User
 
     # Note that the OAuth will fail if your application does not
     # have access to the scope that is required to access
