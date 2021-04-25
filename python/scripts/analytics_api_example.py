@@ -5,13 +5,9 @@ import sys
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from access_token import AccessToken
-from advertisers import Advertisers
 from api_config import ApiConfig
-from delivery_metrics import DeliveryMetrics
-from delivery_metrics import DeliveryMetricsAsyncReport
 from generic_requests import download_file
 from oauth_scope import Scope
-from user import User
 from utils import input_number
 from utils import input_path_for_write
 
@@ -22,6 +18,12 @@ def main():
     # Set the API configuration verbosity to 2 to show all of requests
     # and response statuses. To see the complete responses, set verbosity to 3.
     api_config.verbosity = 2
+
+    # imports that depend on the version of the API
+    from advertisers import Advertisers
+    from delivery_metrics import DeliveryMetrics
+    from delivery_metrics import DeliveryMetricsAsyncReport
+    from user import User
 
     # Note that the OAuth will fail if your application does not
     # have access to the scope that is required to access

@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+#
+# Copying a pin is not representative of typical user behavior on Pinterest.
+#
+# This script is intended to demonstrate how to use the API to developers,
+# and to provide functionality that might be convenient for developers.
+# For example, it might be used as part of a program to generate an
+# account to be used to test an API-based application.
+#
 from os.path import dirname, abspath, join
 import argparse
 import sys
@@ -8,7 +16,6 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 from api_config import ApiConfig
 from access_token import AccessToken
 from oauth_scope import Scope
-from pin import Pin
 
 def main(argv=[]):
     parser = argparse.ArgumentParser(description='Get Pinterest OAuth token')
@@ -20,6 +27,9 @@ def main(argv=[]):
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
     api_config.verbosity = 2
+
+    # imports that depend on the version of the API
+    from pin import Pin
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.

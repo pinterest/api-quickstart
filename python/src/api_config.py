@@ -1,4 +1,7 @@
 import os # for environment variables
+import sys # for sys.path.append
+
+from os.path import dirname, abspath, join
 
 # Construct the redirect_uri for the OAuth process. The REDIRECT_URI must
 # be literally the same as configured at https://developers.pinterest.com/manage/.
@@ -8,6 +11,7 @@ import os # for environment variables
 DEFAULT_PORT = 8085
 DEFAULT_REDIRECT_URI = 'https://localhost:' + str(DEFAULT_PORT) + '/'
 DEFAULT_API_URI = 'https://api.pinterest.com'
+DEFAULT_API_VERSION = 'v3'
 DEFAULT_OAUTH_URI = 'https://www.pinterest.com'
 DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/'
 DEFAULT_KEY_FILE = 'localhost-key.pem'
@@ -35,6 +39,10 @@ class ApiConfig:
         # swizzle oauth and api hosts, based on environment
         self.oauth_uri = os.environ.get('PINTEREST_OAUTH_URI') or DEFAULT_OAUTH_URI
         self.api_uri = os.environ.get('PINTEREST_API_URI') or DEFAULT_API_URI
+        self.version = os.environ.get('PINTEREST_API_VERSION') or DEFAULT_API_VERSION
 
         # default level of verbosity, probably should switch to logging
         self.verbosity = 1
+
+        # set up to load the code modules for this version of the API
+        sys.path.append(abspath(join(dirname(__file__), self.version)))

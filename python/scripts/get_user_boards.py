@@ -6,11 +6,8 @@ import sys
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
-from api_object import ApiObject
 from access_token import AccessToken
-from board import Board
 from oauth_scope import Scope
-from user import User
 
 def main(argv=[]):
     def positive_integer(number):
@@ -35,6 +32,10 @@ def main(argv=[]):
     api_config = ApiConfig()
     api_config.verbosity = 2
 
+    # imports that depend on the version of the API
+    from board import Board
+    from user import User
+
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config)
@@ -48,7 +49,7 @@ def main(argv=[]):
                       'include_archived': args.include_archived,
                       }
     board_iterator = user_me.get_boards(user_me_data, query_parameters)
-    ApiObject.print_multiple(args.page_size, 'board', Board, board_iterator)
+    user_me.print_multiple(args.page_size, 'board', Board, board_iterator)
 
 if __name__ == '__main__':
     main(sys.argv[1:])

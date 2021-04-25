@@ -6,11 +6,8 @@ import sys
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
-from api_object import ApiObject
 from access_token import AccessToken
 from oauth_scope import Scope
-from pin import Pin
-from user import User
 
 def main(argv=[]):
     def positive_integer(number):
@@ -28,6 +25,10 @@ def main(argv=[]):
     api_config = ApiConfig()
     api_config.verbosity = 2
 
+    # imports that depend on the version of the API
+    from pin import Pin
+    from user import User
+
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config)
@@ -38,7 +39,7 @@ def main(argv=[]):
     user_me_data = user_me.get()
     pin_iterator = user_me.get_pins(user_me_data,
                                     query_parameters={'page_size': args.page_size})
-    ApiObject.print_multiple(args.page_size, 'pin', Pin, pin_iterator)
+    user_me.print_multiple(args.page_size, 'pin', Pin, pin_iterator)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
