@@ -36,6 +36,11 @@ After running the Quick Start, you should be able to run any of the use cases in
   * `refresh_example.py`: Demonstrates how to refresh an access token.
   * `get_businesses.py`: Reads the `/v3/users/{user}/businesses/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_linked_business_accounts_GET). This script will generate a 400 error if your application does not have access to the `read_advertisers` scope. To see any data, the authorized account needs to have linked business acounts.
   * `analytics_api_example.py`: Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [request](https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST) and [get](https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_advertiser_delivery_metrics_report_handler_GET) endpoints.
+  * `get_pin.py`: Retrieves the information for a specific board with the `/v3/pins/{pin}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_pin_GET).
+  * `get_board.py`: Retrieves the information for a specific board with the `/v3/boards/{board}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_GET).
+  * `get_user_pins.py`: Retrieves all of the pins for a user with the `/v3/users/{users}/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET), using the paging mechanism of the API.
+  * `get_user_boards.py`: Retrieves all of the boards for a user with the `/v3/users/{user}/boards/feed/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET), using the paging mechanism of the API.
+  * `copy_pin.py`: Demonstration of how to use the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) endpoint to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
 
 In every new shell, you'll need to activate the virtualenv and configure the environment.
 
