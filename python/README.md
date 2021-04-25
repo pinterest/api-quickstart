@@ -40,7 +40,7 @@ After running the Quick Start, you should be able to run any of the use cases in
   * `get_board.py`: Retrieves the information for a specific board with the `/v3/boards/{board}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_GET).
   * `get_user_pins.py`: Retrieves all of the pins for a user with the `/v3/users/{users}/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET), using the paging mechanism of the API.
   * `get_user_boards.py`: Retrieves all of the boards for a user with the `/v3/users/{user}/boards/feed/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET), using the paging mechanism of the API.
-  * `copy_pin.py`: Demonstration of how to use the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) endpoint to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
+  * `copy_pin.py`: Demonstration of how to use the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
 
 In every new shell, you'll need to activate the virtualenv and configure the environment.
 
