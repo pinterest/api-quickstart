@@ -54,6 +54,13 @@ class IntegrationMocks(unittest.TestCase):
         print('tearDown')
         self.monkeypatch(self.originals)
 
+    # The integration tests start a web server on localhost and send a response to it.
+    # So, the https certificate set-up and an appropriate api_env are required.
+    # See the README file at the top-level of this repository for more information
+    # on the required set-up.
+    if not os.environ.get('HTTPS_KEY_FILE') or not os.environ.get('HTTPS_KEY_FILE'):
+        raise RuntimeError('Certificate set up is required for integration tests. See top-level README.')
+
     mock_os_environ = {'PINTEREST_APP_ID': 'test-app-id',
                        'PINTEREST_APP_SECRET': 'test-app-secret',
                        'HTTPS_KEY_FILE': os.environ['HTTPS_KEY_FILE'],
