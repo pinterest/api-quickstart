@@ -2,6 +2,7 @@ import contextlib
 import mock
 import os
 import requests
+import ssl
 import sys
 import threading
 import time
@@ -78,10 +79,12 @@ class IntegrationMocks(unittest.TestCase):
         def send_test_redirect():
             while True:
                 # use requests.request to avoid monkey-patched function
+                # HTTPS_CA_BUNDLE is set by the api_env script so that this
+                # test script can run with verified https.
                 response = requests.request(
                     'GET',
                     'https://localhost:8085/?test-path&code=test-oauth-code',
-                    allow_redirects=False)
+                    allow_redirects=False, verify=os.environ['HTTPS_CA_BUNDLE'])
                 print('response to redirect (301 expected): ' + str(response))
                 if response.ok:
                     return
