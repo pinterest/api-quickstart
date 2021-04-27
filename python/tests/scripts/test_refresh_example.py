@@ -30,8 +30,9 @@ class RefreshExampleTest(IntegrationMocks):
                                       }
         return response
 
+    @mock.patch('time.sleep') # prevent delay from real sleep
     @mock.patch('builtins.print')
-    def test_refresh_example(self, mock_print):
+    def test_refresh_example(self, mock_print, mock_sleep):
         from scripts.refresh_example import main # import here to see monkeypatches
 
         self.requests_put_calls = 0
@@ -41,7 +42,8 @@ class RefreshExampleTest(IntegrationMocks):
             with self.mock_redirect():
                 main() # run refresh_example
 
-        self.assertEqual(self.requests_put_calls, 3)
+        self.assertEqual(self.requests_put_calls, 3) # check calls to requests.put()
+        mock_sleep.assert_has_calls([mock.call(1),mock.call(1)]) # check calls to time.sleep()
 
         # verify expected values printed.
         # echo -n test-access-token-1 | shasum -a 256
