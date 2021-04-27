@@ -1,7 +1,7 @@
 import datetime
 
-from api_object import ApiObject
-from async_report import AsyncReport
+from v3.api_object import ApiObject
+from v3.async_report import AsyncReport
 
 class DeliveryMetrics(ApiObject):
     def __init__(self, api_config, access_token):
@@ -50,7 +50,7 @@ class DeliveryMetricsAsyncReport(AsyncReport):
         super().__init__(api_config, access_token, advertiser_id)
         self.kind_of = 'delivery_metrics' # override required by superclass
         self._start_date = None
-        self._end_data = None
+        self._end_date = None
         self._metrics = set()
         self.attrs = {}
 
@@ -273,8 +273,11 @@ class DeliveryMetricsAsyncReport(AsyncReport):
         for the POST that initiates the report.
         """
         self.verify_attributes()
+        # set order is nondeterministic, so create a sorted list
+        metrics_list = list(self._metrics)
+        metrics_list.sort()
         attributes = (f'?start_date={self._start_date}&end_date={self._end_date}' +
-                      '&metrics=' + ','.join(self._metrics))
+                      '&metrics=' + ','.join(metrics_list))
 
         for attr, value in self.attrs.items():
             attributes += f'&{attr}={value}'
