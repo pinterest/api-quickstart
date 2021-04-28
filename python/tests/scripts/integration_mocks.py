@@ -41,6 +41,9 @@ class IntegrationMocks(unittest.TestCase):
         
     def mock_requests_post(self, uri, headers=None, data=None):
         assert False, 'Override mock_requests_post for this test to run.'
+
+    def mock_input(self, prompt):
+        assert False, 'Override mock_input for this test to run.'
         
     def setUp(self):
         print('setUp')
@@ -49,7 +52,8 @@ class IntegrationMocks(unittest.TestCase):
             ('webbrowser', 'open_new', self.mock_open_new),
             ('requests', 'put', self.mock_requests_put),
             ('requests', 'post', self.mock_requests_post),
-            ('requests', 'get', self.mock_requests_get)])
+            ('requests', 'get', self.mock_requests_get),
+            ('builtins', 'input', self.mock_input)])
 
     def tearDown(self):
         print('tearDown')
