@@ -64,7 +64,9 @@ class IntegrationMocks(unittest.TestCase):
     # See the README file at the top-level of this repository for more information
     # on the required set-up.
     if not os.environ.get('HTTPS_KEY_FILE') or not os.environ.get('HTTPS_KEY_FILE'):
-        raise RuntimeError('Certificate set up is required for integration tests. See top-level README.')
+        raise RuntimeError('HTTPS localhost certificate is required.' +
+                           ' See top-level README.' +
+                           ' Did you run the api_env script?')
 
     mock_os_environ = {'PINTEREST_APP_ID': 'test-app-id',
                        'PINTEREST_APP_SECRET': 'test-app-secret',
