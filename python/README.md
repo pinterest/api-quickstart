@@ -31,7 +31,7 @@ your application ID, application secret, and https certificates.
 
 ## Additional Functionality
 
-After running the Quick Start, you should be able to run any of the use cases in the scripts directory:
+After running the Quick Start, you should be able to run any of the use cases in the scripts directory. Scripts that accept arguments use `argparse`, which ensures that the `-h` or `--help` argument shows usage documentation.
   * `get_access_token.py`: Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v3/users/{user}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET). Running this script with the `-w` parameter (`./scripts/get_access_token -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use.
   * `refresh_example.py`: Demonstrates how to refresh an access token.
   * `get_businesses.py`: Reads the `/v3/users/{user}/businesses/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_linked_business_accounts_GET). This script will generate a 400 error if your application does not have access to the `read_advertisers` scope. To see any data, the authorized account needs to have linked business acounts.
@@ -41,6 +41,7 @@ After running the Quick Start, you should be able to run any of the use cases in
   * `get_user_pins.py`: Retrieves all of the pins for a user with the `/v3/users/{users}/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET), using the paging mechanism of the API.
   * `get_user_boards.py`: Retrieves all of the boards for a user with the `/v3/users/{user}/boards/feed/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET), using the paging mechanism of the API.
   * `copy_pin.py`: Demonstration of how to use the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
+  * `copy_board.py`: Demonstration of how to use the `PUT /v3/boards/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_board_PUT) to create a board and the `PUT /v3/board/{self.board_id}/sections/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_section_PUT) to create board sections. Copying a board can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
 
 In every new shell, you'll need to activate the virtualenv and configure the environment.
 
