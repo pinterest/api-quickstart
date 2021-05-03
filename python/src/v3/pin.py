@@ -11,10 +11,14 @@ class Pin(ApiObject):
     @classmethod
     def print_summary(klass, pin_data):
         print('--- Pin Summary ---')
-        print('Pin ID: ' + pin_data['id'])
-        print('Description: ' + pin_data['description'])
-        print('Domain: ' + pin_data['domain'])
-        print('Native format type: ' + pin_data['native_format_type'])
+        print(f"Pin ID: {pin_data['id']}")
+        print(f"Type: {pin_data['type']}")
+        if pin_data['type'] == 'pin':
+            print(f"Description: {pin_data.get('description')}")
+            print(f"Domain: {pin_data.get('domain')}")
+            print(f"Native format type: {pin_data.get('native_format_type')}")
+        elif pin_data['type'] == 'story':
+            print(f"Story type: {pin_data.get('story_type')}")
         print('--------------------')
 
     def create(self, pin_data, board_id, section=None):
@@ -34,7 +38,6 @@ class Pin(ApiObject):
         if link:
             create_data['source_url'] = link
 
-        # TODO: finish reviewing all of the fields
         for key in OPTIONAL_ATTRIBUTES:
             value = pin_data.get(key)
             if value:

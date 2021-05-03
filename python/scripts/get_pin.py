@@ -10,7 +10,7 @@ from access_token import AccessToken
 from oauth_scope import Scope
 
 def main(argv=[]):
-    parser = argparse.ArgumentParser(description='Get Pinterest OAuth token')
+    parser = argparse.ArgumentParser(description='Get a Pin')
     parser.add_argument('-p', '--pin_id', required=True, help='pin identifier')
     args = parser.parse_args(argv)
 

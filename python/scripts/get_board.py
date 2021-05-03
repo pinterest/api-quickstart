@@ -10,16 +10,18 @@ from access_token import AccessToken
 from oauth_scope import Scope
 
 def main(argv=[]):
-    parser = argparse.ArgumentParser(description='Get Pinterest OAuth token')
+    parser = argparse.ArgumentParser(description='Get a Board')
     parser.add_argument('-b', '--board_id', required=True, help='board identifier')
+    parser.add_argument('--pins', action='store_true', help='Get the Pins for the Board')
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
-    api_config.verbosity = 3
+    api_config.verbosity = 2
 
     # imports that depend on the version of the API
     from board import Board
+    from pin import Pin
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
@@ -29,6 +31,16 @@ def main(argv=[]):
     board = Board(args.board_id, api_config, access_token)
     board_data = board.get()
     board.print_summary(board_data)
+
+    if args.pins:
+        for pin_data in board.get_pins():
+            Pin.print_summary(pin_data)
+
+    for section_data in board.get_sections():
+        board.print_section(section_data)
+        if args.pins:
+            for pin_data in board.get_section_pins(section_data['id']):
+                Pin.print_summary(pin_data)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
