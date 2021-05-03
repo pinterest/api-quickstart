@@ -1,4 +1,4 @@
-from api_object import ApiObject
+from v3.api_object import ApiObject # specifying v3 required for unit tests
 
 class User(ApiObject):
     def __init__(self, user, api_config, access_token):

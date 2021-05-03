@@ -27,6 +27,12 @@ unset PINTEREST_OAUTH_URI
 export HTTPS_KEY_FILE="${SCRIPT_DIR}/../certs/localhost-key.pem"
 export HTTPS_CERT_FILE="${SCRIPT_DIR}/../certs/localhost.pem"
 
+# Some programs need access to the location of the CA bundle.
+# For example, using this CA bundle is required for python integration tests.
+if (which mkcert >/dev/null) ; then
+   export HTTPS_CA_BUNDLE="$(mkcert -CAROOT)"/rootCA.pem
+fi
+
 # location to read and write OAuth tokens
 export PINTEREST_OAUTH_TOKEN_DIR="${SCRIPT_DIR}/../oauth_tokens/"
 mkdir -p "${PINTEREST_OAUTH_TOKEN_DIR}"

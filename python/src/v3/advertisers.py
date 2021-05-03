@@ -1,4 +1,4 @@
-from api_object import ApiObject
+from v3.api_object import ApiObject
 
 class Advertisers(ApiObject):
     def __init__(self, user_id, api_config, access_token):
