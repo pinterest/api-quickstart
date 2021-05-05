@@ -1,15 +1,23 @@
 import unittest
 import mock
-from src.v3.api_object import ApiObject
+from os.path import dirname, abspath, join
+import sys
+
+# required for imports in api_object to work
+sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
+
+from api_config import SpamException
+from api_config import RateLimitException
+from v3.api_object import ApiObject
 
 class ApiObjectTest(unittest.TestCase):
 
     @mock.patch('src.v3.api_object.requests.get')
     def test_api_object(self, mock_requests_get):
-        response = mock.Mock()
-        response.ok = True
-        response.json.return_value = {'data': 'test_response_data'}
-        mock_requests_get.return_value = response
+        mock_response = mock.Mock()
+        mock_response.ok = True
+        mock_response.json.return_value = {'data': 'test_response_data'}
+        mock_requests_get.return_value = mock_response
 
         api_config = mock.Mock()
         api_config.api_uri = 'test_uri'
@@ -21,3 +29,16 @@ class ApiObjectTest(unittest.TestCase):
         response = api_object.request_data('/test_path')
         self.assertEqual(response, 'test_response_data')
         mock_requests_get.assert_called_once_with('test_uri/test_path', headers='test_headers')
+
+        mock_response.ok = False
+        mock_response.status_code = 429
+        mock_response.reason = 'Too Many Requests'
+        mock_response.json.return_value = {'message_detail': 'blah blah Spam yada yada'}
+
+        with self.assertRaises(SpamException):
+            api_object.request_data('/test_path/spammy-thing')
+
+        mock_response.json.return_value = {'other': 'something besides a spam response'}
+
+        with self.assertRaises(RateLimitException):
+            api_object.request_data('/test_path/oops-rate-limit')
