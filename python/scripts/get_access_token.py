@@ -13,6 +13,7 @@ def main(argv=[]):
     parser = argparse.ArgumentParser(description='Get Pinterest OAuth token')
     parser.add_argument('-w', '--write', action='store_true', help='write access token to file')
     parser.add_argument('-ct', '--cleartext', action='store_true', help='print the token in clear text')
+    parser.add_argument('-s', '--scopes', help='comma separated list of scopes')
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
@@ -25,7 +26,10 @@ def main(argv=[]):
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config)
-    access_token.fetch(scopes=[Scope.READ_USERS])
+    scopes=None
+    if args.scopes:
+        scopes = list(map(lambda arg: Scope[arg.upper()], args.scopes.split(',')))
+    access_token.fetch(scopes=scopes)
 
     if args.cleartext:
         print('Please keep clear text tokens secure!')

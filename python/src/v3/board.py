@@ -6,6 +6,8 @@ class Board(ApiObject):
         self.board_id = board_id
 
     def get(self):
+        if not self.board_id:
+            raise ValueError('board_id must be set to get a board')
         return self.request_data(f'/v3/boards/{self.board_id}')
 
     @classmethod
@@ -41,7 +43,9 @@ class Board(ApiObject):
             if value:
                 create_data[key] = value
 
-        return self.put_data('/v3/boards/', create_data)
+        board_data = self.put_data('/v3/boards/', create_data)
+        self.board_id = board_data['id']
+        return board_data
 
     def get_pins(self):
         return self.get_iterator(f'/v3/boards/{self.board_id}/pins/')

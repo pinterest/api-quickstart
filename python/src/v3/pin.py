@@ -6,6 +6,8 @@ class Pin(ApiObject):
         self.pin_id = pin_id
 
     def get(self):
+        if not self.pid_id:
+            raise ValueError('pin_id must be set to get a pin')
         return self.request_data('/v3/pins/{}'.format(self.pin_id))
 
     @classmethod
@@ -43,4 +45,6 @@ class Pin(ApiObject):
             if value:
                 create_data[key] = value
 
-        return self.put_data('/v3/pins/', create_data)
+        pin_data = self.put_data('/v3/pins/', create_data)
+        self.pin_id = pin_data['id']
+        return pin_data
