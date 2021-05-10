@@ -21,20 +21,21 @@ from oauth_scope import Scope
 def main(argv=[]):
     parser = argparse.ArgumentParser(description='Copy a Board')
     parser.add_argument('-b', '--board_id', required=True, help='source board identifier')
-    parser.add_argument('-n', '--name', required=True, help='target board name')
+    parser.add_argument('-n', '--name', help='target board name')
     parser.add_argument('-s', '--source_access_token', help='source access token name')
     parser.add_argument('-t', '--target_access_token', help='target access token name')
     args = parser.parse_args(argv)
 
     if args.target_access_token:
         if not args.source_access_token:
+            parser.print_usage()
             print('source access token is required when using a target access token')
             exit(1)
-        print('oops! target access token is not yet supported. :-p')
-        exit(2)
     else:
         if not args.name:
+            parser.print_usage()
             print('target board name is required when not using a target access token')
+            exit(1)
 
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
@@ -58,15 +59,24 @@ def main(argv=[]):
         except SpamException:
             print('skipping pin because of spam exception')
 
-    # Note: It's possible to use the same API configuration with
-    # multiple access tokens, so these objects are kept separate.
-    access_token = AccessToken(api_config)
-    access_token.fetch(scopes=[Scope.READ_PINS]) # TODO: need write scope?
+    # Note: The same API configuration is used with both the
+    # source and target access tokens.
 
-    # need to think about how the Pin object should work in this case...
-    pin_for_api = Pin(0, api_config, access_token)
+    if args.source_access_token:
+        source_token = AccessToken(api_config, name=args.source_access_token)
+    else:
+        source_token = AccessToken(api_config)
+    source_token.fetch(scopes=[Scope.READ_PINS, Scope.READ_BOARDS]) # get the token
 
-    board = Board(args.board_id, api_config, access_token)
+    if args.target_access_token:
+        target_token = AccessToken(api_config, name=args.target_access_token)
+        target_token.fetch(scopes=[Scope.WRITE_PINS,Scope.WRITE_BOARDS]) # TODO: need write scope?
+    else:
+        target_token = source_token # already have the token
+
+    target_pin = Pin(None, api_config, target_token) # pin_id set by create
+
+    board = Board(args.board_id, api_config, source_token)
     board_data = board.get()
     print('source board:')
     board.print_summary(board_data)
@@ -77,15 +87,14 @@ def main(argv=[]):
         print('setting target board name to "' + args.name + '"')
         board_data['name'] = args.name
 
-    # TODO: support separate access tokens for the source and destination boards
-    new_board_data = board.create(board_data)
-    new_board = Board(new_board_data['id'], api_config, access_token)
+    new_board = Board(None, api_config, target_token) # board_id set by create
+    new_board_data = new_board.create(board_data)
     print('new board:')
     new_board.print_summary(new_board_data)
 
     # copy board pins
     for pin_data in board.get_pins():
-        copy_pin(pin_for_api, pin_data, new_board_data['id'])
+        copy_pin(target_pin, pin_data, new_board_data['id'])
 
     sections_iterator = board.get_sections()
     for idx, section_data in enumerate(sections_iterator):
@@ -97,7 +106,7 @@ def main(argv=[]):
         
         # copy board section pins
         for pin_data in board.get_section_pins(section_data['id']):
-            copy_pin(pin_for_api, pin_data, new_board_data['id'], new_section_data['id'])
+            copy_pin(target_pin, pin_data, new_board_data['id'], new_section_data['id'])
 
 if __name__ == '__main__':
     main(sys.argv[1:])
