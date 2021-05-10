@@ -19,6 +19,13 @@ DEFAULT_CERT_FILE = 'localhost.pem'
 # OAuth tokens are in the current directory by default
 DEFAULT_OAUTH_TOKEN_DIR = '.'
 
+class RateLimitException(Exception):
+    """Raised when API emits a HTTP 429 Too Many Requests Error"""
+    pass
+
+class SpamException(Exception):
+    """Raised when API emits a HTTP 429 due to a spam issue"""
+
 class ApiConfig:
     def __init__(self):
         # Get Pinterest application ID and secret from the OS environment.

@@ -14,6 +14,7 @@ import sys
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
+from api_config import SpamException
 from access_token import AccessToken
 from oauth_scope import Scope
 
@@ -44,15 +45,18 @@ def main(argv=[]):
     from pin import Pin
 
     def copy_pin(pin, pin_data, target_board_id, target_section_id=None):
-        if pin_data['type'] == 'pin':
-            print('source pin:')
-            Pin.print_summary(pin_data)
-            new_pin_data = pin.create(pin_data, target_board_id, target_section_id)
-            print('new pin:')
-            Pin.print_summary(new_pin_data)
-        else:
-            print('skipping pin:')
-            Pin.print_summary(pin_data)
+        try:
+            if pin_data['type'] == 'pin':
+                print('source pin:')
+                Pin.print_summary(pin_data)
+                new_pin_data = pin.create(pin_data, target_board_id, target_section_id)
+                print('new pin:')
+                Pin.print_summary(new_pin_data)
+            else:
+                print("skipping pin because type is not 'pin'")
+                Pin.print_summary(pin_data)
+        except SpamException:
+            print('skipping pin because of spam exception')
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
