@@ -20,10 +20,12 @@ from oauth_scope import Scope
 
 def main(argv=[]):
     parser = argparse.ArgumentParser(description='Copy a Board')
-    parser.add_argument('-b', '--board_id', required=True, help='source board identifier')
+    parser.add_argument('-b', '--board-id', required=True, help='source board identifier')
     parser.add_argument('-n', '--name', help='target board name')
-    parser.add_argument('-s', '--source_access_token', help='source access token name')
-    parser.add_argument('-t', '--target_access_token', help='target access token name')
+    parser.add_argument('-s', '--source-access-token', help='source access token name')
+    parser.add_argument('-t', '--target-access-token', help='target access token name')
+    parser.add_argument('--all', dest='all_boards', action='store_true', help='copy all boards from source to target')
+    parser.add_argument('--dry-run', action='store_true', help='print changes but do not execute them')
     args = parser.parse_args(argv)
 
     if args.target_access_token:
@@ -32,10 +34,22 @@ def main(argv=[]):
             print('source access token is required when using a target access token')
             exit(1)
     else:
+        if args.all_boards:
+            parser.print_usage()
+            print('all boards option requires a target access token')
+            exit(1)
         if not args.name:
             parser.print_usage()
             print('target board name is required when not using a target access token')
             exit(1)
+
+    if args.all_boards and args.name:
+        print('the name and all options are mutually exclusive')
+        exit(1)
+
+    if args.all_boards and args.board_id:
+        print('the board-id and all options are mutually exclusive')
+        exit(1)
 
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
@@ -79,7 +93,7 @@ def main(argv=[]):
     board = Board(args.board_id, api_config, source_token)
     board_data = board.get()
     print('source board:')
-    board.print_summary(board_data)
+    Board.print_summary(board_data)
 
     # option: use different name, which should be mandatory when using
     # a single access token
@@ -88,25 +102,41 @@ def main(argv=[]):
         board_data['name'] = args.name
 
     new_board = Board(None, api_config, target_token) # board_id set by create
-    new_board_data = new_board.create(board_data)
-    print('new board:')
-    new_board.print_summary(new_board_data)
+    if args.dry_run:
+        print('dry-run: skipping attempt to create board:')
+        Board.print_summary(board_data)
+    else:
+        new_board_data = new_board.create(board_data)
+        print('new board:')
+        Board.print_summary(new_board_data)
 
     # copy board pins
     for pin_data in board.get_pins():
-        copy_pin(target_pin, pin_data, new_board_data['id'])
+        if args.dry_run:
+            print('dry-run: skipping attempt to create board pin:')
+            Pin.print_summary(pin_data)
+        else:
+            copy_pin(target_pin, pin_data, new_board_data['id'])
 
     sections_iterator = board.get_sections()
     for idx, section_data in enumerate(sections_iterator):
-        print(f'source section #{idx}:')
-        board.print_section(section_data)
-        new_section_data = new_board.create_section(section_data)
-        print(f'new section #{idx}:')
-        new_board.print_section(new_section_data)
+        if args.dry_run:
+            print('dry-run: skipping attempt to create board section:')
+            Board.print_section(section_data)
+        else:
+            print(f'source section #{idx}:')
+            Board.print_section(section_data)
+            new_section_data = new_board.create_section(section_data)
+            print(f'new section #{idx}:')
+            Board.print_section(new_section_data)
         
         # copy board section pins
         for pin_data in board.get_section_pins(section_data['id']):
-            copy_pin(target_pin, pin_data, new_board_data['id'], new_section_data['id'])
+            if args.dry_run:
+                print('dry-run: skipping attempt to create board section pin:')
+                Pin.print_summary(pin_data)
+            else:
+                copy_pin(target_pin, pin_data, new_board_data['id'], new_section_data['id'])
 
 if __name__ == '__main__':
     main(sys.argv[1:])
