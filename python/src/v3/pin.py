@@ -1,12 +1,11 @@
 from api_object import ApiObject
-
 class Pin(ApiObject):
     def __init__(self, pin_id, api_config, access_token):
         super().__init__(api_config, access_token)
         self.pin_id = pin_id
 
     def get(self):
-        if not self.pid_id:
+        if not self.pin_id:
             raise ValueError('pin_id must be set to get a pin')
         return self.request_data('/v3/pins/{}'.format(self.pin_id))
 
