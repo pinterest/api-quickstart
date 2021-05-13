@@ -74,8 +74,8 @@ The precedence order in this repo for obtaining an access token is: environment,
 * Each language-specific directory is independent of the others:
   * `bash`: shell scripts
   * `nodejs`: JavaScript code and demonstration scripts intended to be run with Node.js
-  * `python`: structured python code and demonstration scripts
-  * More languages are on the way. We're considering providing examples in nodejs/JavaScript, ruby, and Java.
+  * `python`: structured python code and demonstration scripts. Since the python code is implemented first, python typically has the most functionality.
+  * More languages are on the way. We're considering providing examples in ruby and Java.
 * Each language-specific directory (e.g. `python` or `bash`) has one or more of these subdirectories:
   * `scripts` are executable files that demonstrate one or more use cases.
   * `src` contains code that is used by the scripts and that you can incorporate into your own applications
