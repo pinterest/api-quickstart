@@ -1,4 +1,5 @@
-from api_object import ApiObject
+from v3.api_object import ApiObject # specifying v3 required for unit tests
+
 class Pin(ApiObject):
     def __init__(self, pin_id, api_config, access_token):
         super().__init__(api_config, access_token)
