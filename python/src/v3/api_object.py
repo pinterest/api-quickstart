@@ -36,7 +36,7 @@ class PagedIterator:
             if self.bookmark:
                 # Determine whether the query needs to be added to the path or
                 # if the bookmark will be an additional parameter at the end of the query.
-                delimiter = '?' if self.path[-1] == '/' else '&'
+                delimiter = '&' if '?' in self.path else '?'
                 path_with_bookmark = self.path + delimiter + 'bookmark=' + self.bookmark
                 self._get_response(path_with_bookmark)
                 if not self.data: # in case there is some sort of error
