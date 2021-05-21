@@ -71,7 +71,8 @@ def main(argv=[]):
 
     def copy_pin(pin, pin_data, target_board_id, target_section_id=None):
         try:
-            if pin_data['type'] == 'pin':
+            pintype = pin_data.get('type')
+            if not pintype or pintype == 'pin':
                 print('source pin:')
                 Pin.print_summary(pin_data)
                 target_pin_data = pin.create(pin_data, target_board_id, target_section_id)
