@@ -1,4 +1,4 @@
-export default class ApiConfig {
+export class ApiConfig {
   constructor() {
     // Construct the redirect_uri for the OAuth process. The REDIRECT_URI must
     // be literally the same as configured at https://developers.pinterest.com/manage/.
@@ -8,10 +8,12 @@ export default class ApiConfig {
     const DEFAULT_PORT = 8085;
     const DEFAULT_REDIRECT_URI = 'https://localhost:' + DEFAULT_PORT + '/';
     const DEFAULT_API_URI = 'https://api.pinterest.com';
+    const DEFAULT_API_VERSION = 'v3'
     const DEFAULT_OAUTH_URI = 'https://www.pinterest.com';
     const DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/';
     const DEFAULT_KEY_FILE = 'localhost-key.pem';
     const DEFAULT_CERT_FILE = 'localhost.pem';
+    const DEFAULT_OAUTH_TOKEN_DIR = '.'
 
     // Get Pinterest application ID and secret from the OS environment.
     // It is best practice not to store credentials in code.
@@ -28,9 +30,11 @@ export default class ApiConfig {
 
     this.https_key_file = process.env.HTTPS_KEY_FILE || DEFAULT_KEY_FILE
     this.https_cert_file = process.env.HTTPS_CERT_FILE || DEFAULT_CERT_FILE
+    this.oauth_token_dir = process.env.PINTEREST_OAUTH_TOKEN_DIR || DEFAULT_OAUTH_TOKEN_DIR
 
     // swizzle oauth and api hosts, based on environment
     this.oauth_uri = process.env.PINTEREST_OAUTH_URI || DEFAULT_OAUTH_URI
     this.api_uri = process.env.PINTEREST_API_URI || DEFAULT_API_URI
+    this.version = process.env.PINTEREST_API_VERSION || DEFAULT_API_VERSION
   }
 }
