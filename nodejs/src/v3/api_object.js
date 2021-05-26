@@ -1,6 +1,6 @@
 import got from 'got'
 
-export default class ApiObject {
+export class ApiObject {
   constructor(api_config, access_token) {
     this.api_uri = api_config.api_uri;
     this.access_token = access_token;

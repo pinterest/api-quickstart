@@ -1,12 +1,14 @@
 #!/usr/bin/env node
-import AccessToken from '../src/access_token.js'
-import ApiConfig from '../src/api_config.js'
-import Scope from '../src/oauth_scope.js'
-import User from '../src/user.js'
+import {AccessToken} from '../src/access_token.js'
+import {ApiConfig} from '../src/api_config.js'
+import {Scope} from '../src/oauth_scope.js'
 
 async function main () {
   // get configuration from defaults and/or the environment
   const api_config = new ApiConfig();
+
+  // imports that depend on the version of the API
+  const {User} = await import(`../src/${api_config.version}/user.js`);
 
   // Note that the OAuth will fail if your application does not
   // have access to the scope that is required to access

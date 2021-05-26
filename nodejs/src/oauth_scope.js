@@ -1,6 +1,6 @@
 import Enum from 'enum'
 
-const Scope = new Enum({
+export const Scope = new Enum({
   // granular scopes
   READ_DOMAINS: 'read_domains',
   READ_BOARDS: 'read_boards',
@@ -31,5 +31,3 @@ const Scope = new Enum({
   WRITE_ADS: 'write_ads',
   MANAGE_MERCHANTS: 'manage_merchants',
 });
-
-export default Scope;

@@ -1,6 +1,6 @@
-import ApiObject from './api_object.js'
+import {ApiObject} from './api_object.js'
 
-export default class User extends ApiObject {
+export class User extends ApiObject {
   constructor(user, api_config, access_token) {
     super(api_config, access_token);
     this.user = user;
