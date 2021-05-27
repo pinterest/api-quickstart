@@ -46,7 +46,7 @@ export class AccessToken {
       this.read();
       return;
     } catch (err) {
-      console.log(`reading ${this.name} failed, trying oauth`, err);
+      console.log(`reading ${this.name} failed, trying oauth`);
       if (this.api_config.verbosity >= 3) {
         console.log('  because...', err);
       }

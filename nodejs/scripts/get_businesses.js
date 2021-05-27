@@ -13,11 +13,8 @@ async function main () {
   // Note that the OAuth will fail if your application does not
   // have access to the scope that is required to access
   // linked business accounts.
-  const access_token = new AccessToken(api_config, {
-    scopes: [Scope.READ_USERS, Scope.READ_ADVERTISERS],
-    refreshable: true
-  });
-  await access_token.oauth();
+  const access_token = new AccessToken(api_config, {});
+  await access_token.fetch({scopes: [Scope.READ_USERS, Scope.READ_ADVERTISERS]});
 
   // use the access token to get information about the user
   const user_me = new User('me', api_config, access_token);
