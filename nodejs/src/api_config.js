@@ -36,5 +36,8 @@ export class ApiConfig {
     this.oauth_uri = process.env.PINTEREST_OAUTH_URI || DEFAULT_OAUTH_URI
     this.api_uri = process.env.PINTEREST_API_URI || DEFAULT_API_URI
     this.version = process.env.PINTEREST_API_VERSION || DEFAULT_API_VERSION
+
+    // default level of verbosity, probably should switch to logging
+    this.verbosity = 1
   }
 }
