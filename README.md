@@ -4,7 +4,7 @@ Code that makes it easy to get started with the Pinterest API.
 
 ## Purpose
 
-This repository has code that is intended to provide a quick start for working with the [Pinterest API](https://developers.pinterest.com/docs/redoc/). The current version is really just a first draft. It has some shell (bash) scripts and python code that demonstrate "hello, world" functionality. Over time, we hope to demonstrate a lot more of the API functionality and support a few more languages.
+This repository has code that is intended to provide a quick start for working with the [Pinterest API](https://developers.pinterest.com/docs/redoc/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code that is catching up to the python code, and a bash script that demonstrates the OAuth authentication and authorization flow. Over time, we plan to add more demonstrations of API functionality and additional languages -- likely ruby and Java.
 
 ## Quick Start
 
