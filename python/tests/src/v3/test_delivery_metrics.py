@@ -55,7 +55,7 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
 
     @mock.patch('src.v3.delivery_metrics.datetime.date', wraps=datetime.date)
     @mock.patch('src.v3.delivery_metrics.AsyncReport.__init__')
-    def test_dm_async_report_attributes(self, mock_async_report_init, mock_date):
+    def test_dm_async_report_attributes_1(self, mock_async_report_init, mock_date):
         mock_date.today.return_value=datetime.datetime(2021, 3, 31) # for call to last_30_days below
 
         # These attributes might not actually make any sense, but they are
@@ -94,7 +94,7 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
                          '&view_window_days=30')
 
     @mock.patch('src.v3.delivery_metrics.AsyncReport.__init__')
-    def test_dm_async_report_attributes(self, mock_async_report_init):
+    def test_dm_async_report_attributes_2(self, mock_async_report_init):
         dm_async_report = DeliveryMetricsAsyncReport(
             'test_api_config', 'test_access_token', 'test_advertiser_id') \
             .date_range('2021-03-01', '2021-03-31') \

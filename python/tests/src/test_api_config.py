@@ -15,7 +15,7 @@ class ApiConfigTest(unittest.TestCase):
         self.assertEqual(api_config.app_secret, 'test-app-secret')
         self.assertEqual(api_config.port, 8085)
         self.assertEqual(api_config.redirect_uri, 'https://localhost:8085/')
-        self.assertEqual(api_config.landing_uri, 'https://developers.pinterest.com/manage/test_app_id')
+        self.assertEqual(api_config.landing_uri, 'https://developers.pinterest.com/manage/test-app-id')
         self.assertEqual(api_config.https_key_file, 'localhost-key.pem')
         self.assertEqual(api_config.https_cert_file, 'localhost.pem')
         self.assertEqual(api_config.oauth_uri, 'https://www.pinterest.com')
@@ -31,7 +31,7 @@ class ApiConfigTest(unittest.TestCase):
                                 }
 
     @mock.patch.dict('os.environ', mock_os_environ_complete, clear=True)
-    def test_api_config_default(self):
+    def test_api_config_complete(self):
         api_config = ApiConfig()
         self.assertEqual(api_config.app_id, 'test-app-id')
         self.assertEqual(api_config.app_secret, 'test-app-secret')
