@@ -56,7 +56,7 @@ export class AccessToken {
   }
 
   // constructor may not be async, so OAuth must be performed as a separate method.
-  async oauth({scopes=null, refreshable=null}) {
+  async oauth({scopes=null, refreshable=true}) {
     console.log('getting auth_code...');
     const auth_code = await get_auth_code(this.api_config,
                                           {scopes:scopes, refreshable:refreshable});
