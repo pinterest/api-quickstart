@@ -11,7 +11,7 @@ export class ApiObject {
       const response = await got.get(this.api_uri + path, {
         headers: this.access_token.header(),
         responseType: 'json'
-      })
+      });
       console.log(`<Response [${response.statusCode}]>`);
       return response.body.data; // success
     } catch (error) {

@@ -42,3 +42,9 @@ In every new shell, you'll need to configure the environment.
 $ cd nodejs # from the top of this repository
 $ . ../common/scripts/api_env
 ```
+
+## Tests
+
+Unit tests use the [Jest framework](https://jestjs.io/) and are in the `*.test.js` files that correspond to each source file. In addition, the [Babel JavaScript compiler](https://babeljs.io/) is required for Jest to run with the module structure used in this repo. The node dependencies for Jest should have been installed as part of the quickstart instructure, Unless you specified the `--production` flag with ```npm install```. To install the `jest` binary, you'll need to run `npm install jest --global` once on your development machine. (These instructions were written when the latest version of `jest` was 27.0.3). Then, run the tests with the `jest` command. No arguments are required, but you can specify the relative pathname of a test file as an argument. For example: `jest ./src/v3/user.test.js`
+
+For compatibility with other languages in this repo, the `Makefile` is set up to run Jest with `make tests`.
