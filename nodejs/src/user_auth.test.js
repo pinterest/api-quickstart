@@ -25,6 +25,7 @@ describe('user_auth tests', () => {
                              '&refreshable=true' +
                              '&scope=read_users,read_pins');
 
+    // Mock file system reads of the https key and certification.
     fs.readFileSync.mockImplementation(filename => {
       if (filename == 'test-https-key-file') {
         return 'test-https-key';
@@ -35,29 +36,34 @@ describe('user_auth tests', () => {
       }
     });
 
+    // Used to verify that the user_auth code cleans the socket properly.
     const mock_socket = jest.fn();
     mock_socket.destroy = jest.fn();
     mock_socket.end = jest.fn();
     mock_socket.end.mockImplementation(callback => callback());
 
+    // The mock_http_server is returned by the mock https.createServer.
     const mock_http_server = jest.fn();
     mock_http_server.close = jest.fn();
-    mock_http_server.on = jest.fn();
-    mock_http_server.on.mockImplementation((command, cb) => cb(mock_socket));
+    mock_http_server.on = jest.fn().mockImplementation((command, cb) => cb(mock_socket));
     mock_http_server.listen = jest.fn();
 
+    // The mock request and response will be passed to the callback when
+    // the user_auth code calls the mock open() function.
     const mock_request = jest.fn();
     mock_request.url = mock_api_config.redirect_uri + '/?code=test-auth-code';
     const mock_response = jest.fn();
     mock_response.writeHead = jest.fn();
-    mock_response.end = jest.fn();
-    mock_response.end.mockImplementation(callback => callback());
+    mock_response.end = jest.fn().mockImplementation(callback => callback());
 
     https.createServer.mockImplementation((options, callback) => {
+      // Save the callback so that it can be called by open().
       mock_http_server.callback = callback;
       return mock_http_server;
     });
 
+    // The call to open() simulates the browser transaction by calling the request
+    // processing function (callback) that was passed as an argument to createServer().
     open.mockImplementation(access_uri => {
       mock_http_server.callback(mock_request, mock_response)
     });
@@ -71,6 +77,7 @@ describe('user_auth tests', () => {
     expect(mock_socket.destroy.mock.calls.length).toBe(1);
     expect(mock_http_server.on.mock.calls[0][0]).toEqual('connection');
     expect(mock_http_server.close.mock.calls.length).toBe(1);
+    expect(mock_http_server.listen.mock.calls.length).toBe(1);
     expect(mock_response.writeHead.mock.calls[0][0]).toEqual(301);
     expect(mock_response.writeHead.mock.calls[0][1]).toEqual({'Location': 'test-landing-uri'});
   });
