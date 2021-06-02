@@ -10,8 +10,16 @@ from access_token import AccessToken
 from oauth_scope import Scope
 
 def main(argv=[]):
+    """
+    This script prints the information associated with a board. The board identifier
+    may be obtained with the get_user_boards script. If the board has any sections,
+    the script will print information about them.
+
+    Specify the --pins argument to print information about each pin on the board
+    and its sections.
+    """
     parser = argparse.ArgumentParser(description='Get a Board')
-    parser.add_argument('-b', '--board_id', required=True, help='board identifier')
+    parser.add_argument('-b', '--board-id', required=True, help='board identifier')
     parser.add_argument('--pins', action='store_true', help='Get the Pins for the Board')
     args = parser.parse_args(argv)
 
@@ -26,7 +34,10 @@ def main(argv=[]):
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config)
-    access_token.fetch(scopes=[Scope.READ_PINS])
+    scopes = [Scope.READ_USERS,Scope.READ_BOARDS]
+    if args.pins:
+        scopes.append(Scope.READ_PINS);
+    access_token.fetch(scopes=scopes)
 
     board = Board(args.board_id, api_config, access_token)
     board_data = board.get()

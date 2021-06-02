@@ -9,6 +9,13 @@ from api_config import ApiConfig
 from access_token import AccessToken
 
 def main():
+    """
+    This script extends the example in get_access_token.py by demonstrating
+    how to use the OAuth refresh token to obtain a new access token.
+    It executes the refresh twice, verifying each time that the access token
+    has actually changed and that the new access token can be used to access
+    the associated user's profile.
+    """
    # get configuration from defaults and/or the environment
     api_config = ApiConfig()
 
