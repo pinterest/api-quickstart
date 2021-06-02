@@ -45,7 +45,7 @@ def main(argv=[]):
          ./copy_board.py --dry-run --all -s source_account_token.json -t target_account_token.json
          ./copy_board.py --all -s source_account_token.json -t target_account_token.json
     """
-    parser = argparse.ArgumentParser(description='Copy a Board')
+    parser = argparse.ArgumentParser(description='Copy one Board or all Boards')
     parser.add_argument('-b', '--board-id', help='source board identifier')
     parser.add_argument('-n', '--name', help='target board name')
     parser.add_argument('-s', '--source-access-token', help='source access token name')

@@ -10,6 +10,11 @@ from access_token import AccessToken
 from oauth_scope import Scope
 
 def main(argv=[]):
+    """
+    This script prints summary information for each of the pins in a
+    User's profile. It demonstrates how to get paginated information from
+    the Pinterest API.
+    """
     def positive_integer(number):
         ivalue = int(number)
         if ivalue <= 0:
@@ -32,11 +37,13 @@ def main(argv=[]):
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config)
-    access_token.fetch()
+    access_token.fetch(scopes=[Scope.READ_USERS,Scope.READ_PINS])
 
     # use the access token to get information about the user
     user_me = User('me', api_config, access_token)
     user_me_data = user_me.get()
+
+    # get information about all of the pins in the user's profile
     pin_iterator = user_me.get_pins(user_me_data,
                                     query_parameters={'page_size': args.page_size})
     user_me.print_multiple(args.page_size, 'pin', Pin, pin_iterator)

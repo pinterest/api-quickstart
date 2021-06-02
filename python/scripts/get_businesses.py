@@ -9,6 +9,15 @@ from access_token import AccessToken
 from oauth_scope import Scope
 
 def main():
+    """
+    This script gets the business accounts associated with a User.
+
+    Strictly speaking, the READ_ADVERTISERS scope is neither
+    necessary nor sufficient for this script to execute.
+    However, obtaining the READ_ADVERTISERS scope is a good way to
+    verify that the application is authorized to request the
+    /v3/users/me/businesses endpoint.
+    """
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
     api_config.verbosity = 2

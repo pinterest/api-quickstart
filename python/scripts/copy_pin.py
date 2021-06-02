@@ -18,9 +18,18 @@ from access_token import AccessToken
 from oauth_scope import Scope
 
 def main(argv=[]):
+    """
+    This script copies a pin to a board, both of which are specified by identifiers
+    that can be found using the get_user_pins.py and get_user_boards.py script.
+
+    If a section identifier is specified in addition to a board identifier,
+    this script will copy the pin to the board section. Section identifiers can be
+    found using the get_board.py script. A section identifier may not be specified
+    without a board identifier.
+    """
     parser = argparse.ArgumentParser(description='Copy a Pin')
-    parser.add_argument('-p', '--pin_id', required=True, help='source pin identifier')
-    parser.add_argument('-b', '--board_id', required=True, help='destination board identifier')
+    parser.add_argument('-p', '--pin-id', required=True, help='source pin identifier')
+    parser.add_argument('-b', '--board-id', required=True, help='destination board identifier')
     parser.add_argument('-s', '--section', help='destination board section')
     args = parser.parse_args(argv)
 
@@ -34,7 +43,7 @@ def main(argv=[]):
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config)
-    access_token.fetch(scopes=[Scope.READ_PINS]) # TODO: need write scope?
+    access_token.fetch(scopes=[Scope.READ_PINS,Scope.WRITE_BOARDS,Scope.WRITE_PINS])
 
     pin = Pin(args.pin_id, api_config, access_token)
     pin_data = pin.get()

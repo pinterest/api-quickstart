@@ -12,6 +12,28 @@ from utils import input_number
 from utils import input_path_for_write
 
 def main():
+    """
+    This script shows how to use the Pinterest API asynchronous report functionality
+    to download advertiser delivery metrics reports. It is adapted from sample code
+    from a Pinterest Solutions Engineer that has been useful to advertiser and
+    partner engineers who need to fetch a wide range of metrics.
+    The documentation for this API is here:
+      https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
+
+    Using this script requires a login or an access token for a Pinterest
+    user account that has linked Advertiser IDs. (The relationship between User
+    and Advertiser is 1-to-many.) To get a report with useful metrics values,
+    at least one linked Advertiser needs to have an active advertising campaign.
+
+    The sequence of steps in this script is as follows:
+    1. Fetch an access token and print summary data about the associated User.
+    2. Get the linked Advertiser IDs and select one of the Advertiser IDs.
+    3. Print information about metrics. This step is not typical of a
+       production application, but does show how to access information
+       on delivery metrics from the Pinterest API.
+    4. Configure the options for the asynchronous report, and run the report.
+    5. Download the report to a file.
+    """
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
 
@@ -25,6 +47,7 @@ def main():
     from delivery_metrics import DeliveryMetricsAsyncReport
     from user import User
 
+    # Step 1: Fetch an access token and print summary data about the User.
     # Note that the OAuth will fail if your application does not
     # have access to the scope that is required to access
     # linked business accounts.
@@ -40,7 +63,7 @@ def main():
     user_id = user_me_data['id']
     print(f'User id: {user_id}')
 
-    # Sample: Get Advertiser IDs available to my access token
+    # Step 2: Get Advertiser IDs available to my access token and select one of them.
     # One of the first challenges many developers run into is that the relationship between User and Advertiser is 1-to-many
     # In house developers typically don't have login credentials for the main Pinterest account of their brand to OAuth against.
     # We often reccomend that they set up a new "developer" Pinterest user, and then request that this new account is granted
@@ -63,7 +86,7 @@ def main():
     # Case: pulling a report about how my ads are doing. I want to pull a simple report showing paid impressions
     # and clicks my ads got in the last 30 days.
 
-    # Step 1: Learn more about the metrics available
+    # Step 3: Learn more about the metrics available
     # https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_delivery_metrics_handler_GET
 
     # the output of delivery_metrics.get() is too long to be printed
@@ -86,7 +109,7 @@ def main():
     # To print the long list of all metrics, uncomment the next line.
     # delivery_metrics.print_all(metrics)
 
-    # Step 2: Configure the options for the report
+    # Step 4: Configure the options for the report
     # For documentation on async reports, see:
     #   https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
     print(f'Requesting report for advertiser id {advertiser_id}...')
@@ -105,7 +128,7 @@ def main():
     # The code for this process is in ../src/async_report.py.
     report.run()
 
-    # Step 3: Download the report to a file.
+    # Step 5: Download the report to a file.
     # First, input the path from the command line.
     path = input_path_for_write('Please enter a file name for the report:',
                                 report.filename())

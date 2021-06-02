@@ -10,8 +10,12 @@ from access_token import AccessToken
 from oauth_scope import Scope
 
 def main(argv=[]):
+    """
+    This script prints the information associate with a pin. The pin identifier
+    my be obtained with the get_user_pins.py or get_board.py script.
+    """
     parser = argparse.ArgumentParser(description='Get a Pin')
-    parser.add_argument('-p', '--pin_id', required=True, help='pin identifier')
+    parser.add_argument('-p', '--pin-id', required=True, help='pin identifier')
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
