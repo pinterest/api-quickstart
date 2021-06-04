@@ -61,6 +61,12 @@ PUT_DATA="{\"code\": \"${AUTH_CODE}\", \"redirect_uri\": \"${REDIRECT_URI}\", \"
 # 2. Note that it is necessary to specify JSON as the content type.
 OAUTH_RESPONSE=$(curl --silent -X PUT --header "Authorization:Basic ${B64AUTH}" --header 'Content-Type: application/json' --data "${PUT_DATA}" "${PINTEREST_API_URI}/v3/oauth/access_token/")
 
+# An alternative for the above command is to use the basic authentication
+# that is built into curl. Replace these arguments:
+#   --header "Authorization:Basic ${B64AUTH}"
+# with these arguments:
+#   --basic --user "${PINTEREST_APP_ID}:${PINTEREST_APP_SECRET}"
+
 STATUS=$(echo "$OAUTH_RESPONSE" | jq -r '.["status"]')
 echo status: $STATUS
 
@@ -75,6 +81,12 @@ echo scope: $SCOPE
 # Demonstrate how to use the access token to get information about the associated user.
 echo 'getting user data using the access token'
 USER_RESPONSE=$(curl --silent -X GET --header "Authorization:Bearer ${ACCESS_TOKEN}" "${PINTEREST_API_URI}/v3/users/me/")
+
+# An alternative for the above command is to use the OAuth2 bearer authentication
+# that is built into curl. Replace these arguments:
+#   --header "Authorization:Bearer ${ACCESS_TOKEN}"
+# with these arguments:
+#   --oauth2-bearer "${ACCESS_TOKEN}"
 
 # Parse the JSON response and print the data associated with the user.
 USER_ID=$(echo ${USER_RESPONSE} | jq -r '.["data"]["id"]')
