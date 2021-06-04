@@ -20,7 +20,7 @@ def main(argv=[]):
 
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
-    api_config.verbosity = 3
+    api_config.verbosity = 2
 
     # imports that depend on the version of the API
     from pin import Pin

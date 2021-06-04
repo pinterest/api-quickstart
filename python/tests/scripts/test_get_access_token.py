@@ -3,7 +3,7 @@ import mock
 from integration_mocks import IntegrationMocks
 
 class GetAccessTokenTest(IntegrationMocks):
-    def mock_requests_put(self, uri, headers=None, data=None):
+    def mock_requests_put(self, uri, headers=None, data=None, allow_redirects=True):
         print('mock_requests_put', uri, headers, data)
         self.put_uri = uri
         self.requests_put_calls += 1
@@ -16,7 +16,7 @@ class GetAccessTokenTest(IntegrationMocks):
                                       }
         return response
 
-    def mock_requests_get(self, uri, headers=None, data=None):
+    def mock_requests_get(self, uri, headers=None, data=None, allow_redirects=True):
         print('mock_requests_get', uri, headers, data)
         self.get_uri = uri
         self.requests_get_calls += 1

@@ -4,7 +4,7 @@ from integration_mocks import IntegrationMocks
 
 class RefreshExampleTest(IntegrationMocks):
     def mock_requests_put(self, uri, headers=None, data=None):
-        print('mock_requests_put', uri, headers, data)
+        print('mock_requests_put', uri, headers, data, allow_redirects=True)
         self.requests_put_calls += 1
         response = mock.MagicMock()
         response.__str__.return_value = '<Response [200]>'
@@ -16,7 +16,7 @@ class RefreshExampleTest(IntegrationMocks):
                                       }
         return response
 
-    def mock_requests_get(self, uri, headers=None, data=None):
+    def mock_requests_get(self, uri, headers=None, data=None, allow_redirects=True):
         print('mock_requests_get', uri, headers, data)
         response = mock.MagicMock()
         response.__str__.return_value = '<Response [200]>'

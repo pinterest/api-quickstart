@@ -11,7 +11,7 @@ class BoardTest(unittest.TestCase):
 
         mock_api_object_request_data.return_value = 'test_response'
         response = test_board.get()
-        mock_api_object_request_data.assert_called_once_with('/v3/boards/test_board_id')
+        mock_api_object_request_data.assert_called_once_with('/v3/boards/test_board_id/')
         self.assertEqual(response, 'test_response')
 
     @mock.patch('src.v3.board.ApiObject.put_data')

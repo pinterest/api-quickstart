@@ -11,7 +11,7 @@ class PinTest(unittest.TestCase):
 
         mock_api_object_request_data.return_value = 'test_response'
         response = test_pin.get()
-        mock_api_object_request_data.assert_called_once_with('/v3/pins/test_pin_id')
+        mock_api_object_request_data.assert_called_once_with('/v3/pins/test_pin_id/')
         self.assertEqual(response, 'test_response')
 
     @mock.patch('src.v3.pin.ApiObject.put_data')

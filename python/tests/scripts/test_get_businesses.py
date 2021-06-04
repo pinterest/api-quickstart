@@ -3,8 +3,8 @@ import mock
 from integration_mocks import IntegrationMocks
 
 class GetBusinessesTest(IntegrationMocks):
-    def mock_requests_put(self, uri, headers=None, data=None):
-        print('mock_requests_put', uri, headers, data)
+    def mock_requests_put(self, uri, headers=None, data=None, allow_redirects=True):
+        print('mock_requests_put', uri, headers, data, allow_redirects)
         self.requests_put_calls += 1
         response = mock.MagicMock()
         response.__str__.return_value = '<Response [200]>'
@@ -16,8 +16,8 @@ class GetBusinessesTest(IntegrationMocks):
                                       }
         return response
 
-    def mock_requests_get(self, uri, headers=None, data=None):
-        print('mock_requests_get', uri, headers, data)
+    def mock_requests_get(self, uri, headers=None, data=None, allow_redirects=True):
+        print('mock_requests_get', uri, headers, data, allow_redirects)
         response = mock.MagicMock()
         response.__str__.return_value = '<Response [200]>'
         if (uri == 'https://api.pinterest.com/v3/users/me/'):

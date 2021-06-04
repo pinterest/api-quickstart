@@ -8,7 +8,7 @@ class Board(ApiObject):
     def get(self):
         if not self.board_id:
             raise ValueError('board_id must be set to get a board')
-        return self.request_data(f'/v3/boards/{self.board_id}')
+        return self.request_data(f'/v3/boards/{self.board_id}/')
 
     @classmethod
     def print_summary(klass, board_data):

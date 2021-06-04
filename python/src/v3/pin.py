@@ -8,7 +8,7 @@ class Pin(ApiObject):
     def get(self):
         if not self.pin_id:
             raise ValueError('pin_id must be set to get a pin')
-        return self.request_data('/v3/pins/{}'.format(self.pin_id))
+        return self.request_data('/v3/pins/{}/'.format(self.pin_id))
 
     @classmethod
     def print_summary(klass, pin_data):
