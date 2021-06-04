@@ -28,7 +28,7 @@ class ApiObjectTest(unittest.TestCase):
         api_object = ApiObject(api_config, access_token)
         response = api_object.request_data('/test_path')
         self.assertEqual(response, 'test_response_data')
-        mock_requests_get.assert_called_once_with('test_uri/test_path', headers='test_headers')
+        mock_requests_get.assert_called_once_with('test_uri/test_path', headers='test_headers', allow_redirects=False)
 
         mock_response.ok = False
         mock_response.status_code = 429

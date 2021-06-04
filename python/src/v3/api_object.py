@@ -76,7 +76,7 @@ class ApiObject:
     def get_response(self, path):
         if self.api_config.verbosity >= 2:
             print(f'GET {self.api_uri + path}')
-        return requests.get(self.api_uri + path, headers=self.access_token.header())
+        return requests.get(self.api_uri + path, headers=self.access_token.header(), allow_redirects=False)
 
     def request_data(self, path):
         return self.unpack(self.get_response(path)).get('data')
@@ -86,13 +86,13 @@ class ApiObject:
             print(f'PUT {self.api_uri + path}')
         if self.api_config.verbosity >= 3:
             print(put_data)
-        response = requests.put(self.api_uri + path, data = put_data, headers=self.access_token.header())
+        response = requests.put(self.api_uri + path, data = put_data, headers=self.access_token.header(), allow_redirects=False)
         return self.unpack(response).get('data')
 
     def post_data(self, path):
         if self.api_config.verbosity >= 2:
             print(f'POST {self.api_uri + path}')
-        response = requests.post(self.api_uri + path, headers=self.access_token.header())
+        response = requests.post(self.api_uri + path, headers=self.access_token.header(), allow_redirects=False)
         return self.unpack(response).get('data')
 
     def get_iterator(self, path):

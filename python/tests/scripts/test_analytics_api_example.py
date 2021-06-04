@@ -11,7 +11,7 @@ class AnalyticsApiExampleTest(IntegrationMocks):
     report_url_filename = 'here_is_the_filename.txt' # filename in the report url
     download_filename = 'test_report_file.txt' # filename "entered" for download
 
-    def mock_requests_post(self, uri, headers=None, data=None):
+    def mock_requests_post(self, uri, headers=None, data=None, allow_redirects=True):
         # request from AsyncReport.request_report
         print('mock_requests_post', uri, headers, data)
         self.requests_post_calls += 1
@@ -20,7 +20,7 @@ class AnalyticsApiExampleTest(IntegrationMocks):
         response.json.return_value = {'data': {'token': 'test-report-token'}}
         return response
 
-    def mock_requests_get(self, uri, headers=None, data=None, stream=False):
+    def mock_requests_get(self, uri, headers=None, data=None, stream=False, allow_redirects=True):
         print('mock_requests_get', uri, headers, data)
         self.requests_get_calls += 1
         report_url = f'test-report-url/x-y-z/{self.report_url_filename}?long-identifier-string'
