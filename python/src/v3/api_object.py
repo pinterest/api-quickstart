@@ -1,7 +1,6 @@
 import requests
 
-from api_config import RateLimitException
-from api_config import SpamException
+from api_common import ApiCommon
 from utils import input_one_of
 
 class PagedIterator:
@@ -48,30 +47,11 @@ class PagedIterator:
         self.index += 1 # increment the index for the next time
         return retval
 
-class ApiObject:
+class ApiObject(ApiCommon):
     def __init__(self, api_config, access_token):
         self.api_uri = api_config.api_uri
         self.api_config = api_config
         self.access_token = access_token
-
-    def unpack(self, response):
-        if self.api_config.verbosity >= 1:
-            print(response)
-        unpacked = response.json()
-        if not response.ok:
-            print('request failed with reason: ' + response.reason)
-            if self.api_config.verbosity >= 2:
-                print(unpacked)
-            if response.status_code == 429:
-                detail = unpacked.get('message_detail')
-                if detail and 'spam' in detail.lower(): # reason for 429 response is spam
-                    raise SpamException
-                raise RateLimitException
-            # as use cases arise, add other kinds of exceptions
-            return {}
-        if self.api_config.verbosity >= 3:
-            print(unpacked)
-        return unpacked
 
     def get_response(self, path):
         if self.api_config.verbosity >= 2:

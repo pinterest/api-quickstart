@@ -13,8 +13,8 @@ import sys
 
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
+from api_common import SpamException
 from api_config import ApiConfig
-from api_config import SpamException
 from access_token import AccessToken
 from oauth_scope import Scope
 

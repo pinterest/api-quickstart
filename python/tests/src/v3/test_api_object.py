@@ -6,8 +6,8 @@ import sys
 # required for imports in api_object to work
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
-from api_config import SpamException
-from api_config import RateLimitException
+from api_common import SpamException
+from api_common import RateLimitException
 from v3.api_object import ApiObject
 
 class ApiObjectTest(unittest.TestCase):
@@ -42,3 +42,12 @@ class ApiObjectTest(unittest.TestCase):
 
         with self.assertRaises(RateLimitException):
             api_object.request_data('/test_path/oops-rate-limit')
+
+        # simulate JSON error thrown by a response with no data
+        mock_error_message = 'mock error reason'
+        mock_response.json.side_effect = RuntimeError(mock_error_message)
+
+        with self.assertRaisesRegex(RuntimeError,
+                                    'response does not have valid json content: ' +
+                                    mock_error_message):
+            api_object.request_data('/test_path/oops-bad-json')
