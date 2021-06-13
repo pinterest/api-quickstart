@@ -37,5 +37,4 @@ class User(ApiObject):
             for query_parameter, value in query_parameters.items():
                 path += delimiter + query_parameter + '=' + str(value)
                 delimiter = '&'
-        # TODO: generic iterator using bookmark in ApiObject
         return self.get_iterator(path) # the returned iterator handles API paging

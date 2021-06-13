@@ -35,4 +35,16 @@ export class User extends ApiObject {
     }
     return this.get_iterator(path); // iterator that handles API paging
   }
+
+  async get_pins(user_data, {query_parameters=null}) {
+    var path = `/v3/users/${user_data.id}/pins/`;
+    if (query_parameters) {
+      var delimiter = '?';
+      for (const [query_parameter, value] of Object.entries(query_parameters)) {
+        path += delimiter + query_parameter + '=' + value;
+        delimiter = '&'
+      }
+    }
+    return this.get_iterator(path); // iterator that handles API paging
+  }
 }

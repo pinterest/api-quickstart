@@ -25,12 +25,12 @@ export class ApiObject {
       }
       return response.body; // success
     } catch (error) {
-      error_message = 'request failed with reason: ' + error.response.body.message;
+      const error_message = 'request failed with reason: ' + error.response.body.message;
       if (this.api_config.verbosity >= 1) {
         console.log(`<Response [${error.response.statusCode}]>`);
         console.log(error_message);
         if (this.api_config.verbosity >= 2) {
-          console.log(response.body);
+          console.log(error.response.body);
         }
       }
       throw error_message;
