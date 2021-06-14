@@ -7,7 +7,6 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
 from access_token import AccessToken
-from oauth_scope import Scope
 
 def main(argv=[]):
     """
@@ -15,7 +14,7 @@ def main(argv=[]):
     the get_access_token.py script with the --write argument. The new access
     token may be printed with the --cleartext option.
     """
-    parser = argparse.ArgumentParser(description='Get Pinterest OAuth token')
+    parser = argparse.ArgumentParser(description='Refresh Pinterest OAuth token')
     parser.add_argument('-ct', '--cleartext', action='store_true', help='print the token in clear text')
     args = parser.parse_args(argv)
 

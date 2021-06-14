@@ -28,9 +28,9 @@ import {Scope} from '../src/oauth_scope.js'
  *    OAuth scopes, allows experimentation with different sets of scopes.
  */
 async function main (argv) {
-  const parser = new ArgumentParser({description: 'Get Pinterest OAuth token'})
-  parser.add_argument('-w', '--write', {action:'store_true', help:'write access token to file'})
-  parser.add_argument('-ct', '--cleartext', {action:'store_true', help:'print the token in clear text'})
+  const parser = new ArgumentParser({description: 'Get Pinterest OAuth token'});
+  parser.add_argument('-w', '--write', {action:'store_true', help:'write access token to file'});
+  parser.add_argument('-ct', '--cleartext', {action:'store_true', help:'print the token in clear text'});
   parser.add_argument('-s', '--scopes', {help:'comma separated list of scopes'});
   const args = parser.parse_args(argv);
 
