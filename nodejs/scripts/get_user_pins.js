@@ -6,7 +6,7 @@ import {ApiConfig} from '../src/api_config.js'
 import {Scope} from '../src/oauth_scope.js'
 
 /**
- *  This script prints summary information for each of the boards in a
+ *  This script prints summary information for each of the pins in a
  *  User's profile. It demonstrates how to get paginated information from
  *  the Pinterest API.
  */

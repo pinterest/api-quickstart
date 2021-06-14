@@ -6,6 +6,13 @@ export class Pin extends ApiObject {
     this.pin_id= pin_id;
   }
 
+  async get() {
+    if (!this.pin_id) {
+      throw 'pin_id must be set to get a pin';
+    }
+    return this.request_data(`/v3/pins/${this.pin_id}/`);
+  }
+
   static print_summary(pin_data) {
     console.log('--- Pin Summary ---');
     console.log(`Pin ID: ${pin_data.id}`);
