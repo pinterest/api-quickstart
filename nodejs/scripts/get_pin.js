@@ -6,7 +6,7 @@ import {ApiConfig} from '../src/api_config.js'
 import {Scope} from '../src/oauth_scope.js'
 
 /**
- * This script prints the information associate with a pin. The pin identifier
+ * This script prints the information associated with a pin. The pin identifier
  * my be obtained with the get_user_pins.py or get_board.py script.
  */
 async function main (argv) {
