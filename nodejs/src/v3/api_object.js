@@ -8,32 +8,42 @@ export class ApiObject {
     this.access_token = access_token;
   }
 
+  print_response(response) {
+    if (this.api_config.verbosity >= 1) {
+      console.log(`<Response [${response.statusCode}]>`);
+      if (this.api_config.verbosity >= 3) {
+        console.log(response.body);
+      }
+    }
+  }
+
+  print_and_throw_error(error) {
+    const error_message = 'request failed with reason: ' + error.response.body.message;
+    if (this.api_config.verbosity >= 1) {
+      console.log(`<Response [${error.response.statusCode}]>`);
+      console.log(error_message);
+      if (this.api_config.verbosity >= 2) {
+        console.log(error.response.body);
+      }
+    }
+    throw error_message;
+  }
+
   async get_response(path) {
+    const full_uri = this.api_uri + path;
     if (this.api_config.verbosity >= 2) {
-      console.log('GET', path);
+      console.log('GET', full_uri);
     }
     try {
-      const response = await got.get(this.api_uri + path, {
+      const response = await got.get(full_uri, {
         headers: this.access_token.header(),
+        followRedirect: false,
         responseType: 'json'
       });
-      if (this.api_config.verbosity >= 1) {
-        console.log(`<Response [${response.statusCode}]>`);
-        if (this.api_config.verbosity >= 3) {
-          console.log(response.body);
-        }
-      }
+      this.print_response(response);
       return response.body; // success
     } catch (error) {
-      const error_message = 'request failed with reason: ' + error.response.body.message;
-      if (this.api_config.verbosity >= 1) {
-        console.log(`<Response [${error.response.statusCode}]>`);
-        console.log(error_message);
-        if (this.api_config.verbosity >= 2) {
-          console.log(error.response.body);
-        }
-      }
-      throw error_message;
+      this.print_and_throw_error(error);
     }
   }
 
@@ -41,6 +51,29 @@ export class ApiObject {
     const response = await this.get_response(path);
     return(response.data);
   }
+
+  async put_data(path, put_data) {
+    const full_uri = this.api_uri + path;
+    if (this.api_config.verbosity >= 2) {
+      console.log('PUT', full_uri);
+    }
+    if (this.api_config.verbosity >= 3) {
+      console.log(put_data);
+    }
+    try {
+      const response = await got.put(full_uri, {
+        headers: this.access_token.header(),
+        json: put_data,
+        followRedirect: false,
+        responseType: 'json'
+      });
+      this.print_response(response);
+      return response.body.data;
+    } catch (error) {
+      this.print_and_throw_error(error);
+    }
+  }
+
 
   /**
    *  This class implements paging on top of the bookmark functionality provided
