@@ -26,4 +26,35 @@ export class Pin extends ApiObject {
     }
     console.log('--------------------');
   }
+
+  async create(pin_data, board_id, {section=null}) {
+    // TODO: carousel_data_json
+    const OPTIONAL_ATTRIBUTES = [
+      'alt_text',
+      'description',
+      'title',
+    ];
+    const create_data = {
+      'board_id': board_id,
+      'image_url': pin_data['image_large_url']
+    };
+    if (section) {
+      create_data['section'] = section;
+    }
+    const link = pin_data.link;
+    if (link) {
+      create_data['source_url'] = link;
+    }
+
+    for (const key in OPTIONAL_ATTRIBUTES) {
+      const value = pin_data[key];
+      if (value) {
+        create_data[key] = value;
+      }
+    }
+
+    const new_pin_data = await this.put_data('/v3/pins/', create_data);
+    this.pin_id = new_pin_data.id;
+    return new_pin_data;
+  }
 }
