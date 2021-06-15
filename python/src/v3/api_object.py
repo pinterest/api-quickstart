@@ -75,6 +75,12 @@ class ApiObject(ApiCommon):
         response = requests.post(self.api_uri + path, headers=self.access_token.header(), allow_redirects=False)
         return self.unpack(response).get('data')
 
+    def delete_and_check(self, path):
+        if self.api_config.verbosity >= 2:
+            print(f'DELETE {self.api_uri + path}')
+        response = requests.delete(self.api_uri + path, headers=self.access_token.header(), allow_redirects=False)
+        self.check(response) # throws an exception if anything goes wrong
+
     def get_iterator(self, path):
         return PagedIterator(self, path)
 
