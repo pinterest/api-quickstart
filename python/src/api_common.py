@@ -8,6 +8,23 @@ class SpamException(Exception):
 class ApiCommon:
     """Common code for using the Pinterest API"""
 
+    def check(self, response):
+        """Check for errors and respond appropriately."""
+        # Save a human-readable status for output and error handling.
+        status = 'ok' if response.ok else 'request failed with reason: ' + response.reason
+
+        # Print a short summary of the response and and error message, if necessary.
+        if self.api_config.verbosity >= 1:
+            print(response)
+            if not response.ok:
+                print(status)
+
+        # Handle errors.
+        if not response.ok:
+            if response.status_code == 429:
+                raise RateLimitException
+            raise RuntimeError(status)
+
     def unpack(self, response):
         """Check for errors, retrieve the response, and respond appropriately."""
 

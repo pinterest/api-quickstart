@@ -47,6 +47,9 @@ class Board(ApiObject):
         self.board_id = board_data['id']
         return board_data
 
+    def delete(self):
+        return self.delete_and_check(f'/v3/boards/{self.board_id}/')
+
     def get_pins(self):
         return self.get_iterator(f'/v3/boards/{self.board_id}/pins/')
 
