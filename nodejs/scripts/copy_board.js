@@ -158,7 +158,7 @@ async function main (argv) {
   } else { // copy just the board designated by board_id
     source_board = new Board(args.board_id, api_config, source_token);
     const source_board_data = await source_board.get();
-    boards = [source_board_data]
+    boards = [source_board_data];
   }
 
   for await (let source_board_data of boards) {

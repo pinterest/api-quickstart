@@ -65,6 +65,10 @@ export class Board extends ApiObject {
     return new_board_data;
   }
 
+  async delete() {
+    return await this.delete_and_check(`/v3/boards/${this.board_id}/`);
+  }
+
   static print_section(section_data) {
     console.log('--- Board Section ---');
     console.log(`Section ID: ${section_data.id}`);
