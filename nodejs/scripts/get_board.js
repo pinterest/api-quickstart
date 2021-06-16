@@ -11,7 +11,7 @@ import {Scope} from '../src/oauth_scope.js'
  */
 async function main (argv) {
   const parser = new ArgumentParser({
-    description: "Get A Pin"
+    description: "Get A Board"
   });
   parser.add_argument('-b', '--board-id', {required: true, help: 'board identifier'});
   parser.add_argument('--pins', {action: 'store_true', help: 'Get the Pins for the Board'});

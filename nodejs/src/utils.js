@@ -27,6 +27,11 @@ export class Input {
     this.rl.close();
   }
 
+  // Simple pass-through interface for readline.
+  async get(prompt) {
+    return await this.question(prompt);
+  }
+
   // Request the user to input one of a list of values. The input is
   // case-insensitive, but the return value is always a verbatim member
   // of the list.

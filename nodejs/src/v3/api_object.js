@@ -63,6 +63,19 @@ export class ApiObject extends ApiCommon {
     }
   }
 
+  async delete_and_check(path) {
+    if (this.api_config.verbosity >= 2) {
+      console.log('DELETE', this.api_uri + path);
+    }
+    try {
+      const response = await got.delete(this.api_uri + path, {
+        headers: this.access_token.header(),
+        followRedirect: false
+      });
+    } catch (error) {
+      print_and_throw_error(error);
+    }
+  }
 
   /**
    *  The iterator returned by this function implements paging on top of the bookmark
