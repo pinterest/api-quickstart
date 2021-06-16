@@ -43,9 +43,9 @@ class Board(ApiObject):
             if value:
                 create_data[key] = value
 
-        board_data = self.put_data('/v3/boards/', create_data)
-        self.board_id = board_data['id']
-        return board_data
+        new_board_data = self.put_data('/v3/boards/', create_data)
+        self.board_id = new_board_data['id']
+        return new_board_data
 
     def delete(self):
         return self.delete_and_check(f'/v3/boards/{self.board_id}/')

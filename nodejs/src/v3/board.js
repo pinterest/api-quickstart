@@ -36,6 +36,35 @@ export class Board extends ApiObject {
     console.log('--------------------');
   }
 
+  async create(board_data) {
+    const OPTIONAL_ATTRIBUTES = [
+      'category',
+      'collaborator_invites_enabled',
+      'description',
+      'event_date',
+      'event_start_date',
+      'initial_pin_client_tracking_params',
+      'initial_pins',
+      'layout',
+      'privacy',
+      'protected',
+      'return_existing'
+    ];
+    const create_data = {
+      'name': board_data.name
+    };
+    for (const key in OPTIONAL_ATTRIBUTES) {
+      const value = board_data[key];
+      if (value) {
+        create_data[key] = value;
+      }
+    }
+
+    const new_board_data = await this.put_data('/v3/boards/', create_data);
+    this.board_id = new_board_data.id;
+    return new_board_data;
+  }
+
   static print_section(section_data) {
     console.log('--- Board Section ---');
     console.log(`Section ID: ${section_data.id}`);
@@ -48,5 +77,25 @@ export class Board extends ApiObject {
     for (const section of sections_iterator) {
       this.print_section(section);
     }
+  }
+
+  async create_section(section_data) {
+    const OPTIONAL_ATTRIBUTES = [
+      'client_id',
+      'initial_pins',
+      'preselected_pins',
+      'title_source'
+    ];
+    const create_data = {
+      'title': section_data.title
+    };
+    for (const key in OPTIONAL_ATTRIBUTES) {
+      const value = section_data[key];
+      if (value) {
+        create_data[key] = value;
+      }
+    }
+
+    return this.put_data(`/v3/board/${this.board_id}/sections/`, create_data);
   }
 }

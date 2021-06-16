@@ -25,8 +25,9 @@ describe('v3 api_object tests', () => {
     expect(response).toEqual('test_response_data');
     expect(got.get.mock.calls[0][0]).toEqual('test_uri/test_path');
     expect(got.get.mock.calls[0][1]).toEqual({'headers': 'test_headers',
+                                              'followRedirect': false,
                                               'responseType': 'json'});
-    expect(console.log.mock.calls[0]).toEqual(['GET', '/test_path']);
+    expect(console.log.mock.calls[0]).toEqual(['GET', 'test_uri/test_path']);
     expect(console.log.mock.calls[1][0]).toEqual('<Response [200]>');
   });
 });
