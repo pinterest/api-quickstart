@@ -7,7 +7,6 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
 from access_token import AccessToken
-from oauth_scope import Scope
 
 def main(argv=[]):
     """
@@ -39,6 +38,7 @@ def main(argv=[]):
 
     # imports that depend on the version of the API
     from board import Board
+    from oauth_scope import Scope
     from user import User
 
     # Note: It's possible to use the same API configuration with

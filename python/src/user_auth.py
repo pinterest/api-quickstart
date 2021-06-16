@@ -1,4 +1,3 @@
-import requests
 import ssl # for implementing the https scheme for the redirect URI
 import sys
 
