@@ -16,7 +16,6 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 from api_common import SpamException
 from api_config import ApiConfig
 from access_token import AccessToken
-from oauth_scope import Scope
 
 def main(argv=[]):
     """
@@ -88,6 +87,7 @@ def main(argv=[]):
 
     # imports that depend on the version of the API
     from board import Board
+    from oauth_scope import Scope
     from pin import Pin
     from user import User
 

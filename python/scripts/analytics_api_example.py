@@ -7,7 +7,6 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 from access_token import AccessToken
 from api_config import ApiConfig
 from generic_requests import download_file
-from oauth_scope import Scope
 from utils import input_number
 from utils import input_path_for_write
 
@@ -45,6 +44,7 @@ def main():
     from advertisers import Advertisers
     from delivery_metrics import DeliveryMetrics
     from delivery_metrics import DeliveryMetricsAsyncReport
+    from oauth_scope import Scope
     from user import User
 
     # Step 1: Fetch an access token and print summary data about the User.
