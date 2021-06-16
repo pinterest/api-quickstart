@@ -56,37 +56,31 @@ def main(argv=[]):
 
     # Check the combinations of arguments. The comment at the top of this function
     # describes the intended use cases.
+    args_error = None
     if args.target_access_token:
         if not args.source_access_token:
-            parser.print_usage()
-            print('source access token is required when using a target access token')
-            exit(1)
+            args_error = 'source access token is required when using a target access token'
     else:
         if args.all_boards:
-            parser.print_usage()
-            print('all boards option requires a target access token')
-            exit(1)
+            args_error = 'all boards option requires a target access token'
         if not args.name:
-            parser.print_usage()
-            print('target board name is required when not using a target access token')
-            exit(1)
+            args_error = 'target board name is required when not using a target access token'
 
     if args.all_boards and args.name:
-        parser.print_usage()
-        print('the name and all options are mutually exclusive')
-        exit(1)
+        args_error = 'the name and all options are mutually exclusive'
 
     if args.all_boards:
         if args.board_id:
-            parser.print_usage()
-            print('the board-id and all options are mutually exclusive')
-            exit(1)
+            args_error = 'the board-id and all options are mutually exclusive'
     else:
         if not args.board_id:
-            parser.print_usage()
-            print('board-id is a required argument when not copying all boards')
-            exit(1)
+            args_error = 'board-id is a required argument when not copying all boards'
 
+    # In case of an argument error, print an appropriate message, usage information, and exit.
+    if args_error:
+        print(args_error)
+        parser.print_usage()
+        exit(1)
 
     # get configuration from defaults and/or the environment
     api_config = ApiConfig()
@@ -120,14 +114,18 @@ def main(argv=[]):
         source_token = AccessToken(api_config, name=args.source_access_token)
     else:
         source_token = AccessToken(api_config)
-    source_token.fetch(scopes=[Scope.READ_PINS, Scope.READ_BOARDS]) # get the token
+    source_token_scopes = [Scope.READ_PINS, Scope.READ_BOARDS]
 
     # Default to use the source token (same account) if the target token is not specified.
+    target_token_scopes = [Scope.WRITE_PINS,Scope.WRITE_BOARDS]
     if args.target_access_token:
         target_token = AccessToken(api_config, name=args.target_access_token)
-        target_token.fetch(scopes=[Scope.WRITE_PINS,Scope.WRITE_BOARDS])
+        target_token.fetch(scopes=target_token_scopes)
     else:
-        target_token = source_token # already have the token
+        target_token = source_token # use the same token...
+        source_token_scopes += target_token_scopes # ...with all scopes
+
+    source_token.fetch(scopes=source_token_scopes) # get the source token
 
     # This Pin object is reusable. The pin_id attribute is set when the
     # create method is called successfully.
@@ -141,10 +139,6 @@ def main(argv=[]):
     else: # copy just the board designated by board_id
         source_board = Board(args.board_id, api_config, source_token)
         source_board_data = source_board.get()
-        # use different name, which is mandatory when using a single access token
-        if args.name:
-            print('setting target board name to "' + args.name + '"')
-            source_board_data['name'] = args.name
         boards = [source_board_data]
 
     for source_board_data in boards:
@@ -152,6 +146,12 @@ def main(argv=[]):
         print('source board:')
         Board.print_summary(source_board_data)
         source_board.board_id = source_board_data['id']
+
+        # Use different name, which is mandatory when using a single access token.
+        # Change the name after the Board.print_summary with the source name.
+        if args.name:
+            print('setting target board name to "' + args.name + '"')
+            source_board_data['name'] = args.name
 
         # This Board object is reusable. The board_id is set when the
         # create method is called successfully.

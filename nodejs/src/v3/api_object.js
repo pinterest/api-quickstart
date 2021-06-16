@@ -1,38 +1,17 @@
 import got from 'got'
+import {ApiCommon} from '../api_common.js'
 import {Input} from '../utils.js'
 
 /**
  * The ApiObject uses the got library for REST transations:
  *   https://www.npmjs.com/package/got
  */
-export class ApiObject {
+export class ApiObject extends ApiCommon {
   constructor(api_config, access_token) {
+    super();
     this.api_uri = api_config.api_uri;
     this.api_config = api_config;
     this.access_token = access_token;
-  }
-
-  // common code for printing the response to a successful transaction
-  print_response(response) {
-    if (this.api_config.verbosity >= 1) {
-      console.log(`<Response [${response.statusCode}]>`);
-      if (this.api_config.verbosity >= 3) {
-        console.log(response.body);
-      }
-    }
-  }
-
-  // common code for printing and rethrowing the error in response to a transaction
-  print_and_throw_error(error) {
-    const error_message = 'request failed with reason: ' + error.response.body.message;
-    if (this.api_config.verbosity >= 1) {
-      console.log(`<Response [${error.response.statusCode}]>`);
-      console.log(error_message);
-      if (this.api_config.verbosity >= 2) {
-        console.log(error.response.body);
-      }
-    }
-    throw error_message;
   }
 
   // Code that is common to a simple GET as in response_data()
