@@ -1,4 +1,5 @@
 import mock
+import sys
 
 from integration_mocks import IntegrationMocks
 
@@ -40,9 +41,10 @@ class GetAccessTokenTest(IntegrationMocks):
         self.requests_get_calls = 0
 
         with mock.patch('builtins.open') as mock_open:
-            mock_open.side_effect = FileNotFoundError # no access_token.json file
-            with self.mock_redirect():
-                main() # run get_access_token
+            with mock.patch.dict('os.environ', self.mock_os_environ, clear=True):
+                mock_open.side_effect = FileNotFoundError # no access_token.json file
+                with self.mock_redirect():
+                    main() # run get_access_token
 
         # put called once for access_token
         self.assertEqual(self.requests_put_calls, 1)
@@ -53,6 +55,10 @@ class GetAccessTokenTest(IntegrationMocks):
         self.assertEqual(self.get_uri, 'https://api.pinterest.com/v3/users/me/')
 
         # verify expected values printed. see unit tests for values
+        mock_print.assert_any_call('mock_open_new: ' +
+                                   'https://www.pinterest.com/oauth/?consumer_id=test-app-id' +
+                                   '&redirect_uri=https://localhost:8085/&response_type=code&' +
+                                   'refreshable=True')
         mock_print.assert_any_call('hashed access token: ' +
                                    '597480d4b62ca612193f19e73fe4cc3ad17f0bf9cfc16a7cbf4b5064131c4805')
         mock_print.assert_any_call('hashed refresh token: ' +

@@ -29,6 +29,9 @@ class IntegrationMocks(unittest.TestCase):
 
         return originals
 
+    # Note: mock_open_new has strange behavior with respect to setting instance
+    # variables via the self variable. However, output via print can be observed
+    # by mocking builtins.print.
     def mock_open_new(self, uri):
         print('mock_open_new: ' + uri)
         return True
@@ -47,7 +50,6 @@ class IntegrationMocks(unittest.TestCase):
         
     def setUp(self):
         print('setUp')
-        mock.patch.dict('os.environ', self.mock_os_environ, clear=True)
         self.originals = self.monkeypatch([
             ('webbrowser', 'open_new', self.mock_open_new),
             ('requests', 'put', self.mock_requests_put),
@@ -71,7 +73,8 @@ class IntegrationMocks(unittest.TestCase):
     mock_os_environ = {'PINTEREST_APP_ID': 'test-app-id',
                        'PINTEREST_APP_SECRET': 'test-app-secret',
                        'HTTPS_KEY_FILE': os.environ['HTTPS_KEY_FILE'],
-                       'HTTPS_CERT_FILE': os.environ['HTTPS_CERT_FILE']
+                       'HTTPS_CERT_FILE': os.environ['HTTPS_CERT_FILE'],
+                       'HTTPS_CA_BUNDLE': os.environ['HTTPS_CA_BUNDLE']
                        }
 
     

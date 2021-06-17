@@ -93,9 +93,10 @@ class AnalyticsApiExampleTest(IntegrationMocks):
         mock_file.__enter__.return_value = mock_file
 
         with mock.patch('builtins.open') as mock_open:
-            mock_open.return_value = mock_file
-            main() # run analytics_api_example
-            mock_open.assert_any_call(self.download_filename, 'wb')
+            with mock.patch.dict('os.environ', self.mock_os_environ, clear=True):
+                mock_open.return_value = mock_file
+                main() # run analytics_api_example
+                mock_open.assert_any_call(self.download_filename, 'wb')
 
         self.assertEqual(self.requests_post_calls, 1)
         self.assertEqual(self.requests_get_calls, 5)
