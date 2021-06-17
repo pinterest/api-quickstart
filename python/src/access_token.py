@@ -8,10 +8,15 @@ import requests
 import user_auth
 
 class AccessToken:
-    def __init__(self, api_config, name='access_token'):
+    def __init__(self, api_config, name=None):
+
+        if name:
+            self.name = name
+        else:
+            self.name = 'access_token_' + api_config.version
+
         self.api_config = api_config
-        self.name = name
-        self.path = pathlib.Path(api_config.oauth_token_dir) / (name + '.json')
+        self.path = pathlib.Path(api_config.oauth_token_dir) / (self.name + '.json')
 
         # use the recommended authorization approach
         auth = api_config.app_id + ':' + api_config.app_secret
