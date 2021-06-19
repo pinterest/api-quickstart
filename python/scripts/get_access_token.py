@@ -10,6 +10,9 @@ from access_token import AccessToken
 
 def main(argv=[]):
     """
+    This script retrieves an OAuth 2.0 access token. See the "OAuth Authentication"
+    section of the top-level README in this repository for more information.
+
     The arguments for this script are intended to be used as follows:
      -w / --write :
        Save the access token to a file in JSON format so that it can be used with other scripts.
@@ -29,7 +32,9 @@ def main(argv=[]):
        To provide a quick start for new developers, this script requests an access token with the default
        set of scopes for the application provided in the environment (with the PINTEREST_APP_ID and
        PINTEREST_APP_SECRET variables). This argument, which requires a comma-separated list of valid
-       OAuth scopes, allows experimentation with different sets of scopes.
+       OAuth scopes, allows experimentation with different sets of scopes. Specifying scopes prevents
+       the access token from being read from the environment or file system, and forces the use of
+       the browser-based OAuth process.
     """
     parser = argparse.ArgumentParser(description='Get Pinterest OAuth token')
     parser.add_argument('-w', '--write', action='store_true', help='write access token to file')
@@ -52,7 +57,9 @@ def main(argv=[]):
     if args.scopes:
         # use the comma-separated list of scopes passed as a command-line argument
         scopes = list(map(lambda arg: Scope[arg.upper()], args.scopes.split(',')))
-    access_token.fetch(scopes=scopes)
+        access_token.oauth(scopes=scopes)
+    else:
+        access_token.fetch()
 
     # Note: It is best practice not to print credentials in clear text.
     # Pinterest engineers asked for this capability to make it easier to support partners.

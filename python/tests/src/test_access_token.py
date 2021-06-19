@@ -18,6 +18,7 @@ class AccessTokenTest(unittest.TestCase):
         mock_api_config.redirect_uri = 'test-redirect-uri'
         mock_api_config.oauth_token_dir = 'test-token-dir'
         mock_api_config.version = 'v3'
+        mock_api_config.verbosity = 3
 
         mock_response = mock.MagicMock()
         mock_response.__str__.return_value = '<Response [200]>'
@@ -64,6 +65,7 @@ class AccessTokenTest(unittest.TestCase):
         mock_response = mock.MagicMock()
         mock_response.__str__.return_value = '<Response [200]>'
         mock_response.json.return_value = {'access_token': 'new-access-token'}
+        mock_response.headers = {'x-pinterest-rid': 'mock-request-id'}
         mock_requests_put.reset_mock()
         mock_requests_put.return_value = mock_response
 
@@ -127,7 +129,8 @@ class AccessTokenTest(unittest.TestCase):
 
         access_token_dict = {'name': 'access_token_from_file',
                              'access_token': 'test access token from json',
-                             'refresh_token': 'test refresh token from json'
+                             'refresh_token': 'test refresh token from json',
+                             'scopes': 'test-scope-1,test-scope-2'
                              }
 
         # Test access token JSON file read

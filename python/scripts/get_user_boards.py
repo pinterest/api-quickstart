@@ -26,7 +26,6 @@ def main(argv=[]):
     # include_empty is an example of an API parameter
     parser.add_argument('--include-empty', help='Include empty boards?', dest='include_empty', action='store_true')
     parser.add_argument('--no-include-empty', dest='include_empty', action='store_false')
-    parser.set_defaults(include_empty=True)
     parser.add_argument('--include-archived', help='Include archived boards?', dest='include_archived', action='store_true')
     parser.add_argument('--no-include-archived', dest='include_archived', action='store_false')
     parser.set_defaults(include_archived=False)
@@ -51,10 +50,11 @@ def main(argv=[]):
     user_me_data = user_me.get()
 
     # get information about all of the boards in the user's profile
-    query_parameters={'page_size': args.page_size,
-                      'include_empty': args.include_empty,
-                      'include_archived': args.include_archived,
-                      }
+    query_parameters={'page_size': args.page_size}
+    if (args.include_empty):
+        query_parameters['include_empty'] = args.include_empty
+    if (args.include_archived):
+        query_parameters['include_archived'] = args.include_archived
     board_iterator = user_me.get_boards(user_me_data, query_parameters)
     user_me.print_multiple(args.page_size, 'board', Board, board_iterator)
 

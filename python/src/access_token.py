@@ -71,11 +71,15 @@ class AccessToken:
         put_data = {'code': auth_code,
                     'redirect_uri': self.api_config.redirect_uri,
                     'grant_type': 'authorization_code'}
+        if (self.api_config.verbosity >= 2):
+            print('PUT', self.api_config.api_uri + '/v3/oauth/access_token/')
         response = requests.put(self.api_config.api_uri + '/v3/oauth/access_token/',
                                 headers=self.auth_headers, data=put_data)
         print(response)
         respdict = response.json()
         print('status: ' + respdict['status'])
+        if (self.api_config.verbosity >= 3):
+            print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
         """
         The scope returned in the response includes all of the scopes that
         have been approved now or in the past by the user.
@@ -83,6 +87,7 @@ class AccessToken:
         print('scope: ' + respdict['scope'])
         self.access_token = respdict['access_token']
         self.refresh_token = respdict['data'].get('refresh_token')
+        self.scopes = respdict['scope']
         if self.refresh_token:
             print('received refresh token')
 
@@ -104,6 +109,7 @@ class AccessToken:
             self.name = data.get('name') or 'access_token'
             self.access_token = data['access_token']
             self.refresh_token = data.get('refresh_token')
+            self.scopes = data.get('scopes')
         print(f'read {self.name} from {self.path}')
 
     def write(self):
@@ -117,7 +123,8 @@ class AccessToken:
             # write the information to the file
             json.dump({'name': self.name,
                        'access_token': self.access_token,
-                       'refresh_token': self.refresh_token},
+                       'refresh_token': self.refresh_token,
+                       'scopes': self.scopes},
                       jsonfile,
                       indent=2)
 
@@ -149,7 +156,11 @@ class AccessToken:
         print(f'refreshing {self.name}...')
         put_data = {'grant_type': 'refresh_token',
                     'refresh_token': self.refresh_token}
+        if (self.api_config.verbosity >= 2):
+            print('PUT', self.api_config.api_uri + '/v3/oauth/access_token/')
         response = requests.put(self.api_config.api_uri + '/v3/oauth/access_token/',
                                 headers=self.auth_headers, data=put_data)
         print(response)
+        if (self.api_config.verbosity >= 3):
+            print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
         self.access_token = response.json()['access_token']
