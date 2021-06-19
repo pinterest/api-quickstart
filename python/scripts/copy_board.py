@@ -166,6 +166,9 @@ def main(argv=[]):
 
         # copy board pins
         for pin_data in source_board.get_pins():
+            # ignore pins in sections for now. they will be copied into each section
+            if pin_data.get('board_section_id'):
+                continue
             if args.dry_run:
                 print('dry-run: skipping attempt to create board pin:')
                 Pin.print_summary(pin_data)
