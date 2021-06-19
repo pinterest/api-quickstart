@@ -45,7 +45,9 @@ def main(argv=[]):
 
     if args.pins:
         for pin_data in board.get_pins():
-            Pin.print_summary(pin_data)
+            # ignore pins in sections for now. they will be printed for each section
+            if not pin_data.get('board_section_id'):
+                Pin.print_summary(pin_data)
 
     for section_data in board.get_sections():
         board.print_section(section_data)
