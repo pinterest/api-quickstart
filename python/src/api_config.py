@@ -14,8 +14,6 @@ DEFAULT_API_URI = 'https://api.pinterest.com'
 DEFAULT_API_VERSION = 'v3'
 DEFAULT_OAUTH_URI = 'https://www.pinterest.com'
 DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/'
-DEFAULT_KEY_FILE = 'localhost-key.pem'
-DEFAULT_CERT_FILE = 'localhost.pem'
 # OAuth tokens are in the current directory by default
 DEFAULT_OAUTH_TOKEN_DIR = '.'
 
