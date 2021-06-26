@@ -1,4 +1,4 @@
-import https from 'https'
+import http from 'http'
 import fs from 'fs'
 import open from 'open'
 
@@ -6,17 +6,10 @@ export default async function get_auth_code(
   api_config, {scopes = null, refreshable = true}) {
   const auth_code = new Promise((resolve, reject) => {
 
-    // key and cert are required options for the https server.
-    const options = {
-      // Use mkcert to generate localhost.pem/localhost-key.pem key pair
-      key: fs.readFileSync(api_config.https_key_file),
-      cert: fs.readFileSync(api_config.https_cert_file)
-    };
-
     const sockets = []; // tracks the sockets connected to the server
 
-    // https is required to implement the Pinterest API redirect
-    const server = https.createServer(options, function (req, res) {
+    // http is required to implement the Pinterest API redirect
+    const server = http.createServer(function (req, res) {
       res.writeHead(301, {
         'Location': api_config.landing_uri
       })
