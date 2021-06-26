@@ -1,10 +1,10 @@
 import {Scope} from './oauth_scope.js'
 import get_auth_code from './user_auth.js'
-import https from 'https'
+import http from 'http'
 import fs from 'fs'
 import open from 'open'
 
-jest.mock('https');
+jest.mock('http');
 jest.mock('fs');
 jest.mock('open');
 
@@ -16,8 +16,6 @@ describe('user_auth tests', () => {
     mock_api_config.app_id = 'test-app-id'
     mock_api_config.landing_uri = 'test-landing-uri';
     mock_api_config.redirect_uri = 'test-redirect-uri';
-    mock_api_config.https_key_file = 'test-https-key-file';
-    mock_api_config.https_cert_file = 'test-https-cert-file';
     const mock_access_uri = ('test-oauth-uri/oauth/' +
                              '?consumer_id=test-app-id' +
                              '&redirect_uri=test-redirect-uri' +
@@ -25,24 +23,13 @@ describe('user_auth tests', () => {
                              '&refreshable=true' +
                              '&scope=read_users,read_pins');
 
-    // Mock file system reads of the https key and certification.
-    fs.readFileSync.mockImplementation(filename => {
-      if (filename == 'test-https-key-file') {
-        return 'test-https-key';
-      } else if (filename == 'test-https-cert-file') {
-        return 'test-https-cert';
-      } else {
-        throw `readFileSync received unexpect filename: ${filename}`;
-      }
-    });
-
     // Used to verify that the user_auth code cleans the socket properly.
     const mock_socket = jest.fn();
     mock_socket.destroy = jest.fn();
     mock_socket.end = jest.fn();
     mock_socket.end.mockImplementation(callback => callback());
 
-    // The mock_http_server is returned by the mock https.createServer.
+    // The mock_http_server is returned by the mock http.createServer.
     const mock_http_server = jest.fn();
     mock_http_server.close = jest.fn();
     mock_http_server.on = jest.fn().mockImplementation((command, cb) => cb(mock_socket));
@@ -56,7 +43,7 @@ describe('user_auth tests', () => {
     mock_response.writeHead = jest.fn();
     mock_response.end = jest.fn().mockImplementation(callback => callback());
 
-    https.createServer.mockImplementation((options, callback) => {
+    http.createServer.mockImplementation(callback => {
       // Save the callback so that it can be called by open().
       mock_http_server.callback = callback;
       return mock_http_server;
@@ -72,8 +59,6 @@ describe('user_auth tests', () => {
     const auth_code = await get_auth_code(mock_api_config, {scopes: read_scopes, refreshable: true});
     expect(auth_code).toEqual('test-auth-code');
     expect(open.mock.calls[0][0]).toEqual(mock_access_uri);
-    expect(https.createServer.mock.calls[0][0]).toEqual({key: 'test-https-key',
-                                                         cert: 'test-https-cert'});
     expect(mock_socket.destroy.mock.calls.length).toBe(1);
     expect(mock_http_server.on.mock.calls[0][0]).toEqual('connection');
     expect(mock_http_server.close.mock.calls.length).toBe(1);

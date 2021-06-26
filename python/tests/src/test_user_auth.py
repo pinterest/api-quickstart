@@ -7,10 +7,9 @@ from src.v3.oauth_scope import Scope
 
 class UserAuthTest(unittest.TestCase):
 
-    @mock.patch('src.user_auth.ssl.wrap_socket')
     @mock.patch('src.user_auth.HTTPServer')
     @mock.patch('src.user_auth.open_new')
-    def test_get_auth_code(self, mock_open_new, mock_http_server, mock_wrap_socket):
+    def test_get_auth_code(self, mock_open_new, mock_http_server):
 
         class MockHttpServer:
             def __init__(self):
@@ -27,24 +26,16 @@ class UserAuthTest(unittest.TestCase):
         mock_api_config.oauth_uri = 'test-oauth-uri'
         mock_api_config.app_id = 'test-app-id'
         mock_api_config.redirect_uri = 'test-redirect-uri'
-        mock_api_config.https_key_file = 'test-https-key-file'
-        mock_api_config.https_cert_file = 'test-https-cert-file'
         mock_access_uri = ('test-oauth-uri/oauth/' +
                            '?consumer_id=test-app-id' +
                            '&redirect_uri=test-redirect-uri' +
                            '&response_type=code' +
                            '&refreshable=True')
 
-        mock_wrap_socket.return_value = 'test-wrapped-socket'
-
         auth_code = get_auth_code(mock_api_config)
         mock_open_new.assert_called_once_with(mock_access_uri)
         mock_http_server.assert_called_once_with(('localhost', 'test-port'), mock.ANY)
-        mock_wrap_socket.assert_called_once_with('test-socket',
-                                                 certfile='test-https-cert-file',
-                                                 keyfile='test-https-key-file',
-                                                 server_side=True)
-        self.assertEqual(mock_http_server_instance.socket, 'test-wrapped-socket')
+        self.assertEqual(mock_http_server_instance.socket, 'test-socket')
         self.assertEqual(auth_code, 'test-auth-code')
 
         # verify calling get_auth_code with non-default values

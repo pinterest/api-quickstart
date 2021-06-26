@@ -13,12 +13,10 @@
 
 # Get configuration from environment or defaults.
 : ${REDIRECT_PORT:=8085}
-: ${HTTPS_KEY_FILE:=localhost-key.pem}
-: ${HTTPS_CERT_FILE:=localhost.pem}
 : ${PINTEREST_API_URI:=https://api.pinterest.com}
 : ${PINTEREST_OAUTH_URI:=https://www.pinterest.com}
 : ${REDIRECT_LANDING_URI:=https://developers.pinterest.com/manage/${PINTEREST_APP_ID}}
-REDIRECT_URI="https://localhost:${REDIRECT_PORT}/"
+REDIRECT_URI="http://localhost:${REDIRECT_PORT}/"
 
 # Note that the application id and secrect have no defaults,
 # because it is best practice not to store credentials in code.
@@ -35,14 +33,13 @@ SCOPE=read_users
 # This call opens the browser with the oauth information in the URI.
 open "${PINTEREST_OAUTH_URI}/oauth/?consumer_id=${PINTEREST_APP_ID}&redirect_uri=${REDIRECT_URI}&scope=${SCOPE}&response_type=code" &
 
-# 1. Use openssl to run the web browser to handle the redirect from the oauth call.
+# 1. Use netcat (nc) to run the web browser to handle the redirect from the oauth call.
 # 2. Wait for the response.
 # 3. Redirect using a HTTP 301 response to the landing URI.
-REDIRECT_SESSION=$(openssl s_server -accept ${REDIRECT_PORT} -cert ${HTTPS_CERT_FILE} -key ${HTTPS_KEY_FILE} 2>&1 <<EOF
+REDIRECT_SESSION=$(nc -l localhost ${REDIRECT_PORT} 2>&1 <<EOF
 HTTP/1.1 301 Moved Permanently
 Location: ${REDIRECT_LANDING_URI}
 
-Q
 EOF
 )
 

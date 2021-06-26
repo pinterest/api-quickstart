@@ -62,19 +62,8 @@ class IntegrationMocks(unittest.TestCase):
         self.monkeypatch(self.originals)
 
     # The integration tests start a web server on localhost and send a response to it.
-    # So, the https certificate set-up and an appropriate api_env are required.
-    # See the README file at the top-level of this repository for more information
-    # on the required set-up.
-    if not os.environ.get('HTTPS_KEY_FILE') or not os.environ.get('HTTPS_KEY_FILE'):
-        raise RuntimeError('HTTPS localhost certificate is required.' +
-                           ' See top-level README.' +
-                           ' Did you run the api_env script?')
-
     mock_os_environ = {'PINTEREST_APP_ID': 'test-app-id',
                        'PINTEREST_APP_SECRET': 'test-app-secret',
-                       'HTTPS_KEY_FILE': os.environ['HTTPS_KEY_FILE'],
-                       'HTTPS_CERT_FILE': os.environ['HTTPS_CERT_FILE'],
-                       'HTTPS_CA_BUNDLE': os.environ['HTTPS_CA_BUNDLE']
                        }
 
     
@@ -88,12 +77,10 @@ class IntegrationMocks(unittest.TestCase):
         def send_test_redirect():
             while True:
                 # use requests.request to avoid monkey-patched function
-                # HTTPS_CA_BUNDLE is set by the api_env script so that this
-                # test script can run with verified https.
                 response = requests.request(
                     'GET',
-                    'https://localhost:8085/?test-path&code=test-oauth-code',
-                    allow_redirects=False, verify=os.environ['HTTPS_CA_BUNDLE'])
+                    'http://localhost:8085/?test-path&code=test-oauth-code',
+                    allow_redirects=False)
                 print('response to redirect (301 expected): ' + str(response))
                 if response.ok:
                     return

@@ -8,7 +8,7 @@ This repository has code that is intended to provide a quick start for working w
 
 ## Quick Start
 
-1. Set up the environment with your credentials (app ID and secret, https://localhost certificates). This configuration works with the code in all of the language-specific directories.
+1. Set up the environment with your credentials (app ID and secret). This configuration works with the code in all of the language-specific directories.
 
    * Get an application ID and secret by hitting the "Start building" button at [https://developers.pinterest.com/](https://developers.pinterest.com/). Approval from a contact at Pinterest is required to see the application secret. (We're working on some updates to our program and are currently taking a pause in reviewing applications while we focus on what's next. If you'd still like to apply to our program we'll reach out to the email associated with your account once there's an update. We're excited to share with you what we've been working on.)
    * Put your app ID and secret in an environment script file.
@@ -20,33 +20,22 @@ This repository has code that is intended to provide a quick start for working w
      ```
    * Configure the redirect URI required by this code.
      1. Click on the name of your application at [https://developers.pinterest.com/manage/](https://developers.pinterest.com/manage/).
-     2. In the box labeled "Redirect URIs," enter `https://localhost:8085/`.
+     2. In the box labeled "Redirect URIs," enter `http://localhost:8085/`.
      3. Hit the return (enter) key.
      4. Hit the Save button next in the "You have unsaved changes" box that appears after hitting the return (enter) key.
-   * Create a certificate so that your browser will trust https://localhost/. This configuration will streamline the OAuth process on your development machine. We recommend installing and using [mkcert](https://github.com/FiloSottile/mkcert) for this purpose.
-     ```
-     $ mkdir -p common/certs # create the directory
-     $ cd common/certs
-     $ mkcert -install # if you have not already run this command
-     $ mkcert localhost
-     $ cd ../..
-     ```
    * Run the environment set-up script and verify the results.
      ```
      $ . ./common/scripts/api_env
      $ env | grep PINTEREST_APP
      PINTEREST_APP_ID=<number>
      PINTEREST_APP_SECRET=<string>
-     $ env | grep HTTPS
-     HTTPS_KEY_FILE=<this directory>/common/scripts/../certs/localhost-key.pem
-     HTTPS_CERT_FILE=<this directory>/common/scripts/../certs/localhost.pem
      ```
 
 2. Pick one of the language directories (currently bash, nodejs and python) and follow the directions in the README file in the directory.
 
 ## OAuth Authentication
 
-Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). For details regarding OAuth, please reference our [developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token. The Pinterest API requires using a secure method for the redirect (https), which is the reason why it's necessary to create the SSL/TLS certificate for localhost.
+Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). For details regarding OAuth, please reference our [developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
 
 An access token is used to authenticate most API calls. In general, access tokens are valid for relatively long periods of time, in order to avoid asking users to go through the OAuth flow too often. When an access token expires, it is possible to refresh the token -- a capability that the code in this repo also demonstrates.
 
@@ -61,12 +50,10 @@ The precedence order in this repo for obtaining an access token is: environment,
 
 ## Security Notes
 
-* Best development practice is to keep authentication credentials (like your app secret, certificate key, and access tokens) out of code.
+* Best development practice is to keep authentication credentials (like your app secret and OAuth access tokens) out of code.
 * When using a JSON-encoded file to specify an access token, use a secure file mode when possible. For example: `chmod 600 common/oauth_tokens/*`
 * When specifying credentials in environment variables, export it from a script file instead of on the shell command line. (Commands -- along with the clear text credentials -- are often stored in history and log files.)
-* The recommended locations for your credentials (`common/scripts/api_app_credentials`), certificates (`common/certs`), and access tokens (`common/oauth_tokens`) are listed in the `.gitignore` file to help avoid checking this material into a git repo.
-* To disable the mkcert root certificate, you can run `mkcert -uninstall` and then reenable it later with `mkcert -install`.
-* You're safe from abuse after running `mkcert -uninstall`, but to do a deeper cleaning you can run `rm -rf "$(mkcert -CAROOT)"` and also remove the certificate from your computer's trust store (e.g. using the Keychain Access app on MacOS).
+* The recommended locations for your credentials (`common/scripts/api_app_credentials`), and access tokens (`common/oauth_tokens`) are listed in the `.gitignore` file to help avoid checking this material into a git repo.
 
 ## Repository Layout
 
