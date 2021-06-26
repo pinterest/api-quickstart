@@ -9,7 +9,7 @@ from os.path import dirname, abspath, join
 # of ports that could be used in case some other service is listening on
 # the hard-coded port.
 DEFAULT_PORT = 8085
-DEFAULT_REDIRECT_URI = 'https://localhost:' + str(DEFAULT_PORT) + '/'
+DEFAULT_REDIRECT_URI = 'http://localhost:' + str(DEFAULT_PORT) + '/'
 DEFAULT_API_URI = 'https://api.pinterest.com'
 DEFAULT_API_VERSION = 'v3'
 DEFAULT_OAUTH_URI = 'https://www.pinterest.com'
@@ -32,8 +32,6 @@ class ApiConfig:
         self.landing_uri = os.environ.get('REDIRECT_LANDING_URI') or DEFAULT_LANDING_URI + self.app_id
 
         # locations of credentials in the file system
-        self.https_key_file = os.environ.get('HTTPS_KEY_FILE') or DEFAULT_KEY_FILE
-        self.https_cert_file = os.environ.get('HTTPS_CERT_FILE') or DEFAULT_CERT_FILE
         self.oauth_token_dir = os.environ.get('PINTEREST_OAUTH_TOKEN_DIR') or DEFAULT_OAUTH_TOKEN_DIR
 
         # swizzle oauth and api hosts, based on environment

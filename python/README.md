@@ -4,8 +4,7 @@ Python code that makes it easy to get started with the Pinterest API.
 
 ## Quick Start
 
-1. Follow the directions at the top level of this repo for configuring
-your application ID, application secret, and https certificates.
+1. Follow the directions at the top level of this repo for configuring your application ID and application secret.
 
 2. From the top of this repo, change your working directory to this directory: `cd python`
 
@@ -85,9 +84,6 @@ which is less secure than keeping the credentials in a file that you control.
      $ env | grep PINTEREST_APP
      PINTEREST_APP_ID=<number>
      PINTEREST_APP_SECRET=<string>
-     $ env | grep HTTPS
-     HTTPS_KEY_FILE=<path to key file>
-     HTTPS_CERT_FILE=<path to cert file>
      ```
 
    * Start PyCharm.

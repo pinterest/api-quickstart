@@ -56,16 +56,6 @@ def get_auth_code(api_config, scopes=None, refreshable=True):
                             lambda request, address, server: HTTPServerHandler(
                                 request, address, server, api_config.landing_uri))
 
-    # Need SSL to support https, which is required for Pinterest API redirects
-    # Use mkcert to generate localhost.pem/localhost-key.pem key pair
-    try:
-        httpServer.socket = ssl.wrap_socket(httpServer.socket,
-                                            certfile=api_config.https_cert_file,
-                                            keyfile=api_config.https_key_file,
-                                            server_side=True)
-    except FileNotFoundError:
-        exit('ssl set up failed. Check the top-level README file for instructions regarding certificates.')
-
     # This function will block until it receives a request
     try:
         httpServer.handle_request()
