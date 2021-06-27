@@ -8,7 +8,6 @@ import {ArgumentParser} from 'argparse'
 import {AccessToken} from '../src/access_token.js'
 import {ApiConfig} from '../src/api_config.js'
 import {Input} from '../src/utils.js'
-import {Scope} from '../src/oauth_scope.js'
 
 /**
  * This script is intended primarily for developers who need to delete boards
@@ -37,6 +36,7 @@ async function main (argv) {
   // imports that depend on the version of the API
   const {Board} = await import(`../src/${api_config.version}/board.js`);
   const {User} = await import(`../src/${api_config.version}/user.js`);
+  const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   // get access token
   const access_token = new AccessToken(api_config, {});

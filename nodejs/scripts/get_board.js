@@ -3,7 +3,6 @@ import {ArgumentParser} from 'argparse'
 
 import {AccessToken} from '../src/access_token.js'
 import {ApiConfig} from '../src/api_config.js'
-import {Scope} from '../src/oauth_scope.js'
 
 /**
  * This script prints the information associated with a pin. The pin identifier
@@ -24,6 +23,7 @@ async function main (argv) {
   // imports that depend on the version of the API
   const {Board} = await import(`../src/${api_config.version}/board.js`);
   const {Pin} = await import(`../src/${api_config.version}/pin.js`);
+  const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.

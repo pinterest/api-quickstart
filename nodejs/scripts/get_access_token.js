@@ -3,7 +3,6 @@ import {ArgumentParser} from 'argparse'
 
 import {AccessToken} from '../src/access_token.js'
 import {ApiConfig} from '../src/api_config.js'
-import {Scope} from '../src/oauth_scope.js'
 
 /**
  * The arguments for this script are intended to be used as follows:
@@ -25,7 +24,9 @@ import {Scope} from '../src/oauth_scope.js'
  *    To provide a quick start for new developers, this script requests an access token with the default
  *    set of scopes for the application provided in the environment (with the PINTEREST_APP_ID and
  *    PINTEREST_APP_SECRET variables). This argument, which requires a comma-separated list of valid
- *    OAuth scopes, allows experimentation with different sets of scopes.
+ *    OAuth scopes, allows experimentation with different sets of scopes. Specifying scopes prevents
+ *    the access token from being read from the environment or file system, and forces the use of
+ *    the browser-based OAuth process.
  */
 async function main (argv) {
   const parser = new ArgumentParser({description: 'Get Pinterest OAuth token'});
@@ -40,19 +41,28 @@ async function main (argv) {
 
   // imports that depend on the version of the API
   const {User} = await import(`../src/${api_config.version}/user.js`);
+  const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
   const access_token = new AccessToken(api_config, {});
-  var scopes = null // use the default set of scopes
   if (args.scopes) {
     // use the comma-separated list of scopes passed as a command-line argument
-    scopes = args.scopes.split(',').map(x => Scope[x.toUpperCase()])
+    const scopes = args.scopes.split(',').map(scopeArg => {
+      const scope = Scope[scopeArg.toUpperCase()];
+      if (scope) {
+        return scope;
+      }
+      console.log('invalid scope:', scopeArg);
+      parser.print_usage();
+      process.exit(1);
+    });
+    await access_token.oauth({scopes:scopes});
+  } else {
+    // Try the different methods for getting an access token: from the environment,
+    // from a file, and from Pinterest via the browser.
+    await access_token.fetch({});
   }
-  
-  // Try the different methods for getting an access token: from the environment,
-  // from a file, and from Pinterest via the browser.
-  await access_token.fetch({scopes:scopes});
 
   // Note: It is best practice not to print credentials in clear text.
   // Pinterest engineers asked for this capability to make it easier to support partners.

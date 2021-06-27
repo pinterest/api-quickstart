@@ -38,14 +38,14 @@ export default async function get_auth_code(
                     '?consumer_id=' + api_config.app_id +
                     '&redirect_uri=' + api_config.redirect_uri +
                     '&response_type=code' +
-                    '&refreshable=' + refreshable.toString())
+                    '&refreshable=' + refreshable.toString());
 
   if (scopes) {
-    access_uri = access_uri + '&scope=' + scopes.map(s => s.value).join(',')
+    access_uri = access_uri + '&scope=' + scopes.map(s => s.value).join(',');
   }
 
   // open the default browser for user interaction
-  open(access_uri)
+  open(access_uri);
 
   // Returns the promise that will eventually resolve into the auth_code.
   return auth_code;
