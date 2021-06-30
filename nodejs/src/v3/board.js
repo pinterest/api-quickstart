@@ -74,11 +74,6 @@ export class Board extends ApiObject {
     return await this.delete_and_check(`/v3/boards/${this.board_id}/`);
   }
 
-  // provides a human-readable identifier for a board
-  static text_id(board_data) {
-    return board_data.url;
-  }
-
   static print_section(section_data) {
     console.log('--- Board Section ---');
     console.log('Section ID:', section_data.id);
