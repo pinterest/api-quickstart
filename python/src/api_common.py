@@ -48,6 +48,7 @@ class ApiCommon:
         if not response.ok:
             if self.api_config.verbosity >= 2:
                 print(unpacked)
+                print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
             if response.status_code == 429:
                 detail = unpacked.get('message_detail')
                 if detail and 'spam' in detail.lower(): # reason for 429 response is spam

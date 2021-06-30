@@ -1,4 +1,4 @@
-import {Scope} from './oauth_scope.js'
+import {Scope} from './v3/oauth_scope.js'
 import get_auth_code from './user_auth.js'
 import http from 'http'
 import fs from 'fs'

@@ -1,5 +1,5 @@
 import {AccessToken} from './access_token.js'
-import {Scope} from './oauth_scope.js'
+import {Scope} from './v3/oauth_scope.js'
 import get_auth_code from './user_auth.js'
 import got from 'got'
 

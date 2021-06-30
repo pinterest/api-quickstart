@@ -38,6 +38,7 @@ export class ApiCommon {
       console.log(error_message);
       if (this.api_config.verbosity >= 2) {
         console.log(error.response.body);
+        console.log('x-pinterest-rid:', error.response.headers['x-pinterest-rid']);
       }
     }
     if (error.response.statusCode == 429) {

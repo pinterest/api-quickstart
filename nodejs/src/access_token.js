@@ -7,14 +7,18 @@ import get_auth_code from './user_auth.js'
 
 export class AccessToken {
 
-  constructor(api_config, {name = 'access_token'}) {
+  constructor(api_config, {name = null}) {
     const auth = api_config.app_id + ':' + api_config.app_secret;
     const b64auth = Buffer.from(auth).toString('base64');
     this.api_config = api_config;
     this.api_uri = api_config.api_uri;
     this.auth_headers = {'Authorization': 'Basic ' + b64auth}
-    this.name = name;
-    this.path = path.join(api_config.oauth_token_dir, name + '.json')
+    if (name) {
+      this.name = name;
+    } else {
+      this.name = 'access_token_' + api_config.version;
+    }
+    this.path = path.join(api_config.oauth_token_dir, this.name + '.json')
   }
 
   /**
@@ -81,6 +85,9 @@ export class AccessToken {
 
     console.log(`<Response [${response.statusCode}]>`);
     console.log('status: ' + response.body.status);
+    if (this.api_config.verbosity >= 3) {
+      console.log('x-pinterest-rid:', response.headers['x-pinterest-rid']);
+    }
     // The scope returned in the response includes all of the scopes that
     // have been approved now or in the past by the user.
     console.log('scope: ' + response.body.scope);

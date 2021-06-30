@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 import {AccessToken} from '../src/access_token.js'
 import {ApiConfig} from '../src/api_config.js'
-import {Scope} from '../src/oauth_scope.js'
 
 async function main () {
   // get configuration from defaults and/or the environment
   const api_config = new ApiConfig();
 
   // imports that depend on the version of the API
+  const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
   const {User} = await import(`../src/${api_config.version}/user.js`);
 
   // Note: It's possible to use the same API configuration with

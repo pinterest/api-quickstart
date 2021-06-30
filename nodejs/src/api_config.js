@@ -18,22 +18,22 @@ export class ApiConfig {
     this.app_id = process.env.PINTEREST_APP_ID;
     this.app_secret = process.env.PINTEREST_APP_SECRET;
     if (!this.app_id || !this.app_secret) {
-      throw new Error('PINTEREST_APP_ID and PINTEREST_APP_SECRET must be set in the environment.')
+      throw new Error('PINTEREST_APP_ID and PINTEREST_APP_SECRET must be set in the environment.');
     }
 
     // might want to get these from the environment in the future
-    this.port = DEFAULT_PORT
-    this.redirect_uri = DEFAULT_REDIRECT_URI
-    this.landing_uri = process.env.REDIRECT_LANDING_URI || DEFAULT_LANDING_URI + this.app_id
+    this.port = DEFAULT_PORT;
+    this.redirect_uri = DEFAULT_REDIRECT_URI;
+    this.landing_uri = process.env.REDIRECT_LANDING_URI || DEFAULT_LANDING_URI + this.app_id;
 
-    this.oauth_token_dir = process.env.PINTEREST_OAUTH_TOKEN_DIR || DEFAULT_OAUTH_TOKEN_DIR
+    this.oauth_token_dir = process.env.PINTEREST_OAUTH_TOKEN_DIR || DEFAULT_OAUTH_TOKEN_DIR;
 
     // swizzle oauth and api hosts, based on environment
-    this.oauth_uri = process.env.PINTEREST_OAUTH_URI || DEFAULT_OAUTH_URI
-    this.api_uri = process.env.PINTEREST_API_URI || DEFAULT_API_URI
-    this.version = process.env.PINTEREST_API_VERSION || DEFAULT_API_VERSION
+    this.oauth_uri = process.env.PINTEREST_OAUTH_URI || DEFAULT_OAUTH_URI;
+    this.api_uri = process.env.PINTEREST_API_URI || DEFAULT_API_URI;
+    this.version = process.env.PINTEREST_API_VERSION || DEFAULT_API_VERSION;
 
     // default level of verbosity, probably should switch to logging
-    this.verbosity = 1
+    this.verbosity = 1;
   }
 }

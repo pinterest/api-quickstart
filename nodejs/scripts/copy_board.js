@@ -11,7 +11,6 @@ import {ArgumentParser} from 'argparse'
 
 import {AccessToken} from '../src/access_token.js'
 import {ApiConfig} from '../src/api_config.js'
-import {Scope} from '../src/oauth_scope.js'
 import {SpamError} from '../src/api_common.js'
 
 /**
@@ -95,6 +94,7 @@ async function main (argv) {
   // imports that depend on the version of the API
   const {Board} = await import(`../src/${api_config.version}/board.js`);
   const {Pin} = await import(`../src/${api_config.version}/pin.js`);
+  const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
   const {User} = await import(`../src/${api_config.version}/user.js`);
 
   // helper function to copy a pin

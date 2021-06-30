@@ -16,6 +16,7 @@ export class User extends ApiObject {
 
   print_summary(user_data) {
     console.log('--- User Summary ---');
+    console.log('Username:', user_data.username);
     console.log('Full Name:', user_data.full_name);
     console.log('About:', user_data.about);
     console.log('Profile URL:', user_data.profile_url);
