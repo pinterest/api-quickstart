@@ -47,11 +47,11 @@ def main(argv=[]):
         user_me = User('me', api_config, access_token)
         user_me_data = user_me.get()
         boards = user_me.get_boards(user_me_data)
-        confirmation = f"Delete all boards for {user_me_data['full_name']}"
+        confirmation = f"Delete all boards for {user_me_data['username']}"
     else: # copy just the board designated by board_id
         deletion_board = Board(args.board_id, api_config, access_token)
         board_data = deletion_board.get()
-        confirmation = f"Delete the board with URL {board_data['url']}"
+        confirmation = f"Delete this board: {Board.text_id(board_data)}"
         boards = [board_data]
 
     try:
@@ -72,7 +72,7 @@ def main(argv=[]):
 
         # one final check before deletion
         Board.print_summary(board_data)
-        if 'yes' != input_one_of(f"Delete board at {board_data['url']}? ",
+        if 'yes' != input_one_of(f"Delete board: {Board.text_id(board_data)}? ",
                                  ['yes', 'no'], 'yes'):
             continue
 

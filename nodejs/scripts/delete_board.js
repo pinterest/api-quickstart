@@ -48,16 +48,16 @@ async function main (argv) {
     const user_me = new User('me', api_config, access_token);
     const user_me_data = await user_me.get();
     boards = await user_me.get_boards(user_me_data, {});
-    confirmation = 'Delete all boards for ' + user_me_data.full_name;
+    confirmation = 'Delete all boards for ' + user_me_data.username;
   } else { // copy just the board designated by board_id
     const deletion_board = new Board(args.board_id, api_config, access_token);
     const board_data = await deletion_board.get();
-    confirmation = 'Delete the board with URL ' + board_data.url;
+    confirmation = 'Delete this board: ' + Board.text_id(board_data);
     boards = [board_data];
   }
 
   console.log('WARNING: This script permanently deletes pins and boards from Pinterest!');
-  console.log('To acknowledge this warning, enter the following information at the prompt:');
+  console.log('To acknowledge this warning, enter the following phrase at the prompt:');
   console.log('  ', confirmation);
   const input = new Input();
   const confirmation_response = await input.get('> ');
@@ -71,7 +71,7 @@ async function main (argv) {
   for await (let board_data of boards) {
     // one final check before deletion
     Board.print_summary(board_data);
-    if ('yes' != await input.one_of(`Delete board at ${board_data.url}? `,
+    if ('yes' != await input.one_of(`Delete board: ${Board.text_id(board_data)}? `,
                                     ['yes', 'no'], 'yes')) {
       continue;
     }

@@ -46,7 +46,7 @@ export class Pin extends ApiObject {
       create_data['source_url'] = link;
     }
 
-    for (const key in OPTIONAL_ATTRIBUTES) {
+    for (const key of OPTIONAL_ATTRIBUTES) {
       const value = pin_data[key];
       if (value) {
         create_data[key] = value;

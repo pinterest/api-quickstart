@@ -85,6 +85,9 @@ export class AccessToken {
 
     console.log(`<Response [${response.statusCode}]>`);
     console.log('status: ' + response.body.status);
+    if (this.api_config.verbosity >= 3) {
+      console.log('x-pinterest-rid:', response.headers['x-pinterest-rid']);
+    }
     // The scope returned in the response includes all of the scopes that
     // have been approved now or in the past by the user.
     console.log('scope: ' + response.body.scope);

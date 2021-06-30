@@ -36,6 +36,11 @@ export class Board extends ApiObject {
     console.log('--------------------');
   }
 
+  // provides a human-readable identifier for a board
+  static text_id(board_data) {
+    return board_data.url;
+  }
+
   async create(board_data) {
     const OPTIONAL_ATTRIBUTES = [
       'category',
@@ -53,7 +58,7 @@ export class Board extends ApiObject {
     const create_data = {
       'name': board_data.name
     };
-    for (const key in OPTIONAL_ATTRIBUTES) {
+    for (const key of OPTIONAL_ATTRIBUTES) {
       const value = board_data[key];
       if (value) {
         create_data[key] = value;
@@ -69,11 +74,16 @@ export class Board extends ApiObject {
     return await this.delete_and_check(`/v3/boards/${this.board_id}/`);
   }
 
+  // provides a human-readable identifier for a board
+  static text_id(board_data) {
+    return board_data.url;
+  }
+
   static print_section(section_data) {
     console.log('--- Board Section ---');
-    console.log(`Section ID: ${section_data.id}`);
-    console.log(`Title: ${section_data.title}`);
-    console.log(`Pin Count: ${section_data.pin_count}`);
+    console.log('Section ID:', section_data.id);
+    console.log('Title:', section_data.title);
+    console.log('Pin Count:', section_data.pin_count);
     console.log('---------------------');
   }
 
@@ -93,7 +103,7 @@ export class Board extends ApiObject {
     const create_data = {
       'title': section_data.title
     };
-    for (const key in OPTIONAL_ATTRIBUTES) {
+    for (const key of OPTIONAL_ATTRIBUTES) {
       const value = section_data[key];
       if (value) {
         create_data[key] = value;

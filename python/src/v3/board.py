@@ -21,6 +21,10 @@ class Board(ApiObject):
         print(f"Pin Count: {board_data.get('pin_count')}")
         print('--------------------')
 
+    # provides a human-readable identifier for a board
+    def text_id(klass, board_data):
+        return board_data['url']
+
     def create(self, board_data):
         OPTIONAL_ATTRIBUTES = [
             'category',
