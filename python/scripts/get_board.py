@@ -7,6 +7,7 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
 from access_token import AccessToken
+from arguments import common_arguments
 
 def main(argv=[]):
     """
@@ -20,11 +21,11 @@ def main(argv=[]):
     parser = argparse.ArgumentParser(description='Get a Board')
     parser.add_argument('-b', '--board-id', required=True, help='board identifier')
     parser.add_argument('--pins', action='store_true', help='Get the Pins for the Board')
+    common_arguments(parser)
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig()
-    api_config.verbosity = 2
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from board import Board
@@ -33,7 +34,7 @@ def main(argv=[]):
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
-    access_token = AccessToken(api_config)
+    access_token = AccessToken(api_config, name=args.access_token)
     scopes = [Scope.READ_USERS,Scope.READ_BOARDS]
     if args.pins:
         scopes.append(Scope.READ_PINS);

@@ -15,6 +15,7 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
 from access_token import AccessToken
+from arguments import common_arguments
 
 def main(argv=[]):
     """
@@ -30,19 +31,17 @@ def main(argv=[]):
     parser.add_argument('-p', '--pin-id', required=True, help='source pin identifier')
     parser.add_argument('-b', '--board-id', required=True, help='destination board identifier')
     parser.add_argument('-s', '--section', help='destination board section')
+    common_arguments(parser)
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig()
-    api_config.verbosity = 2
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from oauth_scope import Scope
     from pin import Pin
 
-    # Note: It's possible to use the same API configuration with
-    # multiple access tokens, so these objects are kept separate.
-    access_token = AccessToken(api_config)
+    access_token = AccessToken(api_config, name=args.access_token)
     access_token.fetch(scopes=[Scope.READ_PINS,Scope.WRITE_BOARDS,Scope.WRITE_PINS])
 
     pin = Pin(args.pin_id, api_config, access_token)

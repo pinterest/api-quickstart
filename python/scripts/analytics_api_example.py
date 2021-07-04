@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 from os.path import dirname, abspath, join
+import argparse
 import sys
 
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from access_token import AccessToken
 from api_config import ApiConfig
+from arguments import common_arguments
 from generic_requests import download_file
 from utils import input_number
 from utils import input_path_for_write
 
-def main():
+def main(argv=[]):
     """
     This script shows how to use the Pinterest API asynchronous report functionality
     to download advertiser delivery metrics reports. It is adapted from sample code
@@ -33,12 +35,14 @@ def main():
     4. Configure the options for the asynchronous report, and run the report.
     5. Download the report to a file.
     """
-    # get configuration from defaults and/or the environment
-    api_config = ApiConfig()
+    parser = argparse.ArgumentParser(description='Analytics API Example')
+    common_arguments(parser)
+    args = parser.parse_args(argv)
 
+    # Get configuration from defaults and/or the environment.
     # Set the API configuration verbosity to 2 to show all of requests
     # and response statuses. To see the complete responses, set verbosity to 3.
-    api_config.verbosity = 2
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from advertisers import Advertisers
@@ -51,7 +55,7 @@ def main():
     # Note that the OAuth will fail if your application does not
     # have access to the scope that is required to access
     # linked business accounts.
-    access_token = AccessToken(api_config)
+    access_token = AccessToken(api_config, name=args.access_token)
     access_token.fetch(scopes=[Scope.READ_USERS,Scope.READ_ADVERTISERS])
 
     # Sample: Get my user id
@@ -139,4 +143,4 @@ def main():
     download_file(report.url(), path)
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

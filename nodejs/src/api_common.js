@@ -25,6 +25,7 @@ export class ApiCommon {
     if (this.api_config.verbosity >= 1) {
       console.log(`<Response [${response.statusCode}]>`);
       if (this.api_config.verbosity >= 3) {
+        console.log('x-pinterest-rid:', response.headers['x-pinterest-rid']);
         console.log(response.body);
       }
     }
@@ -37,12 +38,12 @@ export class ApiCommon {
       console.log(`<Response [${error.response.statusCode}]>`);
       console.log(error_message);
       if (this.api_config.verbosity >= 2) {
-        console.log(error.response.body);
         console.log('x-pinterest-rid:', error.response.headers['x-pinterest-rid']);
+        console.log(error.response.body);
       }
     }
     if (error.response.statusCode == 429) {
-      const detail = error.response.body.message_detail;
+      const detail = error.response.body.message_detail || error.response.body.message;
       if (detail && detail.toLowerCase().includes('spam')) {
         throw new SpamError(detail);
       }
