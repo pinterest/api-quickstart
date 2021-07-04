@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from os.path import dirname, abspath, join
+import argparse
 import sys
 import time
 
@@ -7,8 +8,9 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
 from access_token import AccessToken
+from arguments import common_arguments
 
-def main():
+def main(argv=[]):
     """
     This script extends the example in get_access_token.py by demonstrating
     how to use the OAuth refresh token to obtain a new access token.
@@ -16,15 +18,19 @@ def main():
     has actually changed and that the new access token can be used to access
     the associated user's profile.
     """
-   # get configuration from defaults and/or the environment
-    api_config = ApiConfig()
+    parser = argparse.ArgumentParser(description='Refresh Pinterest OAuth token')
+    common_arguments(parser)
+    args = parser.parse_args(argv)
+
+    # get configuration from defaults and/or the environment
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from user import User
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
-    access_token = AccessToken(api_config)
+    access_token = AccessToken(api_config, name=args.access_token)
     access_token.fetch()
     hashed = access_token.hashed()
     access_token_hashes = [hashed]
@@ -76,4 +82,4 @@ def main():
     user_me.print_summary(user_me_data)
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])

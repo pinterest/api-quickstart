@@ -18,7 +18,7 @@ DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/'
 DEFAULT_OAUTH_TOKEN_DIR = '.'
 
 class ApiConfig:
-    def __init__(self):
+    def __init__(self, verbosity=2, version=None):
         # Get Pinterest application ID and secret from the OS environment.
         # It is best practice not to store credentials in code.
         self.app_id = os.environ['PINTEREST_APP_ID']
@@ -35,10 +35,13 @@ class ApiConfig:
         # swizzle oauth and api hosts, based on environment
         self.oauth_uri = os.environ.get('PINTEREST_OAUTH_URI') or DEFAULT_OAUTH_URI
         self.api_uri = os.environ.get('PINTEREST_API_URI') or DEFAULT_API_URI
-        self.version = os.environ.get('PINTEREST_API_VERSION') or DEFAULT_API_VERSION
+        if (version):
+            self.version = 'v' + str(version)
+        else:
+            self.version = os.environ.get('PINTEREST_API_VERSION') or DEFAULT_API_VERSION
 
         # default level of verbosity, probably should switch to logging
-        self.verbosity = 1
+        self.verbosity = verbosity
 
         # set up to load the code modules for this version of the API
         sys.path.append(abspath(join(dirname(__file__), self.version)))

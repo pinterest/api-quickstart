@@ -7,6 +7,7 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
 from access_token import AccessToken
+from arguments import common_arguments
 
 def main(argv=[]):
     """
@@ -40,11 +41,11 @@ def main(argv=[]):
     parser.add_argument('-w', '--write', action='store_true', help='write access token to file')
     parser.add_argument('-ct', '--cleartext', action='store_true', help='print the token in clear text')
     parser.add_argument('-s', '--scopes', help='comma separated list of scopes')
+    common_arguments(parser)
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig()
-    api_config.verbosity = 2
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from oauth_scope import Scope
@@ -52,7 +53,7 @@ def main(argv=[]):
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
-    access_token = AccessToken(api_config)
+    access_token = AccessToken(api_config, name=args.access_token)
     scopes=None # use the default set of scopes
     if args.scopes:
         # use the comma-separated list of scopes passed as a command-line argument

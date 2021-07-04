@@ -16,6 +16,7 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 from api_common import SpamException
 from api_config import ApiConfig
 from access_token import AccessToken
+from arguments import common_arguments
 
 def main(argv=[]):
     """
@@ -51,12 +52,15 @@ def main(argv=[]):
     parser.add_argument('-t', '--target-access-token', help='target access token name')
     parser.add_argument('--all', dest='all_boards', action='store_true', help='copy all boards from source to target')
     parser.add_argument('--dry-run', action='store_true', help='print changes but do not execute them')
+    common_arguments(parser)
     args = parser.parse_args(argv)
 
     # Check the combinations of arguments. The comment at the top of this function
     # describes the intended use cases.
     args_error = None
     if args.target_access_token:
+        if args.access_token:
+            args_error = 'generic access token may not be specified when using a target access token'
         if not args.source_access_token:
             args_error = 'source access token is required when using a target access token'
     else:
@@ -64,6 +68,8 @@ def main(argv=[]):
             args_error = 'all boards option requires a target access token'
         if not args.name:
             args_error = 'target board name is required when not using a target access token'
+        if args.source_access_token and args.access_token:
+            args_error = 'generic access token may not be specified when using a source access token'
 
     if args.all_boards and args.name:
         args_error = 'the name and all options are mutually exclusive'
@@ -82,8 +88,7 @@ def main(argv=[]):
         exit(1)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig()
-    api_config.verbosity = 2
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from board import Board
@@ -113,7 +118,7 @@ def main(argv=[]):
     if args.source_access_token:
         source_token = AccessToken(api_config, name=args.source_access_token)
     else:
-        source_token = AccessToken(api_config)
+        source_token = AccessToken(api_config, name=args.access_token)
     source_token_scopes = [Scope.READ_PINS, Scope.READ_BOARDS]
 
     # Default to use the source token (same account) if the target token is not specified.

@@ -11,6 +11,7 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
 from access_token import AccessToken
+from arguments import common_arguments
 from utils import input_one_of
 
 def main(argv=[]):
@@ -22,6 +23,7 @@ def main(argv=[]):
     parser = argparse.ArgumentParser(description='Delete one Board or all Boards');
     parser.add_argument('-b', '--board-id', help='identifier of board to be deleted');
     parser.add_argument('--all-boards', action='store_true', help='delete all boards from the account');
+    common_arguments(parser)
     args = parser.parse_args(argv);
 
     # Check the arguments: need specify exactly one of board_id and all_boards.
@@ -31,8 +33,7 @@ def main(argv=[]):
         exit(1);
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig()
-    api_config.verbosity = 2
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from board import Board
@@ -40,7 +41,7 @@ def main(argv=[]):
     from user import User
 
     # get access token
-    access_token = AccessToken(api_config)
+    access_token = AccessToken(api_config, name=args.access_token)
     access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_BOARDS, Scope.WRITE_BOARDS])
 
     if args.all_boards: # delete all boards for the user

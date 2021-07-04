@@ -7,6 +7,8 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
 from access_token import AccessToken
+from arguments import common_arguments
+from arguments import positive_integer
 
 def main(argv=[]):
     """
@@ -14,11 +16,6 @@ def main(argv=[]):
     User's profile. It demonstrates how to get paginated information from
     the Pinterest API.
     """
-    def positive_integer(number):
-        ivalue = int(number)
-        if ivalue <= 0:
-            raise argparse.ArgumentTypeError(f'{number} must be a positive integer')
-        return ivalue
 
     parser = argparse.ArgumentParser(description="Get A User's Boards")
     parser.add_argument('-ps', '--page-size', help='Boards per page',
@@ -29,11 +26,11 @@ def main(argv=[]):
     parser.add_argument('--include-archived', help='Include archived boards?', dest='include_archived', action='store_true')
     parser.add_argument('--no-include-archived', dest='include_archived', action='store_false')
     parser.set_defaults(include_archived=False)
+    common_arguments(parser)
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig()
-    api_config.verbosity = 2
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from board import Board
@@ -42,7 +39,7 @@ def main(argv=[]):
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
-    access_token = AccessToken(api_config)
+    access_token = AccessToken(api_config, name=args.access_token)
     access_token.fetch(scopes=[Scope.READ_USERS,Scope.READ_BOARDS])
 
     # use the access token to get information about the user
