@@ -73,20 +73,30 @@ class IntegrationMocks(unittest.TestCase):
     """
     @contextlib.contextmanager
     def mock_redirect(self):
-        # This is the function that is run by the thread.
+        """
+        This is the function that is run by the thread. It needs to keep trying
+        to mock the redirect until the test application is ready.
+        """
         def send_test_redirect():
-            while True:
-                # use requests.request to avoid monkey-patched function
-                response = requests.request(
-                    'GET',
-                    'http://localhost:8085/?test-path&code=test-oauth-code',
-                    allow_redirects=False)
-                print('response to redirect (301 expected): ' + str(response))
-                if response.ok:
-                    return
-                # if at first you don't succeed, try try again. but not too fast.
-                time.sleep(0.5)
+            for attempt in range(20): # try for 2 seconds
+                time.sleep(0) # yield so that the test thread can start
+                try:
+                    # use requests.request to avoid monkey-patched function
+                    response = requests.request(
+                        'GET',
+                        'http://localhost:8085/?test-path&code=test-oauth-code',
+                        allow_redirects=False)
+                    print('response to redirect (301 expected): ' + str(response))
+                    if response.ok:
+                        return
+                except:
+                    # most likely, the test has not yet started the local web server yet
+                    pass
 
+                # if at first you don't succeed, try try again. but not too fast.
+                time.sleep(0.1)
+
+        # start the thread and then yield to the test application
         redirect_thread = threading.Thread(name='redirect', target=send_test_redirect)
         redirect_thread.start()
         try:

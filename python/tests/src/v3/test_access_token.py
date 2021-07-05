@@ -2,12 +2,12 @@ import unittest
 import mock
 import json
 
-from src.access_token import AccessToken
+from src.v3.access_token import AccessToken
 
 class AccessTokenTest(unittest.TestCase):
 
-    @mock.patch('src.access_token.requests.put')
-    @mock.patch('src.access_token.user_auth.get_auth_code')
+    @mock.patch('src.v3.access_token.requests.put')
+    @mock.patch('src.access_token_common.user_auth.get_auth_code')
     def test_access_token(self, mock_get_auth_code, mock_requests_put):
         mock_get_auth_code.return_value = 'test-auth-code'
 

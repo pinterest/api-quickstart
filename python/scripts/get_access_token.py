@@ -6,7 +6,6 @@ import sys
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
-from access_token import AccessToken
 from arguments import common_arguments
 
 def main(argv=[]):
@@ -48,6 +47,7 @@ def main(argv=[]):
     api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
+    from access_token import AccessToken
     from oauth_scope import Scope
     from user import User
 
