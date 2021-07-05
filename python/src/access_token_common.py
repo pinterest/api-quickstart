@@ -3,9 +3,6 @@ import hashlib
 import json
 import os
 import pathlib
-import requests
-
-import user_auth
 
 class AccessTokenCommon:
     def __init__(self, api_config, name=None):
@@ -53,17 +50,7 @@ class AccessTokenCommon:
         self.oauth(scopes=scopes, refreshable=refreshable)
 
     def oauth(self, scopes=None, refreshable=True):
-        """
-        Execute the OAuth 2.0 process for obtaining an access token.
-        For more information, see IETF RFC 6749: https://tools.ietf.org/html/rfc6749
-        """
-        print('getting auth_code...')
-        auth_code = user_auth.get_auth_code(self.api_config, scopes=scopes, refreshable=refreshable)
-        print(f'exchanging auth_code for {self.name}...')
-        self.exchange_auth_code(auth_code)
-
-    def exchange_auth_code(self, auth_code):
-        print('exchange_auth_code must be overridden.')
+        print('oauth() must be overridden')
 
     def from_environment(self):
         """

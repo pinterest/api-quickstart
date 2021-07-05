@@ -1,10 +1,21 @@
 import requests
 
 from access_token_common import AccessTokenCommon
+from user_auth import get_auth_code
 
 class AccessToken(AccessTokenCommon):
     def __init__(self, api_config, name=None):
         super().__init__(api_config, name)
+
+    def oauth(self, scopes=None, refreshable=True):
+        """
+        Execute the OAuth 2.0 process for obtaining an access token.
+        For more information, see IETF RFC 6749: https://tools.ietf.org/html/rfc6749
+        """
+        print('getting auth_code...')
+        auth_code = get_auth_code(self.api_config, scopes=scopes, refreshable=refreshable)
+        print(f'exchanging auth_code for {self.name}...')
+        self.exchange_auth_code(auth_code)
 
     def exchange_auth_code(self, auth_code):
         """
