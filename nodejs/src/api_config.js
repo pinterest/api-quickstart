@@ -13,13 +13,12 @@ export class ApiConfig {
     const DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/';
     const DEFAULT_OAUTH_TOKEN_DIR = '.'
 
-    // Get Pinterest application ID and secret from the OS environment.
-    // It is best practice not to store credentials in code.
-    this.app_id = process.env.PINTEREST_APP_ID;
-    this.app_secret = process.env.PINTEREST_APP_SECRET;
-    if (!this.app_id || !this.app_secret) {
-      throw new Error('PINTEREST_APP_ID and PINTEREST_APP_SECRET must be set in the environment.');
-    }
+    // default level of verbosity, probably should switch to logging
+    this.verbosity = 2;
+
+    this.version = process.env.PINTEREST_API_VERSION || DEFAULT_API_VERSION;
+
+    this.get_application_id();
 
     // might want to get these from the environment in the future
     this.port = DEFAULT_PORT;
@@ -31,9 +30,45 @@ export class ApiConfig {
     // swizzle oauth and api hosts, based on environment
     this.oauth_uri = process.env.PINTEREST_OAUTH_URI || DEFAULT_OAUTH_URI;
     this.api_uri = process.env.PINTEREST_API_URI || DEFAULT_API_URI;
-    this.version = process.env.PINTEREST_API_VERSION || DEFAULT_API_VERSION;
+  }
 
-    // default level of verbosity, probably should switch to logging
-    this.verbosity = 1;
+  /**
+   * Get Pinterest application ID and secret from the OS environment.
+   * It is best practice not to store credentials in code nor to provide
+   * credentials on a shell command line.
+   *
+   * First, try the version-specific environment variables like
+   * PINTEREST_V3_APP_ID and PINTEREST_V3_APP_SECRET.
+   * Then, try the non-version-specific environment variables like
+   * PINTEREST_V5_APP_ID and PINTEREST_V5_APP_SECRET.
+   *
+   * Exit with error code 1 (argument error) if the application id and secret
+   * can not be found in the environment.
+   */
+  get_application_id() {
+    var env_app_id = `PINTEREST_${this.version}_APP_ID`.toUpperCase();
+    var env_app_secret = `PINTEREST_${this.version}_APP_SECRET`.toUpperCase();
+    const app_id = process.env[env_app_id];
+    const app_secret = process.env[env_app_secret];
+
+    if (app_id && app_secret) {
+      this.app_id = app_id;
+      this.app_secret = app_secret;
+    } else {
+      // try non-version-specific application ID and secret
+      env_app_id = 'PINTEREST_APP_ID';
+      env_app_secret = 'PINTEREST_APP_SECRET';
+      this.app_id = process.env[env_app_id];
+      this.app_secret = process.env[env_app_secret];
+    }
+
+    if (this.app_id && this.app_secret) {
+      if (this.verbosity >= 2) {
+        console.log(`Using application ID and secret from ${env_app_id} and ${env_app_secret}.`);
+        return;
+      }
+    }
+
+    throw new Error(`${env_app_id} and ${env_app_secret} must be set in the environment.`);
   }
 }

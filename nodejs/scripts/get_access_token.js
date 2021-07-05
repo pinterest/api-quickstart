@@ -61,7 +61,13 @@ async function main (argv) {
   } else {
     // Try the different methods for getting an access token: from the environment,
     // from a file, and from Pinterest via the browser.
-    await access_token.fetch({});
+    try {
+      await access_token.fetch({});
+    } catch (error) { // probably because scopes are required
+      console.log(error);
+      parser.print_usage();
+      process.exit(1);
+    }
   }
 
   // Note: It is best practice not to print credentials in clear text.

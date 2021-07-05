@@ -18,6 +18,9 @@ export class AccessToken extends AccessTokenCommon {
     console.log('exchanging auth_code for access_token...');
     var response;
     try {
+      if (this.api_config.verbosity >= 2) {
+        console.log('PUT', this.api_uri + '/v3/oauth/access_token/');
+      }
       response = await got.put(this.api_uri + '/v3/oauth/access_token/', {
         headers: this.auth_headers, // use the recommended authorization approach
         json: {
@@ -57,6 +60,9 @@ export class AccessToken extends AccessTokenCommon {
     console.log('refreshing access_token...');
     var response;
     try {
+      if (this.api_config.verbosity >= 2) {
+        console.log('PUT', this.api_uri + '/v3/oauth/access_token/');
+      }
       response = await got.put(this.api_uri + '/v3/oauth/access_token/', {
         headers: this.auth_headers,
         json: {

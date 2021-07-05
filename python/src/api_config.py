@@ -19,6 +19,9 @@ DEFAULT_OAUTH_TOKEN_DIR = '.'
 
 class ApiConfig:
     def __init__(self, verbosity=2, version=None):
+        # Set logging output (verbosity) level
+        self.verbosity = verbosity
+
         # Get Pinterest API version from the command line, environment, or above default.
         if (version):
             self.version = 'v' + str(version)
@@ -40,16 +43,14 @@ class ApiConfig:
         self.oauth_uri = os.environ.get('PINTEREST_OAUTH_URI') or DEFAULT_OAUTH_URI
         self.api_uri = os.environ.get('PINTEREST_API_URI') or DEFAULT_API_URI
 
-        # default level of verbosity, probably should switch to logging
-        self.verbosity = verbosity
-
         # set up to load the code modules for this version of the API
         sys.path.append(abspath(join(dirname(__file__), self.version)))
 
     def get_application_id(self):
         """
         Get Pinterest application ID and secret from the OS environment.
-        It is best practice not to store credentials in code.
+        It is best practice not to store credentials in code nor to provide
+        credentials on a shell command line.
 
         First, try the version-specific environment variables like
         PINTEREST_V3_APP_ID and PINTEREST_V3_APP_SECRET.
@@ -75,14 +76,10 @@ class ApiConfig:
             self.app_secret = os.environ.get(env_app_secret)
 
         if self.app_id and self.app_secret:
-            print(f"Using application ID and secret from {env_app_id} and {env_app_secret}.")
-        elif self.app_id:
-            print(f"Missing application secret in {env_app_secret}.")
-            exit(1)
-        elif self.app_secret:
-            print(f"Missing application id in {env_app_id}.")
-            exit(1)
-        else:
-            print(f"Missing application id and secret in {env_app_id} and {env_app_secret}.")
-            exit(1)
+            if self.verbosity >= 2:
+                print(f"Using application ID and secret from {env_app_id} and {env_app_secret}.")
+            return
+
+        print(f"{env_app_id} and {env_app_secret} must be set in the environment.")
+        exit(1)
         
