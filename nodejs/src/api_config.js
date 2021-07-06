@@ -8,7 +8,7 @@ export class ApiConfig {
     const DEFAULT_PORT = 8085;
     const DEFAULT_REDIRECT_URI = 'http://localhost:' + DEFAULT_PORT + '/';
     const DEFAULT_API_URI = 'https://api.pinterest.com';
-    const DEFAULT_API_VERSION = 'v3'
+    const DEFAULT_API_VERSION = 'v5'
     const DEFAULT_OAUTH_URI = 'https://www.pinterest.com';
     const DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/';
     const DEFAULT_OAUTH_TOKEN_DIR = '.'

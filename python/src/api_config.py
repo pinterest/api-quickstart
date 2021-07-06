@@ -11,7 +11,7 @@ from os.path import dirname, abspath, join
 DEFAULT_PORT = 8085
 DEFAULT_REDIRECT_URI = 'http://localhost:' + str(DEFAULT_PORT) + '/'
 DEFAULT_API_URI = 'https://api.pinterest.com'
-DEFAULT_API_VERSION = 'v3'
+DEFAULT_API_VERSION = 'v5'
 DEFAULT_OAUTH_URI = 'https://www.pinterest.com'
 DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/'
 # OAuth tokens are in the current directory by default
