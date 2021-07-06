@@ -4,7 +4,7 @@
 # version-specific script, based on the PINTEREST_API_VERSION environment
 # variable. More documentation is available in each version-specific script.
 #
-: ${PINTEREST_API_VERSION:=v3}
+: ${PINTEREST_API_VERSION:=v5}
 
 SCRIPT_NAME="${BASH_SOURCE[0]}"
 
