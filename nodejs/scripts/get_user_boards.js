@@ -2,6 +2,7 @@
 import {ArgumentParser} from 'argparse'
 
 import {ApiConfig} from '../src/api_config.js'
+import {common_arguments} from '../src/arguments.js'
 
 /**
  *  This script prints summary information for each of the boards in a
@@ -22,11 +23,11 @@ async function main (argv) {
                       {help: 'Include archived boards?', dest: 'include_archived', action: 'store_true'});
   parser.add_argument('--no-include-archived',
                       {dest: 'include_archived', default: false, action: 'store_false'});
+  common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig();
-  api_config.verbosity = 2;
+  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
 
   // imports that depend on the version of the API
   const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
@@ -36,8 +37,7 @@ async function main (argv) {
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
-  const access_token = new AccessToken(api_config, {});
-  var scopes = null // use the default set of scopes
+  const access_token = new AccessToken(api_config, {name: args.access_token});
   await access_token.fetch({scopes:[Scope.READ_USERS,Scope.READ_BOARDS]});
 
   // use the access token to get information about the user

@@ -1,5 +1,5 @@
 export class ApiConfig {
-  constructor() {
+  constructor({verbosity=2, version=null}) {
     // Construct the redirect_uri for the OAuth process. The REDIRECT_URI must
     // be literally the same as configured at https://developers.pinterest.com/manage/.
     // The port is fixed for now. It would be better to configure a selection
@@ -14,9 +14,14 @@ export class ApiConfig {
     const DEFAULT_OAUTH_TOKEN_DIR = '.'
 
     // default level of verbosity, probably should switch to logging
-    this.verbosity = 2;
+    this.verbosity = verbosity;
 
-    this.version = process.env.PINTEREST_API_VERSION || DEFAULT_API_VERSION;
+    // Get Pinterest API version from the command line, environment, or above default.
+    if (version) {
+      this.version = 'v' + version;
+    } else {
+      this.version = process.env.PINTEREST_API_VERSION || DEFAULT_API_VERSION;
+    }
 
     this.get_application_id();
 
@@ -65,8 +70,8 @@ export class ApiConfig {
     if (this.app_id && this.app_secret) {
       if (this.verbosity >= 2) {
         console.log(`Using application ID and secret from ${env_app_id} and ${env_app_secret}.`);
-        return;
       }
+      return;
     }
 
     throw new Error(`${env_app_id} and ${env_app_secret} must be set in the environment.`);

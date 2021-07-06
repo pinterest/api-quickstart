@@ -19,7 +19,7 @@ describe('ApiConfig test environment', () => {
     // minimal environment
     process.env.PINTEREST_APP_ID = 'test-app-id';
     process.env.PINTEREST_APP_SECRET = 'test-app-secret';
-    const api_config = new ApiConfig();
+    const api_config = new ApiConfig({});
 
     expect(api_config.app_id).toEqual('test-app-id');
     expect(api_config.app_secret).toEqual('test-app-secret');
@@ -46,7 +46,7 @@ describe('ApiConfig test environment', () => {
     process.env.PINTEREST_OAUTH_URI = 'test-oauth-uri';
     process.env.PINTEREST_API_URI = 'test-api-uri';
     process.env.PINTEREST_API_VERSION = 'test-api-version';
-    const api_config = new ApiConfig();
+    const api_config = new ApiConfig({});
 
     expect(api_config.app_id).toEqual('test-app-id');
     expect(api_config.app_secret).toEqual('test-app-secret');

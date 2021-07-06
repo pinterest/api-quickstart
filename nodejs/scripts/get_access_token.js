@@ -2,6 +2,7 @@
 import {ArgumentParser} from 'argparse'
 
 import {ApiConfig} from '../src/api_config.js'
+import {common_arguments} from '../src/arguments.js'
 
 /**
  * The arguments for this script are intended to be used as follows:
@@ -32,11 +33,11 @@ async function main (argv) {
   parser.add_argument('-w', '--write', {action:'store_true', help:'write access token to file'});
   parser.add_argument('-ct', '--cleartext', {action:'store_true', help:'print the token in clear text'});
   parser.add_argument('-s', '--scopes', {help:'comma separated list of scopes'});
+  common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig();
-  api_config.verbosity = 2;
+  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
 
   // imports that depend on the version of the API
   const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
@@ -45,7 +46,7 @@ async function main (argv) {
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
-  const access_token = new AccessToken(api_config, {});
+  const access_token = new AccessToken(api_config, {name: args.access_token});
   if (args.scopes) {
     // use the comma-separated list of scopes passed as a command-line argument
     const scopes = args.scopes.split(',').map(scopeArg => {

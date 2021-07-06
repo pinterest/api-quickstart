@@ -10,6 +10,7 @@
 import {ArgumentParser} from 'argparse'
 
 import {ApiConfig} from '../src/api_config.js'
+import {common_arguments} from '../src/arguments.js'
 import {SpamError} from '../src/api_common.js'
 
 /**
@@ -48,12 +49,16 @@ async function main (argv) {
   parser.add_argument('-t', '--target-access-token', {help: 'target access token name'});
   parser.add_argument('--all', {dest: 'all_boards', action: 'store_true', help: 'copy all boards from source to target'});
   parser.add_argument('--dry-run', {action: 'store_true', help: 'print changes but do not execute them'});
+  common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // Check the combinations of arguments. The comment at the top of this function
   // describes the intended use cases.
   var args_error = null;
   if (args.target_access_token) {
+    if (args.access_token) {
+      args_error = 'generic access token may not be specified when using a target access token';
+    }
     if (!args.source_access_token) {
       args_error = 'source access token is required when using a target access token';
     }
@@ -63,6 +68,9 @@ async function main (argv) {
     }
     if (!args.name) {
       args_error = 'target board name is required when not using a target access token';
+    }
+    if (args.source_access_token && args.access_token) {
+      args_error = 'generic access token may not be specified when using a source access token';
     }
   }
 
@@ -87,8 +95,7 @@ async function main (argv) {
   }
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig();
-  api_config.verbosity = 2;
+  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
 
   // imports that depend on the version of the API
   const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
@@ -128,7 +135,7 @@ async function main (argv) {
   if (args.source_access_token) {
     source_token = new AccessToken(api_config, {name: args.source_access_token});
   } else {
-    source_token = new AccessToken(api_config, {});
+    source_token = new AccessToken(api_config, {name: args.access_token});
   }
   const source_token_scopes = [Scope.READ_PINS, Scope.READ_BOARDS];
 

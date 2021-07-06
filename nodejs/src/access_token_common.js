@@ -86,6 +86,7 @@ export class AccessTokenCommon {
     }
     this.access_token = access_token;
     this.refresh_token = data.refresh_token;
+    this.scopes = data.scopes;
     console.log(`read ${this.name} from ${this.path}`);
   }
 
@@ -93,7 +94,8 @@ export class AccessTokenCommon {
   write() {
     const output = {'name': this.name,
                     'access_token': this.access_token,
-                    'refresh_token': this.refresh_token
+                    'refresh_token': this.refresh_token,
+                    'scopes': this.scopes
                    }
     const json = JSON.stringify(output, null, 2)
     /* Make credentials-bearing file as secure as possible with mode 0o600. */

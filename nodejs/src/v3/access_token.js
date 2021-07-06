@@ -44,6 +44,7 @@ export class AccessToken extends AccessTokenCommon {
     // The scope returned in the response includes all of the scopes that
     // have been approved now or in the past by the user.
     console.log('scope: ' + response.body.scope);
+    this.scopes = response.body.scope;
     this.access_token = response.body.access_token;
     this.refresh_token = response.body.data.refresh_token;
     if (this.refresh_token) {
