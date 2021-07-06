@@ -19,10 +19,17 @@ DEFAULT_OAUTH_TOKEN_DIR = '.'
 
 class ApiConfig:
     def __init__(self, verbosity=2, version=None):
-        # Get Pinterest application ID and secret from the OS environment.
-        # It is best practice not to store credentials in code.
-        self.app_id = os.environ['PINTEREST_APP_ID']
-        self.app_secret = os.environ['PINTEREST_APP_SECRET']
+        # Set logging output (verbosity) level
+        self.verbosity = verbosity
+
+        # Get Pinterest API version from the command line, environment, or above default.
+        if (version):
+            self.version = 'v' + str(version)
+        else:
+            self.version = os.environ.get('PINTEREST_API_VERSION') or DEFAULT_API_VERSION
+
+        # get the required application ID and secret from the environment, based on the version
+        self.get_application_id()
 
         # might want to get these from the environment in the future
         self.port = DEFAULT_PORT
@@ -35,13 +42,44 @@ class ApiConfig:
         # swizzle oauth and api hosts, based on environment
         self.oauth_uri = os.environ.get('PINTEREST_OAUTH_URI') or DEFAULT_OAUTH_URI
         self.api_uri = os.environ.get('PINTEREST_API_URI') or DEFAULT_API_URI
-        if (version):
-            self.version = 'v' + str(version)
-        else:
-            self.version = os.environ.get('PINTEREST_API_VERSION') or DEFAULT_API_VERSION
-
-        # default level of verbosity, probably should switch to logging
-        self.verbosity = verbosity
 
         # set up to load the code modules for this version of the API
         sys.path.append(abspath(join(dirname(__file__), self.version)))
+
+    def get_application_id(self):
+        """
+        Get Pinterest application ID and secret from the OS environment.
+        It is best practice not to store credentials in code nor to provide
+        credentials on a shell command line.
+
+        First, try the version-specific environment variables like
+        PINTEREST_V3_APP_ID and PINTEREST_V3_APP_SECRET.
+        Then, try the non-version-specific environment variables like
+        PINTEREST_V5_APP_ID and PINTEREST_V5_APP_SECRET.
+
+        Exit with error code 1 (argument error) if the application id and secret
+        can not be found in the environment.
+        """
+        env_app_id = f"PINTEREST_{self.version}_APP_ID".upper()
+        env_app_secret = f"PINTEREST_{self.version}_APP_SECRET".upper()
+        app_id = os.environ.get(env_app_id)
+        app_secret = os.environ.get(env_app_secret)
+        if app_id and app_secret:
+            # version-specific application ID and secret override non-version-specific credentials
+            self.app_id = app_id
+            self.app_secret = app_secret
+        else:
+            # try non-version-specific application ID and secret
+            env_app_id = 'PINTEREST_APP_ID'
+            env_app_secret = 'PINTEREST_APP_SECRET'
+            self.app_id = os.environ.get(env_app_id)
+            self.app_secret = os.environ.get(env_app_secret)
+
+        if self.app_id and self.app_secret:
+            if self.verbosity >= 2:
+                print(f"Using application ID and secret from {env_app_id} and {env_app_secret}.")
+            return
+
+        print(f"{env_app_id} and {env_app_secret} must be set in the environment.")
+        exit(1)
+        

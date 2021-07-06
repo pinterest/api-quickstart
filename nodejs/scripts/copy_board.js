@@ -9,7 +9,6 @@
  */
 import {ArgumentParser} from 'argparse'
 
-import {AccessToken} from '../src/access_token.js'
 import {ApiConfig} from '../src/api_config.js'
 import {SpamError} from '../src/api_common.js'
 
@@ -92,6 +91,7 @@ async function main (argv) {
   api_config.verbosity = 2;
 
   // imports that depend on the version of the API
+  const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
   const {Board} = await import(`../src/${api_config.version}/board.js`);
   const {Pin} = await import(`../src/${api_config.version}/pin.js`);
   const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);

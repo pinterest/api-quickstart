@@ -6,7 +6,6 @@ import sys
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_config import ApiConfig
-from access_token import AccessToken
 from arguments import common_arguments
 
 def main(argv=[]):
@@ -48,6 +47,7 @@ def main(argv=[]):
     api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
+    from access_token import AccessToken
     from oauth_scope import Scope
     from user import User
 
@@ -60,7 +60,13 @@ def main(argv=[]):
         scopes = list(map(lambda arg: Scope[arg.upper()], args.scopes.split(',')))
         access_token.oauth(scopes=scopes)
     else:
-        access_token.fetch()
+        try:
+            access_token.fetch()
+        except ValueError as err:
+            # ValueError indicates that something was wrong with the arguments
+            print(err)
+            parser.print_usage()
+            exit(1)
 
     # Note: It is best practice not to print credentials in clear text.
     # Pinterest engineers asked for this capability to make it easier to support partners.

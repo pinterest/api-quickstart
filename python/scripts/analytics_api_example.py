@@ -5,7 +5,6 @@ import sys
 
 sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
-from access_token import AccessToken
 from api_config import ApiConfig
 from arguments import common_arguments
 from generic_requests import download_file
@@ -45,6 +44,7 @@ def main(argv=[]):
     api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
+    from access_token import AccessToken
     from advertisers import Advertisers
     from delivery_metrics import DeliveryMetrics
     from delivery_metrics import DeliveryMetricsAsyncReport

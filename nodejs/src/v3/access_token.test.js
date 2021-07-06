@@ -1,9 +1,9 @@
 import {AccessToken} from './access_token.js'
-import {Scope} from './v3/oauth_scope.js'
-import get_auth_code from './user_auth.js'
+import {Scope} from './oauth_scope.js'
+import get_auth_code from '../user_auth.js'
 import got from 'got'
 
-jest.mock('./user_auth');
+jest.mock('../user_auth');
 jest.mock('got');
 
 describe('access_token tests', () => {
