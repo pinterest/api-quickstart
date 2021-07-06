@@ -13,6 +13,9 @@ describe('ApiConfig test environment', () => {
   });
 
   test('API configuration from defaults', () => {
+    // check output
+    console.log = jest.fn();
+
     // minimal environment
     process.env.PINTEREST_APP_ID = 'test-app-id';
     process.env.PINTEREST_APP_SECRET = 'test-app-secret';
@@ -26,9 +29,14 @@ describe('ApiConfig test environment', () => {
     expect(api_config.oauth_uri).toEqual('https://www.pinterest.com');
     expect(api_config.api_uri).toEqual('https://api.pinterest.com');
     expect(api_config.version).toEqual('v3');
+    expect(console.log.mock.calls[0][0]).toEqual(
+      'Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.');
   });
 
   test('environment API environment', () => {
+    // check output
+    console.log = jest.fn();
+
     // minimal environment
     process.env.PINTEREST_APP_ID = 'test-app-id';
     process.env.PINTEREST_APP_SECRET = 'test-app-secret';
@@ -48,5 +56,7 @@ describe('ApiConfig test environment', () => {
     expect(api_config.oauth_uri).toEqual('test-oauth-uri');
     expect(api_config.api_uri).toEqual('test-api-uri');
     expect(api_config.version).toEqual('test-api-version');
+    expect(console.log.mock.calls[0][0]).toEqual(
+      'Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.');
   });
 });
