@@ -6,6 +6,7 @@
 import {ArgumentParser} from 'argparse'
 
 import {ApiConfig} from '../src/api_config.js'
+import {common_arguments} from '../src/arguments.js'
 import {Input} from '../src/utils.js'
 
 /**
@@ -19,6 +20,7 @@ async function main (argv) {
   });
   parser.add_argument('-b', '--board-id', {help: 'board identifier'});
   parser.add_argument('--all-boards', {action: 'store_true', help: 'delete all boards from the account'});
+  common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // Check the arguments: need specify exactly one of board_id and all_boards.
@@ -29,8 +31,7 @@ async function main (argv) {
   }
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig();
-  api_config.verbosity = 2;
+  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
 
   // imports that depend on the version of the API
   const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
@@ -39,7 +40,7 @@ async function main (argv) {
   const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   // get access token
-  const access_token = new AccessToken(api_config, {});
+  const access_token = new AccessToken(api_config, {name: args.access_token});
   await access_token.fetch({scopes:[Scope.READ_USERS,Scope.READ_BOARDS,Scope.WRITE_BOARDS]});
 
   var boards;

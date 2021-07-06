@@ -10,6 +10,7 @@
 import {ArgumentParser} from 'argparse'
 
 import {ApiConfig} from '../src/api_config.js'
+import {common_arguments} from '../src/arguments.js'
 
 /**
  * This script copies a pin to a board, both of which are specified by identifiers
@@ -27,11 +28,11 @@ async function main (argv) {
   parser.add_argument('-p', '--pin-id', {required: true, help: 'source pin identifier'});
   parser.add_argument('-b', '--board-id', {required: true, help: 'destination board identifier'});
   parser.add_argument('-s', '--section', {help: 'destination board section'});
+  common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig();
-  api_config.verbosity = 2;
+  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
 
   // imports that depend on the version of the API
   const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
@@ -40,7 +41,7 @@ async function main (argv) {
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
-  const access_token = new AccessToken(api_config, {});
+  const access_token = new AccessToken(api_config, {name: args.access_token});
   await access_token.fetch({scopes:[Scope.READ_PINS,Scope.WRITE_BOARDS,Scope.WRITE_PINS]});
 
   const pin = new Pin(args.pin_id, api_config, access_token);

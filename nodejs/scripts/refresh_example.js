@@ -1,18 +1,24 @@
 #!/usr/bin/env node
+import {ArgumentParser} from 'argparse'
+
 import {ApiConfig} from '../src/api_config.js'
+import {common_arguments} from '../src/arguments.js'
 
-async function main () {
+async function main (argv) {
+  const parser = new ArgumentParser({description: 'Get Pinterest OAuth token'});
+  common_arguments(parser);
+  const args = parser.parse_args(argv);
+
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig();
+  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
 
-  // imports that depend on the version of the API
   const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
   const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
   const {User} = await import(`../src/${api_config.version}/user.js`);
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
-  const access_token = new AccessToken(api_config, {});
+  const access_token = new AccessToken(api_config, {name: args.access_token});
 
   await access_token.fetch({scopes: [Scope.READ_USERS],refreshable:true});
   var hashed = access_token.hashed();
@@ -71,5 +77,5 @@ async function main () {
 }
 
 if (!process.env.TEST_ENV) {
-  main();
+  main(process.argv.slice(2));
 }

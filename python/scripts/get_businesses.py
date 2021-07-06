@@ -41,7 +41,7 @@ def main(argv=[]):
     user_me_data = user_me.get()
     user_me.print_summary(user_me_data)
 
-    print('trying /v3/users/me/businesses...')
+    print('trying to get businesses...')
     user_me_businesses = user_me.get_businesses()
     if user_me_businesses:
         print(user_me_businesses)
