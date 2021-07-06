@@ -35,15 +35,16 @@ This repository has code that is intended to provide a quick start for working w
 
 ## OAuth Authentication
 
-Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). For details regarding OAuth, please reference our [developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
+Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). For details regarding OAuth, please reference our [v5 developer docs](https://developers.pinterest.com/docs/v5/#tag/oauth) or [v3 developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
 
 An access token is used to authenticate most API calls. In general, access tokens are valid for relatively long periods of time, in order to avoid asking users to go through the OAuth flow too often. When an access token expires, it is possible to refresh the token -- a capability that the code in this repo also demonstrates.
 
 Like users, most developers do not want to have to go through the OAuth flow too often. So, the python code supports (and soon, other languages will support) two methods for storing OAuth access token:
-* Storing the access token to a JSON-encoded file. The default path in this repo for storing access tokens is `common/oauth_tokens/access_token.json`. To generate this file, use the language-specific `get_access_token` script with the `-w` argument. For example, set up the python environment and then run `python/scripts/get_access_token.py -w`. The contents of this file can be as simple as this JSON: `{"access_token": "<access token retrieved from OAuth flow>"}`. The complete set of JSON object keys are:
+* Storing the access token to a JSON-encoded file. The default path in this repo for storing access tokens is `common/oauth_tokens/access_token.json`. To generate this file, use the language-specific `get_access_token` script with the `-w` argument. You can also use the `-a` argument to specify the name of the token, which is the same as the name of the JSON file. For example, set up the python environment and then run `python/scripts/get_access_token.py -w -a my_access_token -s READ_USERS`. The contents of this file can be as simple as this JSON: `{"access_token": "<access token retrieved from OAuth flow>"}`. The complete set of JSON object keys are:
    * `access_token`: The access token returned by the OAuth flow. [required]
    * `name`: A textual description of the access token. (e.g. "API test account #2")
    * `refresh_token`: The refresh token returned by the OAuth flow.
+   * `scopes`: The OAuth scopes associated with the token
 * Storing the access token in an environment variable. The default environment variable is simply `ACCESS_TOKEN`, so running the command `export ACCESS_TOKEN=<access_token_retrieved_via_oauth>` will work in most situations. This method for specifying an access token is intended to be the easiest, fastest way to use an externally-generated access token with the code in this repo.
 
 The precedence order in this repo for obtaining an access token is: environment, file, execute the OAuth 2.0 flow.
@@ -65,5 +66,6 @@ The precedence order in this repo for obtaining an access token is: environment,
   * More languages are on the way. We're considering providing examples in ruby and Java.
 * Each language-specific directory (e.g. `python` or `bash`) has one or more of these subdirectories:
   * `scripts` are executable files that demonstrate one or more use cases.
-  * `src` contains code that is used by the scripts and that you can incorporate into your own applications
+  * `src` contains code that is used by the scripts and that you can incorporate into your own applications.
   * `tests` contains unit and integration tests.
+* Code that is specific to versions of the Pinterest API is in subdirectories of `src` (in the case of python and nodejs) or `scripts` (in the case of bash). The two versions supported by this quickstart are v3 and v5.

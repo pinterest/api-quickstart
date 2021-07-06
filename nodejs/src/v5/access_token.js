@@ -1,6 +1,7 @@
 import got from 'got'
 
 import {AccessTokenCommon} from '../access_token_common.js'
+import {Scope} from './oauth_scope.js'
 import get_auth_code from '../user_auth.js'
 
 export class AccessToken extends AccessTokenCommon {
@@ -19,7 +20,8 @@ export class AccessToken extends AccessTokenCommon {
    */
   async oauth({scopes=null, refreshable=true}) {
     if (!scopes) {
-      throw 'Pinterest API v5 requires scopes for OAuth';
+      scopes = [Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS];
+      console.log('v5 requires scopes for OAuth. setting to default: READ_USERS,READ_PINS,READ_BOARDS');
     }
 
     if (!refreshable) {

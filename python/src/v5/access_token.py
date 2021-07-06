@@ -2,6 +2,7 @@ import requests
 
 from access_token_common import AccessTokenCommon
 from user_auth import get_auth_code
+from oauth_scope import Scope
 
 class AccessToken(AccessTokenCommon):
     def __init__(self, api_config, name=None):
@@ -15,7 +16,8 @@ class AccessToken(AccessTokenCommon):
         For v5, scopes are required and tokens must be refreshable.
         """
         if not scopes:
-            raise ValueError('Pinterest API v5 requires scopes for OAuth')
+            scopes = [Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS]
+            print('v5 requires scopes for OAuth. setting to default: READ_USERS,READ_PINS,READ_BOARDS')
 
         if not refreshable:
             raise ValueError('Pinterest API v5 only provides refreshable OAuth access tokens')
