@@ -49,6 +49,11 @@ Like users, most developers do not want to have to go through the OAuth flow too
 
 The precedence order in this repo for obtaining an access token is: environment, file, execute the OAuth 2.0 flow.
 
+Code that implements OAuth is available for each language in this repo. The location of the code is as follows.
+   * One bash script for each version of the Pinterest API provide complete examples: [bash/scripts/v3/get_access_token.sh](bash/scripts/v3/get_access_token.sh) and [bash/scripts/v5/get_access_token.sh](bash/scripts/v5/get_access_token.sh).
+   * In python, the version-independent code in [python/src/user_auth.py](python/src/user_auth.py) opens a browser and handles the redirect to obtain an authorization code. The version-dependent code to exchange the authorization code for an access token is in [python/src/v3/access_token.py](python/src/v3/access_token.py) and [python/src/v5/access_token.py](python/src/v5/access_token.py). These two files also implement access token refresh.
+   * In JavaScript, the version-independent code in [nodejs/src/user_auth.js](nodejs/src/user_auth.js) opens a browser and handles the redirect to obtain an authorization code. The version-dependent code to exchange the authorization code for an access token is in [nodejs/src/v3/access_token.js](nodejs/src/v3/access_token.js) and [nodejs/src/v5/access_token.js](nodejs/src/v5/access_token.js). These two files also implement access token refresh.
+
 ## Security Notes
 
 * Best development practice is to keep authentication credentials (like your app secret and OAuth access tokens) out of code.
