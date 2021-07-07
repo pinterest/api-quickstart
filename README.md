@@ -33,7 +33,7 @@ This repository has code that is intended to provide a quick start for working w
 
 2. Pick one of the language directories (currently bash, nodejs and python) and follow the directions in the README file in the directory.
 
-## OAuth Authentication
+## OAuth 2.0 Authorization
 
 Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). For details regarding OAuth, please reference our [v5 developer docs](https://developers.pinterest.com/docs/v5/#tag/oauth) or [v3 developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
 
