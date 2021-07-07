@@ -87,7 +87,7 @@ class ApiObject(ApiCommon):
         return PagedIterator(self, path)
 
     @classmethod
-    def print_multiple(klass, page_size, object_name, object_class, paged_iterator):
+    def print_multiple(cls, page_size, object_name, object_class, paged_iterator):
         """
         Use the PagedIterator to print multiple objects.
         """

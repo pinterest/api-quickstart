@@ -11,7 +11,7 @@ class Pin(ApiObject):
         return self.request_data('/v3/pins/{}/'.format(self.pin_id))
 
     @classmethod
-    def print_summary(klass, pin_data):
+    def print_summary(cls, pin_data):
         print('--- Pin Summary ---')
         print(f"Pin ID: {pin_data['id']}")
         print(f"Type: {pin_data['type']}")
