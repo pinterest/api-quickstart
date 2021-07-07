@@ -28,7 +28,7 @@ describe('ApiConfig test environment', () => {
     expect(api_config.landing_uri).toEqual('https://developers.pinterest.com/manage/test-app-id');
     expect(api_config.oauth_uri).toEqual('https://www.pinterest.com');
     expect(api_config.api_uri).toEqual('https://api.pinterest.com');
-    expect(api_config.version).toEqual('v3');
+    expect(api_config.version).toEqual('v5');
     expect(console.log.mock.calls[0][0]).toEqual(
       'Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.');
   });

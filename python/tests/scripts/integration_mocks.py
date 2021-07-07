@@ -64,6 +64,7 @@ class IntegrationMocks(unittest.TestCase):
     # The integration tests start a web server on localhost and send a response to it.
     mock_os_environ = {'PINTEREST_APP_ID': 'test-app-id',
                        'PINTEREST_APP_SECRET': 'test-app-secret',
+                       'PINTEREST_API_VERSION': 'v3'
                        }
 
     
