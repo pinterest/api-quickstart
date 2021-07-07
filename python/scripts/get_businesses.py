@@ -49,4 +49,4 @@ def main(argv=[]):
         print('This account has no information on linked businesses.')
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
