@@ -22,6 +22,7 @@ class Board(ApiObject):
         print('--------------------')
 
     # provides a human-readable identifier for a board
+    @classmethod
     def text_id(klass, board_data):
         return board_data['url']
 
