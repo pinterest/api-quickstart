@@ -95,7 +95,7 @@ export class ApiObject extends ApiCommon {
         followRedirect: false
       });
     } catch (error) {
-      print_and_throw_error(error);
+      this.print_and_throw_error(error);
     }
   }
 
