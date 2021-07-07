@@ -13,13 +13,13 @@ class Board(ApiObject):
 
     # provides a human-readable identifier for a board
     @classmethod
-    def text_id(klass, board_data):
+    def text_id(cls, board_data):
         # simulate v3 URL to provide a text identifier
         return ('/' + board_data['owner']['username'] + '/' +
                 board_data['name'].lower().replace(' ', '-') + '/')
 
     @classmethod
-    def print_summary(klass, board_data):
+    def print_summary(cls, board_data):
         print('--- Board Summary ---')
         print(f"Board ID: {board_data['id']}")
         print(f"Name: {board_data['name']}")
@@ -57,14 +57,14 @@ class Board(ApiObject):
         return self.get_iterator(f'/v5/boards/{self.board_id}/sections')
 
     @classmethod
-    def print_section(klass, section_data):
+    def print_section(cls, section_data):
         print('--- Board Section ---')
         print(f"Section ID: {section_data['id']}")
         print(f"Name: {section_data['name']}")
         print('---------------------')
 
     @classmethod
-    def print_sections(klass, sections_iterator):
+    def print_sections(cls, sections_iterator):
         for section in sections_iterator:
             self.print_section(section)
 
