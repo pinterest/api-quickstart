@@ -72,7 +72,7 @@ export class AccessToken extends AccessTokenCommon {
         console.log('PUT', this.api_uri + '/v3/oauth/access_token/');
         if (this.api_config.verbosity >= 3) {
           this.api_config.credentials_warning();
-          console.log('PUT', this.api_uri + '/v3/oauth/access_token/');
+          console.log(put_data);
         }
       }
       const response = await got.put(this.api_uri + '/v3/oauth/access_token/', {
