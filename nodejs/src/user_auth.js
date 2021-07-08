@@ -2,6 +2,13 @@ import http from 'http'
 import fs from 'fs'
 import open from 'open'
 
+/**
+ * Executes the process required to obtain an OAuth user authentication code.
+ *   1. Use the default web browser to send a request to the /oauth endpoint.
+ *   2. Start a web (https) server on localhost to get the auth_code.
+ *   3. Wait until the browser executes the authentication process and sends
+ *      the code via the redirect.
+ */
 export default async function get_auth_code(
   api_config, {scopes = null, refreshable = true}) {
   const auth_code = new Promise((resolve, reject) => {
@@ -10,6 +17,10 @@ export default async function get_auth_code(
 
     // http is required to implement the Pinterest API redirect
     const server = http.createServer(function (req, res) {
+      if (api_config.verbosity >= 3) {
+        api_config.credentials_warning();
+        console.log('Redirect request path:', req.url);
+      }
       res.writeHead(301, {
         'Location': api_config.landing_uri
       })
@@ -45,6 +56,9 @@ export default async function get_auth_code(
   }
 
   // open the default browser for user interaction
+  if (api_config.verbosity >= 3) {
+    console.log('OAuth URI:', access_uri);
+  }
   open(access_uri);
 
   // Returns the promise that will eventually resolve into the auth_code.

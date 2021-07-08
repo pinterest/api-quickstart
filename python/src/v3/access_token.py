@@ -28,21 +28,22 @@ class AccessToken(AccessTokenCommon):
                     'grant_type': 'authorization_code'}
         if (self.api_config.verbosity >= 2):
             print('PUT', self.api_config.api_uri + '/v3/oauth/access_token/')
+            if (self.api_config.verbosity >= 3):
+                self.api_config.credentials_warning();
+                print(put_data)
         response = requests.put(self.api_config.api_uri + '/v3/oauth/access_token/',
                                 headers=self.auth_headers, data=put_data)
-        print(response)
-        respdict = response.json()
-        print('status: ' + respdict['status'])
-        if (self.api_config.verbosity >= 3):
-            print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
+        unpacked = self.unpack(response)
+        print('status: ' + unpacked['status'])
+
         """
         The scope returned in the response includes all of the scopes that
         have been approved now or in the past by the user.
         """
-        print('scope: ' + respdict['scope'])
-        self.access_token = respdict['access_token']
-        self.refresh_token = respdict['data'].get('refresh_token')
-        self.scopes = respdict['scope']
+        print('scope: ' + unpacked['scope'])
+        self.access_token = unpacked['access_token']
+        self.refresh_token = unpacked['data'].get('refresh_token')
+        self.scopes = unpacked['scope']
         if self.refresh_token:
             print('received refresh token')
 
@@ -54,9 +55,11 @@ class AccessToken(AccessTokenCommon):
                     'refresh_token': self.refresh_token}
         if (self.api_config.verbosity >= 2):
             print('PUT', self.api_config.api_uri + '/v3/oauth/access_token/')
+            if (self.api_config.verbosity >= 3):
+                self.api_config.credentials_warning();
+                print(put_data)
         response = requests.put(self.api_config.api_uri + '/v3/oauth/access_token/',
+
                                 headers=self.auth_headers, data=put_data)
-        print(response)
-        if (self.api_config.verbosity >= 3):
-            print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
-        self.access_token = response.json()['access_token']
+        unpacked = self.unpack(response)
+        self.access_token = unpacked['access_token']

@@ -26,6 +26,7 @@ class UserAuthTest(unittest.TestCase):
         mock_api_config.oauth_uri = 'test-oauth-uri'
         mock_api_config.app_id = 'test-app-id'
         mock_api_config.redirect_uri = 'test-redirect-uri'
+        mock_api_config.verbosity = 2;
         mock_access_uri = ('test-oauth-uri/oauth/' +
                            '?consumer_id=test-app-id' +
                            '&redirect_uri=test-redirect-uri' +
@@ -71,10 +72,14 @@ class UserAuthTest(unittest.TestCase):
     def test_http_server_handler(self, mock_super,
                                  mock_send_response, mock_send_header, mock_end_headers):
 
+        mock_api_config = mock.Mock()
+        mock_api_config.landing_uri = 'test-landing-uri'
+        mock_api_config.verbosity = 2
+
         http_server_handler = HTTPServerHandler('test-request',
                                                 'test-address',
                                                 'test-server',
-                                                'test-landing-uri')
+                                                mock_api_config)
         mock_super.assert_called_once()
 
         http_server_handler.path = 'test-path code=test-code'

@@ -14,6 +14,7 @@ describe('access_token tests', () => {
     mock_api_config.api_uri = 'test-api-uri';
     mock_api_config.redirect_uri = 'test-redirect-uri';
     mock_api_config.oauth_token_dir = 'test-token-dir';
+    mock_api_config.verbosity = 2;
 
     const access_token = new AccessToken(mock_api_config, {});
 
@@ -45,6 +46,7 @@ describe('access_token tests', () => {
     expect(console.log.mock.calls).toEqual([
       ['getting auth_code...'],
       ['exchanging auth_code for access_token...'],
+      ['PUT', 'test-api-uri/v3/oauth/access_token/'],
       ['<Response [42]>'],
       ['status: test-status'],
       ['scope: test-scope'],

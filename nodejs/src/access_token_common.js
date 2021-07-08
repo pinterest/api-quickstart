@@ -2,9 +2,13 @@ import crypto from 'crypto'
 import fs from 'fs';
 import path from 'path'
 
-export class AccessTokenCommon {
+import {ApiCommon} from './api_common.js'
+
+export class AccessTokenCommon extends ApiCommon {
 
   constructor(api_config, {name = null}) {
+    super();
+
     const auth = api_config.app_id + ':' + api_config.app_secret;
     const b64auth = Buffer.from(auth).toString('base64');
     this.api_config = api_config;

@@ -38,17 +38,17 @@ class AccessToken(AccessTokenCommon):
                      'grant_type': 'authorization_code'}
         if (self.api_config.verbosity >= 2):
             print('POST', self.api_config.api_uri + '/v5/oauth/token')
+            if (self.api_config.verbosity >= 3):
+                self.api_config.credentials_warning();
+                print(post_data)
         response = requests.post(self.api_config.api_uri + '/v5/oauth/token',
                                  headers=self.auth_headers, data=post_data)
-        print(response)
-        respdict = response.json()
-        if (self.api_config.verbosity >= 3):
-            print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
+        unpacked = self.unpack(response)
 
-        print('scope: ' + respdict['scope'])
-        self.access_token = respdict['access_token']
-        self.refresh_token = respdict['refresh_token']
-        self.scopes = respdict['scope']
+        print('scope: ' + unpacked['scope'])
+        self.access_token = unpacked['access_token']
+        self.refresh_token = unpacked['refresh_token']
+        self.scopes = unpacked['scope']
 
     def refresh(self):
         print(f'refreshing {self.name}...')
@@ -56,9 +56,10 @@ class AccessToken(AccessTokenCommon):
                      'refresh_token': self.refresh_token}
         if (self.api_config.verbosity >= 2):
             print('POST', self.api_config.api_uri + '/v5/oauth/token')
+            if (self.api_config.verbosity >= 3):
+                self.api_config.credentials_warning();
+                print(post_data)
         response = requests.post(self.api_config.api_uri + '/v5/oauth/token',
                                  headers=self.auth_headers, data=post_data)
-        print(response)
-        if (self.api_config.verbosity >= 3):
-            print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
-        self.access_token = response.json()['access_token']
+        unpacked = self.unpack(response)
+        self.access_token = unpacked['access_token']
