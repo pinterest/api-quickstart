@@ -60,6 +60,7 @@ Code that implements OAuth is available for each language in this repo. The loca
 * When using a JSON-encoded file to specify an access token, use a secure file mode when possible. For example: `chmod 600 common/oauth_tokens/*`
 * When specifying credentials in environment variables, export it from a script file instead of on the shell command line. (Commands -- along with the clear text credentials -- are often stored in history and log files.)
 * The recommended locations for your credentials (`common/scripts/api_app_credentials`), and access tokens (`common/oauth_tokens`) are listed in the `.gitignore` file to help avoid checking this material into a git repo.
+* Specifying a high level of logging verbosity may print credentials in clear text. This data is useful for local debugging, but should be protected -- not transmitted via email or other insecure kinds of communication.
 
 ## Repository Layout
 
