@@ -33,39 +33,37 @@ export class AccessToken extends AccessTokenCommon {
                                           {scopes:scopes, refreshable:refreshable});
 
     console.log('exchanging auth_code for access_token...');
-    var response;
     try {
+      const post_data = {
+        'code': auth_code,
+        'redirect_uri': this.api_config.redirect_uri,
+        'grant_type': 'authorization_code'
+      };
       if (this.api_config.verbosity >= 2) {
         console.log('POST', this.api_uri + '/v5/oauth/token');
+        if (this.api_config.verbosity >= 3) {
+          this.api_config.credentials_warning();
+          console.log(post_data);
+        }
       }
-      response = await got.post(this.api_uri + '/v5/oauth/token', {
+      const response = await got.post(this.api_uri + '/v5/oauth/token', {
         headers: this.auth_headers, // use the recommended authorization approach
-        form: { // send body as x-www-form-urlencoded
-          'code': auth_code,
-          'redirect_uri': this.api_config.redirect_uri,
-          'grant_type': 'authorization_code'
-        },
+        form: post_data, // send body as x-www-form-urlencoded
         responseType: 'json'
       })
-    } catch (error) {
-      // console.log('error:', error);
-      console.log(`<Response [${error.response.statusCode}]>`);
-      console.log('request failed with reason:', error.response.body.message);
-      throw 'OAuth failed because... ' + error.response.body.message;
-    }
+      this.print_response(response);
 
-    console.log(`<Response [${response.statusCode}]>`);
-    if (this.api_config.verbosity >= 3) {
-      console.log('x-pinterest-rid:', response.headers['x-pinterest-rid']);
-    }
-    // The scope returned in the response includes all of the scopes that
-    // have been approved now or in the past by the user.
-    console.log('scope: ' + response.body.scope);
-    this.scopes = response.body.scope;
-    this.access_token = response.body.access_token;
-    this.refresh_token = response.body.refresh_token;
-    if (this.refresh_token) {
-      console.log('received refresh token');
+      // The scope returned in the response includes all of the scopes that
+      // have been approved now or in the past by the user.
+      console.log('scope: ' + response.body.scope);
+      this.scopes = response.body.scope;
+      this.access_token = response.body.access_token;
+      this.refresh_token = response.body.refresh_token;
+      if (this.refresh_token) {
+        console.log('received refresh token');
+      }
+    } catch (error) {
+      this.print_and_throw_error(error);
     }
   }
 
@@ -78,23 +76,26 @@ export class AccessToken extends AccessTokenCommon {
     console.log('refreshing access_token...');
     var response;
     try {
+      const post_data = {
+        'grant_type': 'refresh_token',
+        'refresh_token': this.refresh_token
+      };
       if (this.api_config.verbosity >= 2) {
         console.log('POST', this.api_uri + '/v5/oauth/token');
+        if (this.api_config.verbosity >= 3) {
+          this.api_config.credentials_warning();
+          console.log(post_data);
+        }
       }
       response = await got.post(this.api_uri + '/v5/oauth/token', {
         headers: this.auth_headers,
-        form: { // send body as x-www-form-urlencoded
-          'grant_type': 'refresh_token',
-          'refresh_token': this.refresh_token
-        },
+        form: post_data, // send body as x-www-form-urlencoded
         responseType: 'json'
       })
+      this.print_response(response);
+      this.access_token = response.body.access_token;
     } catch (error) {
-      console.log(`<Response [${error.response.statusCode}]>`);
-      console.log('request failed with reason:', error.response.body.message);
-      throw 'AccessToken refresh failed because... ' + error.response.body.message;
+      this.print_and_throw_error(error);
     }
-    console.log(`<Response [${response.statusCode}]>`);
-    this.access_token = response.body.access_token;
   }
 }

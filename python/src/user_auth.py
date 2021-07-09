@@ -9,8 +9,8 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
     """
     HTTP Server callback to handle Pinterest OAuth redirect with auth_code
     """
-    def __init__(self, request, address, server, landing_uri):
-        self.landing_uri = landing_uri
+    def __init__(self, request, address, server, api_config):
+        self.api_config = api_config
         super().__init__(request, address, server)
 
     # override log_message to prevent logging the auth_code to the console
@@ -18,9 +18,12 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
         pass
 
     def do_GET(self):
-        # redirect the developer to the management page for their app
+        if (self.api_config.verbosity >= 3):
+            self.api_config.credentials_warning();
+            print('Redirect request path:', self.path)
+        # redirect to the landing_uri
         self.send_response(301)
-        self.send_header('Location', self.landing_uri)
+        self.send_header('Location', self.api_config.landing_uri)
         self.end_headers()
         # get the auth_code from the path of the redirect URI
         if 'code' in self.path:
@@ -50,11 +53,13 @@ def get_auth_code(api_config, scopes=None, refreshable=True):
     unlikely that the browser will start and get human input before
     the localhost https server can start.
     """
+    if (api_config.verbosity >= 3):
+        print('OAuth URI:', access_uri)
     open_new(access_uri)
 
     httpServer = HTTPServer(('localhost', api_config.port),
                             lambda request, address, server: HTTPServerHandler(
-                                request, address, server, api_config.landing_uri))
+                                request, address, server, api_config))
 
     # This function will block until it receives a request
     try:

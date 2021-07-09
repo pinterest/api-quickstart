@@ -4,7 +4,9 @@ import json
 import os
 import pathlib
 
-class AccessTokenCommon:
+from api_common import ApiCommon
+
+class AccessTokenCommon(ApiCommon):
     def __init__(self, api_config, name=None):
 
         if name:

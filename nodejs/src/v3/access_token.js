@@ -9,46 +9,50 @@ export class AccessToken extends AccessTokenCommon {
     super(api_config, {name: name});
   }
 
-  // constructor may not be async, so OAuth must be performed as a separate method.
+  /**
+   * Execute the OAuth 2.0 process for obtaining an access token.
+   * For more information, see IETF RFC 6749: https://tools.ietf.org/html/rfc6749
+   *
+   * Constructor may not be async, so OAuth must be performed as a separate method.
+   */
   async oauth({scopes=null, refreshable=true}) {
     console.log('getting auth_code...');
     const auth_code = await get_auth_code(this.api_config,
                                           {scopes:scopes, refreshable:refreshable});
 
     console.log('exchanging auth_code for access_token...');
-    var response;
     try {
+      const put_data = {
+        'code': auth_code,
+        'redirect_uri': this.api_config.redirect_uri,
+        'grant_type': 'authorization_code'
+      };
       if (this.api_config.verbosity >= 2) {
         console.log('PUT', this.api_uri + '/v3/oauth/access_token/');
+        if (this.api_config.verbosity >= 3) {
+          this.api_config.credentials_warning();
+          console.log(put_data);
+        }
       }
-      response = await got.put(this.api_uri + '/v3/oauth/access_token/', {
+      const response = await got.put(this.api_uri + '/v3/oauth/access_token/', {
         headers: this.auth_headers, // use the recommended authorization approach
-        json: {
-          'code': auth_code,
-          'redirect_uri': this.api_config.redirect_uri,
-          'grant_type': 'authorization_code'
-        },
+        json: put_data,
         responseType: 'json'
       })
-    } catch (error) {
-      console.log(`<Response [${error.response.statusCode}]>`);
-      console.log('request failed with reason:', error.response.body.message);
-      throw 'OAuth failed because... ' + error.response.body.message;
-    }
+      this.print_response(response);
+      console.log('status: ' + response.body.status);
 
-    console.log(`<Response [${response.statusCode}]>`);
-    console.log('status: ' + response.body.status);
-    if (this.api_config.verbosity >= 3) {
-      console.log('x-pinterest-rid:', response.headers['x-pinterest-rid']);
-    }
-    // The scope returned in the response includes all of the scopes that
-    // have been approved now or in the past by the user.
-    console.log('scope: ' + response.body.scope);
-    this.scopes = response.body.scope;
-    this.access_token = response.body.access_token;
-    this.refresh_token = response.body.data.refresh_token;
-    if (this.refresh_token) {
-      console.log('received refresh token');
+      // The scope returned in the response includes all of the scopes that
+      // have been approved now or in the past by the user.
+      console.log('scope: ' + response.body.scope);
+      this.scopes = response.body.scope;
+      this.access_token = response.body.access_token;
+      this.refresh_token = response.body.data.refresh_token;
+      if (this.refresh_token) {
+        console.log('received refresh token');
+      }
+    } catch (error) {
+      this.print_and_throw_error(error);
     }
   }
 
@@ -59,25 +63,27 @@ export class AccessToken extends AccessTokenCommon {
     }
 
     console.log('refreshing access_token...');
-    var response;
     try {
+      const put_data = {
+        'grant_type': 'refresh_token',
+        'refresh_token': this.refresh_token
+      };
       if (this.api_config.verbosity >= 2) {
         console.log('PUT', this.api_uri + '/v3/oauth/access_token/');
+        if (this.api_config.verbosity >= 3) {
+          this.api_config.credentials_warning();
+          console.log(put_data);
+        }
       }
-      response = await got.put(this.api_uri + '/v3/oauth/access_token/', {
+      const response = await got.put(this.api_uri + '/v3/oauth/access_token/', {
         headers: this.auth_headers,
-        json: {
-          'grant_type': 'refresh_token',
-          'refresh_token': this.refresh_token
-        },
+        json: put_data,
         responseType: 'json'
       })
+      this.print_response(response)
+      this.access_token = response.body.access_token;
     } catch (error) {
-      console.log(`<Response [${error.response.statusCode}]>`);
-      console.log('request failed with reason:', error.response.body.message);
-      throw 'AccessToken refresh failed because... ' + error.response.body.message;
+      this.print_and_throw_error(error);
     }
-    console.log(`<Response [${response.statusCode}]>`);
-    this.access_token = response.body.access_token;
   }
 }

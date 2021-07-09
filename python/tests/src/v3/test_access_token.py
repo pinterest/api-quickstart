@@ -18,7 +18,7 @@ class AccessTokenTest(unittest.TestCase):
         mock_api_config.redirect_uri = 'test-redirect-uri'
         mock_api_config.oauth_token_dir = 'test-token-dir'
         mock_api_config.version = 'v3'
-        mock_api_config.verbosity = 3
+        mock_api_config.verbosity = 2
 
         mock_response = mock.MagicMock()
         mock_response.__str__.return_value = '<Response [200]>'

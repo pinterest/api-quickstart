@@ -82,4 +82,6 @@ class ApiConfig:
 
         print(f"{env_app_id} and {env_app_secret} must be set in the environment.")
         exit(1)
-        
+
+    def credentials_warning(self):
+        print('WARNING: This log has clear text credentials that need to be protected.')

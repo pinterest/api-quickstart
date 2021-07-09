@@ -76,4 +76,8 @@ export class ApiConfig {
 
     throw new Error(`${env_app_id} and ${env_app_secret} must be set in the environment.`);
   }
+
+  credentials_warning() {
+    console.log('WARNING: This log has clear text credentials that need to be protected.');
+  }
 }
