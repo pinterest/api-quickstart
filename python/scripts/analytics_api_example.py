@@ -41,7 +41,9 @@ def main(argv=[]):
     # Get configuration from defaults and/or the environment.
     # Set the API configuration verbosity to 2 to show all of requests
     # and response statuses. To see the complete responses, set verbosity to 3.
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
+
+    # Set API version to 3, because this script does not work with 5 yet.
+    api_config = ApiConfig(verbosity=args.log_level, version='3')
 
     # imports that depend on the version of the API
     from access_token import AccessToken
