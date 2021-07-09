@@ -52,7 +52,7 @@ echo 'exchanging auth_code for access_token...'
 
 # Execute the curl PUT command to exchange the authorization code for the access token.
 # 1. Use basic authorization (constructed above) with the application id and secret.
-# 2. Note that it is necessary to specify JSON as the content type.
+# 2. Note that it is necessary to send x-www-form-urlencoded data.
 OAUTH_RESPONSE=$(curl --silent -X POST --header "Authorization:Basic ${B64AUTH}" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=authorization_code' --data-urlencode "code=${AUTH_CODE}" --data-urlencode "redirect_uri=${REDIRECT_URI}" "${PINTEREST_API_URI}/v5/oauth/token")
 
 RESPONSE_TYPE=$(echo "$OAUTH_RESPONSE" | jq -r '.["response_type"]')
