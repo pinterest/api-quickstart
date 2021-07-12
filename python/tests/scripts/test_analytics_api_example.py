@@ -11,9 +11,9 @@ class AnalyticsApiExampleTest(IntegrationMocks):
     report_url_filename = 'here_is_the_filename.txt' # filename in the report url
     download_filename = 'test_report_file.txt' # filename "entered" for download
 
-    def mock_requests_post(self, uri, headers=None, data=None, allow_redirects=True):
+    def mock_requests_post(self, uri, headers=None, json=None, allow_redirects=True):
         # request from AsyncReport.request_report
-        print('mock_requests_post', uri, headers, data)
+        print('mock_requests_post', uri, headers, json)
         self.requests_post_calls += 1
         response = mock.MagicMock()
         response.__str__.return_value = '<Response [200]>'

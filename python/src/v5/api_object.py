@@ -64,17 +64,19 @@ class ApiObject(ApiCommon):
     def put_data(self, path, put_data):
         if self.api_config.verbosity >= 2:
             print(f'PUT {self.api_uri + path}')
-        if self.api_config.verbosity >= 3:
-            print(put_data)
-        response = requests.put(self.api_uri + path, data=put_data, headers=self.access_token.header(), allow_redirects=False)
+            if self.api_config.verbosity >= 3:
+                print(put_data)
+        response = requests.put(self.api_uri + path, data = put_data,
+                                headers=self.access_token.header(), allow_redirects=False)
         return self.unpack(response)
 
     def post_data(self, path, post_data=None):
         if self.api_config.verbosity >= 2:
             print(f'POST {self.api_uri + path}')
-        if self.api_config.verbosity >= 3:
-            print(post_data)
-        response = requests.post(self.api_uri + path, json=post_data, headers=self.access_token.header(), allow_redirects=False)
+            if self.api_config.verbosity >= 3:
+                print(post_data)
+        response = requests.post(self.api_uri + path, json = post_data,
+                                 headers=self.access_token.header(), allow_redirects=False)
         return self.unpack(response)
 
     def delete_and_check(self, path):

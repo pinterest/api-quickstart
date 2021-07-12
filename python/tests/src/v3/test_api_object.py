@@ -44,7 +44,7 @@ class ApiObjectTest(unittest.TestCase):
         post_data = {'key3': 'value3', 'key4': 'value4'}
         response = api_object.post_data('/test_path', post_data)
         self.assertEqual(response, 'test_response_data')
-        mock_requests_post.assert_called_once_with('test_uri/test_path', data = post_data,
+        mock_requests_post.assert_called_once_with('test_uri/test_path', json = post_data,
                                                    headers='test_headers', allow_redirects=False)
 
         mock_response.ok = False
@@ -57,3 +57,42 @@ class ApiObjectTest(unittest.TestCase):
         # verify delete called
         mock_requests_delete.assert_called_once_with('test_uri/delete_path',
                                                      headers='test_headers', allow_redirects=False)
+
+    @mock.patch('src.v3.api_object.requests.get')
+    def test_api_object(self, mock_requests_get):
+        mock_response1 = mock.Mock()
+        mock_response1.ok = True
+        mock_response1.json.return_value = {'data': ['one', 'two'], 'bookmark': 'BOOKMARK1'}
+        mock_response2 = mock.Mock()
+        mock_response2.ok = True
+        mock_response2.json.return_value = {'data': ['three']}
+        mock_requests_get.side_effect = [mock_response1, mock_response2]
+
+        api_config = mock.Mock()
+        api_config.api_uri = 'test_uri'
+        api_config.verbosity = 2
+
+        access_token = mock.Mock()
+        access_token.header.return_value = 'test_headers'
+        api_object = ApiObject(api_config, access_token)
+
+        expected_values = ['one', 'two', 'three']
+        for index, value in enumerate(api_object.get_iterator('/test_iterpath')):
+            self.assertEqual(expected_values[index], value)
+
+        mock_requests_get.assert_has_calls([
+            mock.call('test_uri/test_iterpath', headers='test_headers', allow_redirects=False),
+            mock.call('test_uri/test_iterpath?bookmark=BOOKMARK1', headers='test_headers', allow_redirects=False)
+        ])
+
+        mock_requests_get.reset_mock()
+        mock_requests_get.side_effect = [mock_response1, mock_response2]
+        for index, value in enumerate(api_object.get_iterator('/test_iterpath?key1=value1')):
+            self.assertEqual(expected_values[index], value)
+
+        mock_requests_get.assert_has_calls([
+            mock.call('test_uri/test_iterpath?key1=value1',
+                      headers='test_headers', allow_redirects=False),
+            mock.call('test_uri/test_iterpath?key1=value1&bookmark=BOOKMARK1',
+                      headers='test_headers', allow_redirects=False)
+        ])
