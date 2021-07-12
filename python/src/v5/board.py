@@ -1,4 +1,4 @@
-from v5.api_object import ApiObject # specifying v5 required for unit tests
+from api_object import ApiObject
 
 class Board(ApiObject):
     def __init__(self, board_id, api_config, access_token):

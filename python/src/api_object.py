@@ -14,7 +14,7 @@ class PagedIterator:
         """
         response = self.api_object.get_response(path_maybe_with_bookmark)
         unpacked = self.api_object.unpack(response)
-        self.data = unpacked['items']
+        self.items = unpacked.get('items') or unpacked.get('data') # items in v5, data in v3
         self.bookmark = unpacked.get('bookmark')
         self.index = 0
 
@@ -30,7 +30,7 @@ class PagedIterator:
         return self
 
     def __next__(self):
-        if self.index >= len(self.data):
+        if self.index >= len(self.items):
             # need to fetch more data, if there is a bookmark
             if self.bookmark:
                 # Determine whether the query needs to be added to the path or
@@ -38,12 +38,12 @@ class PagedIterator:
                 delimiter = '&' if '?' in self.path else '?'
                 path_with_bookmark = self.path + delimiter + 'bookmark=' + self.bookmark
                 self._get_response(path_with_bookmark)
-                if not self.data: # in case there is some sort of error
+                if not self.items: # in case there is some sort of error
                     raise StopIteration
             else:
                 raise StopIteration # no bookmark => all done
 
-        retval = self.data[self.index] # get the current element
+        retval = self.items[self.index] # get the current element
         self.index += 1 # increment the index for the next time
         return retval
 
@@ -59,7 +59,7 @@ class ApiObject(ApiCommon):
         return requests.get(self.api_uri + path, headers=self.access_token.header(), allow_redirects=False)
 
     def request_data(self, path):
-        return self.unpack(self.get_response(path))
+        return self.unpack(self.get_response(path), raw=False)
 
     def put_data(self, path, put_data):
         if self.api_config.verbosity >= 2:
@@ -68,7 +68,7 @@ class ApiObject(ApiCommon):
                 print(put_data)
         response = requests.put(self.api_uri + path, data = put_data,
                                 headers=self.access_token.header(), allow_redirects=False)
-        return self.unpack(response)
+        return self.unpack(response, raw=False)
 
     def post_data(self, path, post_data=None):
         if self.api_config.verbosity >= 2:
@@ -77,7 +77,7 @@ class ApiObject(ApiCommon):
                 print(post_data)
         response = requests.post(self.api_uri + path, json = post_data,
                                  headers=self.access_token.header(), allow_redirects=False)
-        return self.unpack(response)
+        return self.unpack(response, raw=False)
 
     def delete_and_check(self, path):
         if self.api_config.verbosity >= 2:

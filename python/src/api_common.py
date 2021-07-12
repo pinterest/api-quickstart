@@ -32,7 +32,7 @@ class ApiCommon:
         if self.api_config.verbosity >= 3:
             print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
 
-    def unpack(self, response):
+    def unpack(self, response, raw=True):
         """Check for errors, retrieve the response, and respond appropriately."""
 
         # Save a human-readable status for output and error handling.
@@ -67,4 +67,9 @@ class ApiCommon:
         if self.api_config.verbosity >= 3:
             print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
             print(unpacked)
-        return unpacked
+
+        if raw or self.api_config.version == 'v5':
+            return unpacked
+
+        # API version v3 uses a data container that is useful to unpack
+        return unpacked.get('data')

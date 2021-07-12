@@ -1,6 +1,6 @@
 import time
 
-from v3.api_object import ApiObject
+from api_object import ApiObject
 
 class AsyncReport(ApiObject):
     """

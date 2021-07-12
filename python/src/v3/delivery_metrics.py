@@ -1,6 +1,6 @@
 import datetime
 
-from v3.api_object import ApiObject
+from api_object import ApiObject
 from v3.async_report import AsyncReport
 
 class DeliveryMetrics(ApiObject):
