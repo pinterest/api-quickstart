@@ -8,15 +8,15 @@ sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
 
 from api_common import SpamException
 from api_common import RateLimitException
-from v3.api_object import ApiObject
+from v5.api_object import ApiObject
 
 class ApiObjectTest(unittest.TestCase):
 
-    @mock.patch('src.v3.api_object.requests.get')
+    @mock.patch('src.v5.api_object.requests.get')
     def test_api_object(self, mock_requests_get):
         mock_response = mock.Mock()
         mock_response.ok = True
-        mock_response.json.return_value = {'data': 'test_response_data'}
+        mock_response.json.return_value = 'test_response_data'
         mock_requests_get.return_value = mock_response
 
         api_config = mock.Mock()

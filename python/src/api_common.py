@@ -7,6 +7,8 @@ class SpamException(Exception):
 
 class ApiCommon:
     """Common code for using the Pinterest API"""
+    def __init__(self, api_config):
+        self.api_config = api_config
 
     def check(self, response):
         """Check for errors and respond appropriately."""
@@ -21,9 +23,14 @@ class ApiCommon:
 
         # Handle errors.
         if not response.ok:
+            if self.api_config.verbosity >= 2:
+                print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
             if response.status_code == 429:
                 raise RateLimitException
             raise RuntimeError(status)
+
+        if self.api_config.verbosity >= 3:
+            print('x-pinterest-rid:', response.headers.get('x-pinterest-rid'))
 
     def unpack(self, response):
         """Check for errors, retrieve the response, and respond appropriately."""

@@ -49,8 +49,8 @@ class PagedIterator:
 
 class ApiObject(ApiCommon):
     def __init__(self, api_config, access_token):
+        super().__init__(api_config)
         self.api_uri = api_config.api_uri
-        self.api_config = api_config
         self.access_token = access_token
 
     def get_response(self, path):
