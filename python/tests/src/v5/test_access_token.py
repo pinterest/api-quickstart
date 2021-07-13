@@ -35,7 +35,7 @@ class AccessTokenTest(unittest.TestCase):
 
         # mock does not figure out enum equality, so need to unpack arguments
         # of get_auth_code in order to check the default value for scopes.
-        self.assertEqual(True, mock_get_auth_code.mock_calls[0][2]['refreshable'])
+        self.assertTrue(mock_get_auth_code.mock_calls[0][2]['refreshable'])
         scopes = mock_get_auth_code.mock_calls[0][2]['scopes']
         # convert from Scope enum to values
         values = list(map(lambda scope: scope.value, scopes))
