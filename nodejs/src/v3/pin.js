@@ -1,4 +1,4 @@
-import {ApiObject} from './api_object.js'
+import {ApiObject} from '../api_object.js'
 
 export class Pin extends ApiObject {
   constructor(pin_id, api_config, access_token) {

@@ -1,4 +1,4 @@
-import {ApiObject} from './api_object.js'
+import {ApiObject} from '../api_object.js'
 import {Board} from './board.js'
 
 export class User extends ApiObject {

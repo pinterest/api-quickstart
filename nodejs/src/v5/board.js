@@ -1,4 +1,4 @@
-import {ApiObject} from './api_object.js'
+import {ApiObject} from '../api_object.js'
 
 export class Board extends ApiObject {
   constructor(board_id, api_config, access_token) {
