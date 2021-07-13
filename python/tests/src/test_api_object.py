@@ -99,12 +99,13 @@ class ApiObjectTest(unittest.TestCase):
         mock_response1.json.return_value = {'data': ['one', 'two'], 'bookmark': 'BOOKMARK1'} # v3 uses data
         mock_response2 = mock.Mock()
         mock_response2.ok = True
-        mock_response2.json.return_value = {'items': ['three']} # v5 uses items
+        mock_response2.json.return_value = {'data': ['three']} # v5 uses items
         mock_requests_get.side_effect = [mock_response1, mock_response2]
 
         api_config = mock.Mock()
         api_config.api_uri = 'test_uri'
         api_config.verbosity = 2
+        api_config.version = 'v3'
 
         access_token = mock.Mock()
         access_token.header.return_value = 'test_headers'
@@ -119,6 +120,9 @@ class ApiObjectTest(unittest.TestCase):
             mock.call('test_uri/test_iterpath?bookmark=BOOKMARK1', headers='test_headers', allow_redirects=False)
         ])
 
+        api_config.version = 'v5'
+        mock_response1.json.return_value = {'items': ['one', 'two'], 'bookmark': 'BOOKMARK1'} # v3 uses data
+        mock_response2.json.return_value = {'items': ['three']}
         mock_requests_get.reset_mock()
         mock_requests_get.side_effect = [mock_response1, mock_response2]
         for index, value in enumerate(api_object.get_iterator('/test_iterpath?key1=value1')):
