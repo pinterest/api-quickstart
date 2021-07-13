@@ -2,7 +2,7 @@ import requests
 
 from access_token_common import AccessTokenCommon
 from user_auth import get_auth_code
-from oauth_scope import Scope
+from v5.oauth_scope import Scope
 
 class AccessToken(AccessTokenCommon):
     def __init__(self, api_config, name=None):

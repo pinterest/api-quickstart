@@ -1,4 +1,4 @@
-from v5.api_object import ApiObject
+from api_object import ApiObject
 
 class Pin(ApiObject):
     def __init__(self, pin_id, api_config, access_token):
