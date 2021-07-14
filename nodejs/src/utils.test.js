@@ -13,6 +13,7 @@ describe('Input tests', () => {
     readline.createInterface.mockReturnValue(mock_rl_interface);
 
     mock_rl_interface.question = jest.fn();
+    mock_rl_interface.close = jest.fn();
     mock_rl_interface.question
       .mockImplementationOnce((_query, cb) => cb('CaT'))
       .mockImplementationOnce((_query, cb) => cb('fish'))
@@ -37,5 +38,8 @@ describe('Input tests', () => {
       ['test 2'],
       ['input must be one of', test_list]
     ]);
+
+    input.close();
+    expect(mock_rl_interface.close.mock.calls.length === 1);
   });
 });
