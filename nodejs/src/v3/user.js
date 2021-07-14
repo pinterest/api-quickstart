@@ -6,10 +6,12 @@ export class User extends ApiObject {
     this.user = user;
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET
   async get() {
     return await super.request_data(`/v3/users/${this.user}/`);
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_linked_business_accounts_GET
   async get_businesses() {
     return await super.request_data(`/v3/users/${this.user}/businesses/`);
   }
@@ -24,7 +26,7 @@ export class User extends ApiObject {
     console.log('--------------------');
   }
 
-  // documentation: https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET
   async get_boards(user_data, {query_parameters=null}) {
     var path = `/v3/users/${user_data.id}/boards/feed/`;
     if (query_parameters) {
@@ -37,6 +39,7 @@ export class User extends ApiObject {
     return this.get_iterator(path); // iterator that handles API paging
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET
   async get_pins(user_data, {query_parameters=null}) {
     var path = `/v3/users/${user_data.id}/pins/`;
     if (query_parameters) {

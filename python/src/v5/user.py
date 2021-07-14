@@ -57,7 +57,7 @@ class User(ApiObject):
                 delimiter = '&'
         return self.get_iterator(path) # the returned iterator handles API paging
 
-    # documentation: /v5/pins is not supported, so iterate through boards
+    # getting all of a user's pins is not supported, so iterate through boards
     def get_pins(self, user_data, query_parameters={}):
         return UserPinIterator(self.get_boards(user_data, query_parameters),
                                self.api_config, self.access_token)

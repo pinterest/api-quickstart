@@ -39,7 +39,7 @@ export class User extends ApiObject {
     return this.get_iterator(path); // iterator that handles API paging
   }
 
-  // /v5/pins is not supported, so iterate through boards
+  // getting all of a user's pins is not supported, so iterate through boards
   async get_pins(user_data, {query_parameters=null}) {
     const user = this;
     const board_iterator = await this.get_boards(user_data,

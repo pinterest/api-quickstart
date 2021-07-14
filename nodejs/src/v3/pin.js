@@ -6,6 +6,7 @@ export class Pin extends ApiObject {
     this.pin_id= pin_id;
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_pin_GET
   async get() {
     if (!this.pin_id) {
       throw 'pin_id must be set to get a pin';
@@ -27,6 +28,7 @@ export class Pin extends ApiObject {
     console.log('--------------------');
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT
   async create(pin_data, board_id, {section=null}) {
     // TODO: carousel_data_json
     const OPTIONAL_ATTRIBUTES = [

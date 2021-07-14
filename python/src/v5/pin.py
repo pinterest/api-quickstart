@@ -5,6 +5,7 @@ class Pin(ApiObject):
         super().__init__(api_config, access_token)
         self.pin_id = pin_id
 
+    # https://developers.pinterest.com/docs/v5/#operation/pins/get
     def get(self):
         return self.request_data('/v5/pins/{}'.format(self.pin_id))
 

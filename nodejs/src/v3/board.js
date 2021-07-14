@@ -6,6 +6,7 @@ export class Board extends ApiObject {
     this.board_id= board_id;
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_GET
   async get() {
     if (!this.board_id) {
       throw 'board_id must be set to get a board';
@@ -13,10 +14,12 @@ export class Board extends ApiObject {
     return this.request_data(`/v3/boards/${this.board_id}/`);
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_board_pins_GET
   async get_pins() {
     return this.get_iterator(`/v3/boards/${this.board_id}/pins/`);
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_sections_GET
   async get_sections() {
     return this.get_iterator(`/v3/board/${this.board_id}/sections/`);
   }
@@ -72,6 +75,7 @@ export class Board extends ApiObject {
     return new_board_data;
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_delete_board_DELETE
   async delete() {
     return await this.delete_and_check(`/v3/boards/${this.board_id}/`);
   }

@@ -5,6 +5,7 @@ class Advertisers(ApiObject):
         super().__init__(api_config, access_token)
         self.user_id = user_id
 
+    # https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_advertisers_by_owner_user_id_handler_GET
     def get(self):
         """
         Get the advertisers shared with the specified user_id.

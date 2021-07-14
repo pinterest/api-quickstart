@@ -5,6 +5,7 @@ class Pin(ApiObject):
         super().__init__(api_config, access_token)
         self.pin_id = pin_id
 
+    # https://developers.pinterest.com/docs/redoc/#operation/v3_get_pin_GET
     def get(self):
         if not self.pin_id:
             raise ValueError('pin_id must be set to get a pin')
@@ -23,6 +24,7 @@ class Pin(ApiObject):
             print(f"Story type: {pin_data.get('story_type')}")
         print('--------------------')
 
+    # https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT
     def create(self, pin_data, board_id, section=None):
         # TODO: carousel_data_json
         OPTIONAL_ATTRIBUTES = [
