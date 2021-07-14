@@ -8,9 +8,8 @@ import {Input} from './utils.js'
  */
 export class ApiObject extends ApiCommon {
   constructor(api_config, access_token) {
-    super();
+    super(api_config);
     this.api_uri = api_config.api_uri;
-    this.api_config = api_config;
     this.access_token = access_token;
   }
 

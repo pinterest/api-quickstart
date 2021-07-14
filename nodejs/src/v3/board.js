@@ -21,6 +21,7 @@ export class Board extends ApiObject {
     return this.get_iterator(`/v3/board/${this.board_id}/sections/`);
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_section_pins_GET
   async get_section_pins(section_id) {
     return this.get_iterator(`/v3/board/sections/${section_id}/pins/`);
   }
@@ -41,6 +42,7 @@ export class Board extends ApiObject {
     return board_data.url;
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_create_board_PUT
   async create(board_data) {
     const OPTIONAL_ATTRIBUTES = [
       'category',
@@ -88,6 +90,7 @@ export class Board extends ApiObject {
     }
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_create_section_PUT
   async create_section(section_data) {
     const OPTIONAL_ATTRIBUTES = [
       'client_id',

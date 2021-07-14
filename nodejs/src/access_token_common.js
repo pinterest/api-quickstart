@@ -7,11 +7,10 @@ import {ApiCommon} from './api_common.js'
 export class AccessTokenCommon extends ApiCommon {
 
   constructor(api_config, {name = null}) {
-    super();
+    super(api_config);
 
     const auth = api_config.app_id + ':' + api_config.app_secret;
     const b64auth = Buffer.from(auth).toString('base64');
-    this.api_config = api_config;
     this.api_uri = api_config.api_uri;
     this.auth_headers = {'Authorization': 'Basic ' + b64auth}
     if (name) {
@@ -100,8 +99,8 @@ export class AccessTokenCommon extends ApiCommon {
                     'access_token': this.access_token,
                     'refresh_token': this.refresh_token,
                     'scopes': this.scopes
-                   }
-    const json = JSON.stringify(output, null, 2)
+                   };
+    const json = JSON.stringify(output, null, 2);
     /* Make credentials-bearing file as secure as possible with mode 0o600. */
     fs.open(this.path, 'w', 0o600, (err, fd) => {
       if (err) {

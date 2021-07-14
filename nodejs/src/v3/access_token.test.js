@@ -6,7 +6,7 @@ import got from 'got'
 jest.mock('../user_auth');
 jest.mock('got');
 
-describe('access_token tests', () => {
+describe('v3 access_token tests', () => {
   test('v3 api_object request_data', async () => {
     const mock_api_config = jest.fn();
     mock_api_config.app_id = 'test-app-id';

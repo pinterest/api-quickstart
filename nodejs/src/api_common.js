@@ -20,6 +20,10 @@ export class RequestFailedError extends Error {
 }
 
 export class ApiCommon {
+  constructor(api_config) {
+    this.api_config = api_config;
+  }
+
   // common code for printing the response to a successful transaction
   print_response(response) {
     if (this.api_config.verbosity >= 1) {

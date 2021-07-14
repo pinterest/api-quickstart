@@ -63,7 +63,7 @@ export class Board extends ApiObject {
   }
 
   async delete() {
-    return await this.delete_and_check(`/v5/boards/${this.board_id}`);
+    await this.delete_and_check(`/v5/boards/${this.board_id}`);
   }
 
   static print_section(section_data) {
