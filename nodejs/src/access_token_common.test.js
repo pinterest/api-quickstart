@@ -54,7 +54,7 @@ describe('access_token_common tests', () => {
     // echo -n 'test access token from json' | shasum -a 256
     expect('8de299eafa6932d8be18d7ff053d3bc6361c2b66ae1922f55fbf390d42de4cf6')
       .toEqual(access_token.hashed());
-                     
+       
     // echo -n 'test refresh token from json' | shasum -a 256
     expect('15569cfd5a27881329e842dfea303e05ec60c99fbdebcdaa20d2445647297072')
       .toEqual(access_token.hashed_refresh_token());
