@@ -6,7 +6,7 @@ import got from 'got'
 jest.mock('../user_auth');
 jest.mock('got');
 
-describe('access_token tests', () => {
+describe('v3 access_token tests', () => {
   test('v3 api_object request_data', async () => {
     const mock_api_config = jest.fn();
     mock_api_config.app_id = 'test-app-id';
@@ -19,12 +19,12 @@ describe('access_token tests', () => {
     const access_token = new AccessToken(mock_api_config, {});
 
     get_auth_code.mockResolvedValueOnce('test-auth-code');
-    got.put.mockResolvedValueOnce({'statusCode': 42,
-                                   'body': {'status': 'test-status',
-                                            'scope': 'test-scope',
-                                            'access_token': 'test-access-token',
-                                            'data': {'refresh_token': 'test-refresh-token'}
-                                           }});
+    got.put.mockResolvedValueOnce({statusCode: 42,
+                                   body: {status: 'test-status',
+                                          scope: 'test-scope',
+                                          access_token: 'test-access-token',
+                                          data: {refresh_token: 'test-refresh-token'}
+                                         }});
 
     // check output
     console.log = jest.fn();
@@ -34,22 +34,22 @@ describe('access_token tests', () => {
     expect(get_auth_code.mock.calls[0][0]).toBe(mock_api_config);
     expect(get_auth_code.mock.calls[0][1]).toEqual({scopes: read_scopes, refreshable: true});
     expect(got.put.mock.calls[0][0]).toEqual('test-api-uri/v3/oauth/access_token/');
-    expect(got.put.mock.calls[0][1]).toEqual({'headers':
-                                              {'Authorization':
+    expect(got.put.mock.calls[0][1]).toEqual({headers:
+                                              {Authorization:
                                                'Basic dGVzdC1hcHAtaWQ6dGVzdC1hcHAtc2VjcmV0'},
-                                              'json': {
-                                                'code': 'test-auth-code',
-                                                'redirect_uri': 'test-redirect-uri',
-                                                'grant_type': 'authorization_code'
+                                              json: {
+                                                code: 'test-auth-code',
+                                                redirect_uri: 'test-redirect-uri',
+                                                grant_type: 'authorization_code'
                                               },
-                                              'responseType': 'json'});
+                                              responseType: 'json'});
     expect(console.log.mock.calls).toEqual([
       ['getting auth_code...'],
       ['exchanging auth_code for access_token...'],
       ['PUT', 'test-api-uri/v3/oauth/access_token/'],
       ['<Response [42]>'],
-      ['status: test-status'],
-      ['scope: test-scope'],
+      ['status:', 'test-status'],
+      ['scope:', 'test-scope'],
       ['received refresh token']
     ]);
   });

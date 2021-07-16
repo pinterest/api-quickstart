@@ -7,6 +7,7 @@ class DeliveryMetrics(ApiObject):
     def __init__(self, api_config, access_token):
         super().__init__(api_config, access_token)
 
+    # https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_delivery_metrics_handler_GET
     def get(self):
         """
         Get the full list of all available delivery metrics.

@@ -45,6 +45,7 @@ class Board(ApiObject):
         self.board_id = board_data['id']
         return board_data
 
+    # https://developers.pinterest.com/docs/v5/#operation/boards/delete
     def delete(self):
         self.delete_and_check(f'/v5/boards/{self.board_id}')
 

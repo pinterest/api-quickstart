@@ -6,20 +6,15 @@ import {ApiCommon} from './api_common.js'
 
 export class AccessTokenCommon extends ApiCommon {
 
-  constructor(api_config, {name = null}) {
-    super();
+  constructor(api_config, {name}) {
+    super(api_config);
 
-    const auth = api_config.app_id + ':' + api_config.app_secret;
+    const auth = `${api_config.app_id}:${api_config.app_secret}`;
     const b64auth = Buffer.from(auth).toString('base64');
-    this.api_config = api_config;
     this.api_uri = api_config.api_uri;
-    this.auth_headers = {'Authorization': 'Basic ' + b64auth}
-    if (name) {
-      this.name = name;
-    } else {
-      this.name = 'access_token_' + api_config.version;
-    }
-    this.path = path.join(api_config.oauth_token_dir, this.name + '.json')
+    this.auth_headers = {Authorization: `Basic ${b64auth}`}
+    this.name = (name) ? name : `access_token_${api_config.version}`;
+    this.path = path.join(api_config.oauth_token_dir, `${this.name}.json`);
   }
 
   /**
@@ -96,27 +91,27 @@ export class AccessTokenCommon extends ApiCommon {
 
   /* Store the access token in the file at this.path. */
   write() {
-    const output = {'name': this.name,
-                    'access_token': this.access_token,
-                    'refresh_token': this.refresh_token,
-                    'scopes': this.scopes
-                   }
-    const json = JSON.stringify(output, null, 2)
+    const json = JSON.stringify({
+      name: this.name,
+      access_token: this.access_token,
+      refresh_token: this.refresh_token,
+      scopes: this.scopes
+    }, null, 2);
     /* Make credentials-bearing file as secure as possible with mode 0o600. */
     fs.open(this.path, 'w', 0o600, (err, fd) => {
       if (err) {
-        throw 'Can not open file for write: ' + this.path;
+        throw `Can not open file for write: ${this.path}`;
       }
       fs.write(fd, json, (err, written, string) => {
         if (err) {
-          throw 'Can not write file: ' + this.path;
+          throw `Can not write file: ${this.path}`;
         }
       })
     })
   }
 
   header(headers = {}) {
-    headers['Authorization'] = 'Bearer ' + this.access_token;
+    headers['Authorization'] = `Bearer ${this.access_token}`;
     return headers;
   }
 

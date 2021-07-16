@@ -1,4 +1,4 @@
-import {ApiObject} from './api_object.js'
+import {ApiObject} from '../api_object.js'
 
 export class Board extends ApiObject {
   constructor(board_id, api_config, access_token) {
@@ -6,6 +6,7 @@ export class Board extends ApiObject {
     this.board_id= board_id;
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_GET
   async get() {
     if (!this.board_id) {
       throw 'board_id must be set to get a board';
@@ -13,14 +14,17 @@ export class Board extends ApiObject {
     return this.request_data(`/v3/boards/${this.board_id}/`);
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_board_pins_GET
   async get_pins() {
     return this.get_iterator(`/v3/boards/${this.board_id}/pins/`);
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_sections_GET
   async get_sections() {
     return this.get_iterator(`/v3/board/${this.board_id}/sections/`);
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_section_pins_GET
   async get_section_pins(section_id) {
     return this.get_iterator(`/v3/board/sections/${section_id}/pins/`);
   }
@@ -41,6 +45,7 @@ export class Board extends ApiObject {
     return board_data.url;
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_create_board_PUT
   async create(board_data) {
     const OPTIONAL_ATTRIBUTES = [
       'category',
@@ -56,7 +61,7 @@ export class Board extends ApiObject {
       'return_existing'
     ];
     const create_data = {
-      'name': board_data.name
+      name: board_data.name
     };
     for (const key of OPTIONAL_ATTRIBUTES) {
       const value = board_data[key];
@@ -70,6 +75,7 @@ export class Board extends ApiObject {
     return new_board_data;
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_delete_board_DELETE
   async delete() {
     return await this.delete_and_check(`/v3/boards/${this.board_id}/`);
   }
@@ -88,6 +94,7 @@ export class Board extends ApiObject {
     }
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_create_section_PUT
   async create_section(section_data) {
     const OPTIONAL_ATTRIBUTES = [
       'client_id',
@@ -96,7 +103,7 @@ export class Board extends ApiObject {
       'title_source'
     ];
     const create_data = {
-      'title': section_data.title
+      title: section_data.title
     };
     for (const key of OPTIONAL_ATTRIBUTES) {
       const value = section_data[key];

@@ -1,11 +1,9 @@
 import {Scope} from './v3/oauth_scope.js'
 import get_auth_code from './user_auth.js'
 import http from 'http'
-import fs from 'fs'
 import open from 'open'
 
 jest.mock('http');
-jest.mock('fs');
 jest.mock('open');
 
 describe('user_auth tests', () => {
@@ -64,6 +62,6 @@ describe('user_auth tests', () => {
     expect(mock_http_server.close.mock.calls.length).toBe(1);
     expect(mock_http_server.listen.mock.calls.length).toBe(1);
     expect(mock_response.writeHead.mock.calls[0][0]).toEqual(301);
-    expect(mock_response.writeHead.mock.calls[0][1]).toEqual({'Location': 'test-landing-uri'});
+    expect(mock_response.writeHead.mock.calls[0][1]).toEqual({Location: 'test-landing-uri'});
   });
 });

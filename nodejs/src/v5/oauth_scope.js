@@ -1,5 +1,7 @@
 import Enum from 'enum'
 
+// Enumerate the valid OAuth scopes.
+// For details, see: https://developers.pinterest.com/docs/v5/#section/Authentication
 export const Scope = new Enum({
   READ_BOARDS: 'boards:read',
   WRITE_BOARDS: 'boards:write',

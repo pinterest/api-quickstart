@@ -5,9 +5,11 @@ class User(ApiObject):
         super().__init__(api_config, access_token)
         self.user = user
 
+    # https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET
     def get(self):
         return self.request_data('/v3/users/{}/'.format(self.user))
 
+    # https://developers.pinterest.com/docs/redoc/#operation/v3_get_linked_business_accounts_GET
     def get_businesses(self):
         return self.request_data('/v3/users/{}/businesses/'.format(self.user))
 
@@ -20,7 +22,7 @@ class User(ApiObject):
         print('Pin Count: ' + str(user_data['pin_count']))
         print('--------------------')
 
-    # documentation: https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET
+    # https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET
     def get_boards(self, user_data, query_parameters={}):
         path = f"/v3/users/{user_data['id']}/boards/feed/"
         if query_parameters:
@@ -30,6 +32,7 @@ class User(ApiObject):
                 delimiter = '&'
         return self.get_iterator(path) # the returned iterator handles API paging
 
+    # https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET
     def get_pins(self, user_data, query_parameters={}):
         path = f"/v3/users/{user_data['id']}/pins/"
         if query_parameters:

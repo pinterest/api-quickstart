@@ -74,14 +74,14 @@ async function main (argv) {
   // Note: It is best practice not to print credentials in clear text.
   // Pinterest engineers asked for this capability to make it easier to support partners.
   if (args.cleartext) {
-    console.warn('Please keep clear text tokens secure!')
-    console.log('clear text access token: ' + access_token.access_token)
+    console.warn('Please keep clear text tokens secure!');
+    console.log('clear text access token:', access_token.access_token);
   }
   console.log('hashed access token:', access_token.hashed());
 
   if (access_token.refresh_token) {
     if (args.cleartext) {
-      console.log('clear text refresh token: ' + access_token.refresh_token);
+      console.log('clear text refresh token:', access_token.refresh_token);
     }
     console.log('hashed refresh token:', access_token.hashed_refresh_token());
   }

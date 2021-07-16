@@ -1,4 +1,4 @@
-import {ApiObject} from './api_object.js'
+import {ApiObject} from '../api_object.js'
 
 export class Pin extends ApiObject {
   constructor(pin_id, api_config, access_token) {
@@ -6,6 +6,7 @@ export class Pin extends ApiObject {
     this.pin_id= pin_id;
   }
 
+  // https://developers.pinterest.com/docs/v5/#operation/pins/get
   async get() {
     if (!this.pin_id) {
       throw 'pin_id must be set to get a pin';
@@ -23,7 +24,8 @@ export class Pin extends ApiObject {
     console.log('--------------------');
   }
 
-  async create(pin_data, board_id, {section=null}) {
+  // https://developers.pinterest.com/docs/v5/#operation/pins/create
+  async create(pin_data, board_id, {section}) {
     // TODO: carousel_data_json
     const OPTIONAL_ATTRIBUTES = [
       'link',
@@ -32,9 +34,9 @@ export class Pin extends ApiObject {
       'alt_text',
     ];
     const create_data = {
-      'board_id': board_id,
-      'media_source': {'source_type': 'image_url',
-                       'url': pin_data.media.images.originals.url}
+      board_id: board_id,
+      media_source: {source_type: 'image_url',
+                       url: pin_data.media.images.originals.url}
     };
     if (section) {
       create_data['board_section_id'] = section;

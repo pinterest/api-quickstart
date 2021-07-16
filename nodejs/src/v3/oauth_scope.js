@@ -1,5 +1,7 @@
 import Enum from 'enum'
 
+// Enumerate the valid OAuth scopes.
+// For details, see: https://developers.pinterest.com/docs/redoc/#section/User-Authorization/OAuth-scopes
 export const Scope = new Enum({
   // granular scopes
   READ_DOMAINS: 'read_domains',

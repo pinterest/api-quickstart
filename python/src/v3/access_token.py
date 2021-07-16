@@ -11,6 +11,7 @@ class AccessToken(AccessTokenCommon):
         """
         Execute the OAuth 2.0 process for obtaining an access token.
         For more information, see IETF RFC 6749: https://tools.ietf.org/html/rfc6749
+        and https://developers.pinterest.com/docs/redoc/#tag/Authentication
         """
         print('getting auth_code...')
         auth_code = get_auth_code(self.api_config, scopes=scopes, refreshable=refreshable)

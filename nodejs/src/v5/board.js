@@ -1,4 +1,4 @@
-import {ApiObject} from './api_object.js'
+import {ApiObject} from '../api_object.js'
 
 export class Board extends ApiObject {
   constructor(board_id, api_config, access_token) {
@@ -6,6 +6,7 @@ export class Board extends ApiObject {
     this.board_id= board_id;
   }
 
+  // https://developers.pinterest.com/docs/v5/#operation/boards/get
   async get() {
     if (!this.board_id) {
       throw 'board_id must be set to get a board';
@@ -13,14 +14,17 @@ export class Board extends ApiObject {
     return this.request_data(`/v5/boards/${this.board_id}`);
   }
 
+  // https://developers.pinterest.com/docs/v5/#operation/boards/list_pins
   async get_pins() {
     return this.get_iterator(`/v5/boards/${this.board_id}/pins`);
   }
 
+  // https://developers.pinterest.com/docs/v5/#operation/board_sections/list
   async get_sections() {
     return this.get_iterator(`/v5/boards/${this.board_id}/sections`);
   }
 
+  // https://developers.pinterest.com/docs/v5/#operation/board_sections/list_pins
   async get_section_pins(section_id) {
     return this.get_iterator(`/v5/boards/${this.board_id}/sections/${section_id}/pins`);
   }
@@ -38,17 +42,18 @@ export class Board extends ApiObject {
   // provides a human-readable identifier for a board
   static text_id(board_data) {
     // simulate v3 URL to provide a text identifier
-    return ('/' + board_data.owner.username + '/' +
+    return (`/${board_data.owner.username}/` +
             board_data.name.toLowerCase().replaceAll(' ', '-') + '/');
   }
 
+  // https://developers.pinterest.com/docs/v5/#operation/boards/create
   async create(board_data) {
     const OPTIONAL_ATTRIBUTES = [
       'description',
       'privacy',
     ];
     const create_data = {
-      'name': board_data.name
+      name: board_data.name
     };
     for (const key of OPTIONAL_ATTRIBUTES) {
       const value = board_data[key];
@@ -62,8 +67,9 @@ export class Board extends ApiObject {
     return new_board_data;
   }
 
+  // https://developers.pinterest.com/docs/v5/#operation/boards/delete
   async delete() {
-    return await this.delete_and_check(`/v5/boards/${this.board_id}`);
+    await this.delete_and_check(`/v5/boards/${this.board_id}`);
   }
 
   static print_section(section_data) {
@@ -79,9 +85,10 @@ export class Board extends ApiObject {
     }
   }
 
+  // https://developers.pinterest.com/docs/v5/#operation/board_sections/create
   async create_section(section_data) {
     const create_data = {
-      'name': section_data.name
+      name: section_data.name
     };
     return this.post_data(`/v5/boards/${this.board_id}/sections`, create_data);
   }

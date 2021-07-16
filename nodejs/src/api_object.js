@@ -1,6 +1,6 @@
 import got from 'got'
-import {ApiCommon} from '../api_common.js'
-import {Input} from '../utils.js'
+import {ApiCommon} from './api_common.js'
+import {Input} from './utils.js'
 
 /**
  * The ApiObject uses the got library for REST transations:
@@ -8,10 +8,15 @@ import {Input} from '../utils.js'
  */
 export class ApiObject extends ApiCommon {
   constructor(api_config, access_token) {
-    super();
+    super(api_config);
     this.api_uri = api_config.api_uri;
-    this.api_config = api_config;
     this.access_token = access_token;
+  }
+
+  // This method extracts the data container from the v3 response body
+  // and returns the v5 response body without modification.
+  extract(body) {
+    return (this.api_config.version === 'v3') ? body.data : body;
   }
 
   // Code that is common to a simple GET as in response_data()
@@ -37,7 +42,7 @@ export class ApiObject extends ApiCommon {
   // Simple GET transaction.
   async request_data(path) {
     const response = await this.get_response(path);
-    return(response.data);
+    return this.extract(response);
   }
 
   // Simple PUT transaction.
@@ -45,9 +50,9 @@ export class ApiObject extends ApiCommon {
     const full_uri = this.api_uri + path;
     if (this.api_config.verbosity >= 2) {
       console.log('PUT', full_uri);
-    }
-    if (this.api_config.verbosity >= 3) {
-      console.log(put_data);
+      if (this.api_config.verbosity >= 3) {
+        console.log(put_data);
+      }
     }
     try {
       const response = await got.put(full_uri, {
@@ -57,7 +62,30 @@ export class ApiObject extends ApiCommon {
         responseType: 'json'
       });
       this.print_response(response);
-      return response.body.data;
+      return this.extract(response.body);
+    } catch (error) {
+      this.print_and_throw_error(error);
+    }
+  }
+
+  // Simple POST transaction.
+  async post_data(path, post_data) {
+    const full_uri = this.api_uri + path;
+    if (this.api_config.verbosity >= 2) {
+      console.log('POST', full_uri);
+      if (this.api_config.verbosity >= 3) {
+        console.log(post_data);
+      }
+    }
+    try {
+      const response = await got.post(full_uri, {
+        headers: this.access_token.header(),
+        json: post_data,
+        followRedirect: false,
+        responseType: 'json'
+      });
+      this.print_response(response);
+      return this.extract(response.body);
     } catch (error) {
       this.print_and_throw_error(error);
     }
@@ -98,7 +126,8 @@ export class ApiObject extends ApiCommon {
 
         while (true) {
           // send the current response to the function using the iterator
-          for (const value of response.data) {
+          const items = response.items || response.data; // items in v5, data in v5
+          for (const value of items) {
             yield value;
           }
           // continue the loop if the current response has a bookmark, otherwise done
@@ -121,7 +150,7 @@ export class ApiObject extends ApiCommon {
       for await (let object_data of paged_iterator) {
         // do this check after fetching a new page to make sure that there are more pins
         if (page_index > page_size) {
-          if ('yes' == await input.one_of(`Continue printing ${object_name} list?`,
+          if ('yes' === await input.one_of(`Continue printing ${object_name} list?`,
                                           ['yes', 'no'], 'yes')) {
             page_index = 1;
           } else {
