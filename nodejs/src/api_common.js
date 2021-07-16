@@ -46,7 +46,7 @@ export class ApiCommon {
         console.log(error.response.body);
       }
     }
-    if (error.response.statusCode == 429) {
+    if (error.response.statusCode === 429) {
       const detail = error.response.body.message_detail || error.response.body.message;
       if (detail && detail.toLowerCase().includes('spam')) {
         throw new SpamError(detail);

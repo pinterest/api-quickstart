@@ -46,11 +46,11 @@ export class Input {
     while (true) {
       const raw = await this.question(`[${defaultValue}] `);
       const value = raw.toLowerCase(); // for case insensitive lookup
-      if (value == '') {
+      if (value === '') {
         return defaultValue; // blank entry returns the default
       }
       for (var idx = 0; idx < one_of_list.length; ++idx) {
-        if (value == one_of_list_lowercase[idx]) {
+        if (value === one_of_list_lowercase[idx]) {
           return one_of_list[idx];
         }
       }

@@ -16,7 +16,7 @@ export class ApiObject extends ApiCommon {
   // This method extracts the data container from the v3 response body
   // and returns the v5 response body without modification.
   extract(body) {
-    return (this.api_config.version == 'v3') ? body.data : body;
+    return (this.api_config.version === 'v3') ? body.data : body;
   }
 
   // Code that is common to a simple GET as in response_data()
@@ -150,7 +150,7 @@ export class ApiObject extends ApiCommon {
       for await (let object_data of paged_iterator) {
         // do this check after fetching a new page to make sure that there are more pins
         if (page_index > page_size) {
-          if ('yes' == await input.one_of(`Continue printing ${object_name} list?`,
+          if ('yes' === await input.one_of(`Continue printing ${object_name} list?`,
                                           ['yes', 'no'], 'yes')) {
             page_index = 1;
           } else {

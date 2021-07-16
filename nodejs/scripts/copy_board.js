@@ -29,7 +29,7 @@ import {SpamError} from '../src/api_common.js'
  *      ./copy_board.js -b <board-id> -n 'test board 001'
  * 2. Copy a board from one account to another, which requires specifying one
  *    access token for the source account and one for the target account. See
- *    the comments at the top of the get_access_tokeh.js script for information
+ *    the comments at the top of the get_access_token.js script for information
  *    about where access tokens are stored.
  *    For example:
  *      ./copy_board.js -b <board-id> -s source_account_token.json -t target_account_token.json
@@ -110,7 +110,7 @@ async function main (argv) {
       const pintype = pin_data.type;
       // Sometimes the board list operation will generate entities (e.g. "more ideas"
       // tiles) that resemble pins but can not be copied.
-      if (!pintype || (pintype == 'pin')) {
+      if (!pintype || (pintype === 'pin')) {
         console.log('source pin:');
         Pin.print_summary(pin_data);
         const target_pin_data = await pin.create(pin_data, target_board_id,
