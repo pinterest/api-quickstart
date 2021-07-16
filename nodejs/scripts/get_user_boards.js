@@ -46,12 +46,11 @@ async function main (argv) {
   user_me.print_summary(user_me_data);
 
   // get information about all of the boards in the user's profile
-  const query_parameters = {
-    'page_size': args.page_size,
-    'include_empty': args.include_empty,
-    'include_archived': args.include_archived
-  };
-  const board_iterator = await user_me.get_boards(user_me_data, {query_parameters: query_parameters});
+  const board_iterator = await user_me.get_boards(user_me_data, {query_parameters: {
+    page_size: args.page_size,
+    include_empty: args.include_empty,
+    include_archived: args.include_archived
+  }});
   await user_me.print_multiple(args.page_size, 'board', Board, board_iterator);
 }
 

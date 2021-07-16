@@ -25,7 +25,7 @@ export class Pin extends ApiObject {
   }
 
   // https://developers.pinterest.com/docs/v5/#operation/pins/create
-  async create(pin_data, board_id, {section=null}) {
+  async create(pin_data, board_id, {section}) {
     // TODO: carousel_data_json
     const OPTIONAL_ATTRIBUTES = [
       'link',
@@ -34,9 +34,9 @@ export class Pin extends ApiObject {
       'alt_text',
     ];
     const create_data = {
-      'board_id': board_id,
-      'media_source': {'source_type': 'image_url',
-                       'url': pin_data.media.images.originals.url}
+      board_id: board_id,
+      media_source: {source_type: 'image_url',
+                       url: pin_data.media.images.originals.url}
     };
     if (section) {
       create_data['board_section_id'] = section;

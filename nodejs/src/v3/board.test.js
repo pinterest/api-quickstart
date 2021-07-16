@@ -35,35 +35,35 @@ describe('v3 board tests', () => {
     expect(mock_get_iterator.mock.calls[2][0]).toEqual('/v3/board/sections/test_section_id/pins/');
 
     const board_data = {
-      'name': 'My Test Board',
-      'description': 'This is a test board',
-      'category': 'fashion',
-      'url': '/pindexter/my-test-board/'
+      name: 'My Test Board',
+      description: 'This is a test board',
+      category: 'fashion',
+      url: '/pindexter/my-test-board/'
     }
     expect('/pindexter/my-test-board/').toEqual(Board.text_id(board_data));
 
     const mock_put_data = jest.spyOn(ApiObject.prototype, 'put_data');
-    const created_data = {'id': 'created_board_id'};
+    const created_data = {id: 'created_board_id'};
     mock_put_data.mockResolvedValue(created_data);
     response = await test_board.create(board_data);
     expect(created_data).toEqual(response);
     expect(mock_put_data.mock.calls[0]).toEqual(
       ['/v3/boards/',
-       {'name': 'My Test Board',
-        'description': 'This is a test board',
-        'category': 'fashion'
+       {name: 'My Test Board',
+        description: 'This is a test board',
+        category: 'fashion'
         // url should not be in the data
        }]);
 
     created_data.id = 'created_section_id';
-    const section_data = {'title': 'New Section Name', 'ignore': 'ignored', 'title_source': '1'}
+    const section_data = {title: 'New Section Name', ignore: 'ignored', title_source: '1'}
     response = await test_board.create_section(section_data)
 
     // Note: the create() above sets test_board.id to the created board
     expect(created_data).toEqual(response);
     expect(mock_put_data.mock.calls[1]).toEqual(
       ['/v3/board/created_board_id/sections/',
-       {'title': 'New Section Name', 'title_source': '1'}
+       {title: 'New Section Name', title_source: '1'}
        // ignored key/value should not be in the data
       ]);
 

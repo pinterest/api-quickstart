@@ -27,7 +27,7 @@ export class User extends ApiObject {
   }
 
   // https://developers.pinterest.com/docs/v5/#operation/boards/list
-  async get_boards(user_data, {query_parameters=null}) {
+  async get_boards(user_data, {query_parameters}) {
     var path = '/v5/boards';
     if (query_parameters) {
       var delimiter = '?';
@@ -40,7 +40,7 @@ export class User extends ApiObject {
   }
 
   // getting all of a user's pins is not supported, so iterate through boards
-  async get_pins(user_data, {query_parameters=null}) {
+  async get_pins(user_data, {query_parameters}) {
     const user = this;
     const board_iterator = await this.get_boards(user_data,
                                                  {query_parameters: query_parameters});

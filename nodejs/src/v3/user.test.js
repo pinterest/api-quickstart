@@ -46,12 +46,12 @@ describe('v3 user tests', () => {
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator')
     mock_get_iterator.mockResolvedValue('test_iterator');
     var iterator = await test_user.get_boards(
-      {'id': 'test_user_id'},
-      {query_parameters: {'key1': 'value1', 'key2': 'value2'}});
+      {id: 'test_user_id'},
+      {query_parameters: {key1: 'value1', key2: 'value2'}});
     expect('test_iterator').toEqual(iterator);
     expect(mock_get_iterator.mock.calls[0][0]).toEqual('/v3/users/test_user_id/boards/feed/?key1=value1&key2=value2');
 
-    iterator = await test_user.get_pins({'id': 'test_user_id2'}, {});
+    iterator = await test_user.get_pins({id: 'test_user_id2'}, {});
     expect('test_iterator').toEqual(iterator);
     expect(mock_get_iterator.mock.calls[1][0]).toEqual('/v3/users/test_user_id2/pins/');
   });

@@ -37,7 +37,7 @@ export class ApiCommon {
 
   // common code for printing and rethrowing the error in response to a transaction
   print_and_throw_error(error) {
-    const error_message = 'request failed with reason: ' + error.response.body.message;
+    const error_message = `request failed with reason: ${error.response.body.message}`;
     if (this.api_config.verbosity >= 1) {
       console.log(`<Response [${error.response.statusCode}]>`);
       console.log(error_message);

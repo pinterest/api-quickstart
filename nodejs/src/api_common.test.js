@@ -39,13 +39,13 @@ describe('api_common tests', () => {
     const api_common = new ApiCommon(mock_api_config);
 
     const mock_error = jest.fn();
-    mock_error.response = {'statusCode': 429, // spam error
-                           'headers': {
+    mock_error.response = {statusCode: 429, // spam error
+                           headers: {
                              'x-pinterest-rid': 'test-429-rid'
                            },
-                           'body': {
-                             'message': 'hey there, slow down!',
-                             'message_detail': 'is u a Spammer?'
+                           body: {
+                             message: 'hey there, slow down!',
+                             message_detail: 'is u a Spammer?'
                            }
                           };
     try {

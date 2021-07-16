@@ -22,12 +22,12 @@ export class User extends ApiObject {
     console.log('Full Name:', user_data.full_name);
     console.log('About:', user_data.about);
     console.log('Profile URL:', user_data.profile_url);
-    console.log('Pin Count: ' + user_data.pin_count);
+    console.log('Pin Count:', user_data.pin_count);
     console.log('--------------------');
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET
-  async get_boards(user_data, {query_parameters=null}) {
+  async get_boards(user_data, {query_parameters}) {
     var path = `/v3/users/${user_data.id}/boards/feed/`;
     if (query_parameters) {
       var delimiter = '?';
@@ -40,7 +40,7 @@ export class User extends ApiObject {
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET
-  async get_pins(user_data, {query_parameters=null}) {
+  async get_pins(user_data, {query_parameters}) {
     var path = `/v3/users/${user_data.id}/pins/`;
     if (query_parameters) {
       var delimiter = '?';

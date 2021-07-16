@@ -105,7 +105,7 @@ async function main (argv) {
   const {User} = await import(`../src/${api_config.version}/user.js`);
 
   // helper function to copy a pin
-  const copy_pin = async function(pin, pin_data, target_board_id, {target_section_id=null}) {
+  const copy_pin = async function(pin, pin_data, target_board_id, {target_section_id}) {
     try {
       const pintype = pin_data.type;
       // Sometimes the board list operation will generate entities (e.g. "more ideas"

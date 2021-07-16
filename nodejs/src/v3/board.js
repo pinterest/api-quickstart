@@ -61,7 +61,7 @@ export class Board extends ApiObject {
       'return_existing'
     ];
     const create_data = {
-      'name': board_data.name
+      name: board_data.name
     };
     for (const key of OPTIONAL_ATTRIBUTES) {
       const value = board_data[key];
@@ -103,7 +103,7 @@ export class Board extends ApiObject {
       'title_source'
     ];
     const create_data = {
-      'title': section_data.title
+      title: section_data.title
     };
     for (const key of OPTIONAL_ATTRIBUTES) {
       const value = section_data[key];

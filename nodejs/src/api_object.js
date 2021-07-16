@@ -16,11 +16,7 @@ export class ApiObject extends ApiCommon {
   // This method extracts the data container from the v3 response body
   // and returns the v5 response body without modification.
   extract(body) {
-    if (this.api_config.version == 'v3') {
-      return body.data;
-    } else {
-      return body;
-    }
+    return (this.api_config.version == 'v3') ? body.data : body;
   }
 
   // Code that is common to a simple GET as in response_data()

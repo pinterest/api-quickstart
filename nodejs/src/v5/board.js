@@ -42,7 +42,7 @@ export class Board extends ApiObject {
   // provides a human-readable identifier for a board
   static text_id(board_data) {
     // simulate v3 URL to provide a text identifier
-    return ('/' + board_data.owner.username + '/' +
+    return (`/${board_data.owner.username}/` +
             board_data.name.toLowerCase().replaceAll(' ', '-') + '/');
   }
 
@@ -53,7 +53,7 @@ export class Board extends ApiObject {
       'privacy',
     ];
     const create_data = {
-      'name': board_data.name
+      name: board_data.name
     };
     for (const key of OPTIONAL_ATTRIBUTES) {
       const value = board_data[key];
@@ -88,7 +88,7 @@ export class Board extends ApiObject {
   // https://developers.pinterest.com/docs/v5/#operation/board_sections/create
   async create_section(section_data) {
     const create_data = {
-      'name': section_data.name
+      name: section_data.name
     };
     return this.post_data(`/v5/boards/${this.board_id}/sections`, create_data);
   }

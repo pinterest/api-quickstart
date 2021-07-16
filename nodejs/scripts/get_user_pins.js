@@ -39,7 +39,7 @@ async function main (argv) {
 
   // get information about all of the pins in the user's profile
   const pin_iterator = await user_me.get_pins(user_me_data,
-                                              {query_parameters: {'page_size': args.page_size}});
+                                              {query_parameters: {page_size: args.page_size}});
   await user_me.print_multiple(args.page_size, 'pin', Pin, pin_iterator);
 }
 

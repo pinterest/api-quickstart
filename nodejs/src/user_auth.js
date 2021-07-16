@@ -22,7 +22,7 @@ export default async function get_auth_code(
         console.log('Redirect request path:', req.url);
       }
       res.writeHead(301, {
-        'Location': api_config.landing_uri
+        Location: api_config.landing_uri
       })
       res.end(function () {
         // Only one response is expected or desired, so close down the server.
