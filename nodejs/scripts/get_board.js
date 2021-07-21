@@ -42,6 +42,10 @@ async function main (argv) {
   if (args.pins) {
     const pin_iterator = await board.get_pins();
     for await (let pin_data of pin_iterator) {
+      // ignore pins in sections for now. they will be printed for each section
+      if (pin_data.board_section_id) {
+        continue;
+      }
       Pin.print_summary(pin_data);
     }
   }
