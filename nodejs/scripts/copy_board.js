@@ -196,6 +196,10 @@ async function main (argv) {
     // copy board pins
     const pin_iterator = await source_board.get_pins();
     for await (let pin_data of pin_iterator) {
+      // ignore pins in sections for now. they will be copied into each section
+      if (pin_data.board_section_id) {
+        continue;
+      }
       if (args.dry_run) {
         console.log('dry-run: skipping attempt to create board pin:');
         Pin.print_summary(pin_data);
