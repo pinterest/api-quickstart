@@ -1,8 +1,6 @@
 name: Python
 
 on:
-  push:
-    paths: 'python/**.py'
   pull_request:
     paths: 'python/**.py'
 
