@@ -9,6 +9,7 @@ from api_config import ApiConfig
 from arguments import common_arguments
 
 def main(argv=[]):
+    print('hello!');
     """
     This script retrieves an OAuth 2.0 access token. See the "OAuth Authentication"
     section of the top-level README in this repository for more information.
