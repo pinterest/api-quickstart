@@ -18,6 +18,7 @@ class ApiCommonTest(unittest.TestCase):
         mock_api_config.verbosity = 2
 
         mock_response = mock.Mock()
+        mock_response.ok = False # test change 014
         mock_response.ok = True
         mock_response.status_code = 200
         response_json = {'response key': 'response value'}
