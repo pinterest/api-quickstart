@@ -63,7 +63,6 @@ In general, use the `-h` or `--help` command-line argument with each script to s
 Unit tests are in `./tests/src/` and integrations tests are in `./tests/scripts/`. To run the tests, run the following commands in your virtualenv:
 ```
 $ . ./venv/api/bin/activate # always run in a vitualenv
-$ . ../common/scripts/api_env # required for integration tests
 $ pip install -r dev-requirements.txt # only needed with a new virtualenv or when requirements change
 $ make tests
 ```
