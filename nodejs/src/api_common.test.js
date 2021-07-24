@@ -6,7 +6,9 @@ import {SpamError} from './api_common';
 describe('api_common tests', () => {
 
   test('test print_response', () => {
-    console.log('test change 002');
+    console.log('test change 003 -- broken test!');
+    process.exit(42);
+
     // check output
     console.log = jest.fn();
 
