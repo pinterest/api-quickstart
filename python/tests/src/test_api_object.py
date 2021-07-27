@@ -1,6 +1,8 @@
 import unittest
 import mock
 from os.path import dirname, abspath, join
+import requests
+import requests_mock
 import sys
 
 # required for imports in api_object to work
@@ -12,125 +14,119 @@ from api_object import ApiObject
 
 class ApiObjectTest(unittest.TestCase):
 
-    @mock.patch('src.api_object.requests.delete')
-    @mock.patch('src.api_object.requests.post')
-    @mock.patch('src.api_object.requests.put')
-    @mock.patch('src.api_object.requests.get')
-    def test_api_object_v3(self, mock_requests_get, mock_requests_put, mock_requests_post, mock_requests_delete):
-        mock_response = mock.Mock()
-        mock_response.ok = True
-        mock_response.json.return_value = {'data': 'test_response_data'} # v3 uses data container
-        mock_requests_get.return_value = mock_response
+    test_uri = 'https://test_host'
+    test_path = '/test_path'
+    test_uri_path = test_uri + test_path
 
+    @requests_mock.Mocker()
+    def test_api_object_v3(self, rm):
         api_config = mock.Mock()
-        api_config.api_uri = 'test_uri'
+        api_config.api_uri = self.test_uri
         api_config.verbosity = 2
         api_config.version = 'v3'
 
         access_token = mock.Mock()
-        access_token.header.return_value = 'test_headers'
+        access_token_header = {'access_token_key': 'access_token_value'}
+        access_token.header.return_value = access_token_header
         api_object = ApiObject(api_config, access_token)
 
-        response = api_object.request_data('/test_path')
-        self.assertEqual(response, 'test_response_data')
-        mock_requests_get.assert_called_once_with('test_uri/test_path', headers='test_headers', allow_redirects=False)
+        rm.get(self.test_uri_path, request_headers=access_token_header,
+               json={'data': 'test_get_response_data'})
 
-        mock_requests_put.return_value = mock_response
+        response = api_object.request_data(self.test_path)
+        self.assertEqual(response, 'test_get_response_data')
+        self.assertFalse(rm.last_request.allow_redirects)
+
+        rm.put(self.test_uri_path, request_headers=access_token_header,
+               json={'data': 'test_put_response_data'})
         put_data = {'key1': 'value1', 'key2': 'value2'}
-        response = api_object.put_data('/test_path', put_data)
-        self.assertEqual(response, 'test_response_data')
-        mock_requests_put.assert_called_once_with('test_uri/test_path', data = put_data,
-                                                  headers='test_headers', allow_redirects=False)
+        response = api_object.put_data(self.test_path, put_data)
+        self.assertEqual(response, 'test_put_response_data')
+        self.assertFalse(rm.last_request.allow_redirects)
+        self.assertEqual('key1=value1&key2=value2', rm.last_request.text)
 
-        mock_requests_post.return_value = mock_response
+        rm.post(self.test_uri_path, request_headers=access_token_header,
+                json={'data': 'test_post_response_data'})
         post_data = {'key3': 'value3', 'key4': 'value4'}
-        response = api_object.post_data('/test_path', post_data)
-        self.assertEqual(response, 'test_response_data')
-        mock_requests_post.assert_called_once_with('test_uri/test_path', json = post_data,
-                                                   headers='test_headers', allow_redirects=False)
+        response = api_object.post_data(self.test_path, post_data)
+        self.assertEqual(response, 'test_post_response_data')
+        self.assertFalse(rm.last_request.allow_redirects)
+        self.assertEqual(post_data, rm.last_request.json())
 
-        mock_response.ok = False
-        mock_response.reason = 'test deletion failure'
-        mock_requests_delete.return_value = mock_response
+        rm.delete(self.test_uri + '/delete_path', request_headers=access_token_header,
+                  status_code = 403, reason='test deletion failure',
+                  text='should be ignored')
         # verify check called after delete
         with self.assertRaisesRegex(RuntimeError,
                                     'request failed with reason: test deletion failure'):
             api_object.delete_and_check('/delete_path')
         # verify delete called
-        mock_requests_delete.assert_called_once_with('test_uri/delete_path',
-                                                     headers='test_headers', allow_redirects=False)
+        self.assertFalse(rm.last_request.allow_redirects)
 
-    @mock.patch('src.api_object.requests.delete')
-    @mock.patch('src.api_object.requests.post')
-    @mock.patch('src.api_object.requests.put')
-    @mock.patch('src.api_object.requests.get')
-    def test_api_object_v5(self, mock_requests_get, mock_requests_put, mock_requests_post, mock_requests_delete):
-        mock_response = mock.Mock()
-        mock_response.ok = True
-        mock_response.json.return_value = 'test_response_data' # v5 does not use data container
-        mock_requests_get.return_value = mock_response
-
+    @requests_mock.Mocker()
+    def test_api_object_v5(self, rm):
         api_config = mock.Mock()
-        api_config.api_uri = 'test_uri'
+        api_config.api_uri = self.test_uri
         api_config.verbosity = 2
         api_config.version = 'v5'
 
         access_token = mock.Mock()
-        access_token.header.return_value = 'test_headers'
+        access_token_header = {'access_token_key': 'access_token_value'}
+        access_token.header.return_value = access_token_header
         api_object = ApiObject(api_config, access_token)
 
-        response = api_object.request_data('/test_path')
-        self.assertEqual(response, 'test_response_data')
+        expected_response = {'response_key': 'test_get_response_value'}
+        rm.get(self.test_uri_path, request_headers=access_token_header,
+               json=expected_response)
+        response = api_object.request_data(self.test_path)
+        self.assertFalse(rm.last_request.allow_redirects)
+        self.assertEqual(expected_response, response)
 
-        mock_requests_put.return_value = mock_response
-        put_data = {'key1': 'value1', 'key2': 'value2'}
-        response = api_object.put_data('/test_path', put_data)
-        self.assertEqual(response, 'test_response_data')
+        expected_response = {'response_key': 'test_put_response_value'}
+        rm.put(self.test_uri_path, request_headers=access_token_header,
+               json=expected_response)
+        put_data = {'key5': 'value5', 'key6': 'value6'}
+        response = api_object.put_data(self.test_path, put_data)
+        self.assertFalse(rm.last_request.allow_redirects)
+        self.assertEqual(expected_response, response)
+        self.assertEqual('key5=value5&key6=value6', rm.last_request.text)
 
-        mock_requests_post.return_value = mock_response
-        response = api_object.post_data('/test_path')
-        self.assertEqual(response, 'test_response_data')
+        expected_response = {'response_key': 'test_post_response_value'}
+        rm.post(self.test_uri_path, request_headers=access_token_header,
+                json=expected_response)
+        response = api_object.post_data(self.test_path)
+        self.assertFalse(rm.last_request.allow_redirects)
+        self.assertEqual(expected_response, response)
+        self.assertEqual(None, rm.last_request.text)
 
 
-    @mock.patch('src.api_object.requests.get')
-    def test_api_object(self, mock_requests_get):
-        mock_response1 = mock.Mock()
-        mock_response1.ok = True
-        mock_response1.json.return_value = {'data': ['one', 'two'], 'bookmark': 'BOOKMARK1'} # v3 uses data
-        mock_response2 = mock.Mock()
-        mock_response2.ok = True
-        mock_response2.json.return_value = {'data': ['three']} # v5 uses items
-        mock_requests_get.side_effect = [mock_response1, mock_response2]
-
+    @requests_mock.Mocker()
+    def test_api_object_iterator(self, rm):
         api_config = mock.Mock()
-        api_config.api_uri = 'test_uri'
+        api_config.api_uri = self.test_uri
         api_config.verbosity = 2
         api_config.version = 'v3'
 
         access_token = mock.Mock()
-        access_token.header.return_value = 'test_headers'
+        access_token_header = {'access_token_key': 'access_token_value'}
+        access_token.header.return_value = access_token_header
         api_object = ApiObject(api_config, access_token)
 
+        rm.get(self.test_uri + '/test_iterpath', headers=access_token_header,
+               json={'data': ['one', 'two'], 'bookmark': 'BOOKMARK1'}) # v3 uses data
+        rm.get(self.test_uri + '/test_iterpath?bookmark=BOOKMARK1', headers=access_token_header,
+               json={'data': ['three']})
         expected_values = ['one', 'two', 'three']
         for index, value in enumerate(api_object.get_iterator('/test_iterpath')):
             self.assertEqual(expected_values[index], value)
-
-        mock_requests_get.assert_has_calls([
-            mock.call('test_uri/test_iterpath', headers='test_headers', allow_redirects=False),
-            mock.call('test_uri/test_iterpath?bookmark=BOOKMARK1', headers='test_headers', allow_redirects=False)
-        ])
+        self.assertFalse(rm.last_request.allow_redirects)
 
         api_config.version = 'v5'
-        mock_response1.json.return_value = {'items': ['one', 'two'], 'bookmark': 'BOOKMARK1'} # v3 uses data
-        mock_response2.json.return_value = {'items': ['three']}
-        mock_requests_get.reset_mock()
-        mock_requests_get.side_effect = [mock_response1, mock_response2]
-        for index, value in enumerate(api_object.get_iterator('/test_iterpath?key1=value1')):
+        rm.get(self.test_uri + '/v5_iterpath?key1=value1', headers=access_token_header,
+               json={'items': ['rabbit', 'frog'], 'bookmark': 'BOOKMARK2'}) # v5 uses items
+        rm.get(self.test_uri + '/v5_iterpath?key1=value1&bookmark=BOOKMARK2', headers=access_token_header,
+               json={'data': ['stoat']})
+        expected_values = ['rabbit', 'frog', 'stoat']
+        for index, value in enumerate(api_object.get_iterator('/v5_iterpath?key1=value1')):
             self.assertEqual(expected_values[index], value)
-
-        mock_requests_get.assert_has_calls([
-            mock.call('test_uri/test_iterpath?key1=value1',
-                      headers='test_headers', allow_redirects=False),
-            mock.call('test_uri/test_iterpath?key1=value1&bookmark=BOOKMARK1',
-                      headers='test_headers', allow_redirects=False)
-        ])
+        self.assertFalse(rm.last_request.allow_redirects)
