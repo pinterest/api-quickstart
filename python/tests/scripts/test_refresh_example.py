@@ -1,41 +1,43 @@
 import mock
+import requests
+import requests_mock
 
 from integration_mocks import IntegrationMocks
 
 class RefreshExampleTest(IntegrationMocks):
-    def mock_requests_put(self, uri, headers=None, data=None):
-        print('mock_requests_put', uri, headers, data, allow_redirects=True)
-        self.requests_put_calls += 1
-        response = mock.MagicMock()
-        response.__str__.return_value = '<Response [200]>'
-        response.json.return_value = {'status': 'test-status',
-                                      'scope': 'test-scope',
-                                      # response needs to be different each time
-                                      'access_token': 'test-access-token-' + str(self.requests_put_calls),
-                                      'data': {'refresh_token': 'test-refresh-token'}
-                                      }
-        return response
-
-    def mock_requests_get(self, uri, headers=None, data=None, allow_redirects=True):
-        print('mock_requests_get', uri, headers, data)
-        response = mock.MagicMock()
-        response.__str__.return_value = '<Response [200]>'
-        response.json.return_value = {'data':
-                                      {'full_name': 'test fullname',
-                                       'id': 'test user id',
-                                       'about': 'test about',
-                                       'profile_url': 'test profile url',
-                                       'pin_count': 'pin count'
-                                       }
-                                      }
-        return response
-
+    # real_http is required for the redirect in integration_mocks to work
+    @requests_mock.Mocker(real_http=True)
     @mock.patch('time.sleep') # prevent delay from real sleep
     @mock.patch('builtins.print')
-    def test_refresh_example(self, mock_print, mock_sleep):
-        from scripts.refresh_example import main # import here to see monkeypatches
+    def test_refresh_example(self, rm, mock_print, mock_sleep):
+        # set up 4 different responses to PUT https://api.pinterest.com/v3/oauth/access_token/
+        basic_response = {'status': 'test-status',
+                          'scope': 'test-scope',
+                          'access_token': 'REPLACE ME',
+                          'data': {'refresh_token': 'test-refresh-token'}
+                          }
+        response_1 = dict(basic_response)
+        response_1['access_token'] = 'test-access-token-1'
+        response_2 = dict(basic_response)
+        response_2['access_token'] = 'test-access-token-2'
+        response_3 = dict(basic_response)
+        response_3['access_token'] = 'test-access-token-3'
 
-        self.requests_put_calls = 0
+        rm.put('https://api.pinterest.com/v3/oauth/access_token/',
+               [{'json': response_1},
+                {'json': response_2},
+                {'json': response_3}])
+        rm.get('https://api.pinterest.com/v3/users/me/',
+               json={'data':
+                     {'full_name': 'test fullname',
+                      'id': 'test user id',
+                      'about': 'test about',
+                      'profile_url': 'test profile url',
+                      'pin_count': 'pin count'
+                      }
+                     })
+
+        from scripts.refresh_example import main # import here to see monkeypatches
 
         with mock.patch('builtins.open') as mock_open:
             with mock.patch.dict('os.environ', self.mock_os_environ, clear=True):
@@ -43,16 +45,15 @@ class RefreshExampleTest(IntegrationMocks):
                 with self.mock_redirect():
                     main() # run refresh_example
 
-        self.assertEqual(self.requests_put_calls, 3) # check calls to requests.put()
         mock_sleep.assert_has_calls([mock.call(1),mock.call(1)]) # check calls to time.sleep()
 
-        # verify expected values printed.
-        # echo -n test-access-token-1 | shasum -a 256
-        mock_print.assert_any_call('hashed access token: ' +
-                                   '74e67193d034054f052777eb0b06d0d7fe72016282e2259d466afd6e9f8cc76a')
+        # verify expected values printed: one refresh token and three different access tokens
         # echo -n test-refresh-token | shasum -a 256
         mock_print.assert_any_call('hashed refresh token: ' +
                                    '0a9b110d5e553bd98e9965c70a601c15c36805016ba60d54f20f5830c39edcde')
+        # echo -n test-access-token-1 | shasum -a 256
+        mock_print.assert_any_call('hashed access token: ' +
+                                   '74e67193d034054f052777eb0b06d0d7fe72016282e2259d466afd6e9f8cc76a')
         # echo -n test-access-token-2 | shasum -a 256
         mock_print.assert_any_call('hashed access token: ' +
                                    '53f55e6fc30e86f042340fe6deec5b3ab5d5d6da11e3e697d41c46143a9cbc2d')
