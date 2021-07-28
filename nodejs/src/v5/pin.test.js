@@ -50,7 +50,6 @@ describe('v5 pin tests', () => {
     // create pin in a section
     created_data.id = 'created_pin_id2';
     response = await test_pin.create(pin_data, 'test_board_id', { section: 'test_section_id' });
-    const section_data = { name: 'New Section Name', ignore: 'ignored' };
     expect(created_data).toEqual(response);
     expected_post_data.board_section_id = 'test_section_id';
     expect(mock_post_data.mock.calls[1]).toEqual(['/v5/pins', expected_post_data]);

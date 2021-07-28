@@ -25,7 +25,7 @@ export class AccessToken extends AccessTokenCommon {
     }
 
     if (!refreshable) {
-      throw 'Pinterest API v5 only provides refreshable OAuth access tokens';
+      throw new Error('Pinterest API v5 only provides refreshable OAuth access tokens');
     }
 
     console.log('getting auth_code...');
@@ -70,7 +70,7 @@ export class AccessToken extends AccessTokenCommon {
   async refresh() {
     // There should be a refresh_token, but it is best to check.
     if (!this.refresh_token) {
-      throw 'AccessToken does not have a refresh token';
+      throw new Error('AccessToken does not have a refresh token');
     }
 
     console.log('refreshing access_token...');

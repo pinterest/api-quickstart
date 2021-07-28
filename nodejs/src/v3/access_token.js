@@ -59,7 +59,7 @@ export class AccessToken extends AccessTokenCommon {
   async refresh() {
     // There should be a refresh_token, but it is best to check.
     if (!this.refresh_token) {
-      throw 'AccessToken does not have a refresh token';
+      throw new Error('AccessToken does not have a refresh token');
     }
 
     console.log('refreshing access_token...');

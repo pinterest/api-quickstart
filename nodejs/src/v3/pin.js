@@ -9,7 +9,7 @@ export class Pin extends ApiObject {
   // https://developers.pinterest.com/docs/redoc/#operation/v3_get_pin_GET
   async get() {
     if (!this.pin_id) {
-      throw 'pin_id must be set to get a pin';
+      throw new Error('pin_id must be set to get a pin');
     }
     return this.request_data(`/v3/pins/${this.pin_id}/`);
   }

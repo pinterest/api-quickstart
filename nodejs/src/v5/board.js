@@ -9,7 +9,7 @@ export class Board extends ApiObject {
   // https://developers.pinterest.com/docs/v5/#operation/boards/get
   async get() {
     if (!this.board_id) {
-      throw 'board_id must be set to get a board';
+      throw new Error('board_id must be set to get a board');
     }
     return this.request_data(`/v5/boards/${this.board_id}`);
   }

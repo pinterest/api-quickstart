@@ -48,7 +48,6 @@ describe('v3 pin tests', () => {
     created_data.id = 'created_pin_id2';
     delete (pin_data.link);
     response = await test_pin.create(pin_data, 'test_board_id', { section: 'test_section_id' });
-    const section_data = { name: 'New Section Name', ignore: 'ignored' };
     expect(created_data).toEqual(response);
     expected_put_data.section = 'test_section_id';
     delete (expected_put_data.source_url);
