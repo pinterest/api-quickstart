@@ -57,7 +57,7 @@ Each language subdirectory in this repo (`nodejs` and `python`) has a README fil
 ## Coding conventions
 
   * Please submit new unit tests for any code changes that you make.
-  * We'll be adding linters that enforce syntax conventions. In the meantime, please do your best to follow the ad hoc conventions in the code.
+  * The nodejs code uses [eslint](https://eslint.org/) to enforce code standards. We'll be adding a linter for python in the near future. In the meantime, please do your best to follow the ad hoc conventions in the code.
   * We try to keep the code in the different languages at the same level of functionality. Your help writing code in multiple languages would be appreciated, but is not required.
 
 ## License
