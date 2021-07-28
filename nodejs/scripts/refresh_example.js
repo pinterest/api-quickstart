@@ -1,28 +1,28 @@
 #!/usr/bin/env node
-import {ArgumentParser} from 'argparse'
+import { ArgumentParser } from 'argparse';
 
-import {ApiConfig} from '../src/api_config.js'
-import {common_arguments} from '../src/arguments.js'
+import { ApiConfig } from '../src/api_config.js';
+import { common_arguments } from '../src/arguments.js';
 
-async function main (argv) {
-  const parser = new ArgumentParser({description: 'Get Pinterest OAuth token'});
+async function main(argv) {
+  const parser = new ArgumentParser({ description: 'Get Pinterest OAuth token' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
+  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
 
-  const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
-  const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const {User} = await import(`../src/${api_config.version}/user.js`);
+  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
+  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
+  const { User } = await import(`../src/${api_config.version}/user.js`);
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
-  const access_token = new AccessToken(api_config, {name: args.access_token});
+  const access_token = new AccessToken(api_config, { name: args.access_token });
 
-  await access_token.fetch({scopes: [Scope.READ_USERS],refreshable:true});
-  var hashed = access_token.hashed();
-  var access_token_hashes = new Set();
+  await access_token.fetch({ scopes: [Scope.READ_USERS], refreshable: true });
+  let hashed = access_token.hashed();
+  const access_token_hashes = new Set();
   access_token_hashes.add(hashed);
   console.log('hashed access token:', hashed);
   try {
@@ -34,7 +34,7 @@ async function main (argv) {
 
   // use the access token to get information about the user
   const user_me = new User('me', api_config, access_token);
-  var user_me_data = await user_me.get();
+  let user_me_data = await user_me.get();
   user_me.print_summary(user_me_data);
 
   // refresh the access_token
@@ -43,7 +43,8 @@ async function main (argv) {
   await access_token.refresh();
   hashed = access_token.hashed();
   if (access_token_hashes.has(hashed)) {
-    throw 'Access Token is the same after refresh.'
+    console.log('Access Token is the same after refresh.');
+    process.exit(2);
   }
   access_token_hashes.add(hashed);
 
@@ -58,7 +59,7 @@ async function main (argv) {
   // Doing refreshes too quickly can result in the same access_token being generated.
   // In practice, this isn't a problem because tokens should be refreshed after
   // relatively long periods of time.
-  console.log('wait a second to avoid getting the same token on the second refresh...')
+  console.log('wait a second to avoid getting the same token on the second refresh...');
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // refresh the access_token again
@@ -66,11 +67,11 @@ async function main (argv) {
 
   // Verify that the access_token has changed again.
   hashed = access_token.hashed();
-  if (access_token_hashes.has(hashed)) {
-    throw 'Access Token is repeated after the second refresh.'
-  }
   console.log('hashed access token:', hashed);
-
+  if (access_token_hashes.has(hashed)) {
+    console.log('Access Token is repeated after the second refresh.');
+    process.exit(2);
+  }
   console.log('accessing with second refreshed access_token...');
   user_me_data = await user_me.get();
   user_me.print_summary(user_me_data);

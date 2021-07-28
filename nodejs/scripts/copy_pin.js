@@ -7,10 +7,10 @@
  * For example, it might be used as part of a program to generate an
  * account to be used to test an API-based application.
  */
-import {ArgumentParser} from 'argparse'
+import { ArgumentParser } from 'argparse';
 
-import {ApiConfig} from '../src/api_config.js'
-import {common_arguments} from '../src/arguments.js'
+import { ApiConfig } from '../src/api_config.js';
+import { common_arguments } from '../src/arguments.js';
 
 /**
  * This script copies a pin to a board, both of which are specified by identifiers
@@ -21,35 +21,35 @@ import {common_arguments} from '../src/arguments.js'
  * found using the get_board.py script. A section identifier may not be specified
  * without a board identifier.
  */
-async function main (argv) {
+async function main(argv) {
   const parser = new ArgumentParser({
-    description: "Copy A Pin"
+    description: 'Copy A Pin'
   });
-  parser.add_argument('-p', '--pin-id', {required: true, help: 'source pin identifier'});
-  parser.add_argument('-b', '--board-id', {required: true, help: 'destination board identifier'});
-  parser.add_argument('-s', '--section', {help: 'destination board section'});
+  parser.add_argument('-p', '--pin-id', { required: true, help: 'source pin identifier' });
+  parser.add_argument('-b', '--board-id', { required: true, help: 'destination board identifier' });
+  parser.add_argument('-s', '--section', { help: 'destination board section' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
+  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
 
   // imports that depend on the version of the API
-  const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
-  const {Pin} = await import(`../src/${api_config.version}/pin.js`);
-  const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
+  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
+  const { Pin } = await import(`../src/${api_config.version}/pin.js`);
+  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
-  const access_token = new AccessToken(api_config, {name: args.access_token});
-  await access_token.fetch({scopes:[Scope.READ_PINS,Scope.WRITE_BOARDS,Scope.WRITE_PINS]});
+  const access_token = new AccessToken(api_config, { name: args.access_token });
+  await access_token.fetch({ scopes: [Scope.READ_PINS, Scope.WRITE_BOARDS, Scope.WRITE_PINS] });
 
   const pin = new Pin(args.pin_id, api_config, access_token);
   const pin_data = await pin.get();
   console.log('source pin:');
   Pin.print_summary(pin_data);
-  const new_pin_data = await pin.create(pin_data, args.board_id, {section:args.section});
-  console.log('new pin:')
+  const new_pin_data = await pin.create(pin_data, args.board_id, { section: args.section });
+  console.log('new pin:');
   Pin.print_summary(new_pin_data);
 }
 
