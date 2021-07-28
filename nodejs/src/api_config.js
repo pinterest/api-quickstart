@@ -1,5 +1,7 @@
+import process from 'process';
+
 export class ApiConfig {
-  constructor({verbosity=2, version}) {
+  constructor({ verbosity = 2, version }) {
     // Construct the redirect_uri for the OAuth process. The REDIRECT_URI must
     // be literally the same as configured at https://developers.pinterest.com/manage/.
     // The port is fixed for now. It would be better to configure a selection
@@ -8,10 +10,10 @@ export class ApiConfig {
     const DEFAULT_PORT = 8085;
     const DEFAULT_REDIRECT_URI = `http://localhost:${DEFAULT_PORT}/`;
     const DEFAULT_API_URI = 'https://api.pinterest.com';
-    const DEFAULT_API_VERSION = 'v5'
+    const DEFAULT_API_VERSION = 'v5';
     const DEFAULT_OAUTH_URI = 'https://www.pinterest.com';
     const DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/';
-    const DEFAULT_OAUTH_TOKEN_DIR = '.'
+    const DEFAULT_OAUTH_TOKEN_DIR = '.';
 
     // default level of verbosity, probably should switch to logging
     this.verbosity = verbosity;
@@ -51,8 +53,8 @@ export class ApiConfig {
    * can not be found in the environment.
    */
   get_application_id() {
-    var env_app_id = `PINTEREST_${this.version}_APP_ID`.toUpperCase();
-    var env_app_secret = `PINTEREST_${this.version}_APP_SECRET`.toUpperCase();
+    let env_app_id = `PINTEREST_${this.version}_APP_ID`.toUpperCase();
+    let env_app_secret = `PINTEREST_${this.version}_APP_SECRET`.toUpperCase();
     const app_id = process.env[env_app_id];
     const app_secret = process.env[env_app_secret];
 

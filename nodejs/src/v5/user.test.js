@@ -1,6 +1,6 @@
-import {ApiObject} from '../api_object.js'
-import {Board} from './board.js'
-import {User} from './user.js'
+import { ApiObject } from '../api_object.js';
+import { Board } from './board.js';
+import { User } from './user.js';
 
 jest.mock('../api_object');
 jest.mock('./board');
@@ -10,7 +10,7 @@ describe('v3 user tests', () => {
     jest.clearAllMocks();
   });
 
-  test('v3 user get methods', async () => {
+  test('v3 user get methods', async() => {
     const test_user = new User('test_user', 'test_api_config', 'test_access_token');
     expect(ApiObject.mock.instances.length).toBe(1);
     expect(ApiObject.mock.calls[0]).toEqual(['test_api_config', 'test_access_token']);
@@ -26,7 +26,7 @@ describe('v3 user tests', () => {
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
     mock_request_data.mockResolvedValue('test_response');
 
-    var response = await test_user.get();
+    let response = await test_user.get();
     expect(mock_request_data.mock.calls[0][0]).toEqual('/v5/user_account');
     expect(response).toEqual('test_response');
 
@@ -39,18 +39,18 @@ describe('v3 user tests', () => {
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');
     mock_get_iterator.mockResolvedValue('test_iterator');
     const iterator = await test_user.get_boards('test_user_data',
-                                                {query_parameters: {key1: 'value1', key2: 'value2'}});
+      { query_parameters: { key1: 'value1', key2: 'value2' } });
     expect('test_iterator').toEqual(iterator);
     expect(mock_get_iterator.mock.calls[0][0]).toEqual('/v5/boards?key1=value1&key2=value2');
   });
 
-  test('v3 user get pins', async () => {
+  test('v3 user get pins', async() => {
     const test_user = new User('test_user', 'test_api_config', 'test_access_token');
 
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');
     // This value mocks the iterator in the get_boards() call.
     mock_get_iterator.mockResolvedValue([
-      {id: 'board1_id'}, {id: 'board2_id'}, {id: 'board3_id'}
+      { id: 'board1_id' }, { id: 'board2_id' }, { id: 'board3_id' }
     ]);
     const mock_get_pins = jest.spyOn(Board.prototype, 'get_pins');
     mock_get_pins
@@ -59,9 +59,9 @@ describe('v3 user tests', () => {
       .mockResolvedValueOnce(['board3_pin1']); // board 3
 
     const expected_pins = ['board1_pin1', 'board1_pin2', 'board3_pin1'];
-    var index = 0;
+    let index = 0;
     const pin_iterator = await test_user.get_pins('test_user_data', {});
-    for await (let pin_data of pin_iterator) {
+    for await (const pin_data of pin_iterator) {
       expect(pin_data).toEqual(expected_pins[index]);
       index++;
     }

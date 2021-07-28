@@ -1,9 +1,9 @@
-import {ApiObject} from '../api_object.js'
+import { ApiObject } from '../api_object.js';
 
 export class Board extends ApiObject {
   constructor(board_id, api_config, access_token) {
     super(api_config, access_token);
-    this.board_id= board_id;
+    this.board_id = board_id;
   }
 
   // https://developers.pinterest.com/docs/v5/#operation/boards/get
@@ -50,7 +50,7 @@ export class Board extends ApiObject {
   async create(board_data) {
     const OPTIONAL_ATTRIBUTES = [
       'description',
-      'privacy',
+      'privacy'
     ];
     const create_data = {
       name: board_data.name

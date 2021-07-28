@@ -1,46 +1,44 @@
-import fs from 'fs'
-import {AccessTokenCommon} from './access_token_common.js'
+import fs from 'fs';
+import { AccessTokenCommon } from './access_token_common.js';
 
-jest.mock('fs')
+jest.mock('fs');
 
 describe('access_token_common tests', () => {
   const SAVED_ENV = process.env;
 
   beforeEach(() => {
     jest.resetModules();
-    process.env = {}
+    process.env = {};
   });
 
   afterAll(() => {
     process.env = SAVED_ENV;
   });
 
-  test('access token from environment', async () => {
+  test('access token from environment', async() => {
     const mock_api_config = jest.fn();
     mock_api_config.app_id = 'test-app-id';
     mock_api_config.app_secret = 'test-app-secret';
     mock_api_config.oauth_token_dir = 'test-token-dir';
 
-
     process.env.ACCESS_TOKEN_FROM_ENV = 'access token 42';
-    var access_token = new AccessTokenCommon(mock_api_config,
-                                             {name: 'access_token_from_env'});
+    let access_token = new AccessTokenCommon(mock_api_config,
+      { name: 'access_token_from_env' });
     await access_token.fetch({});
     // echo -n 'access token 42' | shasum -a 256
     expect('553c1f363497ba07fecc989425e57e37c2b5f57ff7476c79dfd580ef0741db88')
       .toEqual(access_token.hashed());
 
-    mock_api_config.version = 'v3'
+    mock_api_config.version = 'v3';
     access_token = new AccessTokenCommon(mock_api_config, {});
     process.env.ACCESS_TOKEN_V3 = 'v3 access token';
     await access_token.fetch({});
     // echo -n 'access token 42' | shasum -a 256
     expect('0186dba9997e23d7e180a711417e529e8647b2b296807d26781dc76b6edb726e')
       .toEqual(access_token.hashed());
-
   });
 
-  test('access token from JSON file', async () => {
+  test('access token from JSON file', async() => {
     const mock_api_config = jest.fn();
     mock_api_config.app_id = 'test-app-id';
     mock_api_config.app_secret = 'test-app-secret';
@@ -58,12 +56,12 @@ describe('access_token_common tests', () => {
 
     fs.readFileSync.mockReturnValue(access_token_json);
     const access_token = new AccessTokenCommon(mock_api_config,
-                                               {name: 'access_token_from_file'});
+      { name: 'access_token_from_file' });
     await access_token.fetch({});
     // echo -n 'test access token from json' | shasum -a 256
     expect('8de299eafa6932d8be18d7ff053d3bc6361c2b66ae1922f55fbf390d42de4cf6')
       .toEqual(access_token.hashed());
-       
+
     // echo -n 'test refresh token from json' | shasum -a 256
     expect('15569cfd5a27881329e842dfea303e05ec60c99fbdebcdaa20d2445647297072')
       .toEqual(access_token.hashed_refresh_token());

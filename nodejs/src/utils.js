@@ -1,4 +1,4 @@
-import readline from 'readline'
+import readline from 'readline';
 
 /**
  * Input is a container for a few user input functions that use readline.
@@ -49,7 +49,7 @@ export class Input {
       if (value === '') {
         return defaultValue; // blank entry returns the default
       }
-      for (var idx = 0; idx < one_of_list.length; ++idx) {
+      for (let idx = 0; idx < one_of_list.length; ++idx) {
         if (value === one_of_list_lowercase[idx]) {
           return one_of_list[idx];
         }
