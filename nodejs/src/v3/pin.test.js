@@ -46,11 +46,11 @@ describe('v3 pin tests', () => {
 
     // create pin in a section and without a link
     created_data.id = 'created_pin_id2';
-    delete (pin_data.link);
+    delete pin_data.link;
     response = await test_pin.create(pin_data, 'test_board_id', { section: 'test_section_id' });
     expect(created_data).toEqual(response);
     expected_put_data.section = 'test_section_id';
-    delete (expected_put_data.source_url);
+    delete expected_put_data.source_url;
     expect(mock_put_data.mock.calls[1]).toEqual(['/v3/pins/', expected_put_data]);
   });
 });

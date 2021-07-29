@@ -14,12 +14,12 @@ describe('user_auth tests', () => {
     mock_api_config.app_id = 'test-app-id';
     mock_api_config.landing_uri = 'test-landing-uri';
     mock_api_config.redirect_uri = 'test-redirect-uri';
-    const mock_access_uri = ('test-oauth-uri/oauth/' +
+    const mock_access_uri = 'test-oauth-uri/oauth/' +
                              '?consumer_id=test-app-id' +
                              '&redirect_uri=test-redirect-uri' +
                              '&response_type=code' +
                              '&refreshable=true' +
-                             '&scope=read_users,read_pins');
+                             '&scope=read_users,read_pins';
 
     // Used to verify that the user_auth code cleans the socket properly.
     const mock_socket = jest.fn();

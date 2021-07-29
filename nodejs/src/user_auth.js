@@ -43,11 +43,11 @@ export default async function get_auth_code(
     server.listen(api_config.port);
   });
 
-  let access_uri = (api_config.oauth_uri + '/oauth/' +
+  let access_uri = api_config.oauth_uri + '/oauth/' +
                     '?consumer_id=' + api_config.app_id +
                     '&redirect_uri=' + api_config.redirect_uri +
                     '&response_type=code' +
-                    '&refreshable=' + refreshable.toString());
+                    '&refreshable=' + refreshable.toString();
 
   if (scopes) {
     access_uri = access_uri + '&scope=' + scopes.map(s => s.value).join(',');

@@ -110,7 +110,7 @@ async function main(argv) {
       const pintype = pin_data.type;
       // Sometimes the board list operation will generate entities (e.g. "more ideas"
       // tiles) that resemble pins but can not be copied.
-      if (!pintype || (pintype === 'pin')) {
+      if (!pintype || pintype === 'pin') {
         console.log('source pin:');
         Pin.print_summary(pin_data);
         const target_pin_data = await pin.create(pin_data, target_board_id,

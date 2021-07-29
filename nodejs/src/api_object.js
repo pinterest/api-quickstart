@@ -16,7 +16,7 @@ export class ApiObject extends ApiCommon {
   // This method extracts the data container from the v3 response body
   // and returns the v5 response body without modification.
   extract(body) {
-    return (this.api_config.version === 'v3') ? body.data : body;
+    return this.api_config.version === 'v3' ? body.data : body;
   }
 
   // Code that is common to a simple GET as in response_data()
@@ -121,7 +121,7 @@ export class ApiObject extends ApiCommon {
 
         // extend the path if there is a bookmark
         if (response.bookmark) {
-          path_with_query = path + ((path.includes('?')) ? '&' : '?') + 'bookmark=';
+          path_with_query = path + (path.includes('?') ? '&' : '?') + 'bookmark=';
         }
 
         while (true) {

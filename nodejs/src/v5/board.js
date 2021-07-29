@@ -42,8 +42,8 @@ export class Board extends ApiObject {
   // provides a human-readable identifier for a board
   static text_id(board_data) {
     // simulate v3 URL to provide a text identifier
-    return (`/${board_data.owner.username}/` +
-            board_data.name.toLowerCase().replaceAll(' ', '-') + '/');
+    return `/${board_data.owner.username}/` +
+            board_data.name.toLowerCase().replaceAll(' ', '-') + '/';
   }
 
   // https://developers.pinterest.com/docs/v5/#operation/boards/create

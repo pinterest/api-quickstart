@@ -29,7 +29,7 @@ async function main(argv) {
 
   console.log('trying to get businesses...');
   const user_me_businesses = await user_me.get_businesses();
-  if (user_me_businesses && (user_me_businesses.length !== 0)) {
+  if (user_me_businesses && user_me_businesses.length !== 0) {
     console.log(user_me_businesses);
   } else {
     console.log('This account has no information on linked businesses.');

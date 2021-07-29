@@ -58,7 +58,7 @@ describe('api_common tests', () => {
     ]);
 
     mock_api_config.verbosity = 1;
-    delete (mock_error.response.body.message_detail);
+    delete mock_error.response.body.message_detail;
     console.log.mockReset();
     let error_message = 'request failed with reason: hey there, slow down!';
 
