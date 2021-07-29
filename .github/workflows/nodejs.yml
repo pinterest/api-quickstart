@@ -22,5 +22,7 @@ jobs:
           node-version: 15.8
       - name: Install dependencies
         run: npm install
+      - name: Lint
+        run: DEBUG=eslint:cli-engine yarn run eslint src scripts
       - name: Test
         run: yarn test

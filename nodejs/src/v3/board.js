@@ -1,15 +1,15 @@
-import {ApiObject} from '../api_object.js'
+import { ApiObject } from '../api_object.js';
 
 export class Board extends ApiObject {
   constructor(board_id, api_config, access_token) {
     super(api_config, access_token);
-    this.board_id= board_id;
+    this.board_id = board_id;
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_GET
   async get() {
     if (!this.board_id) {
-      throw 'board_id must be set to get a board';
+      throw new Error('board_id must be set to get a board');
     }
     return this.request_data(`/v3/boards/${this.board_id}/`);
   }

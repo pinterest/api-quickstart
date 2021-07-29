@@ -1,28 +1,27 @@
 #!/usr/bin/env node
-import {ArgumentParser} from 'argparse'
+import { ArgumentParser } from 'argparse';
 
-import {ApiConfig} from '../src/api_config.js'
-import {common_arguments} from '../src/arguments.js'
+import { ApiConfig } from '../src/api_config.js';
+import { common_arguments } from '../src/arguments.js';
 
 /**
  * This script refreshes an access token originally created by using the
  * the get_access_token.py script with the --write argument. The new access
  * token may be printed with the --cleartext option.
  */
-async function main (argv) {
-  const parser = new ArgumentParser({description: 'Refresh Pinterest OAuth token'});
-  parser.add_argument('-ct', '--cleartext', {action:'store_true', help:'print the token in clear text'});
+async function main(argv) {
+  const parser = new ArgumentParser({ description: 'Refresh Pinterest OAuth token' });
+  parser.add_argument('-ct', '--cleartext', { action: 'store_true', help: 'print the token in clear text' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
+  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
 
   // imports that depend on the version of the API
-  const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
-  const {User} = await import(`../src/${api_config.version}/user.js`);
+  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
 
-  const access_token = new AccessToken(api_config, {name: args.access_token});
+  const access_token = new AccessToken(api_config, { name: args.access_token });
   access_token.read();
   await access_token.refresh();
 

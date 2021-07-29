@@ -1,6 +1,5 @@
-import http from 'http'
-import fs from 'fs'
-import open from 'open'
+import http from 'http';
+import open from 'open';
 
 /**
  * Executes the process required to obtain an OAuth user authentication code.
@@ -10,28 +9,27 @@ import open from 'open'
  *      the code via the redirect.
  */
 export default async function get_auth_code(
-  api_config, {scopes = null, refreshable = true}) {
+  api_config, { scopes = null, refreshable = true }) {
   const auth_code = new Promise((resolve, reject) => {
-
     const sockets = []; // tracks the sockets connected to the server
 
     // http is required to implement the Pinterest API redirect
-    const server = http.createServer(function (req, res) {
+    const server = http.createServer(function(req, res) {
       if (api_config.verbosity >= 3) {
         api_config.credentials_warning();
         console.log('Redirect request path:', req.url);
       }
       res.writeHead(301, {
         Location: api_config.landing_uri
-      })
-      res.end(function () {
+      });
+      res.end(function() {
         // Only one response is expected or desired, so close down the server.
         server.close();
         // For the server to complete the termination process, need to
         // terminate the sockets cleanly.
         sockets.forEach(function(socket) {
           // First call socket.end to send a FIN, then destroy the socket.
-          socket.end(function () { socket.destroy(); });
+          socket.end(function() { socket.destroy(); });
         });
         // Finally, return the code to the awaiting caller.
         resolve(req.url.split('=')[1]);
@@ -39,17 +37,17 @@ export default async function get_auth_code(
     });
 
     // Capture the open sockets so that the server can be terminated completely.
-    server.on('connection', function (socket) { sockets.push(socket); });
+    server.on('connection', function(socket) { sockets.push(socket); });
 
     // Start listening on the requested port.
     server.listen(api_config.port);
   });
 
-  var access_uri = (api_config.oauth_uri + '/oauth/' +
+  let access_uri = api_config.oauth_uri + '/oauth/' +
                     '?consumer_id=' + api_config.app_id +
                     '&redirect_uri=' + api_config.redirect_uri +
                     '&response_type=code' +
-                    '&refreshable=' + refreshable.toString());
+                    '&refreshable=' + refreshable.toString();
 
   if (scopes) {
     access_uri = access_uri + '&scope=' + scopes.map(s => s.value).join(',');

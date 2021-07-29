@@ -1,19 +1,18 @@
-import crypto from 'crypto'
+import crypto from 'crypto';
 import fs from 'fs';
-import path from 'path'
+import path from 'path';
 
-import {ApiCommon} from './api_common.js'
+import { ApiCommon } from './api_common.js';
 
 export class AccessTokenCommon extends ApiCommon {
-
-  constructor(api_config, {name}) {
+  constructor(api_config, { name }) {
     super(api_config);
 
     const auth = `${api_config.app_id}:${api_config.app_secret}`;
     const b64auth = Buffer.from(auth).toString('base64');
     this.api_uri = api_config.api_uri;
-    this.auth_headers = {Authorization: `Basic ${b64auth}`}
-    this.name = (name) ? name : `access_token_${api_config.version}`;
+    this.auth_headers = { Authorization: `Basic ${b64auth}` };
+    this.name = name || `access_token_${api_config.version}`;
     this.path = path.join(api_config.oauth_token_dir, `${this.name}.json`);
   }
 
@@ -31,7 +30,7 @@ export class AccessTokenCommon extends ApiCommon {
    *    3. Execute the OAuth 2.0 request flow using the default browser
    *       and local redirect.
    */
-  async fetch({scopes=null, refreshable=true}) {
+  async fetch({ scopes = null, refreshable = true }) {
     try {
       this.from_environment();
       return;
@@ -52,12 +51,12 @@ export class AccessTokenCommon extends ApiCommon {
       }
     }
 
-    await this.oauth({scopes:scopes, refreshable:refreshable});
+    await this.oauth({ scopes: scopes, refreshable: refreshable });
   }
 
   // constructor may not be async, so OAuth must be performed as a separate method.
-  async oauth({scopes=null, refreshable=true}) {
-    console.log('refresh() must be overriden.')
+  async oauth({ scopes = null, refreshable = true }) {
+    console.log('refresh() must be overriden.');
   }
 
   /**
@@ -71,7 +70,7 @@ export class AccessTokenCommon extends ApiCommon {
       this.access_token = env_access_token;
       this.refresh_token = null;
     } else {
-      throw 'No access token in the environment';
+      throw new Error('No access token in the environment');
     }
   }
 
@@ -81,7 +80,7 @@ export class AccessTokenCommon extends ApiCommon {
     this.name = data.name || 'access_token';
     const access_token = data.access_token;
     if (!access_token) {
-      throw 'Access token not found in JSON file';
+      throw new Error('Access token not found in JSON file');
     }
     this.access_token = access_token;
     this.refresh_token = data.refresh_token;
@@ -100,18 +99,18 @@ export class AccessTokenCommon extends ApiCommon {
     /* Make credentials-bearing file as secure as possible with mode 0o600. */
     fs.open(this.path, 'w', 0o600, (err, fd) => {
       if (err) {
-        throw `Can not open file for write: ${this.path}`;
+        throw new Error(`Can not open file for write: ${this.path}`);
       }
       fs.write(fd, json, (err, written, string) => {
         if (err) {
-          throw `Can not write file: ${this.path}`;
+          throw new Error(`Can not write file: ${this.path}`);
         }
-      })
-    })
+      });
+    });
   }
 
   header(headers = {}) {
-    headers['Authorization'] = `Bearer ${this.access_token}`;
+    headers.Authorization = `Bearer ${this.access_token}`;
     return headers;
   }
 
@@ -126,12 +125,12 @@ export class AccessTokenCommon extends ApiCommon {
    */
   hashed_refresh_token() {
     if (!this.refresh_token) {
-      throw 'AccessToken does not have a refresh token';
+      throw new Error('AccessToken does not have a refresh token');
     }
     return crypto.createHash('sha256').update(this.refresh_token).digest('hex');
   }
 
   async refresh() {
-    console.log('refresh() must be overriden.')
+    console.log('refresh() must be overriden.');
   }
 }

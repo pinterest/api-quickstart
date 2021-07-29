@@ -1,6 +1,6 @@
-import got from 'got'
-import {ApiCommon} from './api_common.js'
-import {Input} from './utils.js'
+import got from 'got';
+import { ApiCommon } from './api_common.js';
+import { Input } from './utils.js';
 
 /**
  * The ApiObject uses the got library for REST transations:
@@ -16,7 +16,7 @@ export class ApiObject extends ApiCommon {
   // This method extracts the data container from the v3 response body
   // and returns the v5 response body without modification.
   extract(body) {
-    return (this.api_config.version === 'v3') ? body.data : body;
+    return this.api_config.version === 'v3' ? body.data : body;
   }
 
   // Code that is common to a simple GET as in response_data()
@@ -96,7 +96,7 @@ export class ApiObject extends ApiCommon {
       console.log('DELETE', this.api_uri + path);
     }
     try {
-      const response = await got.delete(this.api_uri + path, {
+      await got.delete(this.api_uri + path, {
         headers: this.access_token.header(),
         followRedirect: false
       });
@@ -113,15 +113,15 @@ export class ApiObject extends ApiCommon {
   get_iterator(path) {
     const api_object = this;
     return {
-      [Symbol.asyncIterator]: async function*() {
-        var path_with_query = null; // may not need to be initialized
+      [Symbol.asyncIterator]: async function * () {
+        let path_with_query = null; // may not need to be initialized
 
         // first time: no bookmark
-        var response = await api_object.get_response(path);
+        let response = await api_object.get_response(path);
 
         // extend the path if there is a bookmark
         if (response.bookmark) {
-          path_with_query = path + ((path.includes('?')) ? '&' : '?') + 'bookmark=';
+          path_with_query = path + (path.includes('?') ? '&' : '?') + 'bookmark=';
         }
 
         while (true) {
@@ -138,20 +138,20 @@ export class ApiObject extends ApiCommon {
           }
         }
       }
-    }
+    };
   }
 
   /* Use the paged_iterator to print multiple objects. */
   async print_multiple(page_size, object_name, object_class, paged_iterator) {
     const input = new Input();
-    var index = 1;
-    var page_index = 1;
+    let index = 1;
+    let page_index = 1;
     try {
-      for await (let object_data of paged_iterator) {
+      for await (const object_data of paged_iterator) {
         // do this check after fetching a new page to make sure that there are more pins
         if (page_index > page_size) {
-          if ('yes' === await input.one_of(`Continue printing ${object_name} list?`,
-                                          ['yes', 'no'], 'yes')) {
+          if (await input.one_of(`Continue printing ${object_name} list?`,
+            ['yes', 'no'], 'yes') === 'yes') {
             page_index = 1;
           } else {
             break;

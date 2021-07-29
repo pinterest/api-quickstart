@@ -1,12 +1,11 @@
-import got from 'got'
+import got from 'got';
 
-import {AccessTokenCommon} from '../access_token_common.js'
-import get_auth_code from '../user_auth.js'
+import { AccessTokenCommon } from '../access_token_common.js';
+import get_auth_code from '../user_auth.js';
 
 export class AccessToken extends AccessTokenCommon {
-
-  constructor(api_config, {name}) {
-    super(api_config, {name: name});
+  constructor(api_config, { name }) {
+    super(api_config, { name: name });
   }
 
   /**
@@ -16,10 +15,10 @@ export class AccessToken extends AccessTokenCommon {
    *
    * Constructor may not be async, so OAuth must be performed as a separate method.
    */
-  async oauth({scopes=null, refreshable=true}) {
+  async oauth({ scopes = null, refreshable = true }) {
     console.log('getting auth_code...');
     const auth_code = await get_auth_code(this.api_config,
-                                          {scopes:scopes, refreshable:refreshable});
+      { scopes: scopes, refreshable: refreshable });
 
     console.log('exchanging auth_code for access_token...');
     try {
@@ -39,7 +38,7 @@ export class AccessToken extends AccessTokenCommon {
         headers: this.auth_headers, // use the recommended authorization approach
         json: put_data,
         responseType: 'json'
-      })
+      });
       this.print_response(response);
       console.log('status:', response.body.status);
 
@@ -60,7 +59,7 @@ export class AccessToken extends AccessTokenCommon {
   async refresh() {
     // There should be a refresh_token, but it is best to check.
     if (!this.refresh_token) {
-      throw 'AccessToken does not have a refresh token';
+      throw new Error('AccessToken does not have a refresh token');
     }
 
     console.log('refreshing access_token...');
@@ -80,8 +79,8 @@ export class AccessToken extends AccessTokenCommon {
         headers: this.auth_headers,
         json: put_data,
         responseType: 'json'
-      })
-      this.print_response(response)
+      });
+      this.print_response(response);
       this.access_token = response.body.access_token;
     } catch (error) {
       this.print_and_throw_error(error);

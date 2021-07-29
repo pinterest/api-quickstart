@@ -1,11 +1,10 @@
-import {Input} from './utils';
+import { Input } from './utils';
 import readline from 'readline';
 
 jest.mock('readline');
 
 describe('Input tests', () => {
-
-  test('test input methods', async () => {
+  test('input methods', async() => {
     // check output
     console.log = jest.fn();
 
@@ -14,11 +13,14 @@ describe('Input tests', () => {
 
     mock_rl_interface.question = jest.fn();
     mock_rl_interface.close = jest.fn();
+    /* eslint-disable node/no-callback-literal -- eslint incorrectly detects cb as error callback */
     mock_rl_interface.question
       .mockImplementationOnce((_query, cb) => cb('CaT'))
+
       .mockImplementationOnce((_query, cb) => cb('fish'))
       .mockImplementationOnce((_query, cb) => cb(''))
       .mockImplementationOnce((_query, cb) => cb('hello, world'));
+    /* eslint-enable node/no-callback-literal */
 
     const test_list = ['DOG', 'CAT', 'BIRD'];
 
@@ -40,6 +42,6 @@ describe('Input tests', () => {
     ]);
 
     input.close();
-    expect(mock_rl_interface.close.mock.calls.length === 1);
+    expect(mock_rl_interface.close.mock.calls.length).toBe(1);
   });
 });

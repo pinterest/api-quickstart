@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import {ArgumentParser} from 'argparse'
+import { ArgumentParser } from 'argparse';
 
-import {ApiConfig} from '../src/api_config.js'
-import {common_arguments} from '../src/arguments.js'
+import { ApiConfig } from '../src/api_config.js';
+import { common_arguments } from '../src/arguments.js';
 
 /**
  * The arguments for this script are intended to be used as follows:
@@ -28,25 +28,25 @@ import {common_arguments} from '../src/arguments.js'
  *    the access token from being read from the environment or file system, and forces the use of
  *    the browser-based OAuth process.
  */
-async function main (argv) {
-  const parser = new ArgumentParser({description: 'Get Pinterest OAuth token'});
-  parser.add_argument('-w', '--write', {action:'store_true', help:'write access token to file'});
-  parser.add_argument('-ct', '--cleartext', {action:'store_true', help:'print the token in clear text'});
-  parser.add_argument('-s', '--scopes', {help:'comma separated list of scopes'});
+async function main(argv) {
+  const parser = new ArgumentParser({ description: 'Get Pinterest OAuth token' });
+  parser.add_argument('-w', '--write', { action: 'store_true', help: 'write access token to file' });
+  parser.add_argument('-ct', '--cleartext', { action: 'store_true', help: 'print the token in clear text' });
+  parser.add_argument('-s', '--scopes', { help: 'comma separated list of scopes' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
+  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
 
   // imports that depend on the version of the API
-  const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
-  const {User} = await import(`../src/${api_config.version}/user.js`);
-  const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
+  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
+  const { User } = await import(`../src/${api_config.version}/user.js`);
+  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
-  const access_token = new AccessToken(api_config, {name: args.access_token});
+  const access_token = new AccessToken(api_config, { name: args.access_token });
   if (args.scopes) {
     // use the comma-separated list of scopes passed as a command-line argument
     const scopes = args.scopes.split(',').map(scopeArg => {
@@ -58,7 +58,7 @@ async function main (argv) {
       parser.print_usage();
       process.exit(1);
     });
-    await access_token.oauth({scopes:scopes});
+    await access_token.oauth({ scopes: scopes });
   } else {
     // Try the different methods for getting an access token: from the environment,
     // from a file, and from Pinterest via the browser.

@@ -1,11 +1,11 @@
-import {ApiConfig} from './api_config';
+import { ApiConfig } from './api_config';
 
 describe('ApiConfig test environment', () => {
   const SAVED_ENV = process.env;
 
   beforeEach(() => {
     jest.resetModules();
-    process.env = {}
+    process.env = {};
   });
 
   afterAll(() => {

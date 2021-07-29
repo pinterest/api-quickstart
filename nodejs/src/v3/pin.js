@@ -1,15 +1,15 @@
-import {ApiObject} from '../api_object.js'
+import { ApiObject } from '../api_object.js';
 
 export class Pin extends ApiObject {
   constructor(pin_id, api_config, access_token) {
     super(api_config, access_token);
-    this.pin_id= pin_id;
+    this.pin_id = pin_id;
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_get_pin_GET
   async get() {
     if (!this.pin_id) {
-      throw 'pin_id must be set to get a pin';
+      throw new Error('pin_id must be set to get a pin');
     }
     return this.request_data(`/v3/pins/${this.pin_id}/`);
   }
@@ -29,23 +29,23 @@ export class Pin extends ApiObject {
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT
-  async create(pin_data, board_id, {section}) {
+  async create(pin_data, board_id, { section }) {
     // TODO: carousel_data_json
     const OPTIONAL_ATTRIBUTES = [
       'alt_text',
       'description',
-      'title',
+      'title'
     ];
     const create_data = {
       board_id: board_id,
-      image_url: pin_data['image_large_url']
+      image_url: pin_data.image_large_url
     };
     if (section) {
-      create_data['section'] = section;
+      create_data.section = section;
     }
     const link = pin_data.link;
     if (link) {
-      create_data['source_url'] = link;
+      create_data.source_url = link;
     }
 
     for (const key of OPTIONAL_ATTRIBUTES) {

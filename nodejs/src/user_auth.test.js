@@ -1,25 +1,25 @@
-import {Scope} from './v3/oauth_scope.js'
-import get_auth_code from './user_auth.js'
-import http from 'http'
-import open from 'open'
+import { Scope } from './v3/oauth_scope.js';
+import get_auth_code from './user_auth.js';
+import http from 'http';
+import open from 'open';
 
 jest.mock('http');
 jest.mock('open');
 
 describe('user_auth tests', () => {
-  test('test get_auth_code', async () => {
+  test('get_auth_code', async() => {
     const mock_api_config = jest.fn();
     mock_api_config.port = 'test-port';
     mock_api_config.oauth_uri = 'test-oauth-uri';
-    mock_api_config.app_id = 'test-app-id'
+    mock_api_config.app_id = 'test-app-id';
     mock_api_config.landing_uri = 'test-landing-uri';
     mock_api_config.redirect_uri = 'test-redirect-uri';
-    const mock_access_uri = ('test-oauth-uri/oauth/' +
+    const mock_access_uri = 'test-oauth-uri/oauth/' +
                              '?consumer_id=test-app-id' +
                              '&redirect_uri=test-redirect-uri' +
                              '&response_type=code' +
                              '&refreshable=true' +
-                             '&scope=read_users,read_pins');
+                             '&scope=read_users,read_pins';
 
     // Used to verify that the user_auth code cleans the socket properly.
     const mock_socket = jest.fn();
@@ -50,11 +50,11 @@ describe('user_auth tests', () => {
     // The call to open() simulates the browser transaction by calling the request
     // processing function (callback) that was passed as an argument to createServer().
     open.mockImplementation(access_uri => {
-      mock_http_server.callback(mock_request, mock_response)
+      mock_http_server.callback(mock_request, mock_response);
     });
 
-    const read_scopes = [Scope.READ_USERS,Scope.READ_PINS];
-    const auth_code = await get_auth_code(mock_api_config, {scopes: read_scopes, refreshable: true});
+    const read_scopes = [Scope.READ_USERS, Scope.READ_PINS];
+    const auth_code = await get_auth_code(mock_api_config, { scopes: read_scopes, refreshable: true });
     expect(auth_code).toEqual('test-auth-code');
     expect(open.mock.calls[0][0]).toEqual(mock_access_uri);
     expect(mock_socket.destroy.mock.calls.length).toBe(1);
@@ -62,6 +62,6 @@ describe('user_auth tests', () => {
     expect(mock_http_server.close.mock.calls.length).toBe(1);
     expect(mock_http_server.listen.mock.calls.length).toBe(1);
     expect(mock_response.writeHead.mock.calls[0][0]).toEqual(301);
-    expect(mock_response.writeHead.mock.calls[0][1]).toEqual({Location: 'test-landing-uri'});
+    expect(mock_response.writeHead.mock.calls[0][1]).toEqual({ Location: 'test-landing-uri' });
   });
 });

@@ -7,11 +7,11 @@
  * For example, it might be used as part of a program to generate an
  * account to be used to test an API-based application.
  */
-import {ArgumentParser} from 'argparse'
+import { ArgumentParser } from 'argparse';
 
-import {ApiConfig} from '../src/api_config.js'
-import {common_arguments} from '../src/arguments.js'
-import {SpamError} from '../src/api_common.js'
+import { ApiConfig } from '../src/api_config.js';
+import { common_arguments } from '../src/arguments.js';
+import { SpamError } from '../src/api_common.js';
 
 /**
  * This script is intended primarily for developers who need to create a test copy
@@ -39,22 +39,22 @@ import {SpamError} from '../src/api_common.js'
  *      ./copy_board.js --dry-run --all -s source_account_token.json -t target_account_token.json
  *      ./copy_board.js --all -s source_account_token.json -t target_account_token.json
  */
-async function main (argv) {
+async function main(argv) {
   const parser = new ArgumentParser({
-    description: "Copy one Board or all Boards"
+    description: 'Copy one Board or all Boards'
   });
-  parser.add_argument('-b', '--board-id', {help: 'destination board identifier'});
-  parser.add_argument('-n', '--name', {help: 'target board name'});
-  parser.add_argument('-s', '--source-access-token', {help: 'source access token name'});
-  parser.add_argument('-t', '--target-access-token', {help: 'target access token name'});
-  parser.add_argument('--all', {dest: 'all_boards', action: 'store_true', help: 'copy all boards from source to target'});
-  parser.add_argument('--dry-run', {action: 'store_true', help: 'print changes but do not execute them'});
+  parser.add_argument('-b', '--board-id', { help: 'destination board identifier' });
+  parser.add_argument('-n', '--name', { help: 'target board name' });
+  parser.add_argument('-s', '--source-access-token', { help: 'source access token name' });
+  parser.add_argument('-t', '--target-access-token', { help: 'target access token name' });
+  parser.add_argument('--all', { dest: 'all_boards', action: 'store_true', help: 'copy all boards from source to target' });
+  parser.add_argument('--dry-run', { action: 'store_true', help: 'print changes but do not execute them' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
 
   // Check the combinations of arguments. The comment at the top of this function
   // describes the intended use cases.
-  var args_error = null;
+  let args_error = null;
   if (args.target_access_token) {
     if (args.access_token) {
       args_error = 'generic access token may not be specified when using a target access token';
@@ -95,27 +95,27 @@ async function main (argv) {
   }
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({verbosity: args.log_level, version: args.api_version});
+  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
 
   // imports that depend on the version of the API
-  const {AccessToken} = await import(`../src/${api_config.version}/access_token.js`);
-  const {Board} = await import(`../src/${api_config.version}/board.js`);
-  const {Pin} = await import(`../src/${api_config.version}/pin.js`);
-  const {Scope} = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const {User} = await import(`../src/${api_config.version}/user.js`);
+  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
+  const { Board } = await import(`../src/${api_config.version}/board.js`);
+  const { Pin } = await import(`../src/${api_config.version}/pin.js`);
+  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
+  const { User } = await import(`../src/${api_config.version}/user.js`);
 
   // helper function to copy a pin
-  const copy_pin = async function(pin, pin_data, target_board_id, {target_section_id}) {
+  const copy_pin = async function(pin, pin_data, target_board_id, { target_section_id }) {
     try {
       const pintype = pin_data.type;
       // Sometimes the board list operation will generate entities (e.g. "more ideas"
       // tiles) that resemble pins but can not be copied.
-      if (!pintype || (pintype === 'pin')) {
+      if (!pintype || pintype === 'pin') {
         console.log('source pin:');
         Pin.print_summary(pin_data);
         const target_pin_data = await pin.create(pin_data, target_board_id,
-                                                 {section: target_section_id});
-        console.log('target pin:')
+          { section: target_section_id });
+        console.log('target pin:');
         Pin.print_summary(target_pin_data);
       } else {
         console.log("skipping pin because type is not 'pin'");
@@ -127,36 +127,36 @@ async function main (argv) {
         throw err;
       }
     }
-  }
+  };
 
   // Note: The same API configuration is used with both the source and target access tokens.
-  var source_token;
-  var target_token;
+  let source_token;
+  let target_token;
   if (args.source_access_token) {
-    source_token = new AccessToken(api_config, {name: args.source_access_token});
+    source_token = new AccessToken(api_config, { name: args.source_access_token });
   } else {
-    source_token = new AccessToken(api_config, {name: args.access_token});
+    source_token = new AccessToken(api_config, { name: args.access_token });
   }
   const source_token_scopes = [Scope.READ_PINS, Scope.READ_BOARDS];
 
   // Default to use the source token (same account) if the target token is not specified.
-  const target_token_scopes = [Scope.WRITE_PINS,Scope.WRITE_BOARDS];
+  const target_token_scopes = [Scope.WRITE_PINS, Scope.WRITE_BOARDS];
   if (args.target_access_token) {
-    target_token = new AccessToken(api_config, {name: args.target_access_token});
-    await target_token.fetch({scopes: target_token_scopes});
+    target_token = new AccessToken(api_config, { name: args.target_access_token });
+    await target_token.fetch({ scopes: target_token_scopes });
   } else {
     target_token = source_token; // use the same token...
     source_token_scopes.push(...target_token_scopes); // ...with all the scopes
   }
 
-  await source_token.fetch({scopes:source_token_scopes}); // get the source token
+  await source_token.fetch({ scopes: source_token_scopes }); // get the source token
 
   // This Pin object is reusable. The pin_id attribute is set when the
   // create method is called successfully.
   const target_pin = new Pin(null, api_config, target_token);
 
-  var boards;
-  var source_board;
+  let boards;
+  let source_board;
   if (args.all_boards) { // copy all boards for the source user
     const user_me = new User('me', api_config, source_token);
     const user_me_data = await user_me.get();
@@ -168,7 +168,7 @@ async function main (argv) {
     boards = [source_board_data];
   }
 
-  for await (let source_board_data of boards) {
+  for await (const source_board_data of boards) {
     console.log('source board:');
     Board.print_summary(source_board_data);
     source_board.board_id = source_board_data.id;
@@ -183,7 +183,7 @@ async function main (argv) {
     // This Board object is reusable. The board_id is set when the
     // create method is called successfully.
     const target_board = new Board(null, api_config, target_token);
-    var target_board_data = null;
+    let target_board_data = null;
     if (args.dry_run) {
       console.log('dry-run: skipping attempt to create board:');
       Board.print_summary(source_board_data);
@@ -195,7 +195,7 @@ async function main (argv) {
 
     // copy board pins
     const pin_iterator = await source_board.get_pins();
-    for await (let pin_data of pin_iterator) {
+    for await (const pin_data of pin_iterator) {
       // ignore pins in sections for now. they will be copied into each section
       if (pin_data.board_section_id) {
         continue;
@@ -210,9 +210,9 @@ async function main (argv) {
 
     // get and copy board sections
     const sections_iterator = await source_board.get_sections();
-    var idx = 1;
-    for await (let section_data of sections_iterator) {
-      var target_section_data = null;
+    let idx = 1;
+    for await (const section_data of sections_iterator) {
+      let target_section_data = null;
       if (args.dry_run) {
         console.log('dry-run: skipping attempt to create board section:');
         Board.print_section(section_data);
@@ -226,13 +226,13 @@ async function main (argv) {
 
       // copy board section pins
       const section_pin_iterator = await source_board.get_section_pins(section_data.id);
-      for await (let pin_data of section_pin_iterator) {
+      for await (const pin_data of section_pin_iterator) {
         if (args.dry_run) {
           console.log('dry-run: skipping attempt to create board section pin:');
           Pin.print_summary(pin_data);
         } else {
           await copy_pin(target_pin, pin_data, target_board_data.id,
-                         {target_section_id: target_section_data.id});
+            { target_section_id: target_section_data.id });
         }
       }
       idx++;

@@ -1,15 +1,15 @@
-import {ApiObject} from '../api_object.js'
+import { ApiObject } from '../api_object.js';
 
 export class Board extends ApiObject {
   constructor(board_id, api_config, access_token) {
     super(api_config, access_token);
-    this.board_id= board_id;
+    this.board_id = board_id;
   }
 
   // https://developers.pinterest.com/docs/v5/#operation/boards/get
   async get() {
     if (!this.board_id) {
-      throw 'board_id must be set to get a board';
+      throw new Error('board_id must be set to get a board');
     }
     return this.request_data(`/v5/boards/${this.board_id}`);
   }
@@ -42,15 +42,15 @@ export class Board extends ApiObject {
   // provides a human-readable identifier for a board
   static text_id(board_data) {
     // simulate v3 URL to provide a text identifier
-    return (`/${board_data.owner.username}/` +
-            board_data.name.toLowerCase().replaceAll(' ', '-') + '/');
+    return `/${board_data.owner.username}/` +
+            board_data.name.toLowerCase().replaceAll(' ', '-') + '/';
   }
 
   // https://developers.pinterest.com/docs/v5/#operation/boards/create
   async create(board_data) {
     const OPTIONAL_ATTRIBUTES = [
       'description',
-      'privacy',
+      'privacy'
     ];
     const create_data = {
       name: board_data.name

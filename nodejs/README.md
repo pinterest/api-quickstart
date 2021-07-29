@@ -62,3 +62,11 @@ In general, use the `-h` or `--help` command-line argument with each script to s
 Unit tests use the [Jest framework](https://jestjs.io/) and are in the `*.test.js` files that correspond to each source file. In addition, the [Babel JavaScript compiler](https://babeljs.io/) is required for Jest to run with the module structure used in this repo. The node dependencies for Jest should have been installed as part of the quickstart instructure, Unless you specified the `--production` flag with ```npm install```. To install the `jest` binary, you'll need to run `npm install jest --global` once on your development machine. (These instructions were written when the latest version of `jest` was 27.0.3). Then, run the tests with the `jest` command. No arguments are required, but you can specify the relative pathname of a test file as an argument. For example: `jest ./src/v3/user.test.js`
 
 For compatibility with other languages in this repo, the `Makefile` is set up to run Jest with `make tests`.
+
+## Code Conventions
+
+The code conventions are captured in a set of [rules](.eslintrc.cjs) for [eslint](https://eslint.org/). The configuration is the standard set of rules, with the following modifications:
+  * Variables are snake_case instead of camelCase in order to facilitate the task of maintaining parity between the python and nodejs code.
+  * The Jest checker emits errors when tests are disabled, per the internal Pinterest standard.
+  * Semicolons are used to terminate statements. This convention is debatable but the primary author prefers semicolon syntax for C-like languages.
+  * Function declarations have no space between the function name and the open parenthesis. This convention is debatable but the primary author prefers C-style function declarations.

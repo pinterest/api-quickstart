@@ -1,13 +1,12 @@
-import got from 'got'
+import got from 'got';
 
-import {AccessTokenCommon} from '../access_token_common.js'
-import {Scope} from './oauth_scope.js'
-import get_auth_code from '../user_auth.js'
+import { AccessTokenCommon } from '../access_token_common.js';
+import { Scope } from './oauth_scope.js';
+import get_auth_code from '../user_auth.js';
 
 export class AccessToken extends AccessTokenCommon {
-
-  constructor(api_config, {name}) {
-    super(api_config, {name: name});
+  constructor(api_config, { name }) {
+    super(api_config, { name: name });
   }
 
   /**
@@ -19,19 +18,19 @@ export class AccessToken extends AccessTokenCommon {
    *
    * Constructor may not be async, so OAuth must be performed as a separate method.
    */
-  async oauth({scopes=null, refreshable=true}) {
+  async oauth({ scopes = null, refreshable = true }) {
     if (!scopes) {
       scopes = [Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS];
       console.log('v5 requires scopes for OAuth. setting to default: READ_USERS,READ_PINS,READ_BOARDS');
     }
 
     if (!refreshable) {
-      throw 'Pinterest API v5 only provides refreshable OAuth access tokens';
+      throw new Error('Pinterest API v5 only provides refreshable OAuth access tokens');
     }
 
     console.log('getting auth_code...');
     const auth_code = await get_auth_code(this.api_config,
-                                          {scopes:scopes, refreshable:refreshable});
+      { scopes: scopes, refreshable: refreshable });
 
     console.log('exchanging auth_code for access_token...');
     try {
@@ -51,7 +50,7 @@ export class AccessToken extends AccessTokenCommon {
         headers: this.auth_headers, // use the recommended authorization approach
         form: post_data, // send body as x-www-form-urlencoded
         responseType: 'json'
-      })
+      });
       this.print_response(response);
 
       // The scope returned in the response includes all of the scopes that
@@ -71,11 +70,11 @@ export class AccessToken extends AccessTokenCommon {
   async refresh() {
     // There should be a refresh_token, but it is best to check.
     if (!this.refresh_token) {
-      throw 'AccessToken does not have a refresh token';
+      throw new Error('AccessToken does not have a refresh token');
     }
 
     console.log('refreshing access_token...');
-    var response;
+    let response;
     try {
       const post_data = {
         grant_type: 'refresh_token',
@@ -92,7 +91,7 @@ export class AccessToken extends AccessTokenCommon {
         headers: this.auth_headers,
         form: post_data, // send body as x-www-form-urlencoded
         responseType: 'json'
-      })
+      });
       this.print_response(response);
       this.access_token = response.body.access_token;
     } catch (error) {
