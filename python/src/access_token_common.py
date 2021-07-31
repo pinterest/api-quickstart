@@ -6,21 +6,22 @@ import pathlib
 
 from api_common import ApiCommon
 
+
 class AccessTokenCommon(ApiCommon):
     def __init__(self, api_config, name=None):
 
         if name:
             self.name = name
         else:
-            self.name = 'access_token_' + api_config.version
+            self.name = "access_token_" + api_config.version
 
         self.api_config = api_config
-        self.path = pathlib.Path(api_config.oauth_token_dir) / (self.name + '.json')
+        self.path = pathlib.Path(api_config.oauth_token_dir) / (self.name + ".json")
 
         # use the recommended authorization approach
-        auth = api_config.app_id + ':' + api_config.app_secret
-        b64auth = base64.b64encode(auth.encode('ascii')).decode('ascii')
-        self.auth_headers = {'Authorization': 'Basic ' + b64auth}
+        auth = api_config.app_id + ":" + api_config.app_secret
+        b64auth = base64.b64encode(auth.encode("ascii")).decode("ascii")
+        self.auth_headers = {"Authorization": "Basic " + b64auth}
 
     def fetch(self, scopes=None, refreshable=True):
         """
@@ -40,19 +41,19 @@ class AccessTokenCommon(ApiCommon):
         try:
             self.from_environment()
             return
-        except:
-            print(f'reading {self.name} from environment failed, trying read')
+        except Exception:
+            print(f"reading {self.name} from environment failed, trying read")
 
         try:
             self.read()
             return
-        except:
-            print(f'reading {self.name} failed, trying oauth')
+        except Exception:
+            print(f"reading {self.name} failed, trying oauth")
 
         self.oauth(scopes=scopes, refreshable=refreshable)
 
     def oauth(self, scopes=None, refreshable=True):
-        print('oauth() must be overridden')
+        print("oauth() must be overridden")
 
     def from_environment(self):
         """
@@ -67,32 +68,36 @@ class AccessTokenCommon(ApiCommon):
         """
         Get the access token from the file at self.path.
         """
-        with open(self.path, 'r') as jsonfile:
+        with open(self.path, "r") as jsonfile:
             data = json.load(jsonfile)
-            self.name = data.get('name') or 'access_token'
-            self.access_token = data['access_token']
-            self.refresh_token = data.get('refresh_token')
-            self.scopes = data.get('scopes')
-        print(f'read {self.name} from {self.path}')
+            self.name = data.get("name") or "access_token"
+            self.access_token = data["access_token"]
+            self.refresh_token = data.get("refresh_token")
+            self.scopes = data.get("scopes")
+        print(f"read {self.name} from {self.path}")
 
     def write(self):
         """
         Store the access token in the file at self.path.
         """
-        with open(self.path, 'w') as jsonfile:
+        with open(self.path, "w") as jsonfile:
             # make credential-bearing file as secure as possible
-            if 'chmod' in dir(os):
+            if "chmod" in dir(os):
                 os.chmod(jsonfile.fileno(), 0o600)
             # write the information to the file
-            json.dump({'name': self.name,
-                       'access_token': self.access_token,
-                       'refresh_token': self.refresh_token,
-                       'scopes': self.scopes},
-                      jsonfile,
-                      indent=2)
+            json.dump(
+                {
+                    "name": self.name,
+                    "access_token": self.access_token,
+                    "refresh_token": self.refresh_token,
+                    "scopes": self.scopes,
+                },
+                jsonfile,
+                indent=2,
+            )
 
     def header(self, headers={}):
-        headers['Authorization'] = 'Bearer ' + self.access_token
+        headers["Authorization"] = "Bearer " + self.access_token
         return headers
 
     def hashed(self):
@@ -110,8 +115,8 @@ class AccessTokenCommon(ApiCommon):
         to verify when the refresh token changes.
         """
         if not self.refresh_token:
-            raise RuntimeError('AccessToken does not have a refresh token')
+            raise RuntimeError("AccessToken does not have a refresh token")
         return hashlib.sha256(self.refresh_token.encode()).hexdigest()
 
     def refresh(self):
-        print('refresh() must be overridden.')
+        print("refresh() must be overridden.")

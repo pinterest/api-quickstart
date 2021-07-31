@@ -1,12 +1,13 @@
 #!/usr/bin/env python
-from os.path import dirname, abspath, join
 import argparse
 import sys
+from os.path import abspath, dirname, join
 
-sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
+sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
 from api_config import ApiConfig
 from arguments import common_arguments
+
 
 def main(argv=[]):
     """
@@ -36,10 +37,14 @@ def main(argv=[]):
        the access token from being read from the environment or file system, and forces the use of
        the browser-based OAuth process.
     """
-    parser = argparse.ArgumentParser(description='Get Pinterest OAuth token')
-    parser.add_argument('-w', '--write', action='store_true', help='write access token to file')
-    parser.add_argument('-ct', '--cleartext', action='store_true', help='print the token in clear text')
-    parser.add_argument('-s', '--scopes', help='comma separated list of scopes')
+    parser = argparse.ArgumentParser(description="Get Pinterest OAuth token")
+    parser.add_argument(
+        "-w", "--write", action="store_true", help="write access token to file"
+    )
+    parser.add_argument(
+        "-ct", "--cleartext", action="store_true", help="print the token in clear text"
+    )
+    parser.add_argument("-s", "--scopes", help="comma separated list of scopes")
     common_arguments(parser)
     args = parser.parse_args(argv)
 
@@ -54,10 +59,10 @@ def main(argv=[]):
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config, name=args.access_token)
-    scopes=None # use the default set of scopes
+    scopes = None  # use the default set of scopes
     if args.scopes:
         # use the comma-separated list of scopes passed as a command-line argument
-        scopes = list(map(lambda arg: Scope[arg.upper()], args.scopes.split(',')))
+        scopes = list(map(lambda arg: Scope[arg.upper()], args.scopes.split(",")))
         access_token.oauth(scopes=scopes)
     else:
         try:
@@ -71,29 +76,30 @@ def main(argv=[]):
     # Note: It is best practice not to print credentials in clear text.
     # Pinterest engineers asked for this capability to make it easier to support partners.
     if args.cleartext:
-        print('Please keep clear text tokens secure!')
-        print('clear text access token: ' + access_token.access_token)
-    print('hashed access token: ' + access_token.hashed())
+        print("Please keep clear text tokens secure!")
+        print("clear text access token: " + access_token.access_token)
+    print("hashed access token: " + access_token.hashed())
     try:
         if args.cleartext:
-            print('clear text refresh token: ' + access_token.refresh_token)
-        print('hashed refresh token: ' + access_token.hashed_refresh_token())
-    except:
-        print('no refresh token')
+            print("clear text refresh token: " + access_token.refresh_token)
+        print("hashed refresh token: " + access_token.hashed_refresh_token())
+    except Exception:
+        print("no refresh token")
 
     # Save the token, if requested. The comment at the top of this script provides more
     # information about this feature.
     if args.write:
-        print('writing access token')
+        print("writing access token")
         access_token.write()
 
     # Use the access token to get information about the user. The purpose of this
     # call is to verify that the access token is working.
-    user_me = User('me', api_config, access_token)
+    user_me = User("me", api_config, access_token)
     user_me_data = user_me.get()
     user_me.print_summary(user_me_data)
 
+
 # If this script is being called from the command line, call the main function
 # with the arguments. The other use case is to call main() from an integration test.
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(sys.argv[1:])

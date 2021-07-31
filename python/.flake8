@@ -1,0 +1,8 @@
+[flake8]
+# Pinterest standard line length.
+max-line-length=120
+
+# Ignore E402 in the scripts, because they need to do version-specific imports
+# after determining the version.
+per-file-ignores =
+  scripts/*.py: E402

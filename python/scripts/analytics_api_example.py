@@ -1,15 +1,15 @@
 #!/usr/bin/env python
-from os.path import dirname, abspath, join
 import argparse
 import sys
+from os.path import abspath, dirname, join
 
-sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
+sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
 from api_config import ApiConfig
 from arguments import common_arguments
 from generic_requests import download_file
-from utils import input_number
-from utils import input_path_for_write
+from utils import input_number, input_path_for_write
+
 
 def main(argv=[]):
     """
@@ -34,7 +34,7 @@ def main(argv=[]):
     4. Configure the options for the asynchronous report, and run the report.
     5. Download the report to a file.
     """
-    parser = argparse.ArgumentParser(description='Analytics API Example')
+    parser = argparse.ArgumentParser(description="Analytics API Example")
     common_arguments(parser)
     args = parser.parse_args(argv)
 
@@ -43,13 +43,12 @@ def main(argv=[]):
     # and response statuses. To see the complete responses, set verbosity to 3.
 
     # Set API version to 3, because this script does not work with 5 yet.
-    api_config = ApiConfig(verbosity=args.log_level, version='3')
+    api_config = ApiConfig(verbosity=args.log_level, version="3")
 
     # imports that depend on the version of the API
     from access_token import AccessToken
     from advertisers import Advertisers
-    from delivery_metrics import DeliveryMetrics
-    from delivery_metrics import DeliveryMetricsAsyncReport
+    from delivery_metrics import DeliveryMetrics, DeliveryMetricsAsyncReport
     from oauth_scope import Scope
     from user import User
 
@@ -58,23 +57,27 @@ def main(argv=[]):
     # have access to the scope that is required to access
     # linked business accounts.
     access_token = AccessToken(api_config, name=args.access_token)
-    access_token.fetch(scopes=[Scope.READ_USERS,Scope.READ_ADVERTISERS])
+    access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_ADVERTISERS])
 
     # Sample: Get my user id
     # For a future call we need to know the user id associated with the access token being used
-    user_me = User('me', api_config, access_token)
+    user_me = User("me", api_config, access_token)
     user_me_data = user_me.get()
     user_me.print_summary(user_me_data)
 
-    user_id = user_me_data['id']
-    print(f'User id: {user_id}')
+    user_id = user_me_data["id"]
+    print(f"User id: {user_id}")
 
     # Step 2: Get Advertiser IDs available to my access token and select one of them.
-    # One of the first challenges many developers run into is that the relationship between User and Advertiser is 1-to-many
-    # In house developers typically don't have login credentials for the main Pinterest account of their brand to OAuth against.
-    # We often reccomend that they set up a new "developer" Pinterest user, and then request that this new account is granted
-    # access to the advertiser account via https://help.pinterest.com/en/business/article/add-people-to-your-ad-account
-    # This process is also touched on in the API docs https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
+    # One of the first challenges many developers run into is that the relationship
+    # between User and Advertiser is 1-to-many.
+    # In house developers typically don't have login credentials for the main Pinterest
+    # account of their brand to OAuth against.
+    # We often reccomend that they set up a new "developer" Pinterest user,
+    # and then request that this new account is granted access to the advertiser account via:
+    #   https://help.pinterest.com/en/business/article/add-people-to-your-ad-account
+    # This process is also touched on in the API docs:
+    #   https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
     advertisers = Advertisers(user_id, api_config, access_token)
     advertisers_data = advertisers.get()
     advertisers.print_summary(advertisers_data)
@@ -82,12 +85,12 @@ def main(argv=[]):
 
     # An advertiser id is required to request an asynchronous report.
     if not n_advertisers:
-        exit('This user id does not have any linked advertiser ids.')
+        exit("This user id does not have any linked advertiser ids.")
 
     # Prompt for the advertiser id to be used to pull a report.
-    prompt = f'Please select an advertiser between 1 and {n_advertisers}:'
+    prompt = f"Please select an advertiser between 1 and {n_advertisers}:"
     index = input_number(prompt, 1, n_advertisers) - 1
-    advertiser_id = advertisers_data[index]['id']
+    advertiser_id = advertisers_data[index]["id"]
 
     # Case: pulling a report about how my ads are doing. I want to pull a simple report showing paid impressions
     # and clicks my ads got in the last 30 days.
@@ -105,11 +108,11 @@ def main(argv=[]):
     delivery_metrics = DeliveryMetrics(api_config, access_token)
     metrics = delivery_metrics.get()
 
-    api_config.verbosity = verbosity # restore verbosity
+    api_config.verbosity = verbosity  # restore verbosity
 
-    print('Here are a couple of interesting metrics...')
+    print("Here are a couple of interesting metrics...")
     for metric in metrics:
-        if metric['name'] == 'CLICKTHROUGH_1' or metric['name'] == 'IMPRESSION_1':
+        if metric["name"] == "CLICKTHROUGH_1" or metric["name"] == "IMPRESSION_1":
             delivery_metrics.print(metric)
 
     # To print the long list of all metrics, uncomment the next line.
@@ -118,15 +121,17 @@ def main(argv=[]):
     # Step 4: Configure the options for the report
     # For documentation on async reports, see:
     #   https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
-    print(f'Requesting report for advertiser id {advertiser_id}...')
+    print(f"Requesting report for advertiser id {advertiser_id}...")
     # Configure the report. Request 30 days of data, up to the current date.
     # For a complete set of options, see the report documentation,
     # or the code in ../src/delivery_metrics.py
-    report = DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id) \
-             .last_30_days() \
-             .level('PIN_PROMOTION') \
-             .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'}) \
-             .tag_version(3)
+    report = (
+        DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id)
+        .last_30_days()
+        .level("PIN_PROMOTION")
+        .metrics({"IMPRESSION_1", "CLICKTHROUGH_1"})
+        .tag_version(3)
+    )
 
     # Request (POST) and wait (GET) for the report until it is ready.
     # This is an async process with two API calls. The first is placing a request
@@ -136,13 +141,15 @@ def main(argv=[]):
 
     # Step 5: Download the report to a file.
     # First, input the path from the command line.
-    path = input_path_for_write('Please enter a file name for the report:',
-                                report.filename())
+    path = input_path_for_write(
+        "Please enter a file name for the report:", report.filename()
+    )
 
     # This download_file is generic, because the report URL contains all of the
     # authentication information required to get the data. Note that the download
     # is a request to Amazon S3, not to the Pinterest API itself.
     download_file(report.url(), path)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main(sys.argv[1:])

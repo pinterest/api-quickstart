@@ -7,14 +7,15 @@
 # For example, it might be used as part of a program to generate an
 # account to be used to test an API-based application.
 #
-from os.path import dirname, abspath, join
 import argparse
 import sys
+from os.path import abspath, dirname, join
 
-sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
+sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
 from api_config import ApiConfig
 from arguments import common_arguments
+
 
 def main(argv=[]):
     """
@@ -26,10 +27,12 @@ def main(argv=[]):
     found using the get_board.py script. A section identifier may not be specified
     without a board identifier.
     """
-    parser = argparse.ArgumentParser(description='Copy a Pin')
-    parser.add_argument('-p', '--pin-id', required=True, help='source pin identifier')
-    parser.add_argument('-b', '--board-id', required=True, help='destination board identifier')
-    parser.add_argument('-s', '--section', help='destination board section')
+    parser = argparse.ArgumentParser(description="Copy a Pin")
+    parser.add_argument("-p", "--pin-id", required=True, help="source pin identifier")
+    parser.add_argument(
+        "-b", "--board-id", required=True, help="destination board identifier"
+    )
+    parser.add_argument("-s", "--section", help="destination board section")
     common_arguments(parser)
     args = parser.parse_args(argv)
 
@@ -42,15 +45,16 @@ def main(argv=[]):
     from pin import Pin
 
     access_token = AccessToken(api_config, name=args.access_token)
-    access_token.fetch(scopes=[Scope.READ_PINS,Scope.WRITE_BOARDS,Scope.WRITE_PINS])
+    access_token.fetch(scopes=[Scope.READ_PINS, Scope.WRITE_BOARDS, Scope.WRITE_PINS])
 
     pin = Pin(args.pin_id, api_config, access_token)
     pin_data = pin.get()
-    print('source pin:')
+    print("source pin:")
     Pin.print_summary(pin_data)
     new_pin_data = pin.create(pin_data, args.board_id, args.section)
-    print('new pin:')
+    print("new pin:")
     Pin.print_summary(new_pin_data)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main(sys.argv[1:])
