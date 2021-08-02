@@ -52,12 +52,13 @@ To increase the chances that your pull request will be accepted:
 
 ## Testing
 
-Each language subdirectory in this repo (`nodejs` and `python`) has a README file with instructions on how to run the tests locally. Please ensure that the tests run successfully before submitting a pull request.
+Each language subdirectory in this repo (`nodejs` and `python`) has a README file with instructions on how to run the tests and linters locally. Please ensure that the tests and linters run successfully before submitting a pull request.
 
 ## Coding conventions
 
   * Please submit new unit tests for any code changes that you make.
-  * The nodejs code uses [eslint](https://eslint.org/) to enforce code standards. We'll be adding a linter for python in the near future. In the meantime, please do your best to follow the ad hoc conventions in the code.
+  * The nodejs code uses [eslint](https://eslint.org/) to enforce code standards.
+  * Type python code uses [black](https://black.readthedocs.io/en/stable/), [isort](https://pycqa.github.io/isort/), and [flake8](https://flake8.pycqa.org/) to enforce code standards.
   * We try to keep the code in the different languages at the same level of functionality. Your help writing code in multiple languages would be appreciated, but is not required.
 
 ## License

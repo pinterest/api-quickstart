@@ -1,0 +1,9 @@
+# Sets configuration options for the black and isort linters.
+
+# As of writing, 88 is the default for black. Set it explicitly to avoid any
+# conflicts with flake8 (set in the .flake8 file) and isort (set below).
+[tool.black]
+line-length = 88
+
+[tool.isort]
+line_length = 88

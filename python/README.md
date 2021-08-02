@@ -97,3 +97,6 @@ which is less secure than keeping the credentials in a file that you control.
    * Select Templates/Python
    * Enter the four list variables above in the Environment variables.
 
+## Code Conventions
+
+The code conventions are set by the standard configurations of the [black](https://black.readthedocs.io/en/stable/), [isort](https://pycqa.github.io/isort/), and [flake8](https://flake8.pycqa.org/) linters for python. Run these linters with `make lint`.
