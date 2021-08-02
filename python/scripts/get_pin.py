@@ -1,20 +1,21 @@
 #!/usr/bin/env python
-from os.path import dirname, abspath, join
 import argparse
 import sys
+from os.path import abspath, dirname, join
 
-sys.path.append(abspath(join(dirname(__file__), '..', 'src')))
+sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
 from api_config import ApiConfig
 from arguments import common_arguments
+
 
 def main(argv=[]):
     """
     This script prints the information associated with a pin. The pin identifier
     my be obtained with the get_user_pins.py or get_board.py script.
     """
-    parser = argparse.ArgumentParser(description='Get a Pin')
-    parser.add_argument('-p', '--pin-id', required=True, help='pin identifier')
+    parser = argparse.ArgumentParser(description="Get a Pin")
+    parser.add_argument("-p", "--pin-id", required=True, help="pin identifier")
     common_arguments(parser)
     args = parser.parse_args(argv)
 
@@ -35,5 +36,6 @@ def main(argv=[]):
     pin_data = pin.get()
     pin.print_summary(pin_data)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main(sys.argv[1:])

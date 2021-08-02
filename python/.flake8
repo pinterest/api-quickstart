@@ -1,0 +1,8 @@
+[flake8]
+# Set line length to match black.
+max-line-length=88
+
+# Ignore E402 in the scripts, because they need to do version-specific imports
+# after determining the version.
+per-file-ignores =
+  scripts/*.py: E402
