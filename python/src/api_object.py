@@ -3,11 +3,13 @@ import requests
 from api_common import ApiCommon
 from utils import input_one_of
 
+
 class PagedIterator:
     """
     This class implements paging on top of the bookmark functionality provided
     by the Pinterest API class. It hides the paging mechanism behind an iterator.
     """
+
     def _get_response(self, path_maybe_with_bookmark):
         """
         Use api_object to run HTTP GET. Then, look for bookmark in response.
@@ -16,7 +18,7 @@ class PagedIterator:
         unpacked = self.api_object.unpack(response)
         # the field with the items container is determined in the iterator constructor
         self.items = unpacked.get(self.items_field)
-        self.bookmark = unpacked.get('bookmark')
+        self.bookmark = unpacked.get("bookmark")
         self.index = 0
 
     def __init__(self, api_object, path):
@@ -24,12 +26,12 @@ class PagedIterator:
         Save the api_object and path for subsequent pages of information.
         """
         self.api_object = api_object
-        self.path = path # to be used with the bookmark on subsequent requests
-        if (api_object.api_config.version == 'v3'):
-            self.items_field = 'data' # data container has items returned from request
+        self.path = path  # to be used with the bookmark on subsequent requests
+        if api_object.api_config.version == "v3":
+            self.items_field = "data"  # data container has items returned from request
         else:
-            self.items_field = 'items' # v5 response has a designated items container
-        self._get_response(path) # first time, get response without bookmark
+            self.items_field = "items"  # v5 response has a designated items container
+        self._get_response(path)  # first time, get response without bookmark
 
     def __iter__(self):
         return self
@@ -39,18 +41,20 @@ class PagedIterator:
             # need to fetch more data, if there is a bookmark
             if self.bookmark:
                 # Determine whether the query needs to be added to the path or
-                # if the bookmark will be an additional parameter at the end of the query.
-                delimiter = '&' if '?' in self.path else '?'
-                path_with_bookmark = self.path + delimiter + 'bookmark=' + self.bookmark
+                # if the bookmark will be an additional parameter at the end
+                # of the query.
+                delimiter = "&" if "?" in self.path else "?"
+                path_with_bookmark = self.path + delimiter + "bookmark=" + self.bookmark
                 self._get_response(path_with_bookmark)
-                if not self.items: # in case there is some sort of error
+                if not self.items:  # in case there is some sort of error
                     raise StopIteration
             else:
-                raise StopIteration # no bookmark => all done
+                raise StopIteration  # no bookmark => all done
 
-        retval = self.items[self.index] # get the current element
-        self.index += 1 # increment the index for the next time
+        retval = self.items[self.index]  # get the current element
+        self.index += 1  # increment the index for the next time
         return retval
+
 
 class ApiObject(ApiCommon):
     def __init__(self, api_config, access_token):
@@ -60,35 +64,51 @@ class ApiObject(ApiCommon):
 
     def get_response(self, path):
         if self.api_config.verbosity >= 2:
-            print(f'GET {self.api_uri + path}')
-        return requests.get(self.api_uri + path, headers=self.access_token.header(), allow_redirects=False)
+            print(f"GET {self.api_uri + path}")
+        return requests.get(
+            self.api_uri + path,
+            headers=self.access_token.header(),
+            allow_redirects=False,
+        )
 
     def request_data(self, path):
         return self.unpack(self.get_response(path), raw=False)
 
     def put_data(self, path, put_data):
         if self.api_config.verbosity >= 2:
-            print(f'PUT {self.api_uri + path}')
+            print(f"PUT {self.api_uri + path}")
             if self.api_config.verbosity >= 3:
                 print(put_data)
-        response = requests.put(self.api_uri + path, data = put_data,
-                                headers=self.access_token.header(), allow_redirects=False)
+        response = requests.put(
+            self.api_uri + path,
+            data=put_data,
+            headers=self.access_token.header(),
+            allow_redirects=False,
+        )
         return self.unpack(response, raw=False)
 
     def post_data(self, path, post_data=None):
         if self.api_config.verbosity >= 2:
-            print(f'POST {self.api_uri + path}')
+            print(f"POST {self.api_uri + path}")
             if self.api_config.verbosity >= 3:
                 print(post_data)
-        response = requests.post(self.api_uri + path, json = post_data,
-                                 headers=self.access_token.header(), allow_redirects=False)
+        response = requests.post(
+            self.api_uri + path,
+            json=post_data,
+            headers=self.access_token.header(),
+            allow_redirects=False,
+        )
         return self.unpack(response, raw=False)
 
     def delete_and_check(self, path):
         if self.api_config.verbosity >= 2:
-            print(f'DELETE {self.api_uri + path}')
-        response = requests.delete(self.api_uri + path, headers=self.access_token.header(), allow_redirects=False)
-        self.check(response) # throws an exception if anything goes wrong
+            print(f"DELETE {self.api_uri + path}")
+        response = requests.delete(
+            self.api_uri + path,
+            headers=self.access_token.header(),
+            allow_redirects=False,
+        )
+        self.check(response)  # throws an exception if anything goes wrong
 
     def get_iterator(self, path):
         return PagedIterator(self, path)
@@ -101,15 +121,18 @@ class ApiObject(ApiCommon):
         index = 1
         page_index = 1
         for object_data in paged_iterator:
-            # do this check after fetching a new page to make sure that there are more pins
+            # do this check after fetching a new page to make sure that
+            # there are more pins
             if page_index > page_size:
-                if 'yes' == input_one_of(f'Continue printing {object_name} list?', ['yes', 'no'], 'yes'):
+                if "yes" == input_one_of(
+                    f"Continue printing {object_name} list?", ["yes", "no"], "yes"
+                ):
                     page_index = 1
                 else:
                     break
 
             # print the object
-            print(f'[{index}] ', end='')
+            print(f"[{index}] ", end="")
             object_class.print_summary(object_data)
 
             # increment counters
