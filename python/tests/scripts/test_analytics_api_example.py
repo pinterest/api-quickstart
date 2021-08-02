@@ -100,9 +100,8 @@ class AnalyticsApiExampleTest(IntegrationMocks):
         second_chunk = "b" * 8
         rm.get(self.report_url, text=(first_chunk + second_chunk))
 
-        from scripts.analytics_api_example import (  # import here to see monkeypatches
-            main,
-        )
+        # import main here to see monkeypatches
+        from scripts.analytics_api_example import main
 
         access_token_dict = {
             "name": "access_token_from_file",
