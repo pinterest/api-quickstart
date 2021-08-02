@@ -63,7 +63,8 @@ def main(argv=[]):
             "WARNING: This script permanently deletes pins and boards from Pinterest!"
         )
         print(
-            "To acknowledge this warning, enter the following information at the prompt:"
+            "To acknowledge this warning, "
+            "enter the following information at the prompt:"
         )
         print("  ", confirmation)
         confirmation_response = input("> ").strip()

@@ -59,7 +59,8 @@ class UserAuthTest(unittest.TestCase):
         )
         mock_open_new.assert_called_once_with(mock_access_uri)
 
-        # test clean exit when developer interrupts the web server on localhost with a KeyboardInterrupt
+        # test clean exit when developer interrupts the web server
+        # on localhost with a KeyboardInterrupt
         class MockHttpServerInterrupted:
             def __init__(self):
                 self.socket = "test-socket"

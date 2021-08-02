@@ -10,7 +10,7 @@ class AsyncReport(ApiObject):
     Subclasses must override:
        self.kind_of = String, The kind of report. Example: 'delivery_metrics'
        self.post_uri_attributes() = Method that generates the attributes for the POST.
-    """
+    """  # noqa: E501 because the long URL is okay
 
     def __init__(self, api_config, access_token, advertiser_id):
         super().__init__(api_config, access_token)
@@ -55,9 +55,9 @@ class AsyncReport(ApiObject):
 
     def wait_report(self):
         """
-        Polls for the status of the report until it is complete. Uses an exponential backoff
-        algorithm (up to a 10 second maximum delay) to determine the appropriate amount of time
-        to wait.
+        Polls for the status of the report until it is complete. Uses an
+        exponential backoff algorithm (up to a 10 second maximum delay) to
+        determine the appropriate amount of time to wait.
         """
         delay = 1  # for backoff algorithm
         readable = "a second"  # for human-readable output of delay

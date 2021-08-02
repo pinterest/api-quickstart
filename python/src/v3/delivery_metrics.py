@@ -193,42 +193,45 @@ class DeliveryMetricsAsyncReport(AsyncReport):
 
     def conversion_report_time(self, conversion_report_time):
         """
-        The date by which the conversion metrics returned from this endpoint will be reported.
-        There are two dates associated with a conversion event: the date that the user interacted
-        with the ad, and the date that the user completed a conversion event.
+        The date by which the conversion metrics returned from this endpoint
+        will be reported. There are two dates associated with a conversion event:
+        the date that the user interacted with the ad, and the date that the user
+        completed a conversion event.
         """
         self.attrs["conversion_report_time"] = conversion_report_time
         return self
 
     def data_source(self, data_source):
         """
-        Either OFFLINE or REALTIME. Offline metrics have a long retention and are used for
-        billing (source of truth). Realtime metrics have latest metrics (including today)
-        but only have a 72-hour retention. In addition, realtime metrics are expected to be
-        an estimation and could be slightly inaccurate. Please note that only a limited set
-        of metrics are available for realtime data.
+        Either OFFLINE or REALTIME. Offline metrics have a long retention and are
+        used for billing (source of truth). Realtime metrics have latest metrics
+        (including today) but only have a 72-hour retention. In addition, realtime
+        metrics are expected to be an estimation and could be slightly inaccurate.
+        Please note that only a limited set of metrics are available for realtime data.
         """
         self.attrs["data_source"] = data_source
         return self
 
     def engagement_window_days(self, engagement_window_days):
         """
-        Number of days to use as the conversion attribution window for an engagement action.
-        Engagements include saves, pin clicks, and carousel card swipes. Applies to
-        Pinterest Tag conversion metrics. Prior conversion tags use their defined attribution
-        windows. If not specified, defaults to 30 days.
+        Number of days to use as the conversion attribution window for an engagement
+        action. Engagements include saves, pin clicks, and carousel card swipes.
+        Applies to Pinterest Tag conversion metrics. Prior conversion tags use
+        their defined attribution windows. If not specified, defaults to 30 days.
         """
         self.attrs["engagement_window_days"] = engagement_window_days
         return self
 
     def entity_fields(self, entity_fields):
         """
-        Additional fields that you would like included for each entity in the Delivery Metrics Report.
-        Fields will be prefixed with the requested level when returned in the report, for example if
-        CAMPAIGN_ID is requested at the AD_GROUP level, this field will be called AD_GROUP_CAMPAIGN_ID.
-        Please note that entity fields can only be requested for the specified level and its parents,
-        for example, for an AD_GROUP level request CAMPAIGN and AD_GROUP entity_fields can be requested,
-        but PIN_PROMOTION entity_fields cannot.
+        Additional fields that you would like included for each entity in the
+        Delivery Metrics Report. Fields will be prefixed with the requested level
+        when returned in the report, for example if CAMPAIGN_ID is requested at the
+        AD_GROUP level, this field will be called AD_GROUP_CAMPAIGN_ID.
+        Please note that entity fields can only be requested for the specified level
+        and its parents, for example, for an AD_GROUP level request CAMPAIGN and
+        AD_GROUP entity_fields can be requested, but PIN_PROMOTION entity_fields
+        cannot.
         """
         self.attrs["entity_fields"] = entity_fields
         return self
@@ -259,16 +262,18 @@ class DeliveryMetricsAsyncReport(AsyncReport):
 
     def tag_version(self, tag_version):
         """
-        By default, Pinterest Tag metrics are returned. To view metrics from prior conversion tags, set this field to 2.
+        By default, Pinterest Tag metrics are returned. To view metrics
+        from prior conversion tags, set this field to 2.
         """
         self.attrs["tag_version"] = tag_version
         return self
 
     def view_window_days(self, view_window_days):
         """
-        Number of days to use as the conversion attribution window for a view action.
-        Applies to Pinterest Tag conversion metrics. Prior conversion tags use their
-        defined attribution windows. If not specified, defaults to 1 day.
+        Number of days to use as the conversion attribution window for
+        a view action. Applies to Pinterest Tag conversion metrics. Prior
+        conversion tags use their defined attribution windows. If not specified,
+        defaults to 1 day.
         """
         self.attrs["view_window_days"] = view_window_days
         return self

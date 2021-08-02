@@ -41,7 +41,8 @@ class PagedIterator:
             # need to fetch more data, if there is a bookmark
             if self.bookmark:
                 # Determine whether the query needs to be added to the path or
-                # if the bookmark will be an additional parameter at the end of the query.
+                # if the bookmark will be an additional parameter at the end
+                # of the query.
                 delimiter = "&" if "?" in self.path else "?"
                 path_with_bookmark = self.path + delimiter + "bookmark=" + self.bookmark
                 self._get_response(path_with_bookmark)
@@ -120,7 +121,8 @@ class ApiObject(ApiCommon):
         index = 1
         page_index = 1
         for object_data in paged_iterator:
-            # do this check after fetching a new page to make sure that there are more pins
+            # do this check after fetching a new page to make sure that
+            # there are more pins
             if page_index > page_size:
                 if "yes" == input_one_of(
                     f"Continue printing {object_name} list?", ["yes", "no"], "yes"

@@ -9,7 +9,8 @@ class RefreshExampleTest(IntegrationMocks):
     @mock.patch("time.sleep")  # prevent delay from real sleep
     @mock.patch("builtins.print")
     def test_refresh_example(self, rm, mock_print, mock_sleep):
-        # set up 4 different responses to PUT https://api.pinterest.com/v3/oauth/access_token/
+        # set up 4 different responses to
+        # PUT https://api.pinterest.com/v3/oauth/access_token/
         basic_response = {
             "status": "test-status",
             "scope": "test-scope",
@@ -52,7 +53,8 @@ class RefreshExampleTest(IntegrationMocks):
             [mock.call(1), mock.call(1)]
         )  # check calls to time.sleep()
 
-        # verify expected values printed: one refresh token and three different access tokens
+        # verify expected values printed:
+        #   one refresh token and three different access tokens
         # echo -n test-refresh-token | shasum -a 256
         mock_print.assert_any_call(
             "hashed refresh token: "

@@ -53,7 +53,8 @@ class AsyncReportTest(unittest.TestCase):
         test_report2.request_report()
         self.assertEqual(test_report2.token, "test_report2_token")
         mock_post_data.assert_called_once_with(
-            "/ads/v3/reports/async/test_advertiser_id/test_report2/?test_report2_attributes"
+            "/ads/v3/reports/async/test_advertiser_id/test_report2/"
+            "?test_report2_attributes"
         )
 
         mock_request_data.return_value = {
@@ -63,7 +64,8 @@ class AsyncReportTest(unittest.TestCase):
         test_report2.wait_report()
         self.assertEqual(test_report2.url(), "test_report2_url")
         mock_request_data.assert_called_once_with(
-            "/ads/v3/reports/async/test_advertiser_id/test_report2/?token=test_report2_token"
+            "/ads/v3/reports/async/test_advertiser_id/test_report2/"
+            "?token=test_report2_token"
         )
 
     @mock.patch("builtins.print")
@@ -124,10 +126,12 @@ class AsyncReportTest(unittest.TestCase):
 
         self.assertEqual(test_report3.url(), test_report3_url)  # verify returned URL
         mock_post_data.assert_called_once_with(
-            "/ads/v3/reports/async/test_advertiser_id/test_report3/?test_report3_attributes"
+            "/ads/v3/reports/async/test_advertiser_id/test_report3/"
+            "?test_report3_attributes"
         )
         mock_request_data.assert_called_with(
-            "/ads/v3/reports/async/test_advertiser_id/test_report3/?token=test_report3_token"
+            "/ads/v3/reports/async/test_advertiser_id/test_report3/"
+            "?token=test_report3_token"
         )
         self.assertEqual(
             test_report3.filename(), "metrics_report.txt"

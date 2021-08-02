@@ -33,8 +33,9 @@ class AnalyticsApiExampleTest(IntegrationMocks):
     def test_analytics_api_example(self, rm):
         # request from AsyncReport.request_report
         matcher = re.compile(
-            r"https://api.pinterest.com/ads/v3/reports/async/adv_2_id/delivery_metrics/\?"
-            r"start_date=2\d{3}-[01]\d-[0123]\d&end_date=2\d{3}-[01]\d-[0123]\d"
+            r"https://api.pinterest.com/ads/v3/reports/async/adv_2_id/delivery_metrics/"
+            r"\?start_date=2\d{3}-[01]\d-[0123]\d"
+            r"&end_date=2\d{3}-[01]\d-[0123]\d"
             r"&metrics=CLICKTHROUGH_1,IMPRESSION_1&level=PIN_PROMOTION&tag_version=3"
         )
         rm.post(matcher, json={"data": {"token": "test-report-token"}})
@@ -54,7 +55,8 @@ class AnalyticsApiExampleTest(IntegrationMocks):
         )
         # request from Advertisers.get
         rm.get(
-            "https://api.pinterest.com/ads/v3/advertisers/?owner_user_id=test_user_id&include_acl=true",
+            "https://api.pinterest.com/ads/v3/advertisers/"
+            "?owner_user_id=test_user_id&include_acl=true",
             json={
                 "data": [
                     {"name": "test advertiser 1", "id": "adv_1_id"},
@@ -86,7 +88,8 @@ class AnalyticsApiExampleTest(IntegrationMocks):
 
         # request from AsyncReport.poll_report
         rm.get(
-            "https://api.pinterest.com/ads/v3/reports/async/adv_2_id/delivery_metrics/?token=test-report-token",
+            "https://api.pinterest.com/ads/v3/reports/async/adv_2_id/delivery_metrics/"
+            "?token=test-report-token",
             json={"data": {"report_status": "FINISHED", "url": self.report_url}},
         )
 

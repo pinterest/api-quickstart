@@ -22,7 +22,8 @@ class ApiConfig:
         # Set logging output (verbosity) level
         self.verbosity = verbosity
 
-        # Get Pinterest API version from the command line, environment, or above default.
+        # Get Pinterest API version from the command line, environment,
+        # or above default.
         if version:
             self.version = "v" + str(version)
         else:
@@ -30,7 +31,8 @@ class ApiConfig:
                 os.environ.get("PINTEREST_API_VERSION") or DEFAULT_API_VERSION
             )
 
-        # get the required application ID and secret from the environment, based on the version
+        # get the required application ID and secret from the environment,
+        # based on the version
         self.get_application_id()
 
         # might want to get these from the environment in the future
@@ -71,7 +73,8 @@ class ApiConfig:
         app_id = os.environ.get(env_app_id)
         app_secret = os.environ.get(env_app_secret)
         if app_id and app_secret:
-            # version-specific application ID and secret override non-version-specific credentials
+            # version-specific application ID and secret override
+            # non-version-specific credentials
             self.app_id = app_id
             self.app_secret = app_secret
         else:
@@ -84,7 +87,8 @@ class ApiConfig:
         if self.app_id and self.app_secret:
             if self.verbosity >= 2:
                 print(
-                    f"Using application ID and secret from {env_app_id} and {env_app_secret}."
+                    f"Using application ID and secret "
+                    f"from {env_app_id} and {env_app_secret}."
                 )
             return
 

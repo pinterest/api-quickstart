@@ -74,7 +74,8 @@ class IntegrationMocks(unittest.TestCase):
             for attempt in range(20):  # try for 2 seconds
                 time.sleep(0)  # yield so that the test thread can start
                 try:
-                    # The real_http parameter of requests_mock must be set to True for this request to work.
+                    # The real_http parameter of requests_mock must be set to
+                    # True for this request to work.
                     response = requests.get(
                         "http://localhost:8085/?test-path&code=test-oauth-code",
                         allow_redirects=False,

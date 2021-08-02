@@ -40,11 +40,12 @@ def main(argv=[]):
        For example:
          ./copy_board.py -b <board-id> -s source_account_token.json -t target_account_token.json
     3. Copy all of the boards from one account to another. This use case is designed
-       to be used by developers to create a test account. This use case creates a lot of data,
-       so it is advisable to use the dry-run argument to verify the pins and boards to be copied.
+       to be used by developers to create a test account. This use case creates a lot
+       of data, so it is advisable to use the dry-run argument to verify the pins and
+       boards to be copied.
          ./copy_board.py --dry-run --all -s source_account_token.json -t target_account_token.json
          ./copy_board.py --all -s source_account_token.json -t target_account_token.json
-    """
+    """  # noqa: E501 because the long command lines are okay
     parser = argparse.ArgumentParser(description="Copy one Board or all Boards")
     parser.add_argument("-b", "--board-id", help="source board identifier")
     parser.add_argument("-n", "--name", help="target board name")
@@ -67,7 +68,10 @@ def main(argv=[]):
     args_error = None
     if args.target_access_token:
         if args.access_token:
-            args_error = "generic access token may not be specified when using a target access token"
+            args_error = (
+                "generic access token may not be specified "
+                "when using a target access token"
+            )
         if not args.source_access_token:
             args_error = (
                 "source access token is required when using a target access token"
@@ -80,7 +84,10 @@ def main(argv=[]):
                 "target board name is required when not using a target access token"
             )
         if args.source_access_token and args.access_token:
-            args_error = "generic access token may not be specified when using a source access token"
+            args_error = (
+                "generic access token may not be specified"
+                "when using a source access token"
+            )
 
     if args.all_boards and args.name:
         args_error = "the name and all options are mutually exclusive"
@@ -92,7 +99,8 @@ def main(argv=[]):
         if not args.board_id:
             args_error = "board-id is a required argument when not copying all boards"
 
-    # In case of an argument error, print an appropriate message, usage information, and exit.
+    # In case of an argument error, print an appropriate message,
+    # usage information, and exit.
     if args_error:
         print(args_error)
         parser.print_usage()
@@ -112,8 +120,8 @@ def main(argv=[]):
     def copy_pin(pin, pin_data, target_board_id, target_section_id=None):
         try:
             pintype = pin_data.get("type")
-            # Sometimes the board list operation will generate entities (e.g. "more ideas"
-            # tiles) that resemble pins but can not be copied.
+            # Sometimes the board list operation will generate entities
+            # (e.g. "more ideas" tiles) that resemble pins but can not be copied.
             if not pintype or pintype == "pin":
                 print("source pin:")
                 Pin.print_summary(pin_data)
@@ -128,14 +136,16 @@ def main(argv=[]):
         except SpamException:
             print("skipping pin because of spam exception")
 
-    # Note: The same API configuration is used with both the source and target access tokens.
+    # Note: The same API configuration is used with both the source
+    # and target access tokens.
     if args.source_access_token:
         source_token = AccessToken(api_config, name=args.source_access_token)
     else:
         source_token = AccessToken(api_config, name=args.access_token)
     source_token_scopes = [Scope.READ_PINS, Scope.READ_BOARDS]
 
-    # Default to use the source token (same account) if the target token is not specified.
+    # Default to use the source token (same account) if the target
+    # token is not specified.
     target_token_scopes = [Scope.WRITE_PINS, Scope.WRITE_BOARDS]
     if args.target_access_token:
         target_token = AccessToken(api_config, name=args.target_access_token)

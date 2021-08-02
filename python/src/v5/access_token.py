@@ -20,7 +20,8 @@ class AccessToken(AccessTokenCommon):
         if not scopes:
             scopes = [Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS]
             print(
-                "v5 requires scopes for OAuth. setting to default: READ_USERS,READ_PINS,READ_BOARDS"
+                "v5 requires scopes for OAuth. "
+                "setting to default: READ_USERS,READ_PINS,READ_BOARDS"
             )
 
         if not refreshable:

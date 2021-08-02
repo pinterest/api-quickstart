@@ -49,7 +49,8 @@ class ApiCommon:
         so that the same ApiObject class can handle responses from both v3 and v5.
         - When raw is True, the return value is just the deserialized JSON response.
         - When raw is False, the return value for v5 is the same (the deserialized JSON
-          response) but for v3 includes only the "cooked" data container inside the response.
+          response) but for v3 includes only the "cooked" data container inside
+          the response.
         """
 
         # Save a human-readable status for output and error handling.

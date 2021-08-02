@@ -2,7 +2,8 @@ from enum import Enum
 
 
 # Enumerate the valid OAuth scopes.
-# For details, see: https://developers.pinterest.com/docs/redoc/#section/User-Authorization/OAuth-scopes
+# For details, see:
+#  https://developers.pinterest.com/docs/redoc/#section/User-Authorization/OAuth-scopes
 class Scope(Enum):
     # granular scopes
     READ_DOMAINS = "read_domains"

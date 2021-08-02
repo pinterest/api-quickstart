@@ -12,7 +12,8 @@ integration_tests:
 
 tests: unit_tests integration_tests
 
-# Note: flake8 configuration is in .flake8 file.
+# flake8 configuration is in the .flake8 file.
+# black and isort configurations are in the pyproject.toml file.
 lint_check:
 	black --check src scripts tests
 	isort --profile black --check src scripts tests

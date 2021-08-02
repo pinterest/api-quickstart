@@ -34,7 +34,8 @@ def main(argv=[]):
     access_token.refresh()
 
     # Note: It is best practice not to print credentials in clear text.
-    # Pinterest engineers asked for this capability to make it easier to support partners.
+    # Pinterest engineers asked for this capability to make it easier
+    # to support partners.
     if args.cleartext:
         print("Please keep clear text tokens secure!")
         print("clear text access token after refresh: " + access_token.access_token)
