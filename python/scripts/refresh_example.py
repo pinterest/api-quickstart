@@ -12,6 +12,9 @@ from arguments import common_arguments
 
 def main(argv=[]):
     """
+    This script was written primarily as a way for folks at Pinterest to
+    explain how refresh works on the API. Have a look at refresh_access_token
+    script if you need to refresh and to store an existing access token.
     This script extends the example in get_access_token.py by demonstrating
     how to use the OAuth refresh token to obtain a new access token.
     It executes the refresh twice, verifying each time that the access token
