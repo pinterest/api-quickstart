@@ -49,10 +49,9 @@ export class Input {
       if (value === '') {
         return defaultValue; // blank entry returns the default
       }
-      for (let idx = 0; idx < one_of_list.length; ++idx) {
-        if (value === one_of_list_lowercase[idx]) {
-          return one_of_list[idx];
-        }
+      const index = one_of_list_lowercase.indexOf(value);
+      if (index >= 0) {
+        return one_of_list[index];
       }
       console.log('input must be one of', one_of_list);
     }
