@@ -30,7 +30,8 @@ class AdvertisersTest(unittest.TestCase):
             [
                 call("Test Summary ID: advertiser_2_id | Name: advertiser 2"),
                 call(
-                    "[1] Test Kind ID: advertiser_1_id | Name: advertiser 1 (TEST STATUS)"
+                    "[1] Test Kind ID: advertiser_1_id "
+                    "| Name: advertiser 1 (TEST STATUS)"
                 ),
                 call("[2] Test Kind ID: advertiser_2_id | Name: advertiser 2"),
             ]
