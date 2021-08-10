@@ -91,6 +91,7 @@ def main(argv=[]):
     """  # noqa: E501 because the long URL is okay
     advertisers = Advertisers(user_id, api_config, access_token)
     advertisers_data = list(advertisers.get())
+    print("Advertiser accounts available to this access token:")
     advertisers.print_enumeration(advertisers_data, "Ad Account")
     n_advertisers = len(advertisers_data)
 
