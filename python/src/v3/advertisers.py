@@ -13,7 +13,7 @@ class Advertisers(ApiObject):
         It's unintuitive, but the param include_acl=true is required
         to return advertisers which are shared with your account.
         """
-        return self.request_data(
+        return self.get_iterator(
             "/ads/v3/advertisers/"
             + f"?owner_user_id={self.user_id}"
             + "&include_acl=true"

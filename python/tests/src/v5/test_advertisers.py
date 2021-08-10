@@ -10,9 +10,7 @@ class AdvertisersTest(unittest.TestCase):
     @mock.patch("builtins.print")
     @mock.patch("src.v5.user.ApiObject.get_iterator")
     @mock.patch("src.v5.user.ApiObject.__init__")
-    def test_user_get(
-        self, mock_api_object_init, mock_get_iterator, mock_print
-    ):
+    def test_user_get(self, mock_api_object_init, mock_get_iterator, mock_print):
         test_advertisers = Advertisers(
             "test_user_id", "test_api_uri", "test_access_token"
         )
@@ -26,34 +24,44 @@ class AdvertisersTest(unittest.TestCase):
         ]
         advertisers_data = test_advertisers.get()
 
-        test_advertisers.print_summary(advertisers_data[1], 'Test Summary')
-        test_advertisers.print_enumeration(advertisers_data, 'Test Kind')
+        test_advertisers.print_summary(advertisers_data[1], "Test Summary")
+        test_advertisers.print_enumeration(advertisers_data, "Test Kind")
         mock_print.assert_has_calls(
             [
                 call("Test Summary ID: advertiser_2_id | Name: advertiser 2"),
-                call("[1] Test Kind ID: advertiser_1_id "
-                     "| Name: advertiser 1 (TEST STATUS)"),
+                call(
+                    "[1] Test Kind ID: advertiser_1_id "
+                    "| Name: advertiser 1 (TEST STATUS)"
+                ),
                 call("[2] Test Kind ID: advertiser_2_id | Name: advertiser 2"),
             ]
         )
 
         mock_get_iterator.return_value = "test_iterator"
-        self.assertEqual("test_iterator", test_advertisers.get_campaigns(
-            "test_account_id"
-        ))
-        self.assertEqual("test_iterator", test_advertisers.get_ad_groups(
-            "test_account_id", "test_campaign_id"
-        ))
-        self.assertEqual("test_iterator", test_advertisers.get_ads(
-            "test_account_id", "test_campaign_id", "test_ad_group_id"
-        ))
+        self.assertEqual(
+            "test_iterator", test_advertisers.get_campaigns("test_account_id")
+        )
+        self.assertEqual(
+            "test_iterator",
+            test_advertisers.get_ad_groups("test_account_id", "test_campaign_id"),
+        )
+        self.assertEqual(
+            "test_iterator",
+            test_advertisers.get_ads(
+                "test_account_id", "test_campaign_id", "test_ad_group_id"
+            ),
+        )
         mock_get_iterator.assert_has_calls(
             [
                 call("/v5/ad_accounts"),
                 call("/v5/ad_accounts/test_account_id/campaigns"),
-                call("/v5/ad_accounts/test_account_id/ad_groups"
-                     "?campaign_ids=test_campaign_id"),
-                call("/v5/ad_accounts/test_account_id/ads"
-                     "?campaign_ids=test_campaign_id&ad_group_ids=test_ad_group_id")
+                call(
+                    "/v5/ad_accounts/test_account_id/ad_groups"
+                    "?campaign_ids=test_campaign_id"
+                ),
+                call(
+                    "/v5/ad_accounts/test_account_id/ads"
+                    "?campaign_ids=test_campaign_id&ad_group_ids=test_ad_group_id"
+                ),
             ]
         )
