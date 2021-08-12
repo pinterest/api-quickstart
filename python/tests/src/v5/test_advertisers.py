@@ -3,13 +3,13 @@ import unittest
 import mock
 from mock import call
 
-from src.v3.advertisers import Advertisers
+from src.v5.advertisers import Advertisers
 
 
 class AdvertisersTest(unittest.TestCase):
     @mock.patch("builtins.print")
-    @mock.patch("src.v3.user.ApiObject.get_iterator")
-    @mock.patch("src.v3.user.ApiObject.__init__")
+    @mock.patch("src.v5.user.ApiObject.get_iterator")
+    @mock.patch("src.v5.user.ApiObject.__init__")
     def test_user_get(self, mock_api_object_init, mock_get_iterator, mock_print):
         test_advertisers = Advertisers(
             "test_user_id", "test_api_uri", "test_access_token"
@@ -42,18 +42,26 @@ class AdvertisersTest(unittest.TestCase):
             "test_iterator", test_advertisers.get_campaigns("test_account_id")
         )
         self.assertEqual(
-            "test_iterator", test_advertisers.get_ad_groups(None, "test_campaign_id")
+            "test_iterator",
+            test_advertisers.get_ad_groups("test_account_id", "test_campaign_id"),
         )
         self.assertEqual(
-            "test_iterator", test_advertisers.get_ads(None, None, "test_ad_group_id")
+            "test_iterator",
+            test_advertisers.get_ads(
+                "test_account_id", "test_campaign_id", "test_ad_group_id"
+            ),
         )
         mock_get_iterator.assert_has_calls(
             [
+                call("/v5/ad_accounts"),
+                call("/v5/ad_accounts/test_account_id/campaigns"),
                 call(
-                    "/ads/v3/advertisers/?owner_user_id=test_user_id&include_acl=true"
+                    "/v5/ad_accounts/test_account_id/ad_groups"
+                    "?campaign_ids=test_campaign_id"
                 ),
-                call("/ads/v3/advertisers/test_account_id/campaigns/"),
-                call("/ads/v3/campaigns/test_campaign_id/ad_groups/"),
-                call("/ads/v3/ad_groups/test_ad_group_id/pin_promotions/"),
+                call(
+                    "/v5/ad_accounts/test_account_id/ads"
+                    "?campaign_ids=test_campaign_id&ad_group_ids=test_ad_group_id"
+                ),
             ]
         )
