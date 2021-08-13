@@ -8,7 +8,8 @@ def positive_integer(number):
         raise argparse.ArgumentTypeError(f"{number} must be a positive integer")
     return ivalue
 
-
+# TODO: use parent parser.
+#       see https://docs.python.org/3/library/argparse.html for details.
 def common_arguments(parser):
     """
     Set command line arguments that are common to all of the scripts.
