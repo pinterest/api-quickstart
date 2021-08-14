@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import json
 import sys
 from os.path import abspath, dirname, join
 
@@ -49,15 +50,20 @@ def main(argv=[]):
     This script shows how to use the Pinterest API synchronous analytics endpoints
     to download reports for a User, Ad Account, Campaign, Ad Group, or Ad.
 
-    Using this script requires a login or an access token for a Pinterest
-    user account that has linked Ad Accounts. (The relationship between User
-    and Ad Accounts is 1-to-many.) To get a report with useful metrics values,
-    at least one linked Ad Account needs to have an active advertising campaign.
+    This script fetches user analytics by default, which just requires an
+    access token with READ_USERS scope.
+
+    Using this script for advertising analytics requires a login or an access token
+    for a Pinterest user account that has linked Ad Accounts. (The relationship
+    between User and Ad Accounts is 1-to-many.) To get a report with useful
+    metrics values, at least one linked Ad Account needs to have an active
+    advertising campaign. The access token requires READ_USERS and
+    READ_ADVERTISERS scopes.
     """
     parser = argparse.ArgumentParser(description="Analytics API Example")
     parser.add_argument(
         "-o", "--analytics-object", default="user",
-        choices=["user", "ad_account", "campaign", "ad_group", "ad"],
+        choices=["user", "ad_account_user", "ad_account", "campaign", "ad_group", "ad"],
         help="kind of object used to fetch analytics"
     )
     common_arguments(parser)
@@ -68,56 +74,57 @@ def main(argv=[]):
     # imports that depend on the version of the API
     from access_token import AccessToken
     from advertisers import Advertisers
-    from analytics import Analytics
+    from analytics import Analytics, AdAnalytics
     from oauth_scope import Scope
     from user import User
 
     """
-    Step 1: Fetch an access token and print summary data about the User.
-    Note that the OAuth will fail if your application does not
-    have access to the scope that is required to access
-    linked business accounts.
+    Fetch an access token and print summary data about the User.
     """
 
     access_token = AccessToken(api_config, name=args.access_token)
-    access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_ADVERTISERS])
+    scopes = [Scope.READ_USERS]
+    if args.analytics_object != "user":
+        scopes += [Scope.READ_ADVERTISERS]
+    access_token.fetch(scopes=scopes)
 
-    """
-    Sample: Get my user id
-    For a future call we need to know the user id associated with
-    the access token being used.
-    """
+    # Get the user record. Some versions of the Pinterest API require the
+    # user id associated with the access token.
     user_me = User("me", api_config, access_token)
     user_me_data = user_me.get()
     user_me.print_summary(user_me_data)
 
-    """
-    Step 2: Get Ad Accounts available to my access token and select one of them.
-    One of the first challenges many developers run into is that the relationship
-    between User and Ad Accounts is 1-to-many.
-    In house developers typically don't have login credentials for the main Pinterest
-    account of their brand to OAuth against.
-    We often reccomend that they set up a new "developer" Pinterest user,
-    and then request that this new account is granted access to the
-    advertiser account via:
-      https://help.pinterest.com/en/business/article/add-people-to-your-ad-account
-    This process is also touched on in the API docs:
-      https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
-    """  # noqa: E501 because the long URL is okay
-    advertisers = Advertisers(user_me_data.get("id"), api_config, access_token)
-    analytics = Analytics(user_me_data.get("id"), api_config, access_token)
-
     if args.analytics_object == "user":
+        # Get analytics for the user account associated with the access token.
+        analytics = (
+            Analytics(user_me_data.get("id"), api_config, access_token)
+            .last_30_days()
+            .metrics({"IMPRESSION","PIN_CLICK_RATE"})
+        )
+        results = analytics.get()  # not calling with an ad_account_id argument
+    elif args.analytics_object == "ad_account_user":
+        # Get analytics for the user account associated with an ad account.
+        analytics = (
+            Analytics(user_me_data.get("id"), api_config, access_token)
+            .last_30_days()
+            .metrics({"IMPRESSION","PIN_CLICK_RATE"})
+        )
+        advertisers = Advertisers(user_me_data.get("id"), api_config, access_token)
+        # When using find_and_get_analytics, analytics.get() will be called with
+        # an ad_account_id argument.
         ads_entities = [
             {"object": "ad_account", "kind": "Ad Account", "parent": "User", "get": advertisers.get, "analytics": analytics.get}
         ]
-        try:
-            results = find_and_get_analytics(advertisers, "ad_account", ads_entities, [], 0)
-        except Exception:
-            results = None
-        if not results:
-            results = analytics.get()
+        results = find_and_get_analytics(advertisers, "ad_account", ads_entities, [], 0)
     else:
+        # Get advertising analytics for the appropriate kind of object.
+        analytics = (
+            AdAnalytics(user_me_data.get("id"), api_config, access_token)
+            .last_30_days()
+            .metrics({"SPEND_IN_DOLLAR","TOTAL_CLICKTHROUGH"})
+            .granularity("DAY")
+        )
+        advertisers = Advertisers(user_me_data.get("id"), api_config, access_token)
         ads_entities = [
             {"object": "ad_account", "kind": "Ad Account", "parent": "User", "get": advertisers.get, "analytics": analytics.get_ad_account},
             {"object": "campaign", "kind": "Campaign", "parent": "Ad Account", "get": advertisers.get_campaigns, "analytics": analytics.get_campaign},
@@ -130,11 +137,12 @@ def main(argv=[]):
         print("There are no analytics results.")
         return
 
+    # Prompt for the name of an output file and write the analytics results.
     path = input_path_for_write(
-        "Please enter a file name for the analytics output:", 'analytics_output.txt'
+        "Please enter a file name for the analytics output:", 'analytics_output.json'
     )
-    with open(path, 'w') as output_file:
-        output_file.write(str(results))
+    with open(path, 'w') as json_file:
+        json.dump(results, json_file, indent=2)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

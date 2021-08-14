@@ -67,7 +67,7 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "start date after end date"):
             dm_async_report.post_uri_attributes()
 
-    @mock.patch("src.v3.delivery_metrics.datetime.date", wraps=datetime.date)
+    @mock.patch("src.analytics_attributes.datetime.date", wraps=datetime.date)
     @mock.patch("src.v3.delivery_metrics.AsyncReport.__init__")
     def test_dm_async_report_attributes_1(self, mock_async_report_init, mock_date):
         mock_date.today.return_value = datetime.datetime(
