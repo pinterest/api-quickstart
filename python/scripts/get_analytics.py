@@ -48,7 +48,9 @@ def find_and_get_analytics(advertisers, analytics_object, ads_entities, get_args
 def main(argv=[]):
     """
     This script shows how to use the Pinterest API synchronous analytics endpoints
-    to download reports for a User, Ad Account, Campaign, Ad Group, or Ad.
+    to download reports for a User, Ad Account, Campaign, Ad Group, or Ad. The
+    analytics_api_example script shows how to use Pinterest API v3 to retrieve
+    similar metrics using asynchronous reporting functionality.
 
     This script fetches user analytics by default, which just requires an
     access token with READ_USERS scope.
@@ -60,7 +62,7 @@ def main(argv=[]):
     advertising campaign. The access token requires READ_USERS and
     READ_ADVERTISERS scopes.
     """
-    parser = argparse.ArgumentParser(description="Analytics API Example")
+    parser = argparse.ArgumentParser(description="Get Analytics")
     parser.add_argument(
         "-o", "--analytics-object", default="user",
         choices=["user", "ad_account_user", "ad_account", "campaign", "ad_group", "ad"],

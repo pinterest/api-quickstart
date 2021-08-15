@@ -3,6 +3,10 @@ from api_object import ApiObject
 
 
 class Analytics(AnalyticsAttributes,ApiObject):
+    """
+    This class retrieves user (sometimes called "organic") metrics
+    using the v5 interface.
+    """
     def __init__(self, _user_id, api_config, access_token):
         super().__init__(api_config, access_token)
         self.enumerated_values.update({
@@ -16,7 +20,8 @@ class Analytics(AnalyticsAttributes,ApiObject):
     # https://developers.pinterest.com/docs/v5/#operation/account/analytics
     def get(self, ad_account_id=None):
         """
-        Get analytics for the user account.
+        Get analytics for the user account. If ad_account_id is set, get user
+        analytics associated with the specified Ad Account.
         """
         if ad_account_id:
            self.attrs["ad_account_id"] = ad_account_id 
@@ -25,6 +30,10 @@ class Analytics(AnalyticsAttributes,ApiObject):
 
 
 class AdAnalytics(AdAnalyticsAttributes,ApiObject):
+    """
+    This class retrieves advertising delivery metrics with
+    Pinterest API version v5.
+    """
     def __init__(self, _user_id, api_config, access_token):
         super().__init__(api_config, access_token)
         self.required_attrs.update({"granularity"})
