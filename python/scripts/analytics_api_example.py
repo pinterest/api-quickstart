@@ -48,7 +48,7 @@ def main(argv=[]):
     """
 
     # Set API version to 3, because this script does not work with 5 yet.
-    if (args.api_version != "3"):
+    if args.api_version != "3":
         print("WARNING: Asynchronous analytics only works with API version v3.")
         print("Forcing version 3...")
 

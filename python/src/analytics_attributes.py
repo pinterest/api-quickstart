@@ -1,12 +1,14 @@
 import datetime
 
-class AnalyticsAttributes():
+
+class AnalyticsAttributes:
     """
     This class profiles common variables and functions related
     to the metrics returned by analytics endpoints.
     """
+
     def __init__(self, *args):
-        super().__init__(*args) # forward all args to allow multiple inheritance
+        super().__init__(*args)  # forward all args to allow multiple inheritance
         self._start_date = None
         self._end_date = None
         self.enumerated_values = {}
@@ -38,7 +40,7 @@ class AnalyticsAttributes():
         """
         missing = set()
         for attr in self.required_attrs:
-            if not attr in self.attrs:
+            if attr not in self.attrs:
                 missing.add(attr)
         if missing:
             raise ValueError(f"missing attributes: {missing}")
@@ -162,21 +164,24 @@ class AdAnalyticsAttributes(AnalyticsAttributes):
     This class extends the basic metrics to include standard
     advertising metrics.
     """
+
     ENUMERATED_WINDOW_DAYS = {0, 1, 7, 14, 30, 60}
 
     def __init__(self, *args):
-        super().__init__(*args) # forward all args to allow multiple inheritance
+        super().__init__(*args)  # forward all args to allow multiple inheritance
 
         # This dictionary lists values for attributes that are enumerated
         # in the API documentation. The keys are the names of the attributes,
         # and the dictionary values are sets of API-defined values.
-        self.enumerated_values.update({
-            "granularity": {"TOTAL", "DAY", "HOUR", "WEEK", "MONTH"},
-            "click_window_days": self.ENUMERATED_WINDOW_DAYS,
-            "engagement_window_days": self.ENUMERATED_WINDOW_DAYS,
-            "view_window_days": self.ENUMERATED_WINDOW_DAYS,
-            "conversion_report_time": {"AD_EVENT", "CONVERSION_EVENT"}
-        })
+        self.enumerated_values.update(
+            {
+                "granularity": {"TOTAL", "DAY", "HOUR", "WEEK", "MONTH"},
+                "click_window_days": self.ENUMERATED_WINDOW_DAYS,
+                "engagement_window_days": self.ENUMERATED_WINDOW_DAYS,
+                "view_window_days": self.ENUMERATED_WINDOW_DAYS,
+                "conversion_report_time": {"AD_EVENT", "CONVERSION_EVENT"},
+            }
+        )
 
     def granularity(self, granularity):
         """

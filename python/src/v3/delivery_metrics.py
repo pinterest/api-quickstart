@@ -1,5 +1,5 @@
-from api_object import ApiObject
 from analytics_attributes import AdAnalyticsAttributes
+from api_object import ApiObject
 from v3.async_report import AsyncReport
 
 
@@ -38,7 +38,7 @@ class DeliveryMetrics(ApiObject):
 # AdAnalyticsAttributes to make the multiple inheritance work correctly.
 # In particular, if AdAnalyticsAttributes is not first in the order,
 # the __init__ functions aren't called correctly.
-class DeliveryMetricsAsyncReport(AdAnalyticsAttributes,AsyncReport):
+class DeliveryMetricsAsyncReport(AdAnalyticsAttributes, AsyncReport):
     """
     Specifies all of the attributes for the async advertiser
     delivery metrics report. For more information, see:
@@ -63,37 +63,39 @@ class DeliveryMetricsAsyncReport(AdAnalyticsAttributes,AsyncReport):
         # This dictionary lists values for attributes that are enumerated
         # in the API documentation. The keys are the names of the attributes,
         # and the dictionary values are sets of API-defined values.
-        self.enumerated_values.update({
-            "data_source": {"OFFLINE", "REALTIME"},
-            "entity_fields": {
-                "AD_GROUP_ID",
-                "AD_GROUP_NAME",
-                "AD_GROUP_STATUS",
-                "CAMPAIGN_ID",
-                "CAMPAIGN_MANAGED_STATUS",
-                "CAMPAIGN_NAME",
-                "CAMPAIGN_STATUS",
-                "PIN_PROMOTION_ID",
-                "PIN_PROMOTION_NAME",
-                "PIN_PROMOTION_STATUS",
-                "PRODUCT_GROUP_ID",
-            },
-            "level": {
-                "ADVERTISER",
-                "AD_GROUP",
-                "CAMPAIGN",
-                "ITEM",
-                "KEYWORD",
-                "PIN_PROMOTION",
-                "PIN_PROMOTION_TARGETING",
-                "PRODUCT_GROUP",
-                "PRODUCT_GROUP_TARGETING",
-                "PRODUCT_ITEM",
-                "SEARCH_QUERY",
-            },
-            "report_format": {"csv", "json"},
-            "tag_version": {2, 3, "2", "3"},
-        })
+        self.enumerated_values.update(
+            {
+                "data_source": {"OFFLINE", "REALTIME"},
+                "entity_fields": {
+                    "AD_GROUP_ID",
+                    "AD_GROUP_NAME",
+                    "AD_GROUP_STATUS",
+                    "CAMPAIGN_ID",
+                    "CAMPAIGN_MANAGED_STATUS",
+                    "CAMPAIGN_NAME",
+                    "CAMPAIGN_STATUS",
+                    "PIN_PROMOTION_ID",
+                    "PIN_PROMOTION_NAME",
+                    "PIN_PROMOTION_STATUS",
+                    "PRODUCT_GROUP_ID",
+                },
+                "level": {
+                    "ADVERTISER",
+                    "AD_GROUP",
+                    "CAMPAIGN",
+                    "ITEM",
+                    "KEYWORD",
+                    "PIN_PROMOTION",
+                    "PIN_PROMOTION_TARGETING",
+                    "PRODUCT_GROUP",
+                    "PRODUCT_GROUP_TARGETING",
+                    "PRODUCT_ITEM",
+                    "SEARCH_QUERY",
+                },
+                "report_format": {"csv", "json"},
+                "tag_version": {2, 3, "2", "3"},
+            }
+        )
 
     def level(self, level):
         """

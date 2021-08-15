@@ -1,28 +1,38 @@
-from analytics_attributes import AnalyticsAttributes, AdAnalyticsAttributes
+from analytics_attributes import AdAnalyticsAttributes, AnalyticsAttributes
 from api_object import ApiObject
 
 
-class Analytics(AnalyticsAttributes,ApiObject):
+class Analytics(AnalyticsAttributes, ApiObject):
     """
     This class retrieves user (sometimes called "organic") metrics
     using the v5 interface.
     """
+
     def __init__(self, user_id, api_config, access_token):
         super().__init__(api_config, access_token)
         self.user_id = user_id
-        self.enumerated_values.update({
-            "paid": {0, 1, 2},
-            "in_profile": {0, 1, 2},
-            "from_owned_content": {0, 1, 2},
-            "from_owned_content": {0, 1, 2},
-            "downstream": {0, 1, 2},
-            "pin_format": {"all", "product", "standard", "standard_product_stl_union",
-                           "standard_product_union", "standard_stl_union", "stl", "story",
-                           "video"},
-            "app_types": {"all", "mobile", "tablet", "web"},
-            "publish_types": {"all", "published"},
-            "include_curated": {0, 1, 2}
-        })
+        self.enumerated_values.update(
+            {
+                "paid": {0, 1, 2},
+                "in_profile": {0, 1, 2},
+                "from_owned_content": {0, 1, 2},
+                "downstream": {0, 1, 2},
+                "pin_format": {
+                    "all",
+                    "product",
+                    "standard",
+                    "standard_product_stl_union",
+                    "standard_product_union",
+                    "standard_stl_union",
+                    "stl",
+                    "story",
+                    "video",
+                },
+                "app_types": {"all", "mobile", "tablet", "web"},
+                "publish_types": {"all", "published"},
+                "include_curated": {0, 1, 2},
+            }
+        )
 
     # https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/v3_analytics_partner_metrics_GET
     def get(self, ad_account_id=None):
@@ -35,11 +45,13 @@ class Analytics(AnalyticsAttributes,ApiObject):
             # TODO: confirm this assertion...
             print("User metrics are supported by Pinterest API v5, not v3 or v4.")
             return None
-        return self.request_data(f"/v3/partners/analytics/users/{self.user_id}/metrics/?" +
-                                 self.uri_attributes("metric_types",False))
+        return self.request_data(
+            f"/v3/partners/analytics/users/{self.user_id}/metrics/?"
+            + self.uri_attributes("metric_types", False)
+        )
 
 
-class AdAnalytics(AdAnalyticsAttributes,ApiObject):
+class AdAnalytics(AdAnalyticsAttributes, ApiObject):
     """
     This class retrieves advertising delivery metrics with
     Pinterest API version v4, which has essentially the same
@@ -47,12 +59,13 @@ class AdAnalytics(AdAnalyticsAttributes,ApiObject):
     provides a way to retrieve similar metrics using the v3
     asynchrounous report functionality.
     """
+
     def __init__(self, _user_id, api_config, access_token):
         super().__init__(api_config, access_token)
         self.required_attrs.update({"granularity"})
-        self.enumerated_values.update({
-            "attribution_types": {"INDIVIDUAL", "HOUSEHOLD"}
-        })
+        self.enumerated_values.update(
+            {"attribution_types": {"INDIVIDUAL", "HOUSEHOLD"}}
+        )
 
     def request(self, request_uri):
         return self.request_data(request_uri + self.uri_attributes("columns", True))
