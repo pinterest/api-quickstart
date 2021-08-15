@@ -44,6 +44,24 @@ class Analytics(AnalyticsAttributes, ApiObject):
             }
         )
 
+        # chainable attribute setters...
+
+    def from_claimed_content(self, from_claimed_content):
+        self.attrs["from_claimed_content"] = from_claimed_content
+        return self
+
+    def pin_format(self, pin_format):
+        self.attrs["pin_format"] = pin_format
+        return self
+
+    def app_types(self, app_types):
+        self.attrs["app_types"] = app_types
+        return self
+
+    def split_field(self, split_field):
+        self.attrs["split_field"] = split_field
+        return self
+
     # https://developers.pinterest.com/docs/v5/#operation/account/analytics
     def get(self, ad_account_id=None):
         """
@@ -52,9 +70,13 @@ class Analytics(AnalyticsAttributes, ApiObject):
         """
         if ad_account_id:
             self.attrs["ad_account_id"] = ad_account_id
-        return self.request_data(
-            "/v5/user_account/analytics?" + self.uri_attributes("metric_types", False)
-        )
+        try:
+            return self.request_data(
+                "/v5/user_account/analytics?"
+                + self.uri_attributes("metric_types", False)
+            )
+        finally:
+            self.attrs.pop("ad_account_id", None)
 
 
 class AdAnalytics(AdAnalyticsAttributes, ApiObject):

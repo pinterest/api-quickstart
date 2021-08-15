@@ -41,7 +41,13 @@ class AnalyticsAttributes:
         if not values:
             return
         if value not in values:
-            raise ValueError(f"{name}: {value} is not one of {values}")
+            # sort makes error testing and debugging easier
+            values_list = list(values)
+            try:
+                values_list.sort()  # works if everything is the same type
+            except TypeError:
+                values_list.sort(key=str)  # works for mixed types
+            raise ValueError(f"{name}: {value} is not one of {values_list}")
 
     def check_enumerated_attrs(self):
         """
@@ -60,7 +66,9 @@ class AnalyticsAttributes:
             if attr not in self.attrs:
                 missing.add(attr)
         if missing:
-            raise ValueError(f"missing attributes: {missing}")
+            missing_list = list(missing)
+            missing_list.sort()  # sort makes error testing and debugging easier
+            raise AttributeError(f"missing attributes: {missing_list}")
 
     def start_date(self, start_date):
         """
@@ -87,7 +95,7 @@ class AnalyticsAttributes:
     def last_30_days(self):
         """
         Shortcut: set the end date to the current date and the start date
-        to third days earlier.
+        to thirty days earlier.
         """
         today = datetime.date.today()
         today_minus_30 = today - datetime.timedelta(days=30)
@@ -134,7 +142,7 @@ class AnalyticsAttributes:
 
         # set order is nondeterministic, so create a sorted list
         metrics_list = list(self._metrics)
-        metrics_list.sort()
+        metrics_list.sort()  # sort makes error testing and debugging easier
         return ",".join(metrics_list)
 
     def verify_attributes(self, metrics_required=False):
@@ -170,8 +178,11 @@ class AnalyticsAttributes:
         if metrics:
             attributes += f"&{metrics_parameter}={metrics}"
 
-        for attr, value in self.attrs.items():
-            attributes += f"&{attr}={value}"
+        # sort attributes to make order deterministic for testing
+        attr_list = list(self.attrs.keys())
+        attr_list.sort()  # sort makes error testing and debugging easier
+        for attr in attr_list:
+            attributes += f"&{attr}={self.attrs[attr]}"
 
         return attributes
 

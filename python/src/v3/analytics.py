@@ -41,13 +41,13 @@ class Analytics(AnalyticsAttributes, ApiObject):
         )
 
     # https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/v3_analytics_partner_metrics_GET
-    def get(self, ad_account_id=None):
+    def get(self, advertiser_id=None):
         """
         Get analytics for the user account. This method has the ad_account_id
         for symmetry with the v5 interface, but ad_account_id may not be used
         with the v3 or v4 versions of the API.
         """
-        if ad_account_id:
+        if advertiser_id:
             # TODO: confirm this assertion...
             print("User metrics are supported by Pinterest API v5, not v3 or v4.")
             return None
@@ -55,6 +55,40 @@ class Analytics(AnalyticsAttributes, ApiObject):
             f"/v3/partners/analytics/users/{self.user_id}/metrics/?"
             + self.uri_attributes("metric_types", False)
         )
+
+    # chainable attribute setters...
+
+    def paid(self, paid):
+        self.attrs["paid"] = paid
+        return self
+
+    def in_profile(self, in_profile):
+        self.attrs["in_profile"] = in_profile
+        return self
+
+    def from_owned_content(self, from_owned_content):
+        self.attrs["from_owned_content"] = from_owned_content
+        return self
+
+    def downstream(self, downstream):
+        self.attrs["downstream"] = downstream
+        return self
+
+    def pin_format(self, pin_format):
+        self.attrs["pin_format"] = pin_format
+        return self
+
+    def app_types(self, app_types):
+        self.attrs["app_types"] = app_types
+        return self
+
+    def publish_types(self, publish_types):
+        self.attrs["publish_types"] = publish_types
+        return self
+
+    def include_curated(self, include_curated):
+        self.attrs["include_curated"] = include_curated
+        return self
 
 
 class AdAnalytics(AdAnalyticsAttributes, ApiObject):
