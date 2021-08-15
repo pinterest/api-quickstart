@@ -1,11 +1,28 @@
 from analytics_attributes import AdAnalyticsAttributes, AnalyticsAttributes
 from api_object import ApiObject
 
+#
+# This module uses Pinterest API v5 in two classes:
+# * Analytics synchronously retrieves user (organic) reports.
+# * AdAnalytics synchronously retrieves advertising reports.
+#
+
 
 class Analytics(AnalyticsAttributes, ApiObject):
     """
     This class retrieves user (sometimes called "organic") metrics
     using the v5 interface.
+
+    The attribute functions are chainable. For example:
+       Analytics(user_me_data.get("id"), api_config, access_token)
+       .last_30_days()
+       .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
+
+    The AnalyticsAttributes parent class implements parameters that
+    are common to all analytics reports.
+
+    The ApiObject parent class implements the REST transaction used
+    to fetch the metrics.
     """
 
     def __init__(self, _user_id, api_config, access_token):
@@ -44,6 +61,18 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
     """
     This class retrieves advertising delivery metrics with
     Pinterest API version v5.
+
+    The attribute functions are chainable. For example:
+       AdAnalytics(user_me_data.get("id"), api_config, access_token)
+       .last_30_days()
+       .metrics({"SPEND_IN_DOLLAR", "TOTAL_CLICKTHROUGH"})
+       .granularity("DAY")
+
+    The AdAnalyticsAttributes parent class implements parameters that
+    are common to all analytics reports.
+
+    The ApiObject parent class implements the REST transaction used
+    to fetch the metrics.
     """
 
     def __init__(self, _user_id, api_config, access_token):

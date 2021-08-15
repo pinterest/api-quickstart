@@ -1,6 +1,12 @@
 from analytics_attributes import AdAnalyticsAttributes, AnalyticsAttributes
 from api_object import ApiObject
 
+#
+# This module uses Pinterest API v3 and v4 in two classes:
+# * Analytics synchronously retrieves user (organic) reports.
+# * AdAnalytics synchronously retrieves advertising reports.
+#
+
 
 class Analytics(AnalyticsAttributes, ApiObject):
     """

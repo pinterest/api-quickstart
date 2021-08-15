@@ -1,5 +1,22 @@
 import datetime
 
+#
+# The two classes in this module (AnalyticsAttributes and AdAnalyticsAttributes)
+# provide common parameters for API v3, v4, and v5 synchronous and asynchronous
+# reports. AnalyticsAttributes implements parameters that are common to all
+# reports; AdAnalyticsAttributes extents AnalyticsAttributes to implement
+# parameters for all advertising reports.
+#
+# Class Diagram (the arrow indicates a parent->child relationship)
+#    AnalyticsAttributes
+#    -> Analytics(v3)
+#    -> Analytics(v5)
+#    -> AdAnalyticsAttributes
+#       -> AdAnalytics(v3/v4)
+#       -> AdAnalytics(v5)
+#       -> DeliveryMetricsAsyncReport(v3 only)
+#
+
 
 class AnalyticsAttributes:
     """

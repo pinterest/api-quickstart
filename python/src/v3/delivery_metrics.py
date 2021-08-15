@@ -2,8 +2,21 @@ from analytics_attributes import AdAnalyticsAttributes
 from api_object import ApiObject
 from v3.async_report import AsyncReport
 
+#
+# This module has two classes:
+# * DeliveryMetrics retrieves the complete list of metrics
+#   available for advertising delivery analytics.
+# * DeliveryMetricsAsyncReport sets up and retrieves a
+#   metrics report asynchronously.
+#
+
 
 class DeliveryMetrics(ApiObject):
+    """
+    Use this class to get and to print all of the available
+    advertising delivery metrics.
+    """
+
     def __init__(self, api_config, access_token):
         super().__init__(api_config, access_token)
 
@@ -51,6 +64,12 @@ class DeliveryMetricsAsyncReport(AdAnalyticsAttributes, AsyncReport):
              .level('PIN_PROMOTION') \
              .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'}) \
              .report_format('csv')
+
+    The parent class AdAnalyticsAttributes implements the parameters that
+    are shared between synchronous and asynchronous reports.
+
+    The parent class AsyncReport is used to perform the process of requesting
+    and waiting for the asynchronous report to be ready.
     """
 
     def __init__(self, api_config, access_token, advertiser_id):
