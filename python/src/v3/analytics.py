@@ -48,8 +48,8 @@ class Analytics(AnalyticsAttributes, ApiObject):
         with the v3 or v4 versions of the API.
         """
         if advertiser_id:
-            # TODO: confirm this assertion...
-            print("User metrics are supported by Pinterest API v5, not v3 or v4.")
+            print("User account analytics for shared accounts are")
+            print("supported by Pinterest API v5, but not v3 or v4.")
             return None
         return self.request_data(
             f"/v3/partners/analytics/users/{self.user_id}/metrics/?"
@@ -97,7 +97,7 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
     Pinterest API version v4, which has essentially the same
     functionality as v5. A separate module (delivery_metrics)
     provides a way to retrieve similar metrics using the v3
-    asynchrounous report functionality.
+    asynchronous report functionality.
     """
 
     def __init__(self, _user_id, api_config, access_token):
