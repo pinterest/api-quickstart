@@ -75,14 +75,14 @@ def main(argv=[]):
     common_arguments(parser)
     args = parser.parse_args(argv)
 
-    # This API edge case is best handled up right after args parsing...
-    if args.api_version < 5 and args.analytics_object == "ad_account_user":
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
+
+    # This API edge case is best handled up right after API set-up...
+    if api_config.version < "v5" and args.analytics_object == "ad_account_user":
         print("User account analytics for shared accounts are")
         print("supported by Pinterest API v5, but not v3 or v4.")
         print("Try using -v5 or an analytics object besides ad_account_user.")
         exit(1)
-
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from access_token import AccessToken
