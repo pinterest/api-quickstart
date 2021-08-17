@@ -20,6 +20,9 @@ def main(argv=[]):
     The documentation for this API is here:
       https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
 
+    Synchronous metrics retrieval is demonstrated by the get_analytics script
+    in this directory.
+
     Using this script requires a login or an access token for a Pinterest
     user account that has linked Advertiser IDs. (The relationship between User
     and Advertiser is 1-to-many.) To get a report with useful metrics values,
@@ -45,6 +48,10 @@ def main(argv=[]):
     """
 
     # Set API version to 3, because this script does not work with 5 yet.
+    if args.api_version != "3":
+        print("WARNING: Asynchronous analytics only works with API version v3.")
+        print("Forcing version 3...")
+
     api_config = ApiConfig(verbosity=args.log_level, version="3")
 
     # imports that depend on the version of the API

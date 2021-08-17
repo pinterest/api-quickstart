@@ -67,7 +67,7 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "start date after end date"):
             dm_async_report.post_uri_attributes()
 
-    @mock.patch("src.v3.delivery_metrics.datetime.date", wraps=datetime.date)
+    @mock.patch("src.analytics_attributes.datetime.date", wraps=datetime.date)
     @mock.patch("src.v3.delivery_metrics.AsyncReport.__init__")
     def test_dm_async_report_attributes_1(self, mock_async_report_init, mock_date):
         mock_date.today.return_value = datetime.datetime(
@@ -102,12 +102,12 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
             "?start_date=2021-03-01&end_date=2021-03-31"
             + "&metrics=INAPP_SEARCH_COST_PER_ACTION,INAPP_SEARCH_ROAS,"
             + "TOTAL_CLICK_SEARCH,TOTAL_CLICK_SEARCH_QUANTITY"
-            + "&level=SEARCH_QUERY"
             + "&click_window_days=14"
             + "&conversion_report_time=AD_EVENT"
             + "&data_source=REALTIME"
             + "&engagement_window_days=7"
             + "&granularity=HOUR"
+            + "&level=SEARCH_QUERY"
             + "&report_format=csv"
             + "&tag_version=3"
             + "&view_window_days=30",

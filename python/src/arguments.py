@@ -9,6 +9,8 @@ def positive_integer(number):
     return ivalue
 
 
+# TODO: use parent parser.
+#       see https://docs.python.org/3/library/argparse.html for details.
 def common_arguments(parser):
     """
     Set command line arguments that are common to all of the scripts.

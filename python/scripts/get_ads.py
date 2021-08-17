@@ -54,8 +54,8 @@ def fetch_and_print(advertisers, all_ads, ads_entities, get_args, level):
 
 def main(argv=[]):
     """
-    This script shows how to use the Pinterest API synchronous analytics endpoints
-    to download information about ads.
+    This script shows how to use the Pinterest API endpoints to download
+    information about Ad Accounts, Campaigns, Ad Groups, and Ads.
 
     Using this script requires a login or an access token for a Pinterest
     user account that has linked Ad Accounts. (The relationship between User
