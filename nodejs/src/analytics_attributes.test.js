@@ -1,7 +1,7 @@
 import { AnalyticsAttributes, AdAnalyticsAttributes } from './analytics_attributes.js';
 
 describe('analytics_attributes tests', () => {
-  test('analytics attributes', async() => {
+  test('analytics attributes', () => {
     const attributes = new AnalyticsAttributes();
 
     expect(() => {
@@ -47,8 +47,9 @@ describe('analytics_attributes tests', () => {
       ); // for call to last_30_days
 
     attributes.last_30_days();
-    expect(attributes.uri_attributes('ignored', false))
-      .toEqual('start_date=2021-05-01&end_date=2021-05-31');
+    expect(attributes.uri_attributes('ignored', false)).toEqual(
+      'start_date=2021-05-01&end_date=2021-05-31'
+    );
 
     expect(() => {
       attributes.uri_attributes('ignored', true);
@@ -57,8 +58,7 @@ describe('analytics_attributes tests', () => {
     );
 
     attributes.metric('METRIC_2').metrics(new Set(['METRIC_3', 'METRIC_1']));
-    expect(attributes.uri_attributes('statistics', true))
-      .toEqual('\
+    expect(attributes.uri_attributes('statistics', true)).toEqual('\
 start_date=2021-05-01&end_date=2021-05-31\
 &statistics=METRIC_1,METRIC_2,METRIC_3');
 
@@ -73,8 +73,7 @@ start_date=2021-05-01&end_date=2021-05-31\
 
     attributes.attrs.required_one = 'value_one';
     attributes.attrs.required_two = 'value_two';
-    expect(attributes.uri_attributes('statistics', false))
-      .toEqual('\
+    expect(attributes.uri_attributes('statistics', false)).toEqual('\
 start_date=2021-05-01&end_date=2021-05-31\
 &statistics=METRIC_1,METRIC_2,METRIC_3\
 &required_one=value_one&required_two=value_two');
@@ -91,15 +90,14 @@ start_date=2021-05-01&end_date=2021-05-31\
 
     attributes.attrs.fibonacci = 5;
     attributes.attrs.animal = 'dog'; // of course, if you have to pick just one
-    expect(attributes.uri_attributes('statistics', false))
-      .toEqual('\
+    expect(attributes.uri_attributes('statistics', false)).toEqual('\
 start_date=2021-05-01&end_date=2021-05-31\
 &statistics=METRIC_1,METRIC_2,METRIC_3\
 &animal=dog&fibonacci=5\
 &required_one=value_one&required_two=value_two');
   });
 
-  test('ad analytics attributes', async() => {
+  test('ad analytics attributes', () => {
     const attributes = new AdAnalyticsAttributes()
       .date_range('2021-05-01', '2021-05-31')
       .granularity('MONTH')
@@ -108,8 +106,7 @@ start_date=2021-05-01&end_date=2021-05-31\
       .view_window_days(14)
       .conversion_report_time('CONVERSION_EVENT');
 
-    expect(attributes.uri_attributes('ignored', false))
-      .toEqual('\
+    expect(attributes.uri_attributes('ignored', false)).toEqual('\
 start_date=2021-05-01&end_date=2021-05-31\
 &click_window_days=1\
 &conversion_report_time=CONVERSION_EVENT\
