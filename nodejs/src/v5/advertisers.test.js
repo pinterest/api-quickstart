@@ -26,9 +26,9 @@ describe('v5 advertisers tests', () => {
       { id: 'test_id_1', name: 'test_name_1' },
       { id: 'test_id_2', name: 'test_name_2', status: 'ACTIVE' }
     ];
-    Advertisers.print_summary(elements[0], 'thing 1');
-    Advertisers.print_summary(elements[1], 'thing 2');
-    Advertisers.print_enumeration(elements, 'frob');
+    adv.print_summary(elements[0], 'thing 1');
+    adv.print_summary(elements[1], 'thing 2');
+    adv.print_enumeration(elements, 'frob');
 
     // verify output
     const summary1 = 'ID: test_id_1 | Name: test_name_1';
