@@ -32,6 +32,40 @@ export class Input {
     return await this.question(prompt);
   }
 
+  // Prompt for a numerical input between minimum and maximum.
+  // If the default is not specified, the default is the minimum.
+  async number(prompt, minimum, maximum, defaultVal) {
+    if (!defaultVal) {
+      defaultVal = minimum;
+    }
+    if (minimum === maximum) {
+      return minimum;
+    }
+    if (minimum > maximum) {
+      throw new Error(`minimum ${minimum} > maximum ${maximum}`);
+    }
+
+    // print optional prompt
+    if (prompt) {
+      console.log(prompt);
+    }
+
+    let strval, intval;
+    while (true) {
+      strval = await this.question(`[${defaultVal}] `);
+      if (strval === '') {
+        return defaultVal;
+      }
+      intval = parseInt(strval);
+
+      if (minimum <= intval && intval <= maximum) { return intval; }
+
+      console.log(
+        `${strval} is not a number between ${minimum} and ${maximum}`
+      );
+    }
+  }
+
   // Request the user to input one of a list of values. The input is
   // case-insensitive, but the return value is always a verbatim member
   // of the list.
