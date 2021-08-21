@@ -1,5 +1,5 @@
 import readline from 'readline';
-import { open, close } from 'fs';
+import { openSync, closeSync } from 'fs';
 
 /**
  * Input is a container for a few user input functions that use readline.
@@ -98,46 +98,34 @@ export class Input {
       console.log(prompt);
     }
 
-    while (true) {
+    while (true) { // keep going until a valid path is found
+      // get the path
       let path = await this.question(`[${defaultFile}] `);
       if (path === '') {
         path = defaultFile;
       }
 
-      // try exclusive write
-      let error_code = null;
-      open(path, 'wx', (err, fd) => {
-        if (err) { // got an error: check whether the file exists
-          error_code = err.code;
-        } else { // file is writable
-          close(fd); // close it for now
-        }
-      });
-
-      if (!error_code) {
+      try { // exclusive write to see if the file exists
+        const fd = openSync(path, 'wx');
+        closeSync(fd); // path is writable, all is well
         return path;
-      }
-
-      // check whether to overwrite
-      if (error_code === 'EEXIST') {
-        if (await this.one_of(
-          'Overwrite this file?', ['yes', 'no'], 'no') ===
-            'no') {
-          continue;
-        }
-        // check whether the file is writable
-        open(path, 'w', (err, fd) => {
-          if (!err) { // file is writable
-            close(fd); // close it for now
-            error_code = null; // clear error
+      } catch (err) {
+        if (err.code === 'EEXIST') { // file exists, prompt user
+          if (await this.one_of(
+            'Overwrite this file?', ['yes', 'no'], 'no') ===
+              'no') {
+            continue; // user requested not to overwrite
+          } else {
+            try { // verify that file is otherwise writable
+              const fd = openSync(path, 'w');
+              closeSync(fd); // path is writable, all is well
+              return path;
+            } catch {
+              // some other kind of error: try again
+            }
           }
-        });
+        }
       }
-
-      if (!error_code) {
-        return path;
-      }
-
       console.log('Error: can not write to this file.');
     }
   }

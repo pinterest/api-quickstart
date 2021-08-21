@@ -120,7 +120,7 @@ describe('Input tests', () => {
     mock_rl_interface.question
       .mockImplementationOnce((_query, cb) => cb('testfile1'));
 
-    fs.open.mockImplementationOnce((path, mode, cb) => cb(null, 'testfd1'));
+    fs.openSync.mockReturnValueOnce('testfd1')
 
     /* eslint-enable node/no-callback-literal */
 
@@ -136,11 +136,14 @@ describe('Input tests', () => {
       .toEqual(mock_rl_interface.question.mock.calls[0][0]);
 
     // check open calls
-    expect(fs.open.mock.calls[0][0]).toEqual('testfile1');
-    expect(fs.open.mock.calls[0][1]).toEqual('wx');
+    expect(fs.openSync.mock.calls).toEqual([
+      ['testfile1', 'wx']
+    ]);
 
     // check to make sure that the file is closed properly
-    expect(fs.close.mock.calls).toEqual([['testfd1']]);
+    expect(fs.closeSync.mock.calls).toEqual([
+      ['testfd1']
+    ]);
 
     // check the prompts and error messages sent via the console
     expect(console.log.mock.calls).toEqual([
@@ -175,17 +178,16 @@ describe('Input tests', () => {
       .mockImplementationOnce((_query, cb) => cb('testfile3'))
       .mockImplementationOnce((_query, cb) => cb('yes'));
 
-    fs.open
+    fs.openSync
       .mockImplementationOnce(
-        (path, mode, cb) => cb({ code: 'EEXIST' }, null))
+        (path, mode) => { const err = new Error(); err.code = 'EEXIST'; throw err; })
       .mockImplementationOnce(
-        (path, mode, cb) => cb({ code: 'EEXIST' }, null))
+        (path, mode) => { const err = new Error(); err.code = 'EEXIST'; throw err; })
       .mockImplementationOnce(
-        (path, mode, cb) => cb({ code: 'OTHER_ERROR' }, null))
+        (path, mode) => { const err = new Error(); err.code = 'OTHER'; throw err; })
       .mockImplementationOnce(
-        (path, mode, cb) => cb({ code: 'EEXIST' }, null))
-      .mockImplementationOnce(
-        (path, mode, cb) => cb(null, 'testfd2'));
+        (path, mode) => { const err = new Error(); err.code = 'EEXIST'; throw err; })
+      .mockReturnValueOnce('testfd2');
 
     /* eslint-enable node/no-callback-literal */
 
@@ -209,19 +211,16 @@ describe('Input tests', () => {
       .toEqual(mock_rl_interface.question.mock.calls[5][0]);
 
     // check open calls
-    expect(fs.open.mock.calls[0][0]).toEqual('testfile2');
-    expect(fs.open.mock.calls[0][1]).toEqual('wx');
-    expect(fs.open.mock.calls[1][0]).toEqual('default2');
-    expect(fs.open.mock.calls[1][1]).toEqual('wx');
-    expect(fs.open.mock.calls[2][0]).toEqual('default2');
-    expect(fs.open.mock.calls[2][1]).toEqual('w');
-    expect(fs.open.mock.calls[3][0]).toEqual('testfile3');
-    expect(fs.open.mock.calls[3][1]).toEqual('wx');
-    expect(fs.open.mock.calls[4][0]).toEqual('testfile3');
-    expect(fs.open.mock.calls[4][1]).toEqual('w');
+    expect(fs.openSync.mock.calls).toEqual([
+      ['testfile2', 'wx'],
+      ['default2', 'wx'],
+      ['default2', 'w'],
+      ['testfile3', 'wx'],
+      ['testfile3', 'w']
+    ]);
 
     // check to make sure that the file is closed properly
-    expect(fs.close.mock.calls).toEqual([['testfd2']]);
+    expect(fs.closeSync.mock.calls).toEqual([['testfd2']]);
 
     // check the prompts and error messages sent via the console
     expect(console.log.mock.calls).toEqual([
@@ -252,11 +251,10 @@ describe('Input tests', () => {
       .mockImplementationOnce((_query, cb) => cb('testfile4'))
       .mockImplementationOnce((_query, cb) => cb('testfile5'));
 
-    fs.open
+    fs.openSync
       .mockImplementationOnce(
-        (path, mode, cb) => cb({ code: 'OTHER_ERROR' }, null))
-      .mockImplementationOnce(
-        (path, mode, cb) => cb(null, 'testfd3'));
+        (path, mode) => { const err = new Error(); err.code = 'OTHER'; throw err; })
+      .mockReturnValueOnce('testfd3');
 
     /* eslint-enable node/no-callback-literal */
 
@@ -272,13 +270,13 @@ describe('Input tests', () => {
       .toEqual(mock_rl_interface.question.mock.calls[1][0]);
 
     // check open calls
-    expect(fs.open.mock.calls[0][0]).toEqual('testfile4');
-    expect(fs.open.mock.calls[0][1]).toEqual('wx');
-    expect(fs.open.mock.calls[1][0]).toEqual('testfile5');
-    expect(fs.open.mock.calls[1][1]).toEqual('wx');
+    expect(fs.openSync.mock.calls).toEqual([
+      ['testfile4', 'wx'],
+      ['testfile5', 'wx']
+    ]);
 
     // check to make sure that the file is closed properly
-    expect(fs.close.mock.calls).toEqual([['testfd3']]);
+    expect(fs.closeSync.mock.calls).toEqual([['testfd3']]);
 
     // check the prompts and error messages sent via the console
     expect(console.log.mock.calls).toEqual([

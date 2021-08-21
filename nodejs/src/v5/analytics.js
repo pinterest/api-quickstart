@@ -67,7 +67,7 @@ export class Analytics extends AnalyticsAttributes {
   // Get analytics for the user account. If ad_account_id is set, get user
   // analytics associated with the specified Ad Account.
   // https://developers.pinterest.com/docs/v5/#operation/account/analytics
-  async get({ ad_account_id = null }) {
+  async get(ad_account_id) {
     if (ad_account_id) {
       this.attrs.ad_account_id = ad_account_id;
     }

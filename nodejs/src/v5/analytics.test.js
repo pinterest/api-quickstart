@@ -24,7 +24,7 @@ describe('v5 analytics tests', () => {
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
     mock_request_data.mockResolvedValue('test_response');
 
-    expect(await analytics.get({ ad_account_id: 'test_ad_account' }))
+    expect(await analytics.get('test_ad_account'))
       .toEqual('test_response');
 
     // note that metrics should be sorted
@@ -39,7 +39,7 @@ start_date=2021-03-01&end_date=2021-03-31\
     analytics.app_types('web').split_field('SOURCE');
 
     // verifies additional parameters and no ad_account_id
-    expect(await analytics.get({})).toEqual('test_response');
+    expect(await analytics.get(null)).toEqual('test_response');
     expect(mock_request_data.mock.calls[1][0])
       .toEqual('\
 /v5/user_account/analytics?\
