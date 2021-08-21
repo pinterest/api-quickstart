@@ -26,7 +26,8 @@ import { Input } from '../src/utils.js';
 // Recursive function that prints out one level of advertising entity
 // and then calls itself to print entities at lower levels.
 async function find_and_get_analytics(
-  advertisers, analytics, analytics_object, input, ads_entities, get_args, level) {
+  advertisers, analytics, analytics_object, input, ads_entities, get_args) {
+  var level = get_args.length;
   const entity = ads_entities[level]; // information about the entity
   const kind = entity.kind; // human readable entity type
 
@@ -64,7 +65,7 @@ async function find_and_get_analytics(
 
   // recursively traverse entities in the hierarchy below this entity
   return (await find_and_get_analytics(
-    advertisers, analytics, analytics_object, input, ads_entities, get_args, level));
+    advertisers, analytics, analytics_object, input, ads_entities, get_args));
   }
 
 // This main routine uses the above function to walk the ads entity
@@ -144,7 +145,7 @@ async function main(argv) {
         analyticsfn: 'get',
       }];
 
-      results = await find_and_get_analytics(advertisers, analytics, 'ad_account', input, ads_entities, [], 0);
+      results = await find_and_get_analytics(advertisers, analytics, 'ad_account', input, ads_entities, []);
     } else {
       // Get advertising analytics for the appropriate kind of object.
       const analytics = new AdAnalytics(
@@ -185,7 +186,7 @@ async function main(argv) {
         }
       ];
       results = await find_and_get_analytics(
-        advertisers, analytics, args.analytics_object, input, ads_entities, [], 0
+        advertisers, analytics, args.analytics_object, input, ads_entities, []
       );
     }
 
