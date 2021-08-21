@@ -6,6 +6,10 @@ jest.mock('fs');
 jest.mock('readline');
 
 describe('Input tests', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('one_of and get methods', async() => {
     // check output
     console.log = jest.fn();
@@ -102,10 +106,8 @@ describe('Input tests', () => {
     input.close();
   });
 
-  // This test executes three mocked calls to input.number to test all
-  // of the different conditionals. Search down for "test input.number"
-  // for documentation on each of the three scenarios.
-  test('path_for_write method', async() => {
+  // Test input.path_for_write the a happy path (simple working scenario)
+  test('path_for_write first time successful', async() => {
     // check output
     console.log = jest.fn();
 
@@ -116,27 +118,64 @@ describe('Input tests', () => {
     mock_rl_interface.close = jest.fn();
     /* eslint-disable node/no-callback-literal -- eslint incorrectly detects cb as error callback */
     mock_rl_interface.question
-      // first call to path_for_write
-      .mockImplementationOnce((_query, cb) => cb('testfile1'))
+      .mockImplementationOnce((_query, cb) => cb('testfile1'));
 
-      // second call to path_for_write
+    fs.open.mockImplementationOnce((path, mode, cb) => cb(null, 'testfd1'));
+
+    /* eslint-enable node/no-callback-literal */
+
+    const input = new Input();
+
+    // happy path: success on the first time
+    expect('testfile1').toEqual(
+      await input.path_for_write('should return testfile1', 'default1'));
+
+    // check the prompts sent via the question function
+    // first call to path_for_write
+    expect('[default1] ')
+      .toEqual(mock_rl_interface.question.mock.calls[0][0]);
+
+    // check open calls
+    expect(fs.open.mock.calls[0][0]).toEqual('testfile1');
+    expect(fs.open.mock.calls[0][1]).toEqual('wx');
+
+    // check to make sure that the file is closed properly
+    expect(fs.close.mock.calls).toEqual([['testfd1']]);
+
+    // check the prompts and error messages sent via the console
+    expect(console.log.mock.calls).toEqual([
+      // first call to path_for_write
+      ['should return testfile1']
+    ]);
+
+    input.close();
+  });
+
+  // Test input.path_for_write with a more complicated scenario:
+  // * first file (testfile2) exists and mock user says not to overwrite
+  // * second file (default2) exists, mock user says to overwrite,
+  //   but then there is some sort of error opening the file for write
+  // * third file (testfile3) exists, mock user says to overwrite,
+  //   and the open is successful
+  test('path_for_write second time with errors', async() => {
+    // check output
+    console.log = jest.fn();
+
+    const mock_rl_interface = jest.fn();
+    readline.createInterface.mockReturnValue(mock_rl_interface);
+
+    mock_rl_interface.question = jest.fn();
+    mock_rl_interface.close = jest.fn();
+    /* eslint-disable node/no-callback-literal -- eslint incorrectly detects cb as error callback */
+    mock_rl_interface.question
       .mockImplementationOnce((_query, cb) => cb('testfile2'))
       .mockImplementationOnce((_query, cb) => cb('no'))
       .mockImplementationOnce((_query, cb) => cb(''))
       .mockImplementationOnce((_query, cb) => cb('yes'))
       .mockImplementationOnce((_query, cb) => cb('testfile3'))
-      .mockImplementationOnce((_query, cb) => cb('yes'))
-
-      // third call to path_for_write
-      .mockImplementationOnce((_query, cb) => cb('testfile4'))
-      .mockImplementationOnce((_query, cb) => cb('testfile5'));
+      .mockImplementationOnce((_query, cb) => cb('yes'));
 
     fs.open
-      // first call to path_for_write
-      .mockImplementationOnce(
-        (path, mode, cb) => cb(null, 'testfd1'))
-
-      // second call to path_for_write
       .mockImplementationOnce(
         (path, mode, cb) => cb({ code: 'EEXIST' }, null))
       .mockImplementationOnce(
@@ -146,9 +185,74 @@ describe('Input tests', () => {
       .mockImplementationOnce(
         (path, mode, cb) => cb({ code: 'EEXIST' }, null))
       .mockImplementationOnce(
-        (path, mode, cb) => cb(null, 'testfd2'))
+        (path, mode, cb) => cb(null, 'testfd2'));
 
-      // third call to path_for_write
+    /* eslint-enable node/no-callback-literal */
+
+    const input = new Input();
+
+    expect('testfile3').toEqual(
+      await input.path_for_write('should return testfile3', 'default2'));
+
+    // check the prompts sent via the question function
+    expect('[default2] ')
+      .toEqual(mock_rl_interface.question.mock.calls[0][0]);
+    expect('[no] ')
+      .toEqual(mock_rl_interface.question.mock.calls[1][0]);
+    expect('[default2] ')
+      .toEqual(mock_rl_interface.question.mock.calls[2][0]);
+    expect('[no] ')
+      .toEqual(mock_rl_interface.question.mock.calls[3][0]);
+    expect('[default2] ')
+      .toEqual(mock_rl_interface.question.mock.calls[4][0]);
+    expect('[no] ')
+      .toEqual(mock_rl_interface.question.mock.calls[5][0]);
+
+    // check open calls
+    expect(fs.open.mock.calls[0][0]).toEqual('testfile2');
+    expect(fs.open.mock.calls[0][1]).toEqual('wx');
+    expect(fs.open.mock.calls[1][0]).toEqual('default2');
+    expect(fs.open.mock.calls[1][1]).toEqual('wx');
+    expect(fs.open.mock.calls[2][0]).toEqual('default2');
+    expect(fs.open.mock.calls[2][1]).toEqual('w');
+    expect(fs.open.mock.calls[3][0]).toEqual('testfile3');
+    expect(fs.open.mock.calls[3][1]).toEqual('wx');
+    expect(fs.open.mock.calls[4][0]).toEqual('testfile3');
+    expect(fs.open.mock.calls[4][1]).toEqual('w');
+
+    // check to make sure that the file is closed properly
+    expect(fs.close.mock.calls).toEqual([['testfd2']]);
+
+    // check the prompts and error messages sent via the console
+    expect(console.log.mock.calls).toEqual([
+      ['should return testfile3'],
+      ['Overwrite this file?'],
+      ['Overwrite this file?'],
+      ['Error: can not write to this file.'],
+      ['Overwrite this file?']
+    ]);
+
+    input.close();
+  });
+
+  // Test input.path_for_write with a scenario that completes code coverage:
+  // * first file (testfile4) open is not successful
+  // * second file (testfile5) open is successful
+  test('path_for_write third time with error', async() => {
+    // check output
+    console.log = jest.fn();
+
+    const mock_rl_interface = jest.fn();
+    readline.createInterface.mockReturnValue(mock_rl_interface);
+
+    mock_rl_interface.question = jest.fn();
+    mock_rl_interface.close = jest.fn();
+    /* eslint-disable node/no-callback-literal -- eslint incorrectly detects cb as error callback */
+    mock_rl_interface.question
+      .mockImplementationOnce((_query, cb) => cb('testfile4'))
+      .mockImplementationOnce((_query, cb) => cb('testfile5'));
+
+    fs.open
       .mockImplementationOnce(
         (path, mode, cb) => cb({ code: 'OTHER_ERROR' }, null))
       .mockImplementationOnce(
@@ -158,94 +262,26 @@ describe('Input tests', () => {
 
     const input = new Input();
 
-    // test input.number
-    // first call: success on the first time
-    expect('testfile1').toEqual(
-      await input.path_for_write('should return testfile1', 'default1'));
-
-    // second call:
-    // * first file (testfile2) exists and mock user says not to overwrite
-    // * second file (default2) exists, mock user says to overwrite,
-    //   but then there is some sort of error opening the file for write
-    // * third file (testfile3) exists, mock user says to overwrite,
-    //   and the open is successful
-    expect('testfile3').toEqual(
-      await input.path_for_write('should return testfile3', 'default2'));
-
-    // third call:
-    // * first file (testfile4) open is not successful
-    // * second file (testfile5) open is successful
     expect('testfile5').toEqual(
       await input.path_for_write('should return testfile5', 'default3'));
 
     // check the prompts sent via the question function
-    // first call to path_for_write
-    expect('[default1] ')
+    expect('[default3] ')
       .toEqual(mock_rl_interface.question.mock.calls[0][0]);
-
-    // second call to path_for_write
-    expect('[default2] ')
+    expect('[default3] ')
       .toEqual(mock_rl_interface.question.mock.calls[1][0]);
-    expect('[no] ')
-      .toEqual(mock_rl_interface.question.mock.calls[2][0]);
-    expect('[default2] ')
-      .toEqual(mock_rl_interface.question.mock.calls[3][0]);
-    expect('[no] ')
-      .toEqual(mock_rl_interface.question.mock.calls[4][0]);
-    expect('[default2] ')
-      .toEqual(mock_rl_interface.question.mock.calls[5][0]);
-    expect('[no] ')
-      .toEqual(mock_rl_interface.question.mock.calls[6][0]);
-
-    // third call to path_for_write
-    expect('[default3] ')
-      .toEqual(mock_rl_interface.question.mock.calls[7][0]);
-    expect('[default3] ')
-      .toEqual(mock_rl_interface.question.mock.calls[8][0]);
 
     // check open calls
-    // first call to path_for_write
-    expect(fs.open.mock.calls[0][0]).toEqual('testfile1');
+    expect(fs.open.mock.calls[0][0]).toEqual('testfile4');
     expect(fs.open.mock.calls[0][1]).toEqual('wx');
-
-    // second call to path_for_write
-    expect(fs.open.mock.calls[1][0]).toEqual('testfile2');
+    expect(fs.open.mock.calls[1][0]).toEqual('testfile5');
     expect(fs.open.mock.calls[1][1]).toEqual('wx');
-    expect(fs.open.mock.calls[2][0]).toEqual('default2');
-    expect(fs.open.mock.calls[2][1]).toEqual('wx');
-    expect(fs.open.mock.calls[3][0]).toEqual('default2');
-    expect(fs.open.mock.calls[3][1]).toEqual('w');
-    expect(fs.open.mock.calls[4][0]).toEqual('testfile3');
-    expect(fs.open.mock.calls[4][1]).toEqual('wx');
-    expect(fs.open.mock.calls[5][0]).toEqual('testfile3');
-    expect(fs.open.mock.calls[5][1]).toEqual('w');
-
-    // third call to path_for_write
-    expect(fs.open.mock.calls[6][0]).toEqual('testfile4');
-    expect(fs.open.mock.calls[6][1]).toEqual('wx');
-    expect(fs.open.mock.calls[7][0]).toEqual('testfile5');
-    expect(fs.open.mock.calls[7][1]).toEqual('wx');
 
     // check to make sure that the file is closed properly
-    expect(fs.close.mock.calls).toEqual([
-      ['testfd1'],
-      ['testfd2'],
-      ['testfd3']
-    ]);
+    expect(fs.close.mock.calls).toEqual([['testfd3']]);
 
     // check the prompts and error messages sent via the console
     expect(console.log.mock.calls).toEqual([
-      // first call to path_for_write
-      ['should return testfile1'],
-
-      // second call to path_for_write
-      ['should return testfile3'],
-      ['Overwrite this file?'],
-      ['Overwrite this file?'],
-      ['Error: can not write to this file.'],
-      ['Overwrite this file?'],
-
-      // third call to path_for_write
       ['should return testfile5'],
       ['Error: can not write to this file.']
     ]);
