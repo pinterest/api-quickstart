@@ -1,4 +1,5 @@
 import readline from 'readline';
+import { open, close } from 'fs';
 
 /**
  * Input is a container for a few user input functions that use readline.
@@ -34,9 +35,9 @@ export class Input {
 
   // Prompt for a numerical input between minimum and maximum.
   // If the default is not specified, the default is the minimum.
-  async number(prompt, minimum, maximum, defaultVal) {
-    if (!defaultVal) {
-      defaultVal = minimum;
+  async number(prompt, minimum, maximum, defaultValue) {
+    if (!defaultValue) {
+      defaultValue = minimum;
     }
     if (minimum === maximum) {
       return minimum;
@@ -52,9 +53,9 @@ export class Input {
 
     let strval, intval;
     while (true) {
-      strval = await this.question(`[${defaultVal}] `);
+      strval = await this.question(`[${defaultValue}] `);
       if (strval === '') {
-        return defaultVal;
+        return defaultValue;
       }
       intval = parseInt(strval);
 
@@ -88,6 +89,56 @@ export class Input {
         return one_of_list[index];
       }
       console.log('input must be one of', one_of_list);
+    }
+  }
+
+  // Input a pathname for a writable file.
+  async path_for_write(prompt, defaultFile) {
+    if (prompt) {
+      console.log(prompt);
+    }
+
+    while (true) {
+      let path = await this.question(`[${defaultFile}] `);
+      if (path === '') {
+        path = defaultFile;
+      }
+
+      // try exclusive write
+      let error_code = null;
+      open(path, 'wx', (err, fd) => {
+        if (err) { // got an error: check whether the file exists
+          error_code = err.code;
+        } else { // file is writable
+          close(fd); // close it for now
+        }
+      });
+
+      if (!error_code) {
+        return path;
+      }
+
+      // check whether to overwrite
+      if (error_code === 'EEXIST') {
+        if (await this.one_of(
+          'Overwrite this file?', ['yes', 'no'], 'no') ===
+            'no') {
+          continue;
+        }
+        // check whether the file is writable
+        open(path, 'w', (err, fd) => {
+          if (!err) { // file is writable
+            close(fd); // close it for now
+            error_code = null; // clear error
+          }
+        });
+      }
+
+      if (!error_code) {
+        return path;
+      }
+
+      console.log('Error: can not write to this file.');
     }
   }
 }
