@@ -23,50 +23,58 @@ import { Input } from '../src/utils.js';
  * READ_ADVERTISERS scopes.
  */
 
-// Recursive function that prints out one level of advertising entity
-// and then calls itself to print entities at lower levels.
-async function find_and_get_analytics(
-  advertisers, analytics, analytics_object, input, ads_entities, get_args) {
-  var level = get_args.length;
-  const entity = ads_entities[level]; // information about the entity
-  const kind = entity.kind; // human readable entity type
-
-  // Get all of the entities using the paged iterator.
-  // Note: Array.from does not work with asynchronous iterators.
-  const iterator = await advertisers[entity.getfn](...get_args);
-  const entity_list = [];
-  for await (const entity of iterator) {
-    entity_list.push(entity);
+class FindAndGetAnalytics {
+  constructor(advertisers, analytics, analytics_object, input, ads_entities) {
+    this.advertisers = advertisers; // Advertisers instance
+    this.analytics = analytics; // Analytics or AdAnalytics instance
+    this.analytics_object = analytics_object; // requested type of analytics
+    this.input = input; // Input instance
+    this.ads_entities = ads_entities; // Array of AdsEntity
   }
 
-  const n_entities = entity_list.length; // number of entities found
+  // Recursive function that prints out one level of advertising entity
+  // and then calls itself to print entities at lower levels.
+  async run(get_args) {
+    var level = get_args.length;
+    const entity = this.ads_entities[level]; // information about the entity
+    const kind = entity.kind; // human readable entity type
 
-  if (n_entities === 0) { // no entities found
-    console.log(`${indent}This ${entity.parent} has no ${kind}s.`);
-    return null;
+    // Get all of the entities using the paged iterator.
+    // Note: Array.from does not work with asynchronous iterators.
+    const iterator = await this.advertisers[entity.getfn](...get_args);
+    const entity_list = [];
+    for await (const entity of iterator) {
+      entity_list.push(entity);
+    }
+
+    const n_entities = entity_list.length; // number of entities found
+
+    if (n_entities === 0) { // no entities found
+      console.log(`This ${entity.parent} has no ${kind}s.`);
+      return null;
+    }
+
+    this.advertisers.print_enumeration(entity_list, kind);
+    // Prompt to get the entity index.
+    const prompt = `Please select the ${kind} number between 1 and ${n_entities}:`;
+    const index = await this.input.number(prompt, 1, n_entities);
+    const entity_id = entity_list[index - 1]['id'];
+
+    get_args.push(entity_id);
+
+    if (entity['object'] === this.analytics_object) {
+      return (await this.analytics[entity['analyticsfn']](...get_args));
+    }
+
+    level += 1;
+    if (level === this.ads_entities.length) {
+      return null;
+    }
+
+    // recursively traverse entities in the hierarchy below this entity
+    return (await this.run(get_args));
   }
-
-  advertisers.print_enumeration(entity_list, kind);
-  // Prompt to get the entity index.
-  const prompt = `Please select the ${kind} number between 1 and ${n_entities}:`;
-  const index = await input.number(prompt, 1, n_entities);
-  const entity_id = entity_list[index - 1]['id'];
-
-  get_args.push(entity_id);
-
-  if (entity['object'] === analytics_object) {
-    return (await analytics[entity['analyticsfn']](...get_args));
-  }
-
-  level += 1;
-  if (level === ads_entities.length) {
-    return null;
-  }
-
-  // recursively traverse entities in the hierarchy below this entity
-  return (await find_and_get_analytics(
-    advertisers, analytics, analytics_object, input, ads_entities, get_args));
-  }
+}
 
 // This main routine uses the above function to walk the ads entity
 // structures, ask the user for directions, and get analytics.
@@ -144,8 +152,9 @@ async function main(argv) {
         getfn: 'get',
         analyticsfn: 'get',
       }];
-
-      results = await find_and_get_analytics(advertisers, analytics, 'ad_account', input, ads_entities, []);
+      const finder = new FindAndGetAnalytics(
+        advertisers, analytics, 'ad_account', input, ads_entities);
+      results = await finder.run([]);
     } else {
       // Get advertising analytics for the appropriate kind of object.
       const analytics = new AdAnalytics(
@@ -185,9 +194,9 @@ async function main(argv) {
           analyticsfn: 'get_ad'
         }
       ];
-      results = await find_and_get_analytics(
-        advertisers, analytics, args.analytics_object, input, ads_entities, []
-      );
+      const finder = new FindAndGetAnalytics(
+        advertisers, analytics, args.analytics_object, input, ads_entities);
+      results = await finder.run([]);
     }
 
     if (!results || (results.length == 0)) {
