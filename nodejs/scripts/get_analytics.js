@@ -23,6 +23,19 @@ import { Input } from '../src/utils.js';
  * READ_ADVERTISERS scopes.
  */
 
+// This class encapsulates information about a level of the Ads structure.
+class AdsEntity {
+  constructor(object, kind, parent, getfn, analyticsfn) {
+    this.object = object; // name as specified in command-line arguments
+    this.kind = kind; // name for printing on the console
+    this.parent = parent; // name of the parent entity for printing
+    this.getfn = getfn; // advertisers function used to get the entity
+    this.analyticsfn = analyticsfn; // analytics function used for the entity
+  }
+}
+
+// This class is used to navigate to the appropriate level of the Ads structure
+// and then get the requested analytics.
 class FindAndGetAnalytics {
   constructor(advertisers, analytics, analytics_object, input, ads_entities) {
     this.advertisers = advertisers; // Advertisers instance
@@ -145,15 +158,10 @@ async function main(argv) {
       const advertisers = new Advertisers(user_me_data['id'], api_config, access_token)
       // When using find_and_get_analytics, analytics.get() will be called with
       // an ad_account_id argument.
-      const ads_entities = [{
-        object: 'ad_account',
-        kind: 'Ad Account',
-        parent: 'User',
-        getfn: 'get',
-        analyticsfn: 'get',
-      }];
       const finder = new FindAndGetAnalytics(
-        advertisers, analytics, 'ad_account', input, ads_entities);
+        advertisers, analytics, 'ad_account', input, [
+          new AdsEntity('ad_account', 'Ad Account', 'User', 'get', 'get')
+        ]);
       results = await finder.run([]);
     } else {
       // Get advertising analytics for the appropriate kind of object.
@@ -164,38 +172,17 @@ async function main(argv) {
             .granularity('DAY');
         
       const advertisers = new Advertisers(user_me_data['id'], api_config, access_token);
-      const ads_entities = [
-        {
-          object: 'ad_account',
-          kind: 'Ad Account',
-          parent: 'User',
-          getfn: 'get',
-          analyticsfn: 'get_ad_account'
-        },
-        {
-          object: 'campaign',
-          kind: 'Campaign',
-          parent: 'Ad Account',
-          getfn: 'get_campaigns',
-          analyticsfn: 'get_campaign'
-        },
-        {
-          object: 'ad_group',
-          kind: 'Ad Group',
-          parent: 'Campaign',
-          getfn: 'get_ad_groups',
-          analyticsfn: 'get_ad_group'
-        },
-        {
-          object: 'ad',
-          kind: 'Ad',
-          parent: 'Ad Group',
-          getfn: 'get_ads',
-          analyticsfn: 'get_ad'
-        }
-      ];
       const finder = new FindAndGetAnalytics(
-        advertisers, analytics, args.analytics_object, input, ads_entities);
+        advertisers, analytics, args.analytics_object, input, [
+          new AdsEntity(
+            'ad_account', 'Ad Account', 'User', 'get', 'get_ad_account'),
+          new AdsEntity(
+            'campaign', 'Campaign', 'Ad Account', 'get_campaigns', 'get_campaign'),
+          new AdsEntity(
+            'ad_group', 'Ad Group', 'Campaign', 'get_ad_groups', 'get_ad_group'),
+          new AdsEntity(
+            'ad', 'Ad', 'Ad Group', 'get_ads', 'get_ad')
+        ]);
       results = await finder.run([]);
     }
 
