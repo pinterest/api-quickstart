@@ -48,7 +48,7 @@ class FindAndGetAnalytics {
   // Recursive function that prints out one level of advertising entity
   // and then calls itself to print entities at lower levels.
   async run(get_args) {
-    var level = get_args.length;
+    let level = get_args.length;
     const entity = this.ads_entities[level]; // information about the entity
     const kind = entity.kind; // human readable entity type
 
@@ -71,12 +71,12 @@ class FindAndGetAnalytics {
     // Prompt to get the entity index.
     const prompt = `Please select the ${kind} number between 1 and ${n_entities}:`;
     const index = await this.input.number(prompt, 1, n_entities);
-    const entity_id = entity_list[index - 1]['id'];
+    const entity_id = entity_list[index - 1].id;
 
     get_args.push(entity_id);
 
-    if (entity['object'] === this.analytics_object) {
-      return (await this.analytics[entity['analyticsfn']](...get_args));
+    if (entity.object === this.analytics_object) {
+      return await this.analytics[entity.analyticsfn](...get_args);
     }
 
     level += 1;
@@ -85,7 +85,7 @@ class FindAndGetAnalytics {
     }
 
     // recursively traverse entities in the hierarchy below this entity
-    return (await this.run(get_args));
+    return await this.run(get_args);
   }
 }
 
@@ -116,7 +116,7 @@ async function main(argv) {
   const { User } = await import(`../src/${api_config.version}/user.js`);
 
   // This API edge case is best handled up right after API set-up...
-  if ((api_config.version < 'v5') && (args.analytics_object === 'ad_account_user')) {
+  if (api_config.version < 'v5' && args.analytics_object === 'ad_account_user') {
     console.log('User account analytics for shared accounts are');
     console.log('supported by Pinterest API v5, but not v3 or v4.');
     console.log('Try using -v5 or an analytics object besides ad_account_user.');
@@ -137,25 +137,25 @@ async function main(argv) {
   const user_me_data = await user_me.get();
   user_me.print_summary(user_me_data);
 
-  var results;
+  let results;
   const input = new Input();
   try {
     if (args.analytics_object === 'user') {
       // Get analytics for the user account associated with the access token.
       const analytics = new Analytics(
-        user_me_data['id'], api_config, access_token)
-            .last_30_days()
-            .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);
-      
+        user_me_data.id, api_config, access_token)
+        .last_30_days()
+        .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);
+
       results = await analytics.get(null); // not calling with an ad_account_id argument
     } else if (args.analytics_object === 'ad_account_user') {
       // Get analytics for the user account associated with an ad account.
       const analytics = new Analytics(
-        user_me_data['id'], api_config, access_token)
-            .last_30_days()
-            .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);
-      
-      const advertisers = new Advertisers(user_me_data['id'], api_config, access_token)
+        user_me_data.id, api_config, access_token)
+        .last_30_days()
+        .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);
+
+      const advertisers = new Advertisers(user_me_data.id, api_config, access_token);
       // When using find_and_get_analytics, analytics.get() will be called with
       // an ad_account_id argument.
       const finder = new FindAndGetAnalytics(
@@ -166,12 +166,12 @@ async function main(argv) {
     } else {
       // Get advertising analytics for the appropriate kind of object.
       const analytics = new AdAnalytics(
-        user_me_data['id'], api_config, access_token)
-            .last_30_days()
-            .metrics(['SPEND_IN_DOLLAR'], ['TOTAL_CLICKTHROUGH'])
-            .granularity('DAY');
-        
-      const advertisers = new Advertisers(user_me_data['id'], api_config, access_token);
+        user_me_data.id, api_config, access_token)
+        .last_30_days()
+        .metrics(['SPEND_IN_DOLLAR'], ['TOTAL_CLICKTHROUGH'])
+        .granularity('DAY');
+
+      const advertisers = new Advertisers(user_me_data.id, api_config, access_token);
       const finder = new FindAndGetAnalytics(
         advertisers, analytics, args.analytics_object, input, [
           new AdsEntity(
@@ -186,7 +186,7 @@ async function main(argv) {
       results = await finder.run([]);
     }
 
-    if (!results || (results.length == 0)) {
+    if (!results || results.length === 0) {
       console.log('There are no analytics results.');
       return;
     }

@@ -12,9 +12,9 @@ import { ApiObject } from '../api_object.js';
  * using the v5 interface.
  *
  * The attribute functions are chainable. For example:
- *    Analytics(user_me_data.get("id"), api_config, access_token)
+ *    Analytics(null, api_config, access_token)
  *    .last_30_days()
- *    .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
+ *    .metrics(['IMPRESSION', 'PIN_CLICK_RATE'])
  *
  * The AnalyticsAttributes parent class implements parameters that
  * are common to all analytics reports.
@@ -23,6 +23,7 @@ import { ApiObject } from '../api_object.js';
  * to fetch the metrics.
  */
 export class Analytics extends AnalyticsAttributes {
+  // https://developers.pinterest.com/docs/v5/#operation/user_account/analytics
   constructor(_user_id, api_config, access_token) {
     super();
     this.api_object = new ApiObject(api_config, access_token);
@@ -66,7 +67,7 @@ export class Analytics extends AnalyticsAttributes {
 
   // Get analytics for the user account. If ad_account_id is set, get user
   // analytics associated with the specified Ad Account.
-  // https://developers.pinterest.com/docs/v5/#operation/account/analytics
+  // https://developers.pinterest.com/docs/v5/#operation/user_account/analytics
   async get(ad_account_id) {
     if (ad_account_id) {
       this.attrs.ad_account_id = ad_account_id;
@@ -99,6 +100,7 @@ ${this.uri_attributes('metric_types', false)}`);
  * to fetch the metrics.
  */
 export class AdAnalytics extends AdAnalyticsAttributes {
+  // TODO: remove _user_id across python/nodejs, all versions
   constructor(_user_id, api_config, access_token) {
     super();
     this.api_object = new ApiObject(api_config, access_token);

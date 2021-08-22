@@ -120,7 +120,7 @@ describe('Input tests', () => {
     mock_rl_interface.question
       .mockImplementationOnce((_query, cb) => cb('testfile1'));
 
-    fs.openSync.mockReturnValueOnce('testfd1')
+    fs.openSync.mockReturnValueOnce('testfd1');
 
     /* eslint-enable node/no-callback-literal */
 
