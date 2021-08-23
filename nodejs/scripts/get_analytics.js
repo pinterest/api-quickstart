@@ -168,7 +168,7 @@ async function main(argv) {
       const analytics = new AdAnalytics(
         user_me_data.id, api_config, access_token)
         .last_30_days()
-        .metrics(['SPEND_IN_DOLLAR'], ['TOTAL_CLICKTHROUGH'])
+        .metrics(['SPEND_IN_DOLLAR', 'TOTAL_CLICKTHROUGH'])
         .granularity('DAY');
 
       const advertisers = new Advertisers(user_me_data.id, api_config, access_token);
