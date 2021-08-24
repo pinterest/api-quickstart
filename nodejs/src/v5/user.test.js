@@ -5,12 +5,12 @@ import { User } from './user.js';
 jest.mock('../api_object');
 jest.mock('./board');
 
-describe('v3 user tests', () => {
+describe('v5 user tests', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test('v3 user get methods', async() => {
+  test('v5 user get methods', async() => {
     const test_user = new User('test_user', 'test_api_config', 'test_access_token');
     expect(ApiObject.mock.instances.length).toBe(1);
     expect(ApiObject.mock.calls[0]).toEqual(['test_api_config', 'test_access_token']);
@@ -44,7 +44,7 @@ describe('v3 user tests', () => {
     expect(mock_get_iterator.mock.calls[0][0]).toEqual('/v5/boards?key1=value1&key2=value2');
   });
 
-  test('v3 user get pins', async() => {
+  test('v5 user get pins', async() => {
     const test_user = new User('test_user', 'test_api_config', 'test_access_token');
 
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');

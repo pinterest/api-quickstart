@@ -9,8 +9,6 @@ class Advertisers(ApiObject):
     def get(self):
         """
         Get the advertisers shared with the specified user_id.
-        It's unintuitive, but the param include_acl=true is required
-        to return advertisers which are shared with your account.
         """
         return self.get_iterator("/v5/ad_accounts")
 

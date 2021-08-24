@@ -1,0 +1,144 @@
+import { AnalyticsAttributes, AdAnalyticsAttributes } from '../analytics_attributes.js';
+import { ApiObject } from '../api_object.js';
+
+/**
+ * This module uses Pinterest API v5 in two classes:
+ * - Analytics synchronously retrieves user (organic) reports.
+ * - AdAnalytics synchronously retrieves advertising reports.
+ */
+
+/*
+ * This class retrieves user (sometimes called "organic") metrics
+ * using the v5 interface.
+ *
+ * The attribute functions are chainable. For example:
+ *    Analytics(null, api_config, access_token)
+ *    .last_30_days()
+ *    .metrics(['IMPRESSION', 'PIN_CLICK_RATE'])
+ *
+ * The AnalyticsAttributes parent class implements parameters that
+ * are common to all analytics reports.
+ *
+ * The ApiObject container implements the REST transaction used
+ * to fetch the metrics.
+ */
+export class Analytics extends AnalyticsAttributes {
+  // https://developers.pinterest.com/docs/v5/#operation/user_account/analytics
+  constructor(_user_id, api_config, access_token) {
+    super();
+    this.api_object = new ApiObject(api_config, access_token);
+    Object.assign(this.enumerated_values, {
+      from_claimed_content: ['Other', 'Claimed', 'Both'],
+      pin_format: ['all', 'product', 'regular', 'video'],
+      app_types: ['all', 'mobile', 'tablet', 'web'],
+      split_field: [
+        'NO_SPLIT',
+        'APP_TYPE',
+        'CONTENT_TYPE',
+        'OWNED_CONTENT',
+        'SOURCE',
+        'PIN_FORMAT_CONVERSION_TYPE',
+        'ATTRIBUTION_EVENT'
+      ]
+    });
+  }
+
+  // chainable attribute setters...
+
+  from_claimed_content(from_claimed_content) {
+    this.attrs.from_claimed_content = from_claimed_content;
+    return this;
+  }
+
+  pin_format(pin_format) {
+    this.attrs.pin_format = pin_format;
+    return this;
+  }
+
+  app_types(app_types) {
+    this.attrs.app_types = app_types;
+    return this;
+  }
+
+  split_field(split_field) {
+    this.attrs.split_field = split_field;
+    return this;
+  }
+
+  // Get analytics for the user account. If ad_account_id is set, get user
+  // analytics associated with the specified Ad Account.
+  // https://developers.pinterest.com/docs/v5/#operation/user_account/analytics
+  async get(ad_account_id) {
+    if (ad_account_id) {
+      this.attrs.ad_account_id = ad_account_id;
+    }
+
+    try {
+      return await this.api_object.request_data(`\
+/v5/user_account/analytics?\
+${this.uri_attributes('metric_types', false)}`);
+    } finally {
+      delete this.attrs.ad_account_id;
+    }
+  }
+}
+
+/**
+ * This class retrieves advertising delivery metrics with
+ * Pinterest API version v5.
+ *
+ * The attribute functions are chainable. For example:
+ *    AdAnalytics(user_me_data.get('id'), api_config, access_token).attributes
+ *    .last_30_days()
+ *    .metrics({'SPEND_IN_DOLLAR', 'TOTAL_CLICKTHROUGH'})
+ *    .granularity('DAY')
+ *
+ * The AdAnalyticsAttributes parent class implements parameters that
+ * are common to all advertising reports.
+ *
+ * The ApiObject container implements the REST transaction used
+ * to fetch the metrics.
+ */
+export class AdAnalytics extends AdAnalyticsAttributes {
+  // TODO: remove _user_id across python/nodejs, all versions
+  constructor(_user_id, api_config, access_token) {
+    super();
+    this.api_object = new ApiObject(api_config, access_token);
+    this.required_attrs.add('granularity');
+  }
+
+  async request(request_uri) {
+    return await this.api_object.request_data(
+      request_uri + this.uri_attributes('columns', true));
+  }
+
+  // Get analytics for the ad account.
+  // https://developers.pinterest.com/docs/v5/#operation/advertisers/analytics
+  async get_ad_account(ad_account_id) {
+    return await this.request(`/v5/ad_accounts/${ad_account_id}/analytics?`);
+  }
+
+  // Get analytics for the campaign.
+  // https://developers.pinterest.com/docs/v5/#operation/campaigns/analytics
+  async get_campaign(ad_account_id, campaign_id) {
+    return await this.request(`\
+/v5/ad_accounts/${ad_account_id}/campaigns/analytics\
+?campaign_ids=${campaign_id}&`);
+  }
+
+  // Get analytics for the ad group.
+  // https://developers.pinterest.com/docs/v5/#operation/ad_groups/analytics
+  async get_ad_group(ad_account_id, _campaign_id, ad_group_id) {
+    return await this.request(`\
+/v5/ad_accounts/${ad_account_id}/ad_groups/analytics\
+?ad_group_ids=${ad_group_id}&`);
+  }
+
+  // Get analytics for the ad.
+  // https://developers.pinterest.com/docs/v5/#operation/ads/analytics
+  async get_ad(ad_account_id, _campaign_id, _ad_group_id, ad_id) {
+    return await this.request(`\
+/v5/ad_accounts/${ad_account_id}/ads/analytics\
+?ad_ids=${ad_id}&`);
+  }
+}
