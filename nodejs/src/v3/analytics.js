@@ -116,7 +116,7 @@ ${this.uri_attributes('metric_types', false)}`);
  * asynchronous report functionality.
  *
  * The attribute functions are chainable. For example:
- *    AdAnalytics(user_me_data.get('id'), api_config, access_token).attributes
+ *    AdAnalytics(api_config, access_token).attributes
  *    .last_30_days()
  *    .metrics({'SPEND_IN_DOLLAR', 'TOTAL_CLICKTHROUGH'})
  *    .granularity('DAY')
@@ -128,7 +128,7 @@ ${this.uri_attributes('metric_types', false)}`);
  * to fetch the metrics.
  */
 export class AdAnalytics extends AdAnalyticsAttributes {
-  constructor(_user_id, api_config, access_token) {
+  constructor(api_config, access_token) {
     super();
     this.api_object = new ApiObject(api_config, access_token);
     this.required_attrs.add('granularity');

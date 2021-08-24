@@ -51,8 +51,7 @@ start_date=2021-03-01&end_date=2021-03-31\
   });
 
   test('v5 ads analytics', async() => {
-    const analytics = new AdAnalytics(
-      'test_user_id', 'test_api_config', 'test_access_token')
+    const analytics = new AdAnalytics('test_api_config', 'test_access_token')
       .start_date('2021-03-01')
       .end_date('2021-03-31');
 
