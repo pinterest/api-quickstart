@@ -138,7 +138,7 @@ def main(argv=[]):
     else:
         # Get advertising analytics for the appropriate kind of object.
         analytics = (
-            AdAnalytics(user_me_data.get("id"), api_config, access_token)
+            AdAnalytics(api_config, access_token)
             .last_30_days()
             .metrics({"SPEND_IN_DOLLAR", "TOTAL_CLICKTHROUGH"})
             .granularity("DAY")

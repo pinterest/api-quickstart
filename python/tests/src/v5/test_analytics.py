@@ -55,7 +55,7 @@ class AdAnalyticsTest(unittest.TestCase):
     @mock.patch("src.v5.analytics.ApiObject.__init__")
     def test_adanalytics(self, mock_init, mock_request_data):
         analytics = (
-            AdAnalytics("test_user_id", "test_api_config", "test_access_token")
+            AdAnalytics("test_api_config", "test_access_token")
             .start_date("2021-03-01")
             .end_date("2021-03-31")
         )

@@ -100,7 +100,7 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
     asynchronous report functionality.
     """
 
-    def __init__(self, _user_id, api_config, access_token):
+    def __init__(self, api_config, access_token):
         super().__init__(api_config, access_token)
         self.required_attrs.update({"granularity"})
         self.enumerated_values.update(
