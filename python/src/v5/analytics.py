@@ -85,7 +85,7 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
     Pinterest API version v5.
 
     The attribute functions are chainable. For example:
-       AdAnalytics(user_me_data.get("id"), api_config, access_token)
+       AdAnalytics(api_config, access_token)
        .last_30_days()
        .metrics({"SPEND_IN_DOLLAR", "TOTAL_CLICKTHROUGH"})
        .granularity("DAY")
@@ -97,7 +97,7 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
     to fetch the metrics.
     """
 
-    def __init__(self, _user_id, api_config, access_token):
+    def __init__(self, api_config, access_token):
         super().__init__(api_config, access_token)
         self.required_attrs.update({"granularity"})
 

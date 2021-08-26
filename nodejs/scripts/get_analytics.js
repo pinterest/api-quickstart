@@ -165,8 +165,7 @@ async function main(argv) {
       results = await finder.run([]);
     } else {
       // Get advertising analytics for the appropriate kind of object.
-      const analytics = new AdAnalytics(
-        user_me_data.id, api_config, access_token)
+      const analytics = new AdAnalytics(api_config, access_token)
         .last_30_days()
         .metrics(['SPEND_IN_DOLLAR', 'TOTAL_CLICKTHROUGH'])
         .granularity('DAY');
