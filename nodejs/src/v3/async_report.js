@@ -3,37 +3,27 @@ import { ApiObject } from '../api_object.js';
 /**
  * For documentation, see: https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
  *
- * Subclasses must override:
- *    this.kind_of = String, The kind of report. Example: 'delivery_metrics'
- *    this.post_uri_attributes() = Method that generates the attributes for the POST.
  */
 export class AsyncReport extends ApiObject {
-  constructor(api_config, access_token, advertiser_id) {
+  constructor(kind_of_report, api_config, access_token, advertiser_id) {
     super(api_config, access_token);
     this.advertiser_id = advertiser_id;
-    this.kind_of = null; // must be overridden by subclass
+    this.kind_of = kind_of_report;
     this.token = null;
     this.status = null;
     this._url = null;
   }
 
-  post_uri_attributes() {
-    throw new Error('subclass must override post_uri_attributes()');
-  }
-
   // For documentation, see:
   // https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST
-  async request_report() {
-    if (!this.kind_of) {
-      throw  Error('subclass must override the kind_of report');
-    }
-
+  async request_report(uri_attributes) {
     // create path and set required attributes
     const path = `\
-/ads/v3/reports/async/${this.advertiser_id}/${this.kind_of}/\
-${this.post_uri_attributes()}`;
+/ads/v3/reports/async/${this.advertiser_id}/${this.kind_of}/?\
+${uri_attributes}`;
 
-    this.token = (await this.post_data(path))['token'];
+    this.token = (await this.post_data(path)).token;
+    return this.token; // so that tests can verify the token
   }
 
   // Executes a single GET request to retrieve the status and (if available)
@@ -46,16 +36,16 @@ ${this.post_uri_attributes()}`;
 ?token=${this.token}`;
 
     const poll_data = await this.request_data(path);
-    this.status = poll_data['report_status'];
-    this._url = poll_data.['url'];
+    this.status = poll_data.report_status;
+    this._url = poll_data.url;
   }
 
   // Polls for the status of the report until it is complete. Uses an
   // exponential backoff algorithm (up to a 10 second maximum delay) to
   // determine the appropriate amount of time to wait.
   async wait_report() {
-    var delay = 1; // for backoff algorithm
-    var readable = 'a second'; // for human-readable output of delay
+    let delay = 1; // for backoff algorithm
+    let readable = 'a second'; // for human-readable output of delay
 
     while (true) {
       await this.poll_report();
@@ -65,15 +55,15 @@ ${this.post_uri_attributes()}`;
 
       console.log(`Report status: ${this.status}. Waiting ${readable}...`);
       await new Promise(resolve => setTimeout(resolve, delay * 1000));
-      delay = Math.min(delay * 2, 10)
+      delay = Math.min(delay * 2, 10);
       readable = `${delay} seconds`;
     }
   }
 
   // Executes the POST request to initiate the report and then the GET requests
   // to retrieve the report.
-  async run() {
-    await this.request_report();
+  async run(uri_attributes) {
+    await this.request_report(uri_attributes);
     await this.wait_report();
   }
 

@@ -1,5 +1,5 @@
 import { ApiObject } from '../api_object.js';
-import { AsyncReport } from './async_report.js'
+import { AsyncReport } from './async_report.js';
 
 jest.mock('../api_object');
 
@@ -8,92 +8,43 @@ describe('async report tests', () => {
     jest.clearAllMocks();
   });
 
-  test('v3 async report methods', async () => {
-    const test_async_report = new AsyncReport(
-      'test_api_config', 'test_access_token', 'test_advertiser_id'
+  test('v3 async report methods', async() => {
+    const test_report1 = new AsyncReport(
+      'test_report1', 'test_api_config', 'test_access_token', 'test_advertiser_id'
     );
     expect(ApiObject.mock.instances.length).toBe(1);
     expect(ApiObject.mock.calls[0]).toEqual(['test_api_config', 'test_access_token']);
-
-    await expect(async () => {
-      await test_async_report.request_report();
-    }).rejects.toThrowError(
-      new Error('subclass must override the kind_of report')
-    );
-
-    class TestReport extends AsyncReport {
-      constructor(api_config, access_token, advertiser_id) {
-        super(api_config, access_token, advertiser_id);
-        this.kind_of = 'test_report';
-      }
-    }
-
-    const test_report = new TestReport(
-      'test_api_config', 'test_access_token', 'test_advertiser_id'
-    );
-
-    expect(async () => {
-      await test_report.request_report();
-    }).rejects.toThrowError(
-      new Error('subclass must override post_uri_attributes()')
-    );
-
-    class TestReport2 extends AsyncReport {
-      constructor(api_config, access_token, advertiser_id) {
-        super(api_config, access_token, advertiser_id);
-        this.kind_of = 'test_report2';
-      }      
-
-      post_uri_attributes() {
-        return '?test_report2_attributes';
-      }
-    }
-
-    const test_report2 = new TestReport2(
-      'test_api_config', 'test_access_token', 'test_advertiser_id'
-    );
     const mock_post_data = jest.spyOn(ApiObject.prototype, 'post_data');
-    mock_post_data.mockResolvedValueOnce({ token: 'test_report2_token' });
-    await test_report2.request_report();
-    
-    expect(test_report2.token).toEqual('test_report2_token');
-    expect(mock_post_data.mock.calls).toEqual([[`\
-/ads/v3/reports/async/test_advertiser_id/test_report2/\
-?test_report2_attributes`]]);
+    mock_post_data.mockResolvedValueOnce({ token: 'test_report1_token' });
+    await test_report1.request_report('test_report1_attributes');
+
+    expect(test_report1.token).toEqual('test_report1_token');
+    expect(mock_post_data.mock.calls).toEqual([['\
+/ads/v3/reports/async/test_advertiser_id/test_report1/\
+?test_report1_attributes']]);
 
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
     mock_request_data.mockResolvedValueOnce({
       report_status: 'FINISHED',
-      url: 'test_report2_url'
+      url: 'test_report1_url'
     });
-    await test_report2.wait_report();
-    expect(test_report2.url()).toEqual('test_report2_url');
-    expect(mock_request_data.mock.calls).toEqual([[`\
-/ads/v3/reports/async/test_advertiser_id/test_report2/\
-?token=test_report2_token`]]);
+    await test_report1.wait_report();
+    expect(test_report1.url()).toEqual('test_report1_url');
+    expect(mock_request_data.mock.calls).toEqual([['\
+/ads/v3/reports/async/test_advertiser_id/test_report1/\
+?token=test_report1_token']]);
   });
 
   test('v3 async report run', async() => {
-    class TestReport3 extends AsyncReport {
-      constructor(api_config, access_token, advertiser_id) {
-        super(api_config, access_token, advertiser_id);
-        this.kind_of = 'test_report3';
-      }
+    const test_report2_url = '\
+test_report2_url/x-y-z/metrics_report.txt?Very-long-credentials-string';
 
-      post_uri_attributes() {
-        return '?test_report3_attributes'
-      }
-    }
-
-    const test_report3_url = `\
-test_report3_url/x-y-z/metrics_report.txt?Very-long-credentials-string`;
-
-    const test_report3 = new TestReport3(
-      'test_api_config', 'test_access_token', 'test_advertiser_id'
+    const test_report2 = new AsyncReport(
+      'test_report2', 'test_api_config', 'test_access_token', 'test_advertiser_id'
     );
 
     const mock_post_data = jest.spyOn(ApiObject.prototype, 'post_data');
-    mock_post_data.mockResolvedValueOnce({ token: 'test_report3_token' });
+    mock_post_data.mockResolvedValueOnce({ token: 'test_report2_token' });
 
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
     mock_request_data // simulate time required to generate the test
@@ -104,7 +55,7 @@ test_report3_url/x-y-z/metrics_report.txt?Very-long-credentials-string`;
       .mockResolvedValueOnce({ report_status: 'IN_PROGRESS' })
       .mockResolvedValueOnce({ report_status: 'IN_PROGRESS' })
       .mockResolvedValueOnce(
-        {'report_status': 'FINISHED', 'url': test_report3_url});
+        { report_status: 'FINISHED', url: test_report2_url });
 
     console.log = jest.fn(); // test output
 
@@ -118,7 +69,7 @@ test_report3_url/x-y-z/metrics_report.txt?Very-long-credentials-string`;
       callback(); // run the timer callback immediately
     });
 
-    await test_report3.run();
+    await test_report2.run('test_report2_attributes');
 
     // verify that the backoff algorithm is working as expected
     expect(timeout_calls).toEqual([
@@ -135,17 +86,17 @@ test_report3_url/x-y-z/metrics_report.txt?Very-long-credentials-string`;
       ['Report status: IN_PROGRESS. Waiting 10 seconds...']
     ]);
 
-    expect(test_report3.url()).toEqual(test_report3_url); // verify returned URL
+    expect(test_report2.url()).toEqual(test_report2_url); // verify returned URL
     // verify API requests
-    expect(mock_post_data.mock.calls).toEqual([[`\
-/ads/v3/reports/async/test_advertiser_id/test_report3/\
-?test_report3_attributes`]]);
+    expect(mock_post_data.mock.calls).toEqual([['\
+/ads/v3/reports/async/test_advertiser_id/test_report2/\
+?test_report2_attributes']]);
     // request data will be called multiple times
-    expect(mock_request_data).toHaveBeenCalledWith(`\
-/ads/v3/reports/async/test_advertiser_id/test_report3/\
-?token=test_report3_token`);
+    expect(mock_request_data).toHaveBeenCalledWith('\
+/ads/v3/reports/async/test_advertiser_id/test_report2/\
+?token=test_report2_token');
 
     // verify filename
-    expect(test_report3.filename()).toEqual('metrics_report.txt');
+    expect(test_report2.filename()).toEqual('metrics_report.txt');
   });
 });
