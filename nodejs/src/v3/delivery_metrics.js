@@ -164,6 +164,15 @@ export class DeliveryMetricsAsyncReport extends AdAnalyticsAttributes {
 
   // Pass attributes to AsyncReport.run().
   async run() {
-    this.async_report.run(this.post_uri_attributes());
+    await this.async_report.run(this.post_uri_attributes());
+  }
+
+  // Pass-through methods...
+  filename() {
+    return this.async_report.filename();
+  }
+
+  url() {
+    return this.async_report.url();
   }
 }
