@@ -1,7 +1,7 @@
 import secrets
 import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import parse_qs, urlparse
 from webbrowser import open_new
 
 
@@ -33,7 +33,7 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
         parsed_query = parse_qs(urlparse(self.path).query)
 
         # verify state
-        state_params = parsed_query.get('state')
+        state_params = parsed_query.get("state")
         received_oauth_state = None
         if isinstance(state_params, (list)):
             received_oauth_state = state_params[0]
@@ -41,7 +41,7 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
             raise RuntimeError("Received state does not match sent state")
 
         # save the authorization code
-        code_params = parsed_query.get('code')
+        code_params = parsed_query.get("code")
         if isinstance(code_params, (list)):
             self.server.auth_code = code_params[0]
         else:

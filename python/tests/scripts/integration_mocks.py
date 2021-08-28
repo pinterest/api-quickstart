@@ -1,4 +1,5 @@
 import contextlib
+import secrets  # noqa: F401 because required for monkey-patching
 import sys
 import threading
 import time
@@ -38,12 +39,16 @@ class IntegrationMocks(unittest.TestCase):
     def mock_input(self, prompt):
         assert False, "Override mock_input for this test to run."
 
+    def mock_token_hex(self):
+        return "test-token-hex"
+
     def setUp(self):
         print("setUp")
         self.originals = self.monkeypatch(
             [
                 ("webbrowser", "open_new", self.mock_open_new),
                 ("builtins", "input", self.mock_input),
+                ("secrets", "token_hex", self.mock_token_hex),
             ]
         )
 
@@ -77,7 +82,8 @@ class IntegrationMocks(unittest.TestCase):
                     # The real_http parameter of requests_mock must be set to
                     # True for this request to work.
                     response = requests.get(
-                        "http://localhost:8085/?test-path&code=test-oauth-code",
+                        "http://localhost:8085/?test-path&code=test-oauth-code"
+                        + "&state=test-token-hex",
                         allow_redirects=False,
                     )
                     print("response to redirect (301 expected): " + str(response))
