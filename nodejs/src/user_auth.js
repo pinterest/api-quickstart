@@ -1,5 +1,7 @@
 import http from 'http';
 import open from 'open';
+import { v4 as uuidv4 } from 'uuid';
+import { parse } from 'url';
 
 /**
  * Executes the process required to obtain an OAuth user authentication code.
@@ -10,6 +12,9 @@ import open from 'open';
  */
 export default async function get_auth_code(
   api_config, { scopes = null, refreshable = true }) {
+
+  const oauth_state = uuidv4(); // uuidv4 is cryptographically secure
+
   const auth_code = new Promise((resolve, reject) => {
     const sockets = []; // tracks the sockets connected to the server
 
@@ -31,8 +36,14 @@ export default async function get_auth_code(
           // First call socket.end to send a FIN, then destroy the socket.
           socket.end(function() { socket.destroy(); });
         });
-        // Finally, return the code to the awaiting caller.
-        resolve(req.url.split('=')[1]);
+
+        // parse the url
+        const parsed = parse(req.url, { parseQueryString: true });
+        if (parsed.query.state != oauth_state) {
+          // verify that the returned state is as expected
+          reject(new Error('Received state does not match sent state'));
+        }
+        resolve(parsed.query.code);
       });
     });
 
@@ -54,6 +65,13 @@ ${api_config.oauth_uri}/oauth/\
   if (scopes) {
     access_uri += `&scope=${scopes.map(s => s.value).join(',')}`;
   }
+
+  // The OAuth state parameter is intended to prevent cross-site scripting
+  // exploits. The state should incorporate cryptographically secure randomness,
+  // which should be satisfied by the uuid.v4 function.
+  // oauth_state goes at the end of access_uri to make it easier to read
+  // and to debug the access URI.
+  access_uri += `&state=${oauth_state}`;
 
   // open the default browser for user interaction
   if (api_config.verbosity >= 3) {
