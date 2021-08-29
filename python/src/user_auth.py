@@ -38,7 +38,7 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
         if isinstance(state_params, (list)):
             received_oauth_state = state_params[0]
         if self.oauth_state != received_oauth_state:
-            raise RuntimeError("Received state does not match sent state")
+            raise RuntimeError("Received OAuth state does not match sent state")
 
         # save the authorization code
         code_params = parsed_query.get("code")

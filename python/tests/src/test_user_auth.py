@@ -112,7 +112,7 @@ class UserAuthTest(unittest.TestCase):
         # verify the error when the OAuth state does not match
         http_server_handler.path = "test-path?code=test-code&state=wrong-test-secret"
         with self.assertRaisesRegex(
-            RuntimeError, "Received state does not match sent state"
+            RuntimeError, "Received OAuth state does not match sent state"
         ):
             http_server_handler.do_GET()
 
