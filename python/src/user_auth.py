@@ -1,5 +1,7 @@
+import secrets
 import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from urllib.parse import parse_qs, urlparse
 from webbrowser import open_new
 
 
@@ -8,8 +10,9 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
     HTTP Server callback to handle Pinterest OAuth redirect with auth_code
     """
 
-    def __init__(self, request, address, server, api_config):
+    def __init__(self, request, address, server, api_config, oauth_state):
         self.api_config = api_config
+        self.oauth_state = oauth_state
         super().__init__(request, address, server)
 
     # override log_message to prevent logging the auth_code to the console
@@ -24,9 +27,25 @@ class HTTPServerHandler(BaseHTTPRequestHandler):
         self.send_response(301)
         self.send_header("Location", self.api_config.landing_uri)
         self.end_headers()
-        # get the auth_code from the path of the redirect URI
-        if "code" in self.path:
-            self.server.auth_code = self.path.split("=")[1]
+
+        # Get the state and auth_code from the path of the redirect URI.
+        # Start by parsing the URL path.
+        parsed_query = parse_qs(urlparse(self.path).query)
+
+        # verify state
+        state_params = parsed_query.get("state")
+        received_oauth_state = None
+        if isinstance(state_params, (list)):
+            received_oauth_state = state_params[0]
+        if self.oauth_state != received_oauth_state:
+            raise RuntimeError("Received OAuth state does not match sent state")
+
+        # save the authorization code
+        code_params = parsed_query.get("code")
+        if isinstance(code_params, (list)):
+            self.server.auth_code = code_params[0]
+        else:
+            raise RuntimeError("OAuth redirect does not have an auth code")
 
 
 def get_auth_code(api_config, scopes=None, refreshable=True):
@@ -57,6 +76,14 @@ def get_auth_code(api_config, scopes=None, refreshable=True):
             + ",".join(list(map(lambda scope: scope.value, scopes)))
         )
 
+    # The OAuth state parameter is intended to prevent cross-site scripting
+    # exploits. The state should incorporate cryptographically secure randomness
+    # so create it with the secrets module, which is intended for this purpose.
+    # oauth_state goes at the end of access_uri to make it easier to read
+    # and to debug the access URI.
+    oauth_state = secrets.token_hex()
+    access_uri += f"&state={oauth_state}"
+
     """
     Open a web browser. There's a race condition between the browser
     doing the redirect and the handle_request call below. It is very
@@ -70,7 +97,7 @@ def get_auth_code(api_config, scopes=None, refreshable=True):
     httpServer = HTTPServer(
         ("localhost", api_config.port),
         lambda request, address, server: HTTPServerHandler(
-            request, address, server, api_config
+            request, address, server, api_config, oauth_state
         ),
     )
 

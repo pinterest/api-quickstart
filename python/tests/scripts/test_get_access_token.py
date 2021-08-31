@@ -42,8 +42,8 @@ class GetAccessTokenTest(IntegrationMocks):
         mock_print.assert_any_call(
             "mock_open_new: "
             + "https://www.pinterest.com/oauth/?consumer_id=test-app-id"
-            + "&redirect_uri=http://localhost:8085/&response_type=code&"
-            + "refreshable=True"
+            + "&redirect_uri=http://localhost:8085/&response_type=code"
+            + "&refreshable=True&state=test-token-hex"
         )
         mock_print.assert_any_call(
             "hashed access token: "
