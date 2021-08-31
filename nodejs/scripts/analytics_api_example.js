@@ -66,7 +66,7 @@ async function main(argv) {
   // linked business accounts.
 
   const access_token = new AccessToken(api_config, { name: args.access_token });
-  access_token.fetch({ scopes: [Scope.READ_USERS, Scope.READ_ADVERTISERS] });
+  await access_token.fetch({ scopes: [Scope.READ_USERS, Scope.READ_ADVERTISERS] });
 
   // Sample: Get my user id
   // For a future call we need to know the user id associated with
