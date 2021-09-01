@@ -30,7 +30,6 @@ export class Pin extends ApiObject {
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT
   async create(pin_data, board_id, { section }) {
-    // TODO: carousel_data_json
     const OPTIONAL_ATTRIBUTES = [
       'alt_text',
       'description',
@@ -46,6 +45,10 @@ export class Pin extends ApiObject {
     const link = pin_data.link;
     if (link) {
       create_data.source_url = link;
+    }
+    const carousel_data = pin_data.carousel_data;
+    if (carousel_data) {
+      create_data.carousel_data_json = JSON.stringify(pin_data.carousel_data);
     }
 
     for (const key of OPTIONAL_ATTRIBUTES) {

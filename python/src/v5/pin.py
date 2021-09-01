@@ -23,7 +23,6 @@ class Pin(ApiObject):
 
     # https://developers.pinterest.com/docs/api/v5/#operation/pins/create
     def create(self, pin_data, board_id, section=None):
-        # TODO: carousel_data_json
         OPTIONAL_ATTRIBUTES = [
             "link",
             "title",

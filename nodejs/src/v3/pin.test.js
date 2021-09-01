@@ -20,11 +20,28 @@ describe('v3 pin tests', () => {
     expect(mock_request_data.mock.calls[0][0]).toEqual('/v3/pins/test_pin_id/');
     expect(response).toEqual('test_response');
 
+    const carousel_data = {
+      carousel_slots: {
+        details: 'string',
+        id: 'string',
+        images: {
+          height: 450,
+          url: 'string',
+          width: 236
+        },
+        link: 'string',
+        title: 'string'
+      },
+      id: 'number in a string',
+      index: 'another number in a string'
+    };
+
     const pin_data = {
       link: 'test_pin_link',
       title: 'My Test Pin',
       alt_text: 'This is what a test pin looks like',
       ignore: 'ignored',
+      carousel_data: carousel_data,
       image_large_url: 'image_large_url_is_best_available'
     };
 
@@ -39,6 +56,7 @@ describe('v3 pin tests', () => {
       image_url: 'image_large_url_is_best_available',
       source_url: 'test_pin_link',
       title: 'My Test Pin',
+      carousel_data_json: JSON.stringify(carousel_data),
       alt_text: 'This is what a test pin looks like'
     };
     expect(mock_put_data.mock.calls[0]).toEqual(['/v3/pins/', expected_put_data]);

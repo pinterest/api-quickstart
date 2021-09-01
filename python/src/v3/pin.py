@@ -1,3 +1,5 @@
+import json
+
 from api_object import ApiObject
 
 
@@ -27,7 +29,6 @@ class Pin(ApiObject):
 
     # https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT
     def create(self, pin_data, board_id, section=None):
-        # TODO: carousel_data_json
         OPTIONAL_ATTRIBUTES = [
             "alt_text",
             "description",
@@ -39,6 +40,11 @@ class Pin(ApiObject):
         link = pin_data.get("link")
         if link:
             create_data["source_url"] = link
+        carousel_data = pin_data.get("carousel_data")
+        if carousel_data:
+            create_data["carousel_data_json"] = json.dumps(
+                carousel_data, separators=(",", ":")
+            )
 
         for key in OPTIONAL_ATTRIBUTES:
             value = pin_data.get(key)
