@@ -10,7 +10,7 @@ This repository has code that is intended to provide a quick start for working w
 
 1. Set up the environment with your credentials (app ID and secret). This configuration works with the code in all of the language-specific directories.
 
-   * Get an application ID and secret by hitting the "Connect app" button at [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/). You may need to create a Pinterest business account, verify your account, and agree to the developer terms before getting access to this page. You also may need to wait for your app connection to be approved.
+   * Get an application ID and secret by hitting the "Connect app" button at [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/). You may need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/api/v5/#section/Requesting-Trial-Access) to the Pinterest API.
    * Once your app is connected, hit the Manage button for the app on [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/) to see your App id and App secret key. (Click the Show key button to see the App secret key.)
    * Put your App ID and App secret key in an environment script file.
      ```
@@ -78,4 +78,6 @@ Code that implements OAuth is available for each language in this repo. The loca
 
 ## Other Resources
 
+  * [Pinterest Developers](https://developers.pinterest.com/)
+  * [Pinterest Engineering Blog](https://medium.com/pinterest-engineering)
   * The [pinterest/rest-api](https://github.com/pinterest/rest-api) repo on github contains [OpenAPI](https://www.openapis.org/) descriptions for Pinterest's REST API.

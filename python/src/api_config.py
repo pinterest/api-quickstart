@@ -3,7 +3,7 @@ import sys  # for sys.path.append
 from os.path import abspath, dirname, join
 
 # Construct the redirect_uri for the OAuth process. The REDIRECT_URI must
-# be literally the same as configured at https://developers.pinterest.com/manage/.
+# be literally the same as configured at https://developers.pinterest.com/apps/.
 # The port is fixed for now. It would be better to configure a selection
 # of ports that could be used in case some other service is listening on
 # the hard-coded port.
@@ -12,7 +12,7 @@ DEFAULT_REDIRECT_URI = "http://localhost:" + str(DEFAULT_PORT) + "/"
 DEFAULT_API_URI = "https://api.pinterest.com"
 DEFAULT_API_VERSION = "v5"
 DEFAULT_OAUTH_URI = "https://www.pinterest.com"
-DEFAULT_LANDING_URI = "https://developers.pinterest.com/manage/"
+DEFAULT_LANDING_URI = "https://developers.pinterest.com/apps/"
 # OAuth tokens are in the current directory by default
 DEFAULT_OAUTH_TOKEN_DIR = "."
 

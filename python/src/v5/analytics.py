@@ -62,7 +62,7 @@ class Analytics(AnalyticsAttributes, ApiObject):
         self.attrs["split_field"] = split_field
         return self
 
-    # https://developers.pinterest.com/docs/v5/#operation/account/analytics
+    # https://developers.pinterest.com/docs/api/v5/#operation/user_account/analytics
     def get(self, ad_account_id=None):
         """
         Get analytics for the user account. If ad_account_id is set, get user
@@ -104,14 +104,14 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
     def request(self, request_uri):
         return self.request_data(request_uri + self.uri_attributes("columns", True))
 
-    # https://developers.pinterest.com/docs/v5/#operation/advertisers/analytics
+    # https://developers.pinterest.com/docs/api/v5/#operation/ad_account/analytics
     def get_ad_account(self, ad_account_id):
         """
         Get analytics for the ad account.
         """
         return self.request(f"/v5/ad_accounts/{ad_account_id}/analytics?")
 
-    # https://developers.pinterest.com/docs/v5/#operation/campaigns/analytics
+    # https://developers.pinterest.com/docs/api/v5/#operation/campaigns/analytics
     def get_campaign(self, ad_account_id, campaign_id):
         """
         Get analytics for the campaign.
@@ -120,7 +120,7 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
         request_uri += f"?campaign_ids={campaign_id}&"
         return self.request(request_uri)
 
-    # https://developers.pinterest.com/docs/v5/#operation/ad_groups/analytics
+    # https://developers.pinterest.com/docs/api/v5/#operation/ad_groups/analytics
     def get_ad_group(self, ad_account_id, _campaign_id, ad_group_id):
         """
         Get analytics for the ad group.
@@ -129,7 +129,7 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
         request_uri += f"?ad_group_ids={ad_group_id}&"
         return self.request(request_uri)
 
-    # https://developers.pinterest.com/docs/v5/#operation/ads/analytics
+    # https://developers.pinterest.com/docs/api/v5/#operation/ads/analytics
     def get_ad(self, ad_account_id, _campaign_id, _ad_group_id, ad_id):
         """
         Get analytics for the ad.

@@ -6,7 +6,7 @@ class Pin(ApiObject):
         super().__init__(api_config, access_token)
         self.pin_id = pin_id
 
-    # https://developers.pinterest.com/docs/v5/#operation/pins/get
+    # https://developers.pinterest.com/docs/api/v5/#operation/pins/get
     def get(self):
         return self.request_data("/v5/pins/{}".format(self.pin_id))
 
@@ -21,7 +21,7 @@ class Pin(ApiObject):
         # print('Native format type: ' + pin_data['native_format_type'])
         print("--------------------")
 
-    # https://developers.pinterest.com/docs/v5/#operation/pins/create
+    # https://developers.pinterest.com/docs/api/v5/#operation/pins/create
     def create(self, pin_data, board_id, section=None):
         # TODO: carousel_data_json
         OPTIONAL_ATTRIBUTES = [

@@ -2,7 +2,7 @@ from enum import Enum
 
 
 # Enumerate the valid OAuth scopes.
-# For details, see: https://developers.pinterest.com/docs/v5/#section/Authentication
+# For details, see: https://developers.pinterest.com/docs/api/v5/#tag/Scopes
 class Scope(Enum):
     READ_ADS = "ads:read"
     READ_BOARDS = "boards:read"

@@ -107,8 +107,9 @@ def get_auth_code(api_config, scopes=None, refreshable=True):
     except KeyboardInterrupt:
         """
         This flow will typically be interrupted by the developer if the
-        OAuth did not work in the browser. For details, see:
-         https://developers.pinterest.com/docs/redoc/#section/User-Authorization/Start-the-OAuth-flow-(explicit-server-side)
+        OAuth did not work in the browser. For details, see the documentation:
+         https://developers.pinterest.com/docs/api/v5/#tag/Authentication
+         https://developers.pinterest.com/docs/redoc/#section/User-Authorization/Start-the-OAuth-flow-%28explicit-server-side%29
         """  # noqa: E501 because the long URL is okay
         sys.exit("\nSorry that the OAuth redirect didn't work out. :-/")
 

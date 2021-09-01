@@ -6,7 +6,7 @@ class Board(ApiObject):
         super().__init__(api_config, access_token)
         self.board_id = board_id
 
-    # https://developers.pinterest.com/docs/v5/#operation/boards/get
+    # https://developers.pinterest.com/docs/api/v5/#operation/boards/get
     def get(self):
         if not self.board_id:
             raise ValueError("board_id must be set to get a board")
@@ -33,7 +33,7 @@ class Board(ApiObject):
         print(f"Privacy: {board_data.get('privacy')}")
         print("--------------------")
 
-    # https://developers.pinterest.com/docs/v5/#operation/boards/create
+    # https://developers.pinterest.com/docs/api/v5/#operation/boards/create
     def create(self, board_data):
         OPTIONAL_ATTRIBUTES = ["description", "privacy"]
         create_data = {
@@ -48,15 +48,15 @@ class Board(ApiObject):
         self.board_id = board_data["id"]
         return board_data
 
-    # https://developers.pinterest.com/docs/v5/#operation/boards/delete
+    # https://developers.pinterest.com/docs/api/v5/#operation/boards/delete
     def delete(self):
         self.delete_and_check(f"/v5/boards/{self.board_id}")
 
-    # https://developers.pinterest.com/docs/v5/#operation/boards/list_pins
+    # https://developers.pinterest.com/docs/api/v5/#operation/boards/list_pins
     def get_pins(self):
         return self.get_iterator(f"/v5/boards/{self.board_id}/pins")
 
-    # https://developers.pinterest.com/docs/v5/#operation/board_sections/list
+    # https://developers.pinterest.com/docs/api/v5/#operation/board_sections/list
     def get_sections(self):
         return self.get_iterator(f"/v5/boards/{self.board_id}/sections")
 
@@ -67,14 +67,14 @@ class Board(ApiObject):
         print(f"Name: {section_data['name']}")
         print("---------------------")
 
-    # https://developers.pinterest.com/docs/v5/#operation/board_sections/create
+    # https://developers.pinterest.com/docs/api/v5/#operation/board_sections/create
     def create_section(self, section_data):
         create_data = {
             "name": section_data["name"],
         }
         return self.post_data(f"/v5/boards/{self.board_id}/sections", create_data)
 
-    # https://developers.pinterest.com/docs/v5/#operation/board_sections/list_pins
+    # https://developers.pinterest.com/docs/api/v5/#operation/board_sections/list_pins
     def get_section_pins(self, section_id):
         return self.get_iterator(
             f"/v5/boards/{self.board_id}/sections/{section_id}/pins"
