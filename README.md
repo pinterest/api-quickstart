@@ -80,4 +80,4 @@ Code that implements OAuth is available for each language in this repo. The loca
 
   * [Pinterest Developers](https://developers.pinterest.com/)
   * [Pinterest Engineering Blog](https://medium.com/pinterest-engineering)
-  * The [pinterest/rest-api](https://github.com/pinterest/rest-api) repo on github contains [OpenAPI](https://www.openapis.org/) descriptions for Pinterest's REST API.
+  * The [pinterest/api-description](https://github.com/pinterest/api-description) repo on GitHub contains [OpenAPI](https://www.openapis.org/) descriptions for Pinterest's REST API.
