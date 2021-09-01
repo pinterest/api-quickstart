@@ -10,7 +10,7 @@ This repository has code that is intended to provide a quick start for working w
 
 1. Set up the environment with your credentials (app ID and secret). This configuration works with the code in all of the language-specific directories.
 
-   * Get an application ID and secret by hitting the "Connect app" button at [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/). You may need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/api/v5/#section/Requesting-Trial-Access) to the Pinterest API.
+   * Get an application ID and secret by hitting the "Connect app" button at [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/). You may first need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/api/v5/#section/Requesting-Trial-Access) to the Pinterest API.
    * Once your app is connected, hit the Manage button for the app on [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/) to see your App id and App secret key. (Click the Show key button to see the App secret key.)
    * Put your App ID and App secret key in an environment script file.
      ```
