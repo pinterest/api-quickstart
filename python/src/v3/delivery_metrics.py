@@ -1,3 +1,6 @@
+import json
+from urllib.parse import quote
+
 from analytics_attributes import AdAnalyticsAttributes
 from api_object import ApiObject
 from v3.async_report import AsyncReport
@@ -149,8 +152,12 @@ class DeliveryMetricsAsyncReport(AdAnalyticsAttributes, AsyncReport):
         return self
 
     def filters(self, filters):
-        raise "TODO: not sure how filters need to be encoded"
-        self.attrs["filters"] = filters
+        """
+        Filters must be a list of structures with fields as specified by the API.
+        JSON separators are set to eliminate whitespace and to get the most
+        compact JSON representation.
+        """
+        self.attrs["filters"] = quote(json.dumps(filters, separators=(",", ":")))
         return self
 
     def report_format(self, report_format):

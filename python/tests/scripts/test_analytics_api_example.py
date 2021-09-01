@@ -36,7 +36,9 @@ class AnalyticsApiExampleTest(IntegrationMocks):
             r"https://api.pinterest.com/ads/v3/reports/async/adv_2_id/delivery_metrics/"
             r"\?start_date=2\d{3}-[01]\d-[0123]\d"
             r"&end_date=2\d{3}-[01]\d-[0123]\d"
-            r"&metrics=CLICKTHROUGH_1,IMPRESSION_1&level=PIN_PROMOTION&tag_version=3"
+            r"&metrics=CLICKTHROUGH_1,IMPRESSION_1"
+            r"&filters=[%0-9a-zA-z]+"
+            r"&level=PIN_PROMOTION&tag_version=3"
         )
         rm.post(matcher, json={"data": {"token": "test-report-token"}})
 

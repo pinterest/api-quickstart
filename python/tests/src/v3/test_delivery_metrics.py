@@ -96,6 +96,11 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
         dm_async_report.metric("TOTAL_CLICK_SEARCH_QUANTITY")
         dm_async_report.metric("TOTAL_CLICK_SEARCH")
 
+        # specify filter
+        dm_async_report.filters(
+            [{"field": "PIN_PROMOTION_STATUS", "operator": "=", "value": "APPROVED"}]
+        )
+
         uri_attributes = dm_async_report.post_uri_attributes()
         self.assertEqual(
             uri_attributes,
@@ -106,6 +111,8 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
             + "&conversion_report_time=AD_EVENT"
             + "&data_source=REALTIME"
             + "&engagement_window_days=7"
+            + "&filters=%5B%7B%22field%22%3A%22PIN_PROMOTION_STATUS%22%2C%22"
+            + "operator%22%3A%22%3D%22%2C%22value%22%3A%22APPROVED%22%7D%5D"
             + "&granularity=HOUR"
             + "&level=SEARCH_QUERY"
             + "&report_format=csv"
