@@ -3,7 +3,7 @@ import process from 'process';
 export class ApiConfig {
   constructor({ verbosity = 2, version }) {
     // Construct the redirect_uri for the OAuth process. The REDIRECT_URI must
-    // be literally the same as configured at https://developers.pinterest.com/manage/.
+    // be literally the same as configured at https://developers.pinterest.com/apps/.
     // The port is fixed for now. It would be better to configure a selection
     // of ports that could be used in case some other service is listening on
     // the hard-coded port.
@@ -12,7 +12,7 @@ export class ApiConfig {
     const DEFAULT_API_URI = 'https://api.pinterest.com';
     const DEFAULT_API_VERSION = 'v5';
     const DEFAULT_OAUTH_URI = 'https://www.pinterest.com';
-    const DEFAULT_LANDING_URI = 'https://developers.pinterest.com/manage/';
+    const DEFAULT_LANDING_URI = 'https://developers.pinterest.com/apps/';
     const DEFAULT_OAUTH_TOKEN_DIR = '.';
 
     // default level of verbosity, probably should switch to logging
