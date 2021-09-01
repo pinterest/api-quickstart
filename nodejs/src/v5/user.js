@@ -7,7 +7,7 @@ export class User extends ApiObject {
     this.user = user;
   }
 
-  // https://developers.pinterest.com/docs/v5/#tag/user_accounts
+  // https://developers.pinterest.com/docs/api/v5/#tag/user_account
   async get() {
     return await super.request_data('/v5/user_account');
   }
@@ -26,7 +26,7 @@ export class User extends ApiObject {
     console.log('--------------------');
   }
 
-  // https://developers.pinterest.com/docs/v5/#operation/boards/list
+  // https://developers.pinterest.com/docs/api/v5/#operation/boards/list
   async get_boards(user_data, { query_parameters }) {
     let path = '/v5/boards';
     if (query_parameters) {

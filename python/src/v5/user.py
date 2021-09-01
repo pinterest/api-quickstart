@@ -34,7 +34,7 @@ class User(ApiObject):
         super().__init__(api_config, access_token)
         self.user = user
 
-    # https://developers.pinterest.com/docs/v5/#tag/user_accounts
+    # https://developers.pinterest.com/docs/api/v5/#tag/user_account
     def get(self):
         return self.request_data("/v5/user_account")
 
@@ -50,7 +50,7 @@ class User(ApiObject):
         print("Website URL:", user_data.get("website_url"))
         print("--------------------")
 
-    # https://developers.pinterest.com/docs/v5/#operation/boards/list
+    # https://developers.pinterest.com/docs/api/v5/#operation/boards/list
     def get_boards(self, user_data, query_parameters={}):
         path = "/v5/boards"
         if query_parameters:

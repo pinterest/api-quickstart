@@ -15,7 +15,7 @@
 : ${REDIRECT_PORT:=8085}
 : ${PINTEREST_API_URI:=https://api.pinterest.com}
 : ${PINTEREST_OAUTH_URI:=https://www.pinterest.com}
-: ${REDIRECT_LANDING_URI:=https://developers.pinterest.com/manage/${PINTEREST_APP_ID}}
+: ${REDIRECT_LANDING_URI:=https://developers.pinterest.com/apps/${PINTEREST_APP_ID}}
 REDIRECT_URI="http://localhost:${REDIRECT_PORT}/"
 
 # Note that the application id and secrect have no defaults,
@@ -27,7 +27,7 @@ echo 'getting auth_code...'
 
 # Specify the scopes for the user to authorize via OAuth.
 # This example requests typical read-only authorization.
-# For more information, see: https://developers.pinterest.com/docs/redoc/#section/User-Authorization/OAuth-scopes
+# For more information, see: https://developers.pinterest.com/docs/api/v5/#tag/Authentication
 SCOPE="user_accounts:read"
 
 # This call opens the browser with the oauth information in the URI.

@@ -21,7 +21,7 @@ class ApiConfigTest(unittest.TestCase):
         self.assertEqual(api_config.redirect_uri, "http://localhost:8085/")
         self.assertEqual(
             api_config.landing_uri,
-            "https://developers.pinterest.com/manage/test-app-id",
+            "https://developers.pinterest.com/apps/test-app-id",
         )
         self.assertEqual(api_config.oauth_uri, "https://www.pinterest.com")
         self.assertEqual(api_config.api_uri, "https://api.pinterest.com")

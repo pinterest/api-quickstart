@@ -4,25 +4,25 @@ Code that makes it easy to get started with the Pinterest API.
 
 ## Purpose
 
-This repository has code that is intended to provide a quick start for working with the [Pinterest API](https://developers.pinterest.com/docs/redoc/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code that is catching up to the python code, and a bash script that demonstrates the OAuth authentication and authorization flow. Over time, we plan to add more demonstrations of API functionality and additional languages -- likely ruby and Java.
+This repository has code that is intended to provide a quick start for working with the [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/), and also supports [Pinterest API v3](https://developers.pinterest.com/docs/redoc/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code with essentially the same functionality, and a bash script that demonstrates the OAuth authentication and authorization flow. Over time, we plan to add more demonstrations of API functionality and additional languages -- likely Ruby and maybe Go or PHP.
 
 ## Quick Start
 
 1. Set up the environment with your credentials (app ID and secret). This configuration works with the code in all of the language-specific directories.
 
-   * Get an application ID and secret by hitting the "Start building" button at [https://developers.pinterest.com/](https://developers.pinterest.com/). Approval from a contact at Pinterest is required to see the application secret. (We're working on some updates to our program and are currently taking a pause in reviewing applications while we focus on what's next. If you'd still like to apply to our program we'll reach out to the email associated with your account once there's an update. We're excited to share with you what we've been working on.)
-   * Put your app ID and secret in an environment script file.
+   * Get an application ID and secret by hitting the "Connect app" button at [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/). You may need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/api/v5/#section/Requesting-Trial-Access) to the Pinterest API.
+   * Once your app is connected, hit the Manage button for the app on [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/) to see your App id and App secret key. (Click the Show key button to see the App secret key.)
+   * Put your App ID and App secret key in an environment script file.
      ```
      $ cd common/scripts
      $ cp api_app_credentials.template api_app_credentials
      # edit api_app_credentials and enter your app id and secret in the specified locations
      $ cd ../..
      ```
-   * Configure the redirect URI required by this code.
-     1. Click on the name of your application at [https://developers.pinterest.com/manage/](https://developers.pinterest.com/manage/).
-     2. In the box labeled "Redirect URIs," enter `http://localhost:8085/`.
-     3. Hit the return (enter) key.
-     4. Hit the Save button next in the "You have unsaved changes" box that appears after hitting the return (enter) key.
+   * Configure the OAuth2 redirect URI required by this code.
+     1. Click on the Manage button for your application at [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/).
+     2. In the box labeled "Redirect link," enter `http://localhost:8085/`.
+     3. Hit the return (enter) key or the Add button to save redirect URI (link).
    * Run the environment set-up script and verify the results.
      ```
      $ . ./common/scripts/api_env
@@ -35,7 +35,7 @@ This repository has code that is intended to provide a quick start for working w
 
 ## OAuth 2.0 Authorization
 
-Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). For details regarding OAuth, please reference our [v5 developer docs](https://developers.pinterest.com/docs/v5/#tag/oauth) or [v3 developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
+Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). For details regarding OAuth, please refer to our [v5 developer docs](https://developers.pinterest.com/docs/api/v5/#tag/Authentication) or [v3 developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
 
 An access token is used to authenticate most API calls. In general, access tokens are valid for relatively long periods of time, in order to avoid asking users to go through the OAuth flow too often. When an access token expires, it is possible to refresh the token -- a capability that the code in this repo also demonstrates.
 
@@ -75,3 +75,9 @@ Code that implements OAuth is available for each language in this repo. The loca
   * `src` contains code that is used by the scripts and that you can incorporate into your own applications.
   * `tests` contains unit and integration tests.
 * Code that is specific to versions of the Pinterest API is in subdirectories of `src` (in the case of python and nodejs) or `scripts` (in the case of bash). The two versions supported by this quickstart are v3 and v5.
+
+## Other Resources
+
+  * [Pinterest Developers](https://developers.pinterest.com/)
+  * [Pinterest Engineering Blog](https://medium.com/pinterest-engineering)
+  * The [pinterest/rest-api](https://github.com/pinterest/rest-api) repo on github contains [OpenAPI](https://www.openapis.org/) descriptions for Pinterest's REST API.

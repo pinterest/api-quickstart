@@ -25,7 +25,7 @@ describe('ApiConfig test environment', () => {
     expect(api_config.app_secret).toEqual('test-app-secret');
     expect(api_config.port).toEqual(8085);
     expect(api_config.redirect_uri).toEqual('http://localhost:8085/');
-    expect(api_config.landing_uri).toEqual('https://developers.pinterest.com/manage/test-app-id');
+    expect(api_config.landing_uri).toEqual('https://developers.pinterest.com/apps/test-app-id');
     expect(api_config.oauth_uri).toEqual('https://www.pinterest.com');
     expect(api_config.api_uri).toEqual('https://api.pinterest.com');
     expect(api_config.version).toEqual('v5');

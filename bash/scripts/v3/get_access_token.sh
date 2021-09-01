@@ -15,7 +15,7 @@
 : ${REDIRECT_PORT:=8085}
 : ${PINTEREST_API_URI:=https://api.pinterest.com}
 : ${PINTEREST_OAUTH_URI:=https://www.pinterest.com}
-: ${REDIRECT_LANDING_URI:=https://developers.pinterest.com/manage/${PINTEREST_APP_ID}}
+: ${REDIRECT_LANDING_URI:=https://developers.pinterest.com/apps/${PINTEREST_APP_ID}}
 REDIRECT_URI="http://localhost:${REDIRECT_PORT}/"
 
 # Note that the application id and secrect have no defaults,
