@@ -89,6 +89,13 @@ start_date=2021-03-01&end_date=2021-03-31\
     dm_async_report.metric('TOTAL_CLICK_SEARCH_QUANTITY');
     dm_async_report.metric('TOTAL_CLICK_SEARCH');
 
+    // specify filter
+    dm_async_report.filters([{
+      field: 'PIN_PROMOTION_STATUS',
+      operator: '=',
+      value: 'APPROVED'
+    }]);
+
     const mock_run = jest.spyOn(AsyncReport.prototype, 'run');
     dm_async_report.run();
 
@@ -100,6 +107,8 @@ TOTAL_CLICK_SEARCH,TOTAL_CLICK_SEARCH_QUANTITY\
 &conversion_report_time=AD_EVENT\
 &data_source=REALTIME\
 &engagement_window_days=7\
+&filters=%5B%7B%22field%22%3A%22PIN_PROMOTION_STATUS%22%2C%22\
+operator%22%3A%22%3D%22%2C%22value%22%3A%22APPROVED%22%7D%5D\
 &granularity=HOUR\
 &level=SEARCH_QUERY\
 &report_format=csv\

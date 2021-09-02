@@ -9,11 +9,17 @@ def positive_integer(number):
     return ivalue
 
 
-# TODO: use parent parser.
-#       see https://docs.python.org/3/library/argparse.html for details.
 def common_arguments(parser):
     """
     Set command line arguments that are common to all of the scripts.
+
+    This function should be called after adding arguments, so that the common
+    arguments are at the end of the argument list printed as part of the help
+    message.
+
+    If this function were implemented as a parent parser, then the common
+    arguments would always appear at the beginning of the list provided in the
+    command-line help.
     """
     parser.add_argument("-a", "--access-token", help="access token name")
     parser.add_argument(

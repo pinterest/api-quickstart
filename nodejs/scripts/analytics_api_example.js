@@ -157,6 +157,7 @@ async function main(argv) {
       .last_30_days()
       .level('PIN_PROMOTION')
       .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1'])
+      .filters([{ field: 'PIN_PROMOTION_STATUS', operator: '=', value: 'APPROVED' }])
       .tag_version(3);
 
     // Request (POST) and wait (GET) for the report until it is ready.

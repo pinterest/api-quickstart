@@ -138,9 +138,9 @@ export class DeliveryMetricsAsyncReport extends AdAnalyticsAttributes {
     return this;
   }
 
-  // TODO: not sure how filters need to be encoded.
+  // Filters must be a list of structures with fields as specified by the API.
   filters(filters) {
-    this.attrs.filters = filters;
+    this.attrs.filters = encodeURIComponent(JSON.stringify(filters));
     return this;
   }
 

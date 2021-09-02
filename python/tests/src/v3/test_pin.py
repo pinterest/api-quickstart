@@ -1,3 +1,4 @@
+import json
 import unittest
 
 import mock
@@ -35,11 +36,23 @@ class PinTest(unittest.TestCase):
 
         put_data_return_value = {"id": "new_pin_id"}
         mock_api_object_put_data.return_value = put_data_return_value
+        carousel_data = {
+            "carousel_slots": {
+                "details": "string",
+                "id": "string",
+                "images": {"height": 450, "url": "string", "width": 236},
+                "link": "string",
+                "title": "string",
+            },
+            "id": "number in a string",
+            "index": "another number in a string",
+        }
         new_pin_data = {
             "alt_text": "test alt text",
             "description": "test description",
             "link": "test://domain/path1/path2/webpage.html",
             "image_large_url": "test://domain/path1/path2/image.jpg",
+            "carousel_data": carousel_data,
         }
         expected_put_data = {
             "board_id": "test_board_id",
@@ -47,6 +60,7 @@ class PinTest(unittest.TestCase):
             "source_url": new_pin_data["link"],
             "alt_text": new_pin_data["alt_text"],
             "description": new_pin_data["description"],
+            "carousel_data_json": json.dumps(carousel_data, separators=(",", ":")),
         }
         response = test_pin.create(new_pin_data, "test_board_id")
         self.assertEqual(response, put_data_return_value)

@@ -26,7 +26,6 @@ export class Pin extends ApiObject {
 
   // https://developers.pinterest.com/docs/api/v5/#operation/pins/create
   async create(pin_data, board_id, { section }) {
-    // TODO: carousel_data_json
     const OPTIONAL_ATTRIBUTES = [
       'link',
       'title',
