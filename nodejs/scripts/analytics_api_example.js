@@ -84,7 +84,7 @@ async function main(argv) {
 
   // In house developers typically don't have login credentials for the main Pinterest
   // account of their brand to OAuth against.
-  // We often reccomend that they set up a new 'developer' Pinterest user,
+  // We often recommend that they set up a new 'developer' Pinterest user,
   // and then request that this new account is granted access to the
   // advertiser account via:
   //   https://help.pinterest.com/en/business/article/add-people-to-your-ad-account
