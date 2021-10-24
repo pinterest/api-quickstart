@@ -22,17 +22,21 @@ describe('v5 board tests', () => {
 
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');
     mock_get_iterator.mockResolvedValue('test_iterator');
-    let iterator = await test_board.get_pins();
+    let iterator = await test_board.get_pins('query_parameters');
     expect('test_iterator').toEqual(iterator);
-    expect(mock_get_iterator.mock.calls[0][0]).toEqual('/v5/boards/test_board_id/pins');
+    expect(mock_get_iterator.mock.calls[0]).toEqual([
+      '/v5/boards/test_board_id/pins', 'query_parameters']);
 
     iterator = await test_board.get_sections();
     expect('test_iterator').toEqual(iterator);
-    expect(mock_get_iterator.mock.calls[1][0]).toEqual('/v5/boards/test_board_id/sections');
+    expect(mock_get_iterator.mock.calls[1]).toEqual([
+      '/v5/boards/test_board_id/sections', undefined]);
 
-    iterator = await test_board.get_section_pins('test_section_id');
+    iterator = await test_board.get_section_pins('test_section_id', 'query_parameters_2');
     expect('test_iterator').toEqual(iterator);
-    expect(mock_get_iterator.mock.calls[2][0]).toEqual('/v5/boards/test_board_id/sections/test_section_id/pins');
+    expect(mock_get_iterator.mock.calls[2]).toEqual([
+      '/v5/boards/test_board_id/sections/test_section_id/pins',
+      'query_parameters_2']);
 
     const board_data = {
       owner: { username: 'pindexter' },

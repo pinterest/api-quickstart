@@ -27,28 +27,16 @@ export class User extends ApiObject {
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET
-  async get_boards(user_data, { query_parameters }) {
-    let path = `/v3/users/${user_data.id}/boards/feed/`;
-    if (query_parameters) {
-      let delimiter = '?';
-      for (const [query_parameter, value] of Object.entries(query_parameters)) {
-        path += delimiter + query_parameter + '=' + value;
-        delimiter = '&';
-      }
-    }
-    return this.get_iterator(path); // iterator that handles API paging
+  async get_boards(user_data, query_parameters) {
+    // iterator that handles API paging
+    return this.get_iterator(`/v3/users/${user_data.id}/boards/feed/`,
+      query_parameters);
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET
-  async get_pins(user_data, { query_parameters }) {
-    let path = `/v3/users/${user_data.id}/pins/`;
-    if (query_parameters) {
-      let delimiter = '?';
-      for (const [query_parameter, value] of Object.entries(query_parameters)) {
-        path += delimiter + query_parameter + '=' + value;
-        delimiter = '&';
-      }
-    }
-    return this.get_iterator(path); // iterator that handles API paging
+  async get_pins(user_data, query_parameters) {
+    // iterator that handles API paging
+    return this.get_iterator(`/v3/users/${user_data.id}/pins/`,
+      query_parameters);
   }
 }

@@ -10,9 +10,12 @@ export class Advertisers extends ApiObject {
   // It's unintuitive, but the param include_acl=true is required
   // to return advertisers which are shared with your account.
   // https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_advertisers_by_owner_user_id_handler_GET
-  async get() {
+  async get(query_parameters) {
+    // query_parameters are available for consistency with other endpoints.
+    // There are no other query_parameters available for this endpoint.
     return this.get_iterator(
-      `/ads/v3/advertisers/?owner_user_id=${this.user_id}&include_acl=true`);
+      `/ads/v3/advertisers/?owner_user_id=${this.user_id}&include_acl=true`,
+      query_parameters);
   }
 
   // Return a string with a summary of an element returned by this module.
@@ -39,19 +42,22 @@ export class Advertisers extends ApiObject {
 
   // Get the campaigns associated with an Ad Account.
   // https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_advertiser_campaigns_handler_GET
-  async get_campaigns(ad_account_id) {
-    return this.get_iterator(`/ads/v3/advertisers/${ad_account_id}/campaigns/`);
+  async get_campaigns(ad_account_id, query_parameters) {
+    return this.get_iterator(`/ads/v3/advertisers/${ad_account_id}/campaigns/`,
+      query_parameters);
   }
 
   // Get the ad groups associated with an Ad Account and Campaign.
   // https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_campaign_ad_groups_handler_GET
-  async get_ad_groups(_ad_account_id, campaign_id) {
-    return this.get_iterator(`/ads/v3/campaigns/${campaign_id}/ad_groups/`);
+  async get_ad_groups(_ad_account_id, campaign_id, query_parameters) {
+    return this.get_iterator(`/ads/v3/campaigns/${campaign_id}/ad_groups/`,
+      query_parameters);
   }
 
   // Get the ads associated with an Ad Account, Campaign, and Ad Group.
   // https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_ad_group_pin_promotions_handler_GET
-  async get_ads(_ad_account_id, _campaign_id, ad_group_id) {
-    return this.get_iterator(`/ads/v3/ad_groups/${ad_group_id}/pin_promotions/`);
+  async get_ads(_ad_account_id, _campaign_id, ad_group_id, query_parameters) {
+    return this.get_iterator(`/ads/v3/ad_groups/${ad_group_id}/pin_promotions/`,
+      query_parameters);
   }
 }

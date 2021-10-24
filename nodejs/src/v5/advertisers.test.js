@@ -18,7 +18,8 @@ describe('v5 advertisers tests', () => {
     mock_get_iterator.mockResolvedValue('test_iterator');
 
     let response = await adv.get();
-    expect(mock_get_iterator.mock.calls[0][0]).toEqual('/v5/ad_accounts');
+    expect(mock_get_iterator.mock.calls[0]).toEqual([
+      '/v5/ad_accounts', undefined]);
     expect(response).toEqual('test_iterator');
 
     console.log = jest.fn(); // test output
@@ -40,20 +41,24 @@ describe('v5 advertisers tests', () => {
       [`[2] frob ${summary2}`]
     ]);
 
-    response = await adv.get_campaigns('ad_account_1');
-    expect(mock_get_iterator.mock.calls[1][0]).toEqual(
-      '/v5/ad_accounts/ad_account_1/campaigns');
+    response = await adv.get_campaigns('ad_account_1', 'query_parameters_1');
+    expect(mock_get_iterator.mock.calls[1]).toEqual([
+      '/v5/ad_accounts/ad_account_1/campaigns',
+      'query_parameters_1']);
     expect(response).toEqual('test_iterator');
 
     response = await adv.get_ad_groups('ad_account_2', 'campaign_2');
-    expect(mock_get_iterator.mock.calls[2][0]).toEqual(
-      '/v5/ad_accounts/ad_account_2/ad_groups?campaign_ids=campaign_2');
+    expect(mock_get_iterator.mock.calls[2]).toEqual([
+      '/v5/ad_accounts/ad_account_2/ad_groups?campaign_ids=campaign_2',
+      undefined]);
     expect(response).toEqual('test_iterator');
 
-    response = await adv.get_ads('ad_account_3', 'campaign_3', 'ad_group_3');
-    expect(mock_get_iterator.mock.calls[3][0]).toEqual('\
-/v5/ad_accounts/ad_account_3/ads\
-?campaign_ids=campaign_3&ad_group_ids=ad_group_3');
+    response = await adv.get_ads('ad_account_3', 'campaign_3', 'ad_group_3',
+      'query_parameters_3');
+    expect(mock_get_iterator.mock.calls[3]).toEqual(
+      ['/v5/ad_accounts/ad_account_3/ads\
+?campaign_ids=campaign_3&ad_group_ids=ad_group_3',
+      'query_parameters_3']);
     expect(response).toEqual('test_iterator');
   });
 });

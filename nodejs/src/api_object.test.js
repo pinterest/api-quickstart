@@ -4,6 +4,40 @@ import got from 'got';
 jest.mock('got');
 
 describe('api_object tests', () => {
+  test('add_query', () => {
+    const api_object = new ApiObject(jest.fn(), jest.fn());
+
+    // cases with no parameters to be added
+    expect(api_object.add_query('hello')).toBe('hello');
+    expect(api_object.add_query('hello', null)).toBe('hello');
+    expect(api_object.add_query('hello', {})).toBe('hello');
+    expect(api_object.add_query('hello', { query_parameters: {} })).toBe('hello');
+
+    // verifyh that different numbers of parameters work
+    expect(api_object.add_query('hello', { world: 'ready' }))
+      .toBe('hello?world=ready');
+
+    expect(api_object.add_query('hello', {
+      world: 'ready',
+      set: 'go'
+    })).toBe('hello?world=ready&set=go');
+
+    expect(api_object.add_query('hello', {
+      world: 'ready',
+      set: 'go',
+      eeny: 'meeny'
+    })).toBe('hello?world=ready&set=go&eeny=meeny');
+
+    // verify that query_parameters are surface from within object
+    expect(api_object.add_query('hello', {
+      query_parameters: {
+        world: 'ready',
+        set: 'go',
+        eeny: 'meeny'
+      }
+    })).toBe('hello?world=ready&set=go&eeny=meeny');
+  });
+
   test('v3 api_object', async() => {
     const mock_api_config = jest.fn();
     mock_api_config.api_uri = 'test_uri';
