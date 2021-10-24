@@ -110,8 +110,16 @@ class ApiObject(ApiCommon):
         )
         self.check(response)  # throws an exception if anything goes wrong
 
-    def get_iterator(self, path):
-        return PagedIterator(self, path)
+    def add_query(self, path, query_parameters={}):
+        if query_parameters:
+            delimiter = "&" if ("?" in path) else "?"
+            for query_parameter, value in query_parameters.items():
+                path += delimiter + query_parameter + "=" + str(value)
+                delimiter = "&"
+        return path
+
+    def get_iterator(self, path, query_parameters={}):
+        return PagedIterator(self, self.add_query(path, query_parameters))
 
     @classmethod
     def print_multiple(cls, page_size, object_name, object_class, paged_iterator):
