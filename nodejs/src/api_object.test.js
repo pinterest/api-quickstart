@@ -36,6 +36,17 @@ describe('api_object tests', () => {
         eeny: 'meeny'
       }
     })).toBe('hello?world=ready&set=go&eeny=meeny');
+
+    // verify that delimiter works properly when there already
+    // parameters in the path
+    expect(api_object.add_query('hello?goodbye', {cruel: 'world'}))
+      .toBe('hello?goodbye&cruel=world')
+
+    expect(api_object.add_query('hello?good=bye', {
+      cruel: 'world',
+      and: 'farewell'
+    }))
+      .toBe('hello?good=bye&cruel=world&and=farewell')
   });
 
   test('v3 api_object', async() => {

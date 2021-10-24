@@ -114,7 +114,7 @@ export class ApiObject extends ApiCommon {
       if (query_parameters.query_parameters) {
         query_parameters = query_parameters.query_parameters;
       }
-      let delimiter = '?';
+      let delimiter = path.includes('?') ? '&' : '?';
       for (const [query_parameter, value] of Object.entries(query_parameters)) {
         path += delimiter + query_parameter + '=' + value;
         delimiter = '&';
