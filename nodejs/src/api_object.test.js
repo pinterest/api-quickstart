@@ -13,7 +13,7 @@ describe('api_object tests', () => {
     expect(api_object.add_query('hello', {})).toBe('hello');
     expect(api_object.add_query('hello', { query_parameters: {} })).toBe('hello');
 
-    // verifyh that different numbers of parameters work
+    // verify that different numbers of parameters work
     expect(api_object.add_query('hello', { world: 'ready' }))
       .toBe('hello?world=ready');
 
@@ -28,7 +28,7 @@ describe('api_object tests', () => {
       eeny: 'meeny'
     })).toBe('hello?world=ready&set=go&eeny=meeny');
 
-    // verify that query_parameters are surface from within object
+    // verify that query_parameters are surfaced from within object
     expect(api_object.add_query('hello', {
       query_parameters: {
         world: 'ready',
