@@ -106,18 +106,16 @@ export class ApiObject extends ApiCommon {
   }
 
   // Concatenate the query parameters to the path with appropriate delimiters.
-  // Eventually, might want to use a library to implement all URL-related
-  // functionality.
   add_query(path, query_parameters) {
     if (query_parameters) {
       // for backward compatibility, surface query_parameters from inside object
       if (query_parameters.query_parameters) {
         query_parameters = query_parameters.query_parameters;
       }
-      let delimiter = path.includes('?') ? '&' : '?';
-      for (const [query_parameter, value] of Object.entries(query_parameters)) {
-        path += delimiter + query_parameter + '=' + value;
-        delimiter = '&';
+      const query = new URLSearchParams(query_parameters).toString();
+      if (query) {
+        const delimiter = path.includes('?') ? '&' : '?';
+        path += delimiter + query;
       }
     }
     return path;
