@@ -7,8 +7,8 @@ export class Advertisers extends ApiObject {
 
   // Get the advertisers shared with the specified user_id.
   // https://developers.pinterest.com/docs/api/v5/#operation/ad_accounts/list
-  async get() {
-    return this.get_iterator('/v5/ad_accounts');
+  async get(query_parameters) {
+    return this.get_iterator('/v5/ad_accounts', query_parameters);
   }
 
   // Return a string with a summary of an element returned by this module.
@@ -35,23 +35,26 @@ export class Advertisers extends ApiObject {
 
   // Get the campaigns associated with an Ad Account.
   // https://developers.pinterest.com/docs/api/v5/#operation/campaigns/list
-  async get_campaigns(ad_account_id) {
-    return this.get_iterator(`/v5/ad_accounts/${ad_account_id}/campaigns`);
+  async get_campaigns(ad_account_id, query_parameters) {
+    return this.get_iterator(`/v5/ad_accounts/${ad_account_id}/campaigns`,
+      query_parameters);
   }
 
   // Get the ad groups associated with an Ad Account and Campaign.
   // https://developers.pinterest.com/docs/api/v5/#operation/ad_groups/list
-  async get_ad_groups(ad_account_id, campaign_id) {
+  async get_ad_groups(ad_account_id, campaign_id, query_parameters) {
     return this.get_iterator(
-      `/v5/ad_accounts/${ad_account_id}/ad_groups?campaign_ids=${campaign_id}`
+      `/v5/ad_accounts/${ad_account_id}/ad_groups?campaign_ids=${campaign_id}`,
+      query_parameters
     );
   }
 
   // Get the ads associated with an Ad Account, Campaign, and Ad Group.
   // https://developers.pinterest.com/docs/api/v5/#operation/ads/list
-  async get_ads(ad_account_id, campaign_id, ad_group_id) {
+  async get_ads(ad_account_id, campaign_id, ad_group_id, query_parameters) {
     return this.get_iterator(`\
 /v5/ad_accounts/${ad_account_id}/ads\
-?campaign_ids=${campaign_id}&ad_group_ids=${ad_group_id}`);
+?campaign_ids=${campaign_id}&ad_group_ids=${ad_group_id}`,
+    query_parameters);
   }
 }

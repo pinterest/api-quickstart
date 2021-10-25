@@ -53,12 +53,14 @@ class Board(ApiObject):
         self.delete_and_check(f"/v5/boards/{self.board_id}")
 
     # https://developers.pinterest.com/docs/api/v5/#operation/boards/list_pins
-    def get_pins(self):
-        return self.get_iterator(f"/v5/boards/{self.board_id}/pins")
+    def get_pins(self, query_parameters=None):
+        return self.get_iterator(f"/v5/boards/{self.board_id}/pins", query_parameters)
 
     # https://developers.pinterest.com/docs/api/v5/#operation/board_sections/list
-    def get_sections(self):
-        return self.get_iterator(f"/v5/boards/{self.board_id}/sections")
+    def get_sections(self, query_parameters=None):
+        return self.get_iterator(
+            f"/v5/boards/{self.board_id}/sections", query_parameters
+        )
 
     @classmethod
     def print_section(cls, section_data):
@@ -75,7 +77,7 @@ class Board(ApiObject):
         return self.post_data(f"/v5/boards/{self.board_id}/sections", create_data)
 
     # https://developers.pinterest.com/docs/api/v5/#operation/board_sections/list_pins
-    def get_section_pins(self, section_id):
+    def get_section_pins(self, section_id, query_parameters=None):
         return self.get_iterator(
-            f"/v5/boards/{self.board_id}/sections/{section_id}/pins"
+            f"/v5/boards/{self.board_id}/sections/{section_id}/pins", query_parameters
         )

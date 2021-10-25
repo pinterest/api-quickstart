@@ -129,7 +129,7 @@ async function main(argv) {
   if (args.analytics_object !== 'user') {
     scopes.push(Scope.READ_ADVERTISERS);
   }
-  access_token.fetch({ scopes: scopes });
+  await access_token.fetch({ scopes: scopes });
 
   // Get the user record. Some versions of the Pinterest API require the
   // user id associated with the access token.

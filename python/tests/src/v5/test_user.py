@@ -40,12 +40,12 @@ class UserTest(unittest.TestCase):
             "test_user_data", query_parameters={"param1": "value1", "param2": "value2"}
         )
         mock_api_object_get_iterator.assert_called_once_with(
-            "/v5/boards?param1=value1&param2=value2"
+            "/v5/boards", {"param1": "value1", "param2": "value2"}
         )
         self.assertEqual(response, "test_iterator")
 
         response = test_user.get_boards("test_user_data")
-        mock_api_object_get_iterator.assert_called_with("/v5/boards")
+        mock_api_object_get_iterator.assert_called_with("/v5/boards", None)
 
         response = test_user.get_boards(
             "test_user_data",
@@ -53,7 +53,9 @@ class UserTest(unittest.TestCase):
                 "param1": "value1",
             },
         )
-        mock_api_object_get_iterator.assert_called_with("/v5/boards?param1=value1")
+        mock_api_object_get_iterator.assert_called_with(
+            "/v5/boards", {"param1": "value1"}
+        )
 
     @mock.patch("src.v5.user.ApiObject.get_iterator")
     def test_user_get_pins(self, mock_api_object_get_iterator):
@@ -66,7 +68,7 @@ class UserTest(unittest.TestCase):
                 ), "access_token not as expected"
 
             # the ids here that return static pin data must match the ids below
-            def get_pins(self):
+            def get_pins(self, query_parameters={}):
                 if self.id == "board1":
                     return iter(["board1_pin1", "board1_pin2"])
                 if self.id == "board2":
@@ -95,4 +97,6 @@ class UserTest(unittest.TestCase):
             ):
                 self.assertEqual(expected_pins[index], pin)
 
-        mock_api_object_get_iterator.assert_called_once_with("/v5/boards?param1=value1")
+        mock_api_object_get_iterator.assert_called_once_with(
+            "/v5/boards", {"param1": "value1"}
+        )

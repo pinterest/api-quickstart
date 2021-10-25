@@ -7,11 +7,12 @@ class UserPinIterator:
     This class emulates the ability to list all pins for a user.
     """
 
-    def __init__(self, boards, api_config, access_token):
+    def __init__(self, boards, api_config, access_token, query_parameters):
         self.api_config = api_config
         self.access_token = access_token
         self.board_iterator = boards
         self.pin_iterator = iter([])
+        self.query_parameters = query_parameters
 
     def __iter__(self):
         return self
@@ -23,7 +24,7 @@ class UserPinIterator:
         # no more pins, try next board
         for board_data in self.board_iterator:
             board = Board(board_data["id"], self.api_config, self.access_token)
-            self.pin_iterator = board.get_pins()
+            self.pin_iterator = board.get_pins(self.query_parameters)
             return self.__next__()  # recursively try pin iterator
 
         raise StopIteration  # no more boards
@@ -51,19 +52,15 @@ class User(ApiObject):
         print("--------------------")
 
     # https://developers.pinterest.com/docs/api/v5/#operation/boards/list
-    def get_boards(self, user_data, query_parameters={}):
-        path = "/v5/boards"
-        if query_parameters:
-            delimiter = "?"
-            for query_parameter, value in query_parameters.items():
-                path += delimiter + query_parameter + "=" + str(value)
-                delimiter = "&"
-        return self.get_iterator(path)  # the returned iterator handles API paging
+    def get_boards(self, user_data, query_parameters=None):
+        # the returned iterator handles API paging
+        return self.get_iterator("/v5/boards", query_parameters)
 
     # getting all of a user's pins is not supported, so iterate through boards
-    def get_pins(self, user_data, query_parameters={}):
+    def get_pins(self, user_data, query_parameters=None):
         return UserPinIterator(
             self.get_boards(user_data, query_parameters),
             self.api_config,
             self.access_token,
+            query_parameters,
         )

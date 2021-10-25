@@ -105,12 +105,29 @@ export class ApiObject extends ApiCommon {
     }
   }
 
+  // Concatenate the query parameters to the path with appropriate delimiters.
+  add_query(path, query_parameters) {
+    if (query_parameters) {
+      // for backward compatibility, surface query_parameters from inside object
+      if (query_parameters.query_parameters) {
+        query_parameters = query_parameters.query_parameters;
+      }
+      const query = new URLSearchParams(query_parameters).toString();
+      if (query) {
+        const delimiter = path.includes('?') ? '&' : '?';
+        path += delimiter + query;
+      }
+    }
+    return path;
+  }
+
   /**
    *  The iterator returned by this function implements paging on top of the bookmark
    *  functionality provided by the Pinterest API. Useful blog on async iterators:
    *    https://blog.risingstack.com/async-iterators-in-node-js/
    */
-  get_iterator(path) {
+  get_iterator(path, query_parameters) {
+    path = this.add_query(path, query_parameters);
     const api_object = this;
     return {
       [Symbol.asyncIterator]: async function * () {

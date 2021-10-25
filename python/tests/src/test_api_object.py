@@ -12,6 +12,43 @@ class ApiObjectTest(unittest.TestCase):
     test_path = "/test_path"
     test_uri_path = test_uri + test_path
 
+    def test_add_query(self):
+        api_object = ApiObject(mock.Mock(), mock.Mock())
+
+        # cases with no parameters to be added
+        self.assertEqual("hello", api_object.add_query("hello"))
+        self.assertEqual("hello", api_object.add_query("hello", None))
+        self.assertEqual("hello", api_object.add_query("hello", {}))
+
+        # verify that different numbers of parameters work
+        self.assertEqual(
+            "hello?world=ready", api_object.add_query("hello", {"world": "ready"})
+        )
+        self.assertEqual(
+            "hello?world=ready&set=go",
+            api_object.add_query("hello", {"world": "ready", "set": "go"}),
+        )
+        self.assertEqual(
+            "hello?world=ready&set=go&eeny=meeny",
+            api_object.add_query(
+                "hello", {"world": "ready", "set": "go", "eeny": "meeny"}
+            ),
+        )
+
+        # verify that delimiter works properly when there already
+        # parameters in the path
+        self.assertEqual(
+            "hello?goodbye&cruel=world",
+            api_object.add_query("hello?goodbye", {"cruel": "world"}),
+        )
+
+        self.assertEqual(
+            "hello?good=bye&cruel=world&and=farewell",
+            api_object.add_query(
+                "hello?good=bye", {"cruel": "world", "and": "farewell"}
+            ),
+        )
+
     @requests_mock.Mocker()
     def test_api_object_v3(self, rm):
         api_config = mock.Mock()

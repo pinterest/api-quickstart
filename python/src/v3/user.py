@@ -24,21 +24,13 @@ class User(ApiObject):
         print("--------------------")
 
     # https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET
-    def get_boards(self, user_data, query_parameters={}):
-        path = f"/v3/users/{user_data['id']}/boards/feed/"
-        if query_parameters:
-            delimiter = "?"
-            for query_parameter, value in query_parameters.items():
-                path += delimiter + query_parameter + "=" + str(value)
-                delimiter = "&"
-        return self.get_iterator(path)  # the returned iterator handles API paging
+    def get_boards(self, user_data, query_parameters=None):
+        # the returned iterator handles API paging
+        return self.get_iterator(
+            f"/v3/users/{user_data['id']}/boards/feed/", query_parameters
+        )
 
     # https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET
-    def get_pins(self, user_data, query_parameters={}):
-        path = f"/v3/users/{user_data['id']}/pins/"
-        if query_parameters:
-            delimiter = "?"
-            for query_parameter, value in query_parameters.items():
-                path += delimiter + query_parameter + "=" + str(value)
-                delimiter = "&"
-        return self.get_iterator(path)  # the returned iterator handles API paging
+    def get_pins(self, user_data, query_parameters=None):
+        # the returned iterator handles API paging
+        return self.get_iterator(f"/v3/users/{user_data['id']}/pins/", query_parameters)

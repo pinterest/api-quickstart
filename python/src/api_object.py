@@ -1,3 +1,5 @@
+from urllib.parse import urlencode
+
 import requests
 
 from api_common import ApiCommon
@@ -110,8 +112,14 @@ class ApiObject(ApiCommon):
         )
         self.check(response)  # throws an exception if anything goes wrong
 
-    def get_iterator(self, path):
-        return PagedIterator(self, path)
+    def add_query(self, path, query_parameters=None):
+        if query_parameters:
+            delimiter = "&" if ("?" in path) else "?"
+            path += delimiter + urlencode(query_parameters)
+        return path
+
+    def get_iterator(self, path, query_parameters=None):
+        return PagedIterator(self, self.add_query(path, query_parameters))
 
     @classmethod
     def print_multiple(cls, page_size, object_name, object_class, paged_iterator):

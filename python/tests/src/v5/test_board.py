@@ -62,7 +62,7 @@ class BoardTest(unittest.TestCase):
 
         # test get_pins
         mock_api_object_get_iterator.return_value = "test_iterator"
-        response = test_board.get_pins()
+        response = test_board.get_pins("query_parameters")
         self.assertEqual(response, "test_iterator")
 
         # test get_sections
@@ -70,14 +70,17 @@ class BoardTest(unittest.TestCase):
         self.assertEqual(response, "test_iterator")
 
         # test get_section_pins
-        response = test_board.get_section_pins("test_section_id")
+        response = test_board.get_section_pins("test_section_id", "query_parameters_2")
         self.assertEqual(response, "test_iterator")
 
         mock_api_object_get_iterator.assert_has_calls(
             [
-                mock.call("/v5/boards/new_board_id/pins"),
-                mock.call("/v5/boards/new_board_id/sections"),
-                mock.call("/v5/boards/new_board_id/sections/test_section_id/pins"),
+                mock.call("/v5/boards/new_board_id/pins", "query_parameters"),
+                mock.call("/v5/boards/new_board_id/sections", None),
+                mock.call(
+                    "/v5/boards/new_board_id/sections/test_section_id/pins",
+                    "query_parameters_2",
+                ),
             ]
         )
 

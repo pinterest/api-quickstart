@@ -39,7 +39,8 @@ class AdvertisersTest(unittest.TestCase):
 
         mock_get_iterator.return_value = "test_iterator"
         self.assertEqual(
-            "test_iterator", test_advertisers.get_campaigns("test_account_id")
+            "test_iterator",
+            test_advertisers.get_campaigns("test_account_id", "query_parameters_1"),
         )
         self.assertEqual(
             "test_iterator",
@@ -48,20 +49,25 @@ class AdvertisersTest(unittest.TestCase):
         self.assertEqual(
             "test_iterator",
             test_advertisers.get_ads(
-                "test_account_id", "test_campaign_id", "test_ad_group_id"
+                "test_account_id",
+                "test_campaign_id",
+                "test_ad_group_id",
+                "query_parameters_3",
             ),
         )
         mock_get_iterator.assert_has_calls(
             [
-                call("/v5/ad_accounts"),
-                call("/v5/ad_accounts/test_account_id/campaigns"),
+                call("/v5/ad_accounts", None),
+                call("/v5/ad_accounts/test_account_id/campaigns", "query_parameters_1"),
                 call(
                     "/v5/ad_accounts/test_account_id/ad_groups"
-                    "?campaign_ids=test_campaign_id"
+                    "?campaign_ids=test_campaign_id",
+                    None,
                 ),
                 call(
                     "/v5/ad_accounts/test_account_id/ads"
-                    "?campaign_ids=test_campaign_id&ad_group_ids=test_ad_group_id"
+                    "?campaign_ids=test_campaign_id&ad_group_ids=test_ad_group_id",
+                    "query_parameters_3",
                 ),
             ]
         )

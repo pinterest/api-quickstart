@@ -38,10 +38,10 @@ describe('v5 user tests', () => {
 
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');
     mock_get_iterator.mockResolvedValue('test_iterator');
-    const iterator = await test_user.get_boards('test_user_data',
-      { query_parameters: { key1: 'value1', key2: 'value2' } });
+    const iterator = await test_user.get_boards('test_user_data', 'query_parameters');
     expect('test_iterator').toEqual(iterator);
-    expect(mock_get_iterator.mock.calls[0][0]).toEqual('/v5/boards?key1=value1&key2=value2');
+    expect(mock_get_iterator.mock.calls[0]).toEqual([
+      '/v5/boards', 'query_parameters']);
   });
 
   test('v5 user get pins', async() => {

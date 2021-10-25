@@ -15,18 +15,21 @@ export class Board extends ApiObject {
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_board_pins_GET
-  async get_pins() {
-    return this.get_iterator(`/v3/boards/${this.board_id}/pins/`);
+  async get_pins(query_parameters) {
+    return this.get_iterator(`/v3/boards/${this.board_id}/pins/`,
+      query_parameters);
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_sections_GET
-  async get_sections() {
-    return this.get_iterator(`/v3/board/${this.board_id}/sections/`);
+  async get_sections(query_parameters) {
+    return this.get_iterator(`/v3/board/${this.board_id}/sections/`,
+      query_parameters);
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_section_pins_GET
-  async get_section_pins(section_id) {
-    return this.get_iterator(`/v3/board/sections/${section_id}/pins/`);
+  async get_section_pins(section_id, query_parameters) {
+    return this.get_iterator(`/v3/board/sections/${section_id}/pins/`,
+      query_parameters);
   }
 
   static print_summary(board_data) {
