@@ -114,10 +114,8 @@ class ApiObject(ApiCommon):
 
     def add_query(self, path, query_parameters=None):
         if query_parameters:
-            query = urlencode(query_parameters)
-            if query:
-                delimiter = "&" if ("?" in path) else "?"
-                path += delimiter + query
+            delimiter = "&" if ("?" in path) else "?"
+            path += delimiter + urlencode(query_parameters)
         return path
 
     def get_iterator(self, path, query_parameters=None):
