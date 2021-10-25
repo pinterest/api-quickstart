@@ -57,12 +57,12 @@ class AdvertisersTest(unittest.TestCase):
         )
         mock_get_iterator.assert_has_calls(
             [
-                call("/v5/ad_accounts", {}),
+                call("/v5/ad_accounts", None),
                 call("/v5/ad_accounts/test_account_id/campaigns", "query_parameters_1"),
                 call(
                     "/v5/ad_accounts/test_account_id/ad_groups"
                     "?campaign_ids=test_campaign_id",
-                    {},
+                    None,
                 ),
                 call(
                     "/v5/ad_accounts/test_account_id/ads"

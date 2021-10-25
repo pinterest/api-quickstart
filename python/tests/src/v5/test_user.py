@@ -45,7 +45,7 @@ class UserTest(unittest.TestCase):
         self.assertEqual(response, "test_iterator")
 
         response = test_user.get_boards("test_user_data")
-        mock_api_object_get_iterator.assert_called_with("/v5/boards", {})
+        mock_api_object_get_iterator.assert_called_with("/v5/boards", None)
 
         response = test_user.get_boards(
             "test_user_data",

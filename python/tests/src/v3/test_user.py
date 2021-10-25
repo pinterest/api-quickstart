@@ -54,7 +54,7 @@ class UserTest(unittest.TestCase):
 
         response = test_user.get_boards({"id": "test_user_id2"})
         mock_api_object_get_iterator.assert_called_with(
-            "/v3/users/test_user_id2/boards/feed/", {}
+            "/v3/users/test_user_id2/boards/feed/", None
         )
 
         response = test_user.get_boards(
@@ -84,7 +84,7 @@ class UserTest(unittest.TestCase):
 
         response = test_user.get_pins({"id": "test_user_id2"})
         mock_api_object_get_iterator.assert_called_with(
-            "/v3/users/test_user_id2/pins/", {}
+            "/v3/users/test_user_id2/pins/", None
         )
 
         response = test_user.get_pins(

@@ -73,7 +73,7 @@ class BoardTest(unittest.TestCase):
         mock_api_object_get_iterator.assert_has_calls(
             [
                 mock.call("/v3/boards/test_board_id/pins/", "query_parameters"),
-                mock.call("/v3/board/test_board_id/sections/", {}),
+                mock.call("/v3/board/test_board_id/sections/", None),
                 mock.call(
                     "/v3/board/sections/test_section_id/pins/",
                     "query_parameters_2",
