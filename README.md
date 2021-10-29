@@ -31,7 +31,10 @@ This repository has code that is intended to provide a quick start for working w
      PINTEREST_APP_SECRET=<string>
      ```
 
-2. Pick one of the language directories (currently bash, nodejs and python) and follow the directions in the README file in the directory.
+2. Pick one of the language directories (currently bash, nodejs and python) and follow the directions in the README file in the directory:
+   * [Bash](./bash/README.md)
+   * [NodeJS](./nodejs/README.md)
+   * [Python](./python/README.md)
 
 ## OAuth 2.0 Authorization
 
