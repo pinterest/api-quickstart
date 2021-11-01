@@ -38,7 +38,7 @@ This repository has code that is intended to provide a quick start for working w
 
 ## OAuth 2.0 Authorization
 
-Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). For details regarding OAuth, please refer to our [v5 developer docs](https://developers.pinterest.com/docs/api/v5/#tag/Authentication) or [v3 developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
+Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). To learn about how to use OAuth 2.0 with the Pinterest API, check out the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/). For details regarding OAuth, please refer to our [v5 developer docs](https://developers.pinterest.com/docs/api/v5/#tag/Authentication) or [v3 developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
 
 An access token is used to authenticate most API calls. In general, access tokens are valid for relatively long periods of time, in order to avoid asking users to go through the OAuth flow too often. When an access token expires, it is possible to refresh the token -- a capability that the code in this repo also demonstrates.
 
@@ -82,5 +82,6 @@ Code that implements OAuth is available for each language in this repo. The loca
 ## Other Resources
 
   * [Pinterest Developers](https://developers.pinterest.com/)
+  * [Pinterest OAuth 2.0 Tutorial](https://pinterest-oauth-tutorial.glitch.me/)
   * [Pinterest Engineering Blog](https://medium.com/pinterest-engineering)
   * The [pinterest/api-description](https://github.com/pinterest/api-description) repo on GitHub contains [OpenAPI](https://www.openapis.org/) descriptions for Pinterest's REST API.
