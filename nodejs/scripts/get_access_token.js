@@ -32,7 +32,7 @@ async function main(argv) {
   const parser = new ArgumentParser({ description: 'Get Pinterest OAuth token' });
   parser.add_argument('-w', '--write', { action: 'store_true', help: 'write access token to file' });
   parser.add_argument('-ct', '--cleartext', { action: 'store_true', help: 'print the token in clear text' });
-  parser.add_argument('-s', '--scopes', { help: 'comma separated list of scopes' });
+  parser.add_argument('-s', '--scopes', { help: 'comma separated list of scopes or "help"' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
 
@@ -42,20 +42,25 @@ async function main(argv) {
   // imports that depend on the version of the API
   const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
   const { User } = await import(`../src/${api_config.version}/user.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
+  const { Scope, print_scopes } = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
   const access_token = new AccessToken(api_config, { name: args.access_token });
   if (args.scopes) {
+    if (args.scopes === 'help') {
+      print_scopes(); // print the valid set of scopes for the selected API version
+      process.exit(0);
+    }
+
     // use the comma-separated list of scopes passed as a command-line argument
     const scopes = args.scopes.split(',').map(scopeArg => {
       const scope = Scope[scopeArg.toUpperCase()];
       if (scope) {
         return scope;
       }
-      console.log('invalid scope:', scopeArg);
-      parser.print_usage();
+      console.log('Invalid scope:', scopeArg);
+      print_scopes();
       process.exit(1);
     });
     await access_token.oauth({ scopes: scopes });
