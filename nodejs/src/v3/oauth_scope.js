@@ -33,3 +33,40 @@ export const Scope = new Enum({
   WRITE_ADS: 'write_ads',
   MANAGE_MERCHANTS: 'manage_merchants'
 });
+
+export function print_scopes() {
+  console.log(`\
+Valid OAuth 2.0 scopes for Pinterest API version v3:
+  read_domains         Get your website's most clicked Pins, see top saved Pins, etc.
+  read_boards          See all your boards (including secret and group boards)
+  write_boards         Create new boards and change board settings
+  read_pins            See all public Pins and comments
+  write_pins           Create new Pins
+  read_users           See public data about a user (including boards, following, profile)
+  write_users          Change a user's following information
+  read_secret_boards   See secret boards
+  read_secret_pins     See secret pins
+  read_user_followers  Access a user's follows and followers
+  write_user_followees Follow things for a user
+
+  read_advertisers     See a user's advertising profile and settings
+  write_advertisers    Create and manage a user's advertising profile
+  read_campaigns       See data on ad campaigns, including spend, budget and performance
+  write_campaigns      Create and manage ad campaigns
+  read_merchants       See a user's Catalog (shopping feed)
+  write_merchants      Manage a user's Catalog (shopping feed)
+  read_pin_promotions  See ads and ad creatives
+  write_pin_promotions Create and manage ads and ad creatives
+
+  Composite scopes...
+  read_organic         See all of a user's public data.
+  write_organic        Create new Pins and boards, update public data
+  manage_organic       See, update, and add to public data
+  read_secret          See secret boards and secret Pins
+  read_ads             See data on ad campaigns, including spend, budget and performance
+  write_ads            Manage ad campaigns and see data including spend, budget and performance
+  manage_merchants     See and manage a user's Catalog (shopping feed)
+
+For more information, see:
+ https://developers.pinterest.com/docs/redoc/#section/User-Authorization/OAuth-scopes`);
+}

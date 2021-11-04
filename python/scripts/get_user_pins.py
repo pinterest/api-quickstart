@@ -34,7 +34,7 @@ def main(argv=[]):
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config, name=args.access_token)
-    access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_PINS])
+    access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS])
 
     # use the access token to get information about the user
     user_me = User("me", api_config, access_token)

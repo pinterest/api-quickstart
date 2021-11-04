@@ -50,7 +50,9 @@ def main(argv=[]):
     parser.add_argument(
         "-ct", "--cleartext", action="store_true", help="print the token in clear text"
     )
-    parser.add_argument("-s", "--scopes", help="comma separated list of scopes")
+    parser.add_argument(
+        "-s", "--scopes", help="comma separated list of scopes or 'help'"
+    )
     common_arguments(parser)
     args = parser.parse_args(argv)
 
@@ -59,7 +61,7 @@ def main(argv=[]):
 
     # imports that depend on the version of the API
     from access_token import AccessToken
-    from oauth_scope import Scope
+    from oauth_scope import lookup_scope
     from user import User
 
     # Note: It's possible to use the same API configuration with
@@ -68,7 +70,8 @@ def main(argv=[]):
     scopes = None  # use the default set of scopes
     if args.scopes:
         # use the comma-separated list of scopes passed as a command-line argument
-        scopes = list(map(lambda arg: Scope[arg.upper()], args.scopes.split(",")))
+        scope_list = args.scopes.split(",")
+        scopes = list(map(lookup_scope, scope_list))
         access_token.oauth(scopes=scopes)
     else:
         try:
