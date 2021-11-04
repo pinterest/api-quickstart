@@ -30,7 +30,10 @@ async function main(argv) {
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
   const access_token = new AccessToken(api_config, { name: args.access_token });
-  await access_token.fetch({ scopes: [Scope.READ_USERS, Scope.READ_PINS] });
+  await access_token.fetch({
+    scopes: [
+      Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS]
+  });
 
   // use the access token to get information about the user
   const user_me = new User('me', api_config, access_token);
