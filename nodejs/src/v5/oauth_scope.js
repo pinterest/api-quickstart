@@ -32,7 +32,7 @@ export const Scope = new Enum({
 });
 
 export function print_scopes() {
-  console.log(`
+  console.log(`\
 Valid OAuth 2.0 scopes for Pinterest API version v5:
   ads:read            Read access to advertising data
 

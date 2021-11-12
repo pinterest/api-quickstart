@@ -30,7 +30,9 @@ Python code that makes it easy to get started with the Pinterest API.
 
 ## Additional Functionality
 
-After running the Quick Start, you should be able to run any of the use cases in the scripts directory. Scripts that accept arguments use `argparse`, which ensures that the `-h` or `--help` argument shows usage documentation. The code for each script has a comment that documents its intended purpose.
+After running the Quick Start, you should be able to run any of the use cases in the scripts directory. Scripts that accept arguments use `argparse`, which ensures that the `-h` or `--help` argument shows usage documentation. All of this help documentation is in the [usage.md](./usage.md) file. In addition, thecode for each script has a comment that documents its intended purpose.
+
+Here is a short description of each of the scripts:
   * **[`get_access_token.py`](./scripts/get_access_token.py)**\
  Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v5/user_account` [endpoint](https://developers.pinterest.com/docs/api/v5/#tag/user_account) or the `/v3/users/{user}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET). Running this script with the `-w` parameter (`./scripts/get_access_token.py -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use. Use `-w` parameter in combination with the `-a` (access token name) parameter to store separate access tokens for different purposes. When requesting an access token for v5 without specifying scopes, the script will default to `user_accounts:read` `pins:read` and `boards:read`. The default for v3 is all scopes that are approved for your application. To see a complete list of scopes, refer to the Enums in [`./src/v5/oauth_scope.py`](./src/v5/oauth_scope.py) or [`./src/v3/oauth_scope.py`](./src/v3/oauth_scope.py). You can also run `./scripts/get_access_token.py -s help` to see the scopes for v5 or `./scripts/get_access_token.py -s help -v3` to see the scopes for v3.
   * **[`refresh_example.py`](./scripts/refresh_example.py)**\
