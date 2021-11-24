@@ -37,41 +37,136 @@ Here is a description of each of the scripts.
 ### [get_access_token.js](./scripts/get_access_token.js)
 Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v5/user_account` [endpoint](https://developers.pinterest.com/docs/api/v5/#tag/user_account) or the `/v3/users/{user}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET). Running this script with the `-w` parameter (`./scripts/get_access_token.js -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use. Use `-w` parameter in combination with the `-a` (access token name) parameter to store separate access tokens for different purposes. When requesting an access token for v5 without specifying scopes, the script will default to `user_accounts:read` `pins:read` and `boards:read`. The default for v3 is all scopes that are approved for your application. To see a complete list of scopes, refer to the Enums in [`./src/v5/oauth_scope.js`](./src/v5/oauth_scope.js) or [`./src/v3/oauth_scope.js`](./src/v3/oauth_scope.js). You can also run `./scripts/get_access_token.js -s help` to see the scopes for v5 or `./scripts/get_access_token.js -s help -v3` to see the scopes for v3.
 
+<!--gen-->
+```
+$ ./scripts/get_access_token.js --help
+
+```
+
+Use `--scopes help` to get a list of all possible scopes:
+<!--gen-->
+```
+$ ./scripts/get_access_token.js -v 5 --scopes help
+
+```
+
+<details>
+<summary>Example scopes output for v3</summary>
+
+<!--gen-->
+```
+$ ./scripts/get_access_token.js -v 3 --scopes help
+
+```
+</details>
+
 ### [refresh_example.js](./scripts/refresh_example.js)
 Demonstrates how to refresh an access token. This script is just meant to be self-contained example. Use refresh_access_token if you need to refresh and to store an existing access token.
+
+<!--gen-->
+```
+$ ./scripts/refresh_example.js --help
+
+```
 
 ### [refresh_access_token.js](./scripts/refresh_access_token.js)
 Refreshes an access token stored by using `./scripts/get_access_token.js` with the `-w` (write) argument.
 
+<!--gen-->
+```
+$ ./scripts/refresh_access_token.js --help
+
+```
+
 ### [get_pin.js](./scripts/get_pin.js)
 Retrieves the information for a specific board with the `/v5/pins/{pin_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/get) or the `/v3/pins/{pin}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_pin_GET).
+
+<!--gen-->
+```
+$ ./scripts/get_pin.js --help
+
+```
 
 ### [get_board.js](./scripts/get_board.js)
 Retrieves the information for a specific board with the `/v5/boards/{board_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/get) or the `/v3/boards/{board}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_GET).
 
+<!--gen-->
+```
+$ ./scripts/get_board.js --help
+
+```
+
 ### [get_user_pins.js](./scripts/get_user_pins.js)
 Retrieves all of the pins for a user with the `/v3/users/{users}/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET), using the paging mechanism of the API. There is not an equivalent v5 endpoint, so this script shows how to emulate the behavior in v5.
+
+<!--gen-->
+```
+$ ./scripts/get_user_pins.js --help
+
+```
 
 ### [get_user_boards.js](./scripts/get_user_boards.js)
 Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/list) or the `/v3/users/{user}/boards/feed/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET), using the paging mechanism of the API.
 
+<!--gen-->
+```
+$ ./scripts/get_user_boards.js --help
+
+```
+
 ### [copy_pin.js](./scripts/copy_pin.js)
 Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/create) or the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
+
+<!--gen-->
+```
+$ ./scripts/copy_pin.js --help
+
+```
 
 ### [copy_board.js](./scripts/copy_board.js)
 Demonstration of how to use the `POST /v3/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/create) or the `PUT /v3/boards/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_board_PUT) to create a board. Also uses the `POST /boards/{board_id}/sections` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/board_sections/create) or the `PUT /v3/board/{self.board_id}/sections/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_section_PUT) to create board sections. This script accepts source and target access tokens, so that a board can be copied from one account to another. It also provides an `--all` option that copies all of the boards and pins from a source account into a target account. Copying one or multiple boards can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
 
+<!--gen-->
+```
+$ ./scripts/copy_board.js --help
+
+```
+
 ### [get_ads.js](./scripts/get_ads.js)
 Reads information about advertiser accounts, campaigns, ad groups, and ads. By default, this script runs in interactive mode to get input on how to descend the advertising object hierarchy. Use the `--all-ads` argument to print all of the information associated with an access token.
+
+<!--gen-->
+```
+$ ./scripts/get_ads.js --help
+
+```
 
 ### [get_analytics.js](./scripts/get_analytics.js)
 Demonstrates how to use the API to retrieve analytics metrics with synchronous requests.
 
+<!--gen-->
+```
+$ ./scripts/get_analytics.js --help
+
+```
+
 ### [get_businesses.js](./scripts/get_businesses.js)
 Reads the `/v3/users/{user}/businesses/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_linked_business_accounts_GET). This script will generate a 400 error if your application does not have access to the `read_advertisers` scope. To see any data, the authorized account needs to have linked business acounts. There is not an equivalent v5 endpoint.
 
+<!--gen-->
+```
+$ ./scripts/get_businesses.js --help
+
+```
+
 ### [analytics_api_example.js](./scripts/analytics_api_example.js)
 Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [request](https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST) and [get](https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_advertiser_delivery_metrics_report_handler_GET) endpoints. This script only works for Pinterest API v3.
+
+<!--gen-->
+```
+$ ./scripts/analytics_api_example.js --help
+
+```
 
 In every new shell, you'll need to configure the environment.
 
