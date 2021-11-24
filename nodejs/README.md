@@ -41,6 +41,23 @@ Quick start code that demonstrates the OAuth 2.0 flow and tests the authenticati
 ```
 $ ./scripts/get_access_token.js --help
 
+usage: get_access_token.js [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN]
+                           [-l LOG_LEVEL] [-v API_VERSION]
+
+Get Pinterest OAuth token
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -w, --write           write access token to file
+  -ct, --cleartext      print the token in clear text
+  -s SCOPES, --scopes SCOPES
+                        comma separated list of scopes or "help"
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 Use `--scopes help` to get a list of all possible scopes:
@@ -48,6 +65,24 @@ Use `--scopes help` to get a list of all possible scopes:
 ```
 $ ./scripts/get_access_token.js -v 5 --scopes help
 
+Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.
+Valid OAuth 2.0 scopes for Pinterest API version v5:
+  ads:read            Read access to advertising data
+
+  boards:read         Read access to boards
+  boards:read_secret  Read access to secret boards
+  boards:write        Write access to create, update, or delete boards
+  boards:write_secret Write access to create, update, or delete secret boards
+
+  pins:read           Read access to Pins
+  pins:read_secret    Read access to secret Pins
+  pins:write          Write access to create, update, or delete Pins
+  pins:write_secret   Write access to create, update, or delete secret Pins
+
+  user_accounts:read  Read access to user accounts
+
+For more information, see:
+  https://developers.pinterest.com/docs/api/v5/#tag/Scopes
 ```
 
 <details>
@@ -57,6 +92,40 @@ $ ./scripts/get_access_token.js -v 5 --scopes help
 ```
 $ ./scripts/get_access_token.js -v 3 --scopes help
 
+Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.
+Valid OAuth 2.0 scopes for Pinterest API version v3:
+  read_domains         Get your website's most clicked Pins, see top saved Pins, etc.
+  read_boards          See all your boards (including secret and group boards)
+  write_boards         Create new boards and change board settings
+  read_pins            See all public Pins and comments
+  write_pins           Create new Pins
+  read_users           See public data about a user (including boards, following, profile)
+  write_users          Change a user's following information
+  read_secret_boards   See secret boards
+  read_secret_pins     See secret pins
+  read_user_followers  Access a user's follows and followers
+  write_user_followees Follow things for a user
+
+  read_advertisers     See a user's advertising profile and settings
+  write_advertisers    Create and manage a user's advertising profile
+  read_campaigns       See data on ad campaigns, including spend, budget and performance
+  write_campaigns      Create and manage ad campaigns
+  read_merchants       See a user's Catalog (shopping feed)
+  write_merchants      Manage a user's Catalog (shopping feed)
+  read_pin_promotions  See ads and ad creatives
+  write_pin_promotions Create and manage ads and ad creatives
+
+  Composite scopes...
+  read_organic         See all of a user's public data.
+  write_organic        Create new Pins and boards, update public data
+  manage_organic       See, update, and add to public data
+  read_secret          See secret boards and secret Pins
+  read_ads             See data on ad campaigns, including spend, budget and performance
+  write_ads            Manage ad campaigns and see data including spend, budget and performance
+  manage_merchants     See and manage a user's Catalog (shopping feed)
+
+For more information, see:
+ https://developers.pinterest.com/docs/redoc/#section/User-Authorization/OAuth-scopes
 ```
 </details>
 
@@ -67,6 +136,19 @@ Demonstrates how to refresh an access token. This script is just meant to be sel
 ```
 $ ./scripts/refresh_example.js --help
 
+usage: refresh_example.js [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                          [-v API_VERSION]
+
+Get Pinterest OAuth token
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [refresh_access_token.js](./scripts/refresh_access_token.js)
@@ -76,6 +158,20 @@ Refreshes an access token stored by using `./scripts/get_access_token.js` with t
 ```
 $ ./scripts/refresh_access_token.js --help
 
+usage: refresh_access_token.js [-h] [-ct] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                               [-v API_VERSION]
+
+Refresh Pinterest OAuth token
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -ct, --cleartext      print the token in clear text
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [get_pin.js](./scripts/get_pin.js)
@@ -85,6 +181,21 @@ Retrieves the information for a specific board with the `/v5/pins/{pin_id}` [end
 ```
 $ ./scripts/get_pin.js --help
 
+usage: get_pin.js [-h] -p PIN_ID [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                  [-v API_VERSION]
+
+Get A Pin
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PIN_ID, --pin-id PIN_ID
+                        pin identifier
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [get_board.js](./scripts/get_board.js)
@@ -94,6 +205,22 @@ Retrieves the information for a specific board with the `/v5/boards/{board_id}` 
 ```
 $ ./scripts/get_board.js --help
 
+usage: get_board.js [-h] -b BOARD_ID [--pins] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                    [-v API_VERSION]
+
+Get A Board
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BOARD_ID, --board-id BOARD_ID
+                        board identifier
+  --pins                Get the Pins for the Board
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [get_user_pins.js](./scripts/get_user_pins.js)
@@ -103,6 +230,21 @@ Retrieves all of the pins for a user with the `/v3/users/{users}/pins/` [endpoin
 ```
 $ ./scripts/get_user_pins.js --help
 
+usage: get_user_pins.js [-h] [-ps PAGE_SIZE] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                        [-v API_VERSION]
+
+Get A User's Pins
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -ps PAGE_SIZE, --page-size PAGE_SIZE
+                        Boards per page
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [get_user_boards.js](./scripts/get_user_boards.js)
@@ -112,6 +254,27 @@ Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://
 ```
 $ ./scripts/get_user_boards.js --help
 
+usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty]
+                          [--no-include-empty] [--include-archived]
+                          [--no-include-archived] [-a ACCESS_TOKEN]
+                          [-l LOG_LEVEL] [-v API_VERSION]
+
+Get A User's Boards
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -ps PAGE_SIZE, --page-size PAGE_SIZE
+                        Boards per page
+  --include-empty       Include empty boards?
+  --no-include-empty
+  --include-archived    Include archived boards?
+  --no-include-archived
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [copy_pin.js](./scripts/copy_pin.js)
@@ -121,6 +284,25 @@ Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pi
 ```
 $ ./scripts/copy_pin.js --help
 
+usage: copy_pin.js [-h] -p PIN_ID -b BOARD_ID [-s SECTION] [-a ACCESS_TOKEN]
+                   [-l LOG_LEVEL] [-v API_VERSION]
+
+Copy A Pin
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PIN_ID, --pin-id PIN_ID
+                        source pin identifier
+  -b BOARD_ID, --board-id BOARD_ID
+                        destination board identifier
+  -s SECTION, --section SECTION
+                        destination board section
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [copy_board.js](./scripts/copy_board.js)
@@ -130,6 +312,29 @@ Demonstration of how to use the `POST /v3/boards` [endpoint](https://developers.
 ```
 $ ./scripts/copy_board.js --help
 
+usage: copy_board.js [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN]
+                     [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run]
+                     [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+
+Copy one Board or all Boards
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b BOARD_ID, --board-id BOARD_ID
+                        destination board identifier
+  -n NAME, --name NAME  target board name
+  -s SOURCE_ACCESS_TOKEN, --source-access-token SOURCE_ACCESS_TOKEN
+                        source access token name
+  -t TARGET_ACCESS_TOKEN, --target-access-token TARGET_ACCESS_TOKEN
+                        target access token name
+  --all                 copy all boards from source to target
+  --dry-run             print changes but do not execute them
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [get_ads.js](./scripts/get_ads.js)
@@ -139,6 +344,20 @@ Reads information about advertiser accounts, campaigns, ad groups, and ads. By d
 ```
 $ ./scripts/get_ads.js --help
 
+usage: get_ads.js [-h] [--all-ads] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                  [-v API_VERSION]
+
+Advertisers API Example
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --all-ads             print all ads information
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [get_analytics.js](./scripts/get_analytics.js)
@@ -148,6 +367,22 @@ Demonstrates how to use the API to retrieve analytics metrics with synchronous r
 ```
 $ ./scripts/get_analytics.js --help
 
+usage: get_analytics.js [-h]
+                        [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}]
+                        [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+
+Get Analytics
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o {user,ad_account_user,ad_account,campaign,ad_group,ad}, --analytics-object {user,ad_account_user,ad_account,campaign,ad_group,ad}
+                        kind of object used to fetch analytics
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [get_businesses.js](./scripts/get_businesses.js)
@@ -157,6 +392,19 @@ Reads the `/v3/users/{user}/businesses/` [endpoint](https://developers.pinterest
 ```
 $ ./scripts/get_businesses.js --help
 
+usage: get_businesses.js [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                         [-v API_VERSION]
+
+Get Pinterest OAuth token
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 ### [analytics_api_example.js](./scripts/analytics_api_example.js)
@@ -166,6 +414,19 @@ Demonstrates how to use the API to generate an asynchronous delivery metrics rep
 ```
 $ ./scripts/analytics_api_example.js --help
 
+usage: analytics_api_example.js [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                                [-v API_VERSION]
+
+Analytics API Example
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+  -v API_VERSION, --api-version API_VERSION
+                        version of the API to use
 ```
 
 In every new shell, you'll need to configure the environment.
