@@ -29,3 +29,5 @@ perl -0777 -pi.bak -e 's/
       $2
     )
   /megx' $1
+
+  trap "printf 'deleting temp file '; rm -v $1.bak" EXIT
