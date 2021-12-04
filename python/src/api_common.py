@@ -14,8 +14,15 @@ class ApiCommon:
     def __init__(self, api_config):
         self.api_config = api_config
 
+    def _check(self, response):
+        if not hasattr(response, "ok") or not hasattr(response, "reason"):
+            raise TypeError("unexpected response object: " + response)
+
     def check(self, response):
         """Check for errors and respond appropriately."""
+
+        self._check(response)
+
         # Save a human-readable status for output and error handling.
         status = (
             "ok" if response.ok else "request failed with reason: " + response.reason
@@ -52,6 +59,8 @@ class ApiCommon:
           response) but for v3 includes only the "cooked" data container inside
           the response.
         """
+
+        self._check(response)
 
         # Save a human-readable status for output and error handling.
         status = (

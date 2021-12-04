@@ -80,6 +80,8 @@ Unit tests use the [Jest framework](https://jestjs.io/) and are in the `*.test.j
 
 For compatibility with other languages in this repo, the `Makefile` is set up to run Jest with `make tests`.
 
+As of 2021-11-04, the `Browserslist: caniuse-lite is outdated` message appears to be incorrect and can be ignored.
+
 ## Code Conventions
 
 The code conventions are captured in a set of [rules](.eslintrc.cjs) for [eslint](https://eslint.org/). The configuration is the standard set of rules, with the following modifications:

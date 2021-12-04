@@ -84,5 +84,33 @@ describe('api_common tests', () => {
       ['<Response [401]>'],
       [error_message]
     ]);
+
+    expect(() => {
+      api_common.print_and_throw_error(undefined);
+    }).toThrowError(new RequestFailedError('unknown error'));
+
+    console.log.mockReset();
+
+    expect(() => {
+      api_common.print_and_throw_error('no response');
+    }).toThrowError(new RequestFailedError('error without a response'));
+
+    expect(console.log.mock.calls).toEqual([['error:', 'no response']]);
+
+    console.log.mockReset();
+
+    expect(() => {
+      api_common.print_and_throw_error({ response: 'no body' });
+    }).toThrowError(new RequestFailedError('error without a response body'));
+
+    expect(console.log.mock.calls).toEqual([['error response:', 'no body']]);
+
+    console.log.mockReset();
+
+    expect(() => {
+      api_common.print_and_throw_error({ response: { body: 'no message' } });
+    }).toThrowError(new RequestFailedError('error without a response body message'));
+
+    expect(console.log.mock.calls).toEqual([['error response body:', 'no message']]);
   });
 });

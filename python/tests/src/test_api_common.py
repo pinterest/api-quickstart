@@ -13,11 +13,23 @@ class ApiCommonTest(unittest.TestCase):
 
         mock_response = mock.Mock()
         mock_response.ok = True
+        mock_response.reason = "no reason at all"
         mock_response.status_code = 200
         response_json = {"response key": "response value"}
         mock_response.json.return_value = response_json
 
         api_common = ApiCommon(mock_api_config)
+
+        # verify error for unexpected response
+        with self.assertRaisesRegex(
+            TypeError, "unexpected response object: strange_response_1"
+        ):
+            api_common.check("strange_response_1")
+
+        with self.assertRaisesRegex(
+            TypeError, "unexpected response object: strange_response_2"
+        ):
+            api_common.unpack("strange_response_2")
 
         # verify unpack and printed output for normal response
         unpacked = api_common.unpack(mock_response)
