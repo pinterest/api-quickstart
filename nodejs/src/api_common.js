@@ -37,6 +37,21 @@ export class ApiCommon {
 
   // common code for printing and rethrowing the error in response to a transaction
   print_and_throw_error(error) {
+    if (!error) {
+      throw new RequestFailedError('unknown error');
+    }
+    if (!error.response) {
+      console.log('error:', error);
+      throw new RequestFailedError('error without a response');
+    }
+    if (!error.response.body) {
+      console.log('error response:', error.response);
+      throw new RequestFailedError('error without a response body');
+    }
+    if (!error.response.body.message) {
+      console.log('error response body:', error.response.body);
+      throw new RequestFailedError('error without a response body message');
+    }
     const error_message = `request failed with reason: ${error.response.body.message}`;
     if (this.api_config.verbosity >= 1) {
       console.log(`<Response [${error.response.statusCode}]>`);
