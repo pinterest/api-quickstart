@@ -35,6 +35,19 @@ JavaScript code that makes it easy to get started with the Pinterest API.
 
 After running the Quick Start, you should be able to run any of the use cases in the `scripts/` directory. Scripts that accept arguments use `argparse`, which ensures that the `-h` or `--help` argument shows usage documentation. 
 
+Here is a list of common arguments that work with all scripts:
+  * `-v <version>` or `--api-version <version>`: The version of the Pinterest API to use. The two choices are `3` and `5`.
+  * `-a <name>` or `--access-token <name>`: The name of the access token for the script. This name is helpful with the `-w` or `--write` option to `get_access_token.js`, which will store the access token in a file that can be used by other scripts.
+  * `-l <level>` or `--log-level <level>`: The level of logging verbosity for the script. `0` is only critical output. `1` generates a bit more output. `2` is the default, and prints a lot of useful information for developers learning the API. `3` is maximal verbosity.
+
+
+*Note*: In every new shell, you'll need to configure the environment.
+
+```
+$ cd nodejs # from the top of this repository
+$ . ../common/scripts/api_env
+```
+
 Below you will find a description of each script along with an example of it's help documentation.
 
 
@@ -432,20 +445,6 @@ optional arguments:
   -v API_VERSION, --api-version API_VERSION
                         version of the API to use
 ```
-
-In every new shell, you'll need to configure the environment.
-
-```
-$ cd nodejs # from the top of this repository
-$ . ../common/scripts/api_env
-```
-
-## Common Command-Line Arguments
-
-In general, use the `-h` or `--help` command-line argument with each script to see a complete list of arguments. Here is a list of common arguments that work with all scripts:
-  * `-v <version>` or `--api-version <version>`: The version of the Pinterest API to use. The two choices are `3` and `5`.
-  * `-a <name>` or `--access-token <name>`: The name of the access token for the script. This name is helpful with the `-w` or `--write` option to `get_access_token.js`, which will store the access token in a file that can be used by other scripts.
-  * `-l <level>` or `--log-level <level>`: The level of logging verbosity for the script. `0` is only critical output. `1` generates a bit more output. `2` is the default, and prints a lot of useful information for developers learning the API. `3` is maximal verbosity.
 
 ## Tests
 
