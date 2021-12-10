@@ -6,7 +6,10 @@ JavaScript code that makes it easy to get started with the Pinterest API.
 
 1. Follow the directions at the top level of this repo for configuring your application ID and application secret.
 
-2. From the top of this repo, change your working directory to this directory: `cd nodejs`
+2. From the top of this repo, change your working directory to this directory: 
+    ```
+    $ cd nodejs
+    ```
 
 3. Install [nodejs](https://nodejs.org/en/download/).
 
