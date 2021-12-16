@@ -100,6 +100,10 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
     def __init__(self, api_config, access_token):
         super().__init__(api_config, access_token)
         self.required_attrs.update({"granularity"})
+        self.enumerated_values.update(
+            # https://developers.pinterest.com/docs/api/v5/#operation/ad_account/analytics
+            {"conversion_report_time": {"TIME_OF_AD_ACTION", "TIME_OF_CONVERSION"}}
+        )
 
     def request(self, request_uri):
         return self.request_data(request_uri + self.uri_attributes("columns", True))

@@ -115,7 +115,7 @@ class AdAnalyticsTest(unittest.TestCase):
         )
         mock_request_data.reset_mock()
 
-        analytics.view_window_days(60).conversion_report_time("AD_EVENT")
+        analytics.view_window_days(60).conversion_report_time("TIME_OF_CONVERSION")
         self.assertEqual(
             "test_response",
             analytics.get_ad(
@@ -128,7 +128,7 @@ class AdAnalyticsTest(unittest.TestCase):
             "&start_date=2021-03-01&end_date=2021-03-31"
             "&columns=SPEND_IN_DOLLAR,TOTAL_CLICKTHROUGH"
             "&click_window_days=7"
-            "&conversion_report_time=AD_EVENT"
+            "&conversion_report_time=TIME_OF_CONVERSION"
             "&engagement_window_days=14"
             "&granularity=HOUR"
             "&view_window_days=60"

@@ -104,6 +104,10 @@ export class AdAnalytics extends AdAnalyticsAttributes {
     super();
     this.api_object = new ApiObject(api_config, access_token);
     this.required_attrs.add('granularity');
+    Object.assign(this.enumerated_values, {
+      // https://developers.pinterest.com/docs/api/v5/#operation/ad_account/analytics
+      conversion_report_time: ['TIME_OF_AD_ACTION', 'TIME_OF_CONVERSION']
+    });
   }
 
   async request(request_uri) {
