@@ -104,7 +104,11 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
         super().__init__(api_config, access_token)
         self.required_attrs.update({"granularity"})
         self.enumerated_values.update(
-            {"attribution_types": {"INDIVIDUAL", "HOUSEHOLD"}}
+            # https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST
+            {
+                "attribution_types": {"INDIVIDUAL", "HOUSEHOLD"},
+                "conversion_report_time": {"AD_EVENT", "CONVERSION_EVENT"},
+            }
         )
 
     def request(self, request_uri):

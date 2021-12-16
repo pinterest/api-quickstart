@@ -132,8 +132,10 @@ export class AdAnalytics extends AdAnalyticsAttributes {
     super();
     this.api_object = new ApiObject(api_config, access_token);
     this.required_attrs.add('granularity');
+    // https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST
     Object.assign(this.enumerated_values, {
-      attribution_types: ['INDIVIDUAL', 'HOUSEHOLD']
+      attribution_types: ['INDIVIDUAL', 'HOUSEHOLD'],
+      conversion_report_time: ['AD_EVENT', 'CONVERSION_EVENT']
     });
   }
 

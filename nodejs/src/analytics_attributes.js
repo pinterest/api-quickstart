@@ -213,8 +213,7 @@ export class AdAnalyticsAttributes extends AnalyticsAttributes {
       granularity: ['TOTAL', 'DAY', 'HOUR', 'WEEK', 'MONTH'],
       click_window_days: ENUMERATED_WINDOW_DAYS,
       engagement_window_days: ENUMERATED_WINDOW_DAYS,
-      view_window_days: ENUMERATED_WINDOW_DAYS,
-      conversion_report_time: ['AD_EVENT', 'CONVERSION_EVENT']
+      view_window_days: ENUMERATED_WINDOW_DAYS
     });
   }
 

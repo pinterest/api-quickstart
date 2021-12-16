@@ -207,7 +207,6 @@ class AdAnalyticsAttributes(AnalyticsAttributes):
                 "click_window_days": self.ENUMERATED_WINDOW_DAYS,
                 "engagement_window_days": self.ENUMERATED_WINDOW_DAYS,
                 "view_window_days": self.ENUMERATED_WINDOW_DAYS,
-                "conversion_report_time": {"AD_EVENT", "CONVERSION_EVENT"},
             }
         )
 
