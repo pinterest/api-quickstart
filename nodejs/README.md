@@ -31,16 +31,6 @@ JavaScript code that makes it easy to get started with the Pinterest API.
    $ ./scripts/get_access_token.js
    ```
 
-## Additional Functionality
-
-After running the Quick Start, you should be able to run any of the use cases in the `scripts/` directory. Scripts that accept arguments use `argparse`, which ensures that the `-h` or `--help` argument shows usage documentation. 
-
-Here is a list of common arguments that work with all scripts:
-  * `-v <version>` or `--api-version <version>`: The version of the Pinterest API to use. The two choices are `3` and `5`.
-  * `-a <name>` or `--access-token <name>`: The name of the access token for the script. This name is helpful with the `-w` or `--write` option to `get_access_token.js`, which will store the access token in a file that can be used by other scripts.
-  * `-l <level>` or `--log-level <level>`: The level of logging verbosity for the script. `0` is only critical output. `1` generates a bit more output. `2` is the default, and prints a lot of useful information for developers learning the API. `3` is maximal verbosity.
-
-
 *Note*: In every new shell, you'll need to configure the environment.
 
 ```
@@ -48,7 +38,17 @@ $ cd nodejs # from the top of this repository
 $ . ../common/scripts/api_env
 ```
 
-Below you will find a description of each script along with an example of it's help documentation.
+## Additional Functionality
+
+After running the Quick Start, you should be able to run any of the use cases in the `scripts/` directory. Scripts that accept arguments use `argparse`, which ensures that the `-h` or `--help` argument shows usage documentation. In addition, the code for each script has a comment that documents its intended purpose.
+
+Here is a list of common arguments that work with all scripts:
+  * `-v <version>` or `--api-version <version>`: The version of the Pinterest API to use. The two choices are `3` and `5`.
+  * `-a <name>` or `--access-token <name>`: The name of the access token for the script. This name is helpful with the `-w` or `--write` option to `get_access_token.js`, which will store the access token in a file that can be used by other scripts.
+  * `-l <level>` or `--log-level <level>`: The level of logging verbosity for the script. `0` is only critical output. `1` generates a bit more output. `2` is the default, and prints a lot of useful information for developers learning the API. `3` is maximal verbosity.
+
+
+Below you will find a description of each script along with an example of its help documentation.
 
 
 ### [get_access_token.js](./scripts/get_access_token.js)
@@ -77,7 +77,7 @@ optional arguments:
                         version of the API to use
 ```
 
-Use `--scopes help` to get a list of all possible scopes:
+Use `--scopes help` to get a list of all possible scopes for v5:
 <!--gen-->
 ```
 $ ./scripts/get_access_token.js -v 5 --scopes help
@@ -102,9 +102,7 @@ For more information, see:
   https://developers.pinterest.com/docs/api/v5/#tag/Scopes
 ```
 
-<details>
-<summary>Example scopes output for v3</summary>
-
+Use `--scopes help` to get a list of all possible scopes for v3:
 <!--gen-->
 ```
 $ ./scripts/get_access_token.js -v 3 --scopes help

@@ -14,20 +14,64 @@
 # 
 # Note that this script requires the empty newline after `command_to_run`
 # 
-# inspiration:
-# https://stackoverflow.com/questions/53009153/use-sed-to-replace-text-in-code-block-with-output-of-command-at-the-top-of-the
+# Inspiration:
+#   https://stackoverflow.com/questions/53009153/use-sed-to-replace-text-in-code-block-with-output-of-command-at-the-top-of-the
+#
+# Relevant perl man pages: perlrun, perlop, perlre
+#
+# Perl command line arguments:
+#    -0777 slurps the whole file into memory
+#    -p prints the input after processing
+#    -i edits the file in place with a backup in the $1.bak file
+#    -e provides the perl program on the command line
+#
+# Perl Program:
+#    s/PATTERN/REPLACEMENT/ works similarly to a substitution in sed, with the following options:
+#      /m makes ^ match start of each line instead of start of the whole input string
+#      /e evaluates the replacement as code
+#      /g replaces globally, i.e. as many times as it can
+#      /x uses extended regular expressions
+#    (?<=\<\!--gen--\>\n```\n) means preceded by the <!--gen--> tag, a newline, three backquotes and a newline"
+#    ^(\$\s(\.\/scripts\/[a-z_]+\.(js|py)\s+(--help|-v\s*[0-9]+\s+--scopes\s+help))\n\n)
+#       is a long regular expression that accepts commands from a line that looks like one of these:
+#          $ ./scripts/name_of_script.js --help
+#          $ ./scripts/name_of_script.js -v 3 --scopes help
+#          $ ./scripts/name_of_script.py --help
+#          $ ./scripts/name_of_script.py -v 5 --scopes help
+#       This regular expression is not very forgiving, because executing commands from
+#       a script has security risks.
+#    (?^s:.*?) changes the behaviour of . to match newlines as well, so it matches (frugally because of the *?)
+#       the rest of the preformatted block
+#    (?=```) means "followed by three backquotes"
+#   qx runs the parameter in a shell and returns its output
+#
 
-perl -0777 -pi.bak -e 's/
-    (?<=\<\!--gen--\>\n```\n)  # positive lookbehind for opening code-block
-    ^(\$ (.*)\n\n)             # capture reference command
-    (?^s:.*?)                  # match the rest of the code-block
-    (?=```)                    # positive lookahead for closing code-block
+# provide environment required for scopes help
+export PINTEREST_APP_ID=help_doc
+export PINTEREST_APP_SECRET=help_doc
+
+perl -0777 -p -i -e 's/
+    # positive lookbehind for opening code-block
+    (?<=\<\!--gen--\>\n```\n)
+
+    # capture reference command
+    ^(\$\s(\.\/scripts\/[a-z_]+\.(js|py)\s+(--help|-v\s*[0-9]+\s+--scopes\s+help))\n\n)
+
+    # match the rest of the code-block
+    (?^s:.*?)
+
+    # positive lookahead for closing code-block
+    (?=```)
   /
+    # emit the reference command line
     "$1"
+
+    # execute the following commands in a shell
     .qx(
+      # print a message on stdout
       echo generating documentation for $2 >&2;
+
+      # run the reference command
       $2
     )
-  /megx' $1
-
-  trap "printf 'deleting temp file '; rm -v $1.bak" EXIT
+  /megx' $1 # execute the perl command, passing along the first script argument
