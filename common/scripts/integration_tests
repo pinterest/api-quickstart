@@ -1,0 +1,79 @@
+#!/usr/bin/env bash -ex
+#
+# This script runs the commands in one of the programming language directories
+# using access tokens associated with test accounts on Pinterest. Run the
+#
+
+# Verify that this script is being run in an appropriate directory,
+# and select the corresponding script filename extension.
+case "$(basename $(pwd))" in
+    python) EXT=py ;;
+    nodejs) EXT=js ;;
+    *)
+        echo This script must be run in the python or the nodejs directory.
+        exit 1
+esac
+
+TEST1=pindexterp
+TEST2=penelopepintridge
+VERSIONS="v3 v5"
+
+if false; then # DEBUG ONLY
+
+# first refresh the tokens in case it has been a while since the tests were last run
+for ACCOUNT in ${TEST1} ${TEST2} ; do
+    for VERSION in ${VERSIONS} ; do
+        ./scripts/refresh_access_token.${EXT} -a ${ACCOUNT}_${VERSION} -${VERSION}
+    done
+done
+
+# verify the user_account fetch with the refreshed tokens
+for ACCOUNT in ${TEST1} ${TEST2} ; do
+    for VERSION in ${VERSIONS} ; do
+        ./scripts/get_access_token.${EXT} -a ${ACCOUNT}_${VERSION} -${VERSION}
+    done
+done
+
+# run the refresh example script
+for ACCOUNT in ${TEST1} ${TEST2} ; do
+    for VERSION in ${VERSIONS} ; do
+        ./scripts/refresh_example.${EXT} -a ${ACCOUNT}_${VERSION} -${VERSION}
+    done
+done
+
+PIN=1097963584125248823
+for VERSION in ${VERSIONS} ; do
+    ./scripts/get_pin.${EXT} -p ${PIN} -a ${TEST1}_${VERSION} -${VERSION}
+done
+
+# get the user pins for the pindexter account
+for VERSION in ${VERSIONS} ; do
+    ./scripts/get_user_pins.${EXT} --page-size 100 -a ${TEST1}_${VERSION} -${VERSION}
+done
+
+# get a specific board for the pindexter account
+BOARD=1097963652843192243
+for VERSION in ${VERSIONS} ; do
+    ./scripts/get_board.${EXT} -a ${TEST1}_${VERSION} -${VERSION} -b ${BOARD}
+done
+
+# get a specific board and the pins on the board
+BOARD=1097963652843192243
+for VERSION in ${VERSIONS} ; do
+    ./scripts/get_board.${EXT} -a ${TEST1}_${VERSION} -${VERSION} -b ${BOARD} --pins
+done
+
+# get the user boards with the pins for the pindexter account
+for VERSION in ${VERSIONS} ; do
+    ./scripts/get_user_boards.${EXT} -a ${TEST1}_${VERSION} -${VERSION}
+done
+
+fi # DEBUG ONLY
+
+for VERSION in v3 ; do
+    ./scripts/copy_board.${EXT} -s ${TEST1}_${VERSION} -t ${TEST2}_${VERSION} -${VERSION} --all
+    ./scripts/get_user_boards.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
+    ./scripts/get_user_pins.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
+    printf "Delete all boards for ${TEST2}\n\n\n" | \
+        ./scripts/delete_board.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --all-boards
+done

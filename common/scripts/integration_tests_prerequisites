@@ -1,0 +1,29 @@
+#!/usr/bin/env bash -ex
+#
+# This script runs the commands in one of the programming language directories
+# using access tokens associated with test accounts on Pinterest. Run the
+# integration_tests_prerequisitions script to set up the access tokens required
+# to run this script.
+#
+
+# Verify that this script is being run in an appropriate directory,
+# and select the corresponding script filename extension.
+case "$(basename $(pwd))" in
+    python) EXT=py ;;
+    nodejs) EXT=js ;;
+    *)
+        echo This script must be run in the python or the nodejs directory.
+        exit 1
+esac
+
+TEST1=pindexterp
+TEST2=penelopepintridge
+
+for ACCOUNT in ${TEST1} ${TEST2} ; do
+    read -s -n 1 -p "Log into the ${ACCOUNT} account in your web browser and hit any key to continue..."
+
+    echo "authorizing v5 token for ${ACCOUNT}"
+    ./scripts/get_access_token.${EXT} -a ${ACCOUNT}_v5 -w -s pins:read,pins:write,boards:read,boards:write,user_accounts:read
+    echo "authorizing v3 token for ${ACCOUNT}"
+    ./scripts/get_access_token.${EXT} -a ${ACCOUNT}_v3 -v3 -w -s read_pins,write_pins,read_boards,write_boards,read_users
+done
