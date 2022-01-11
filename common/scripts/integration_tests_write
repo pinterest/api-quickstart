@@ -1,0 +1,48 @@
+#!/usr/bin/env bash -ex
+#
+# NOTE: This script deletes all of the Boards and Pins for the second test
+# (TEST2) account, which is intended to be used only as a blank repository
+# for the tests in this file.
+# 
+# This file runs the following scripts in the programming language directories
+# using access tokens associated with a test account on Pinterest:
+#   copy_board
+#   get_user_pins
+#   get_user_boards
+#   delete_board
+#
+# The tests in this file are only self-checking to the extent that all
+# should run to completion successfully. Knowledge about the test account
+# and manual checking is required to verify that the tests all returned
+# the expected data. Of course, it would be better to check the results
+# automatically, but for now the automation focuses on running a standard
+# set of tests.
+#
+
+# Verify that this script is being run in an appropriate directory,
+# and select the corresponding script filename extension.
+case "$(basename $(pwd))" in
+    python) EXT=py ;;
+    nodejs) EXT=js ;;
+    *)
+        echo This script must be run in the python or the nodejs directory.
+        exit 1
+esac
+
+# These variables are specific to the user names, pin id, and board id
+# to be used for this test.
+TEST1=pindexterp
+TEST2=penelopepintridge
+
+# Versions to test. This variable should not need to change.
+VERSIONS="v5 v3"
+
+for VERSION in ${VERSIONS} ; do
+    printf "Delete all boards for ${TEST2}\n\n\n" | \
+        ./scripts/delete_board.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --all-boards
+    ./scripts/copy_board.${EXT} -s ${TEST1}_${VERSION} -t ${TEST2}_${VERSION} -${VERSION} --all
+    ./scripts/get_user_boards.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
+    ./scripts/get_user_pins.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
+    printf "Delete all boards for ${TEST2}\n\n\n" | \
+        ./scripts/delete_board.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --all-boards
+done

@@ -1,12 +1,24 @@
 #!/usr/bin/env bash -ex
 #
-# NOTE: This script deletes all of the Boards and Pins for the second test
-# (TEST2) account, which is intended as a black repository 
-# 
-# This script runs the commands in one of the programming language directories
-# using access tokens associated with test accounts on Pinterest.
-# Running these tests requires having the credentials for the 
-# 
+# This file runs the following scripts in the programming language directories
+# using access tokens associated with a test account on Pinterest:
+#   refresh_access_token
+#   get_access_token
+#   refresh_example
+#   get_pin
+#   get_user_pins
+#   get_board
+#   get_user_boards
+#
+# All of these scripts are read-only, so it should always be safe to run
+# the tests in this file.
+#
+# The tests in this file are only self-checking to the extent that all
+# should run to completion successfully. Knowledge about the test account
+# and manual checking is required to verify that the tests all returned
+# the expected data. Of course, it would be better to check the results
+# automatically, but for now the automation focuses on running a standard
+# set of tests.
 #
 
 # Verify that this script is being run in an appropriate directory,
@@ -22,27 +34,20 @@ esac
 # These variables are specific to the user names, pin id, and board id
 # to be used for this test.
 TEST1=pindexterp
-TEST2=penelopepintridge
 PIN=1097963584125248823
 BOARD=1097963652843192243
 
 # Versions to test. This variable should not need to change.
 VERSIONS="v3 v5"
 
-if false; then # DEBUG ONLY
-
 # first refresh the tokens in case it has been a while since the tests were last run
-for ACCOUNT in ${TEST1} ${TEST2} ; do
-    for VERSION in ${VERSIONS} ; do
-        ./scripts/refresh_access_token.${EXT} -a ${ACCOUNT}_${VERSION} -${VERSION}
-    done
+for VERSION in ${VERSIONS} ; do
+    ./scripts/refresh_access_token.${EXT} -a ${TEST1}_${VERSION} -${VERSION}
 done
 
 # verify the user_account fetch with the refreshed tokens
-for ACCOUNT in ${TEST1} ${TEST2} ; do
-    for VERSION in ${VERSIONS} ; do
-        ./scripts/get_access_token.${EXT} -a ${ACCOUNT}_${VERSION} -${VERSION}
-    done
+for VERSION in ${VERSIONS} ; do
+    ./scripts/get_access_token.${EXT} -a ${TEST1}_${VERSION} -${VERSION}
 done
 
 # run the refresh example script
@@ -72,14 +77,4 @@ done
 # get the user boards with the pins for the pindexter account
 for VERSION in ${VERSIONS} ; do
     ./scripts/get_user_boards.${EXT} -a ${TEST1}_${VERSION} -${VERSION}
-done
-
-fi # DEBUG ONLY
-
-for VERSION in v3 ; do
-    ./scripts/copy_board.${EXT} -s ${TEST1}_${VERSION} -t ${TEST2}_${VERSION} -${VERSION} --all
-    ./scripts/get_user_boards.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
-    ./scripts/get_user_pins.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
-    printf "Delete all boards for ${TEST2}\n\n\n" | \
-        ./scripts/delete_board.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --all-boards
 done
