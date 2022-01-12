@@ -17,29 +17,29 @@
 # set of tests.
 #
 
-# Verify that this script is being run in an appropriate directory,
-# and select the corresponding script filename extension.
-case "$(basename $(pwd))" in
-    python) EXT=py ;;
-    nodejs) EXT=js ;;
-    *)
-        echo This script must be run in the python or the nodejs directory.
-        exit 1
-esac
+# get the location of this script
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
-# These variables are specific to the user names, pin id, and board id
-# to be used for this test.
-TEST3=dchaiken3407
+# source the common test script code
+. ${SCRIPT_DIR}/integration_tests_preamble
 
 OUTPUT_PREFIX=integtest
 
 # delete output files to avoid overwrite confirmations by scripts
 rm -f ${OUTPUT_PREFIX}_*.json
 
-# Versions to test. This variable should not need to change.
-VERSIONS="v3 v5"
-
 # first refresh the tokens in case it has been a while since the tests were last run
+for VERSION in ${VERSIONS} ; do
+    ./scripts/refresh_access_token.${EXT} -a ${TEST3}_${VERSION} -${VERSION}
+done
+
+# get asynchronous analytics report (v3 only)
+DOCNAME=${OUTPUT_PREFIX}_metrics_report.json
+printf "3\n${DOCNAME}\n" | \
+    ./scripts/analytics_api_example.${EXT} -a ${TEST3}_v3
+wc ${DOCNAME}
+
+# get all of the ads-related data for the test account
 for VERSION in ${VERSIONS} ; do
     ./scripts/get_ads.${EXT} -a ${TEST3}_${VERSION} -${VERSION} --all-ads
 done
@@ -53,12 +53,10 @@ for VERSION in ${VERSIONS} ; do
 done
 
 # get ad_account_user analytics (only available for v5)
-for VERSION in v5 ; do
-    DOCNAME=${OUTPUT_PREFIX}_ad_account_user_analytics_${VERSION}.json
-    printf "3\n${DOCNAME}\n" | \
-         ./scripts/get_analytics.${EXT} -a ${TEST3}_${VERSION} -${VERSION} -o ad_account_user
-    wc ${DOCNAME}
-done
+DOCNAME=${OUTPUT_PREFIX}_ad_account_user_analytics_v5.json
+printf "3\n${DOCNAME}\n" | \
+    ./scripts/get_analytics.${EXT} -a ${TEST3}_v5 -v5 -o ad_account_user
+wc ${DOCNAME}
 
 # get ad_account analytics
 for VERSION in ${VERSIONS} ; do

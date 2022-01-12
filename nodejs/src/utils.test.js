@@ -5,6 +5,8 @@ import readline from 'readline';
 jest.mock('fs');
 jest.mock('readline');
 
+process.stdin.isTTY = true; // required for these tests to work
+
 describe('Input tests', () => {
   afterEach(() => {
     jest.clearAllMocks();

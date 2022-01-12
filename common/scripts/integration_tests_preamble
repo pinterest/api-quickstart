@@ -1,0 +1,21 @@
+# Verify that this script is being run in an appropriate directory,
+# and select the corresponding script filename extension.
+case "$(basename $(pwd))" in
+    python) EXT=py ;;
+    nodejs) EXT=js ;;
+    *)
+        echo This script must be run in the python or the nodejs directory.
+        exit 1
+esac
+
+# Test accounts used by Pinterest to run the integration test.
+TEST1=pindexterp
+TEST2=penelopepintridge
+TEST3=dchaiken3407
+
+# Objects associated with the TEST1 account to be used in the integration tests.
+PIN=1097963584125248823
+BOARD=1097963652843192243
+
+# Versions to test. This variable should not need to change.
+VERSIONS="v3 v5"
