@@ -1,5 +1,8 @@
 #!/usr/bin/env bash -ex
 #
+#
+# End-to-end (e2e) tests that read advertising objects and analytics data.
+#
 # This file runs the following scripts in the programming language directories
 # using access tokens associated with a test account on Pinterest:
 #   get_ads
@@ -21,9 +24,9 @@
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 # source the common test script code
-. ${SCRIPT_DIR}/integration_tests_preamble
+. ${SCRIPT_DIR}/e2e_tests_preamble
 
-OUTPUT_PREFIX=integtest
+OUTPUT_PREFIX=e2etest
 
 # delete output files to avoid overwrite confirmations by scripts
 rm -f ${OUTPUT_PREFIX}_*.json

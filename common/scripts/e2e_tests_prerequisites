@@ -6,19 +6,11 @@
 # to run this script.
 #
 
-# Verify that this script is being run in an appropriate directory,
-# and select the corresponding script filename extension.
-case "$(basename $(pwd))" in
-    python) EXT=py ;;
-    nodejs) EXT=js ;;
-    *)
-        echo This script must be run in the python or the nodejs directory.
-        exit 1
-esac
+# get the location of this script
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
-TEST1=pindexterp
-TEST2=penelopepintridge
-TEST3=dchaiken3407
+# source the common test script code
+. ${SCRIPT_DIR}/e2e_tests_preamble
 
 read -s -n 1 -p "Log into the ${TEST1} (pins/boards read test) account in your web browser and hit any key to continue..."
 echo "authorizing v5 token for ${TEST1}"
@@ -37,4 +29,3 @@ echo "authorizing v5 token for ${TEST3}"
 ./scripts/get_access_token.${EXT} -a ${TEST3}_v5 -w -s ads:read,pins:read,boards:read,user_accounts:read
 echo "authorizing v3 token for ${TEST3}"
 ./scripts/get_access_token.${EXT} -a ${TEST3}_v3 -v3 -w -s read_advertisers,read_campaigns,read_pin_promotions,read_pins,read_boards,read_users
-

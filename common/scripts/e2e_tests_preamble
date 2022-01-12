@@ -1,3 +1,15 @@
+#
+# End-to-end (e2e) test set-up code. Must be sourced in the shell that
+# runs e2e tests.
+#
+
+# check if the environment is set up for the quickstart
+if [ "$PINTEREST_APP_ID" == "" ] || [ "$PINTEREST_APP_SECRET" == "" ] ; then
+   echo "This test requires the quickstart environment to be set."
+   echo "See the top-level README file for more information."
+   exit 1
+fi
+
 # Verify that this script is being run in an appropriate directory,
 # and select the corresponding script filename extension.
 case "$(basename $(pwd))" in

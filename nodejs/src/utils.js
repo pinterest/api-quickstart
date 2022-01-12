@@ -12,7 +12,7 @@ export class Input {
       process.stdin.setEncoding('utf8');
       let stdin_data = '';
       process.stdin.on('data', function(chunk) {
-        stdin_data += chunk
+        stdin_data += chunk;
       });
       process.stdin.on('end', function() {
         resolve(stdin_data);

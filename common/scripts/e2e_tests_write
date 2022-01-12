@@ -1,8 +1,10 @@
 #!/usr/bin/env bash -ex
 #
-# NOTE: This script deletes all of the Boards and Pins for the second test
+# NOTE: This script DELETES ALL OF THE BOARDS AND PINS for the second test
 # (TEST2) account, which is intended to be used only as a blank repository
 # for the tests in this file.
+#
+# End-to-end (e2e) tests that create and delete pins and boards.
 # 
 # This file runs the following scripts in the programming language directories
 # using access tokens associated with a test account on Pinterest:
@@ -23,7 +25,7 @@
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 # source the common test script code
-. ${SCRIPT_DIR}/integration_tests_preamble
+. ${SCRIPT_DIR}/e2e_tests_preamble
 
 # first refresh the tokens in case it has been a while since the tests were last run
 for VERSION in ${VERSIONS} ; do
