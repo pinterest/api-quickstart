@@ -1,0 +1,40 @@
+#!/usr/bin/env bash -ex
+#
+# NOTE: This script DELETES ALL OF THE BOARDS AND PINS for the second test
+# (TEST2) account, which is intended to be used only as a blank repository
+# for the tests in this file.
+#
+# End-to-end (e2e) tests that create and delete pins and boards.
+# 
+# This file runs the following scripts in the programming language directories
+# using access tokens associated with a test account on Pinterest:
+#   copy_board
+#   get_user_pins
+#   get_user_boards
+#   delete_board
+#
+# The tests in this file are only self-checking to the extent that all
+# should run to completion successfully. Knowledge about the test account
+# and manual checking is required to verify that the tests all returned
+# the expected data. Of course, it would be better to check the results
+# automatically, but for now the automation focuses on running a standard
+# set of tests.
+#
+
+# get the location of this script
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+
+# source the common test script code
+. ${SCRIPT_DIR}/e2e_tests_preamble
+
+# For each of the API versions...
+#   Delete the pins and boards from the TEST2 account, and then
+#   copy the boards from the TEST1 account to the TEST2 account.
+#   Finally, read the boards and pins from the TEST2 account.
+for VERSION in ${VERSIONS} ; do
+    printf "Delete all boards for ${TEST2}\nyes\nyes\n" | \
+        ./scripts/delete_board.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --all-boards
+    ./scripts/copy_board.${EXT} -s ${TEST1}_${VERSION} -t ${TEST2}_${VERSION} -${VERSION} --all
+    ./scripts/get_user_boards.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
+    ./scripts/get_user_pins.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
+done

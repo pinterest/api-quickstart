@@ -1,0 +1,42 @@
+#
+# End-to-end (e2e) test set-up code. Must be sourced in the shell that
+# runs e2e tests.
+#
+# The e2e tests are mostly intended to automate testing that used to
+# be performed manually at Pinterest. So, all of the accounts specified
+# in this file are owned by Pinterest or Pinterest employees.
+#
+# If you do not work at Pinterest and are interested in using this code,
+# please consider sending a pull request that would make it easier. For example,
+# the API entities (TEST1, TEST2, TEST3, PIN, BOARD) could be factored out
+# in the same way that the api_app_credentials are factored out of api_env.
+#
+
+# check if the environment is set up for the quickstart
+if [ "$PINTEREST_APP_ID" == "" ] || [ "$PINTEREST_APP_SECRET" == "" ] ; then
+   echo "This test requires the quickstart environment to be set."
+   echo "See the top-level README file for more information."
+   exit 1
+fi
+
+# Verify that this script is being run in an appropriate directory,
+# and select the corresponding script filename extension.
+case "$(basename $(pwd))" in
+    python) EXT=py ;;
+    nodejs) EXT=js ;;
+    *)
+        echo This script must be run in the python or the nodejs directory.
+        exit 1
+esac
+
+# Test accounts used by Pinterest to run the integration test.
+TEST1=pindexterp
+TEST2=penelopepintridge
+TEST3=dchaiken3407
+
+# Objects associated with the TEST1 account to be used in the integration tests.
+PIN=1097963584125248823
+BOARD=1097963652843192243
+
+# Versions to test. This variable should not need to change.
+VERSIONS="v3 v5"

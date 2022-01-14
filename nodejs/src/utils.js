@@ -7,25 +7,69 @@ import { openSync, closeSync } from 'fs';
  * but readline works fine for the purposes of this demonstration code.
  */
 export class Input {
-  constructor() {
-    // Running readline.createInterface prevents the process from terminating
-    // until rl.close is called.
-    this.rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-      terminal: false // so that user input is not echoed
+  stdin_read() {
+    this.stdin_data = new Promise(resolve => {
+      process.stdin.setEncoding('utf8');
+      let stdin_data = '';
+      process.stdin.on('data', function(chunk) {
+        stdin_data += chunk;
+      });
+      process.stdin.on('end', function() {
+        resolve(stdin_data);
+      });
     });
+  }
+
+  async stdin_line(str, resolve) {
+    // Process piped input from stdin.
+    process.stdout.write(str);
+    if (!this.stdin_lines) {
+      const stdin_data = await this.stdin_data;
+      this.stdin_lines = stdin_data.split('\n');
+    }
+    const response = this.stdin_lines.shift();
+    if (!response) {
+      throw new Error('End of input');
+    }
+    process.stdout.write(response + '\n');
+    resolve(response);
+  }
+
+  constructor() {
+    if (process.stdin.isTTY) {
+      // Interact with a human user.
+      // Running readline.createInterface prevents the process from terminating
+      // until rl.close is called.
+      this.rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        terminal: false // so that user input is not echoed
+      });
+    } else {
+      // Running in test mode: retrieve all input from stdin.
+      // Note: This mode is not tested by the unit tests because
+      // it is primarily for use with integration tests.
+      this.stdin_read();
+    }
   }
 
   // This function converts readline.question to returning a Promise.
   async question(str) {
-    return new Promise(resolve => this.rl.question(str, resolve));
+    if (process.stdin.isTTY) {
+      // Request input from the user.
+      return new Promise(resolve => this.rl.question(str, resolve));
+    } else {
+      // Get input from stdin.
+      return new Promise(resolve => this.stdin_line(str, resolve));
+    }
   }
 
   // Call this function to allow the process to exit. An alternative is to
   // call process.exit() explicitly when the process needs to terminate.
   close() {
-    this.rl.close();
+    if (process.stdin.isTTY) {
+      this.rl.close();
+    }
   }
 
   // Simple pass-through interface for readline.

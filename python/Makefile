@@ -10,6 +10,16 @@ integration_tests:
 	@echo integration tests...
 	nosetests --rednose ./tests/scripts
 
+e2e_setup:
+	@echo end to end tests set up...
+	../common/scripts/e2e_tests_prerequisites
+
+e2e_tests: e2e_setup
+	@echo end to end tests...
+	../common/scripts/e2e_tests_read
+	../common/scripts/e2e_tests_write
+	../common/scripts/e2e_tests_ads
+
 tests: unit_tests integration_tests
 
 # flake8 configuration is in the .flake8 file.

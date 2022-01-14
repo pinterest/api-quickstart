@@ -1,0 +1,62 @@
+#!/usr/bin/env bash -ex
+#
+# This script runs the commands in one of the programming language directories
+# using access tokens associated with test accounts on Pinterest. Run the
+# integration_tests_prerequisitions script to set up the access tokens required
+# to run this script.
+#
+# For each of the required tokens:
+# 1. verify if the v5 token can be refreshed. if not, prompt to login and get a new token.
+# 2. verify if the v3 token can be refreshed. if not, prompt to login if necessary and get a new token.
+#
+
+# get the location of this script
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+
+# source the common test script code
+. ${SCRIPT_DIR}/e2e_tests_preamble
+
+LOGIN_MESSAGE="Log into the ${TEST1} (pins/boards read test) account in your web browser and hit any key to continue..."
+if (! ./scripts/refresh_access_token.${EXT} -a ${TEST1}_v5 -v5) ; then
+    LOGIN_ACCOUNT=${TEST1}
+    read -s -n 1 -p "${LOGIN_MESSAGE}"
+    echo "authorizing v5 token for ${TEST1}"
+    ./scripts/get_access_token.${EXT} -a ${TEST1}_v5 -w -s pins:read,boards:read,user_accounts:read
+fi
+if (! ./scripts/refresh_access_token.${EXT} -a ${TEST1}_v3 -v3) ; then
+    if [ "${LOGIN_ACCOUNT}" != "${TEST1}" ] ; then
+        read -s -n 1 -p "${LOGIN_MESSAGE}"
+    fi
+    echo "authorizing v3 token for ${TEST1}"
+    ./scripts/get_access_token.${EXT} -a ${TEST1}_v3 -v3 -w -s read_pins,read_boards,read_users
+fi
+
+LOGIN_MESSAGE="Log into the ${TEST2} (pins/boards write test) account in your web browser and hit any key to continue..."
+if (! ./scripts/refresh_access_token.${EXT} -a ${TEST2}_v5 -v5) ; then
+    LOGIN_ACCOUNT=${TEST2}
+    read -s -n 1 -p "${LOGIN_MESSAGE}"
+    echo "authorizing v5 token for ${TEST2}"
+    ./scripts/get_access_token.${EXT} -a ${TEST2}_v5 -w -s pins:read,pins:write,boards:read,boards:write,user_accounts:read
+fi
+if (! ./scripts/refresh_access_token.${EXT} -a ${TEST2}_v3 -v3) ; then
+    if [ "${LOGIN_ACCOUNT}" != "${TEST2}" ] ; then
+        read -s -n 1 -p "${LOGIN_MESSAGE}"
+    fi
+    echo "authorizing v3 token for ${TEST2}"
+    ./scripts/get_access_token.${EXT} -a ${TEST2}_v3 -v3 -w -s read_pins,write_pins,read_boards,write_boards,read_users
+fi
+
+LOGIN_MESSAGE="Log into the ${TEST3} (ads test) account in your web browser and hit any key to continue..."
+if (! ./scripts/refresh_access_token.${EXT} -a ${TEST3}_v5 -v5) ; then
+    LOGIN_ACCOUNT=${TEST3}
+    read -s -n 1 -p "${LOGIN_MESSAGE}"
+    echo "authorizing v5 token for ${TEST3}"
+    ./scripts/get_access_token.${EXT} -a ${TEST3}_v5 -w -s ads:read,pins:read,boards:read,user_accounts:read
+fi
+if (! ./scripts/refresh_access_token.${EXT} -a ${TEST3}_v3 -v3) ; then
+    if [ "${LOGIN_ACCOUNT}" != "${TEST3}" ] ; then
+        read -s -n 1 -p "${LOGIN_MESSAGE}"
+    fi
+    echo "authorizing v3 token for ${TEST3}"
+    ./scripts/get_access_token.${EXT} -a ${TEST3}_v3 -v3 -w -s read_advertisers,read_campaigns,read_pin_promotions,read_pins,read_boards,read_users
+fi
