@@ -14,7 +14,7 @@ e2e_setup:
 	@echo end to end tests set up...
 	../common/scripts/e2e_tests_prerequisites
 
-e2e_tests:
+e2e_tests: e2e_setup
 	@echo end to end tests...
 	../common/scripts/e2e_tests_read
 	../common/scripts/e2e_tests_write

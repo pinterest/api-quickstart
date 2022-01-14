@@ -27,12 +27,10 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 # source the common test script code
 . ${SCRIPT_DIR}/e2e_tests_preamble
 
-# first refresh the tokens in case it has been a while since the tests were last run
-for VERSION in ${VERSIONS} ; do
-    ./scripts/refresh_access_token.${EXT} -a ${TEST1}_${VERSION} -${VERSION}
-    ./scripts/refresh_access_token.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
-done
-
+# For each of the API versions...
+#   Delete the pins and boards from the TEST2 account, and then
+#   copy the boards from the TEST1 account to the TEST2 account.
+#   Finally, read the boards and pins from the TEST2 account.
 for VERSION in ${VERSIONS} ; do
     printf "Delete all boards for ${TEST2}\nyes\nyes\n" | \
         ./scripts/delete_board.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --all-boards
