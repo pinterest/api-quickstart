@@ -59,8 +59,23 @@ class Analytics(AnalyticsAttributes, ApiObject):
         return self
 
     def split_field(self, split_field):
-        self.attrs["split_field"] = split_field
-        return self
+        """
+        The split_field attribute is not yet implemented in the Pinterest API.
+        To work around this issue, use the appropriate filter attribute
+        and send multiple requests. For example, instead of setting
+        split_field to app_type, send three requests -- each with one of
+        the possible app_types: mobile, tablet, and web.
+        """
+        raise AttributeError(
+            "split_field attribute not yet implemented in the Pinterest API"
+        )
+
+        # When the split_field attribute is implemented in the Pinterest API,
+        # remove the above comment and Error and uncomment the next two lines
+        # of code.
+
+        # self.attrs["split_field"] = split_field
+        # return self
 
     # https://developers.pinterest.com/docs/api/v5/#operation/user_account/analytics
     def get(self, ad_account_id=None):
