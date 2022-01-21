@@ -61,8 +61,19 @@ export class Analytics extends AnalyticsAttributes {
   }
 
   split_field(split_field) {
-    this.attrs.split_field = split_field;
-    return this;
+    // The split_field attribute is not yet implemented in the Pinterest API.
+    // To work around this issue, use the appropriate filter attribute
+    // and send multiple requests. For example, instead of setting
+    // split_field to app_type, send three requests -- each with one of
+    // the possible app_types: mobile, tablet, and web.
+    throw new Error('split_field attribute not yet implemented in the Pinterest API');
+
+    // When the split_field attribute is implemented in the Pinterest API,
+    // remove the above comment and Error and uncomment the next two lines
+    // of code.
+
+    // this.attrs.split_field = split_field;
+    // return this;
   }
 
   // Get analytics for the user account. If ad_account_id is set, get user

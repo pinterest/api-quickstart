@@ -35,7 +35,13 @@ class AnalyticsTest(unittest.TestCase):
         )
         mock_request_data.reset_mock()
 
-        analytics.app_types("web").split_field("SOURCE")
+        analytics.app_types("web")
+
+        with self.assertRaisesRegex(
+            AttributeError,
+            "split_field attribute not yet implemented in the Pinterest API",
+        ):
+            analytics.split_field("SOURCE")
 
         # verifies additional parameters and no ad_account_id
         self.assertEqual("test_response", analytics.get())
@@ -45,7 +51,6 @@ class AnalyticsTest(unittest.TestCase):
             "&metric_types=IMPRESSION,PIN_CLICK_RATE"
             "&app_types=web"
             "&from_claimed_content=Both&pin_format=regular"
-            "&split_field=SOURCE"
         )
         mock_request_data.reset_mock()
 
