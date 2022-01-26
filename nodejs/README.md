@@ -444,6 +444,19 @@ optional arguments:
                         version of the API to use
 ```
 
+## Proxy Configuration
+
+The quickstart uses the [global-agent](https://www.npmjs.com/package/global-agent) package to support proxy configurations. To forward Pinterest API requests through a local proxy at port 8080, run this command in the shell before running any of the above commands:
+```
+$ export GLOBAL_AGENT_HTTPS_PROXY="http://localhost:8080"
+```
+
+According to the [global-agent documentation](https://github.com/gajus/global-agent#what-is-the-reason-global-agentbootstrap-does-not-use-http_proxy), it's also possible to use the more standard HTTPS_PROXY environment variable as follows:
+```
+$ export GLOBAL_AGENT_ENVIRONMENT_VARIABLE_NAMESPACE=
+$ export HTTPS_PROXY="http://localhost:8080"
+```
+
 ## Tests
 
 Unit tests use the [Jest framework](https://jestjs.io/) and are in the `*.test.js` files that correspond to each source file. In addition, the [Babel JavaScript compiler](https://babeljs.io/) is required for Jest to run with the module structure used in this repo. The node dependencies for Jest should have been installed as part of the quickstart instructure, Unless you specified the `--production` flag with ```npm install```. To install the `jest` binary, you'll need to run `npm install jest --global` once on your development machine. (These instructions were written when the latest version of `jest` was 27.0.3). Then, run the tests with the `jest` command. No arguments are required, but you can specify the relative pathname of a test file as an argument. For example: `jest ./src/v3/user.test.js`
