@@ -1,4 +1,5 @@
 import process from 'process';
+import { bootstrap } from 'global-agent';
 
 export class ApiConfig {
   constructor({ verbosity = 2, version }) {
@@ -37,6 +38,9 @@ export class ApiConfig {
     // swizzle oauth and api hosts, based on environment
     this.oauth_uri = process.env.PINTEREST_OAUTH_URI || DEFAULT_OAUTH_URI;
     this.api_uri = process.env.PINTEREST_API_URI || DEFAULT_API_URI;
+
+    // start the global-agent to take care of any required proxies
+    bootstrap();
   }
 
   /**

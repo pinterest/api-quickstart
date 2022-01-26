@@ -432,6 +432,13 @@ optional arguments:
                         version of the API to use
 ```
 
+## Proxy Configuration
+
+The quickstart uses the [Python Requests](https://docs.python-requests.org) library, which supports the `HTTPS_PROXY` environment variable. For example, to forward Pinterest API requests through a local proxy at port 8080, run this command in the shell before running any of the above commands:
+```
+$ export HTTPS_PROXY="http://localhost:8080"
+```
+
 ## Tests
 
 Unit tests are in `./tests/src/` and integrations tests are in `./tests/scripts/`. To run the tests, run the following commands in your virtualenv:
