@@ -112,6 +112,26 @@ class ApiObject(ApiCommon):
         )
         self.check(response)  # throws an exception if anything goes wrong
 
+    def upload_file_multipart(self, url, file_path, post_data):
+        """
+        Upload a file in a form. For example, use this function
+        for uploading a file to Amazon S3 with the parameters
+        returned from the Pinterest media API.
+        """
+        if self.api_config.verbosity >= 2:
+            print(f"POST {url} from {file_path}")
+
+        if self.api_config.verbosity >= 3:
+            self.api_config.credentials_warning()
+            print(post_data)
+
+        with open(file_path, "rb") as file_object:
+            response = requests.post(
+                url,
+                data=post_data,
+                files={"file": (None, file_object)})
+            self.check(response)
+
     def add_query(self, path, query_parameters=None):
         if query_parameters:
             delimiter = "&" if ("?" in path) else "?"
