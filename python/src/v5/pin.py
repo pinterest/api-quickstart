@@ -1,6 +1,3 @@
-import re
-import time
-
 from api_object import ApiObject
 
 class Pin(ApiObject):
@@ -42,11 +39,12 @@ class Pin(ApiObject):
             "board_id": board_id,
         }
 
+        # https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
         media_id = self.media_to_media_id(media)
-        self.check_media_id(media_id)
 
         image_url = pin_data["media"]["images"]["originals"]["url"]
         if media_id:
+            self.check_media_id(media_id)
             create_data["media_source"] = {
                 "source_type": "video_id",
                 "cover_image_url": image_url,
@@ -70,28 +68,6 @@ class Pin(ApiObject):
         self.pin_id = pin_data["id"]
         return pin_data
 
-    # https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
-    def media_to_media_id(self, media):
-        """
-        This function translates the media argument into a media_id, which may be one of:
-           <falsy>     => no video creation is required
-           <file path> => create a media_id from the video in the file path
-           media_id    => an existing media identifier
-        """
-        if not media:
-            return media
-
-        try: # check whether media is a readable file path
-            open(media, "r").close()
-        except OSError:
-            # media is not a readable file path. check whether it is a valid media_id
-            if re.match(r"^\w*\d+$", media):
-                return media
-            raise ValueError(f"invalid media: {media}")
-
-        # valid file found
-        return self.upload_video(media)
-
     # https://developers.pinterest.com/docs/api/v5/#operation/media/create
     def upload_video(self, media_path):
         """
@@ -101,11 +77,14 @@ class Pin(ApiObject):
         self.upload_file_multipart(media_upload["upload_url"],
                                    media_path,
                                    media_upload["upload_parameters"])
-        return media_upload['media_id']
+        return media_upload["media_id"]
 
+    # https://developers.pinterest.com/docs/api/v5/#operation/media/get
     def check_media_id(self, media_id):
-        # poll for successful status (TODO: refactor with async_report delay loop)
-        delay = 1 # for backoff algorithm
+        """
+        Poll for the status of the media until it is complete.
+        """
+        self.reset_backoff()
         while True:
             media_response = self.request_data(f"/v5/media/{media_id}")
             status = media_response["status"]
@@ -113,5 +92,4 @@ class Pin(ApiObject):
                 return
             if status == "failed":
                 raise RuntimeError(f"upload to {media_path} failed with status: {status}")
-            time.sleep(delay)
-            delay = min(delay * 2, 10)
+            self.wait_backoff(f"Media id {media_id} status: {status}.")

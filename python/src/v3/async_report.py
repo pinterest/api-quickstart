@@ -1,5 +1,3 @@
-import time
-
 from api_object import ApiObject
 
 
@@ -55,21 +53,15 @@ class AsyncReport(ApiObject):
 
     def wait_report(self):
         """
-        Polls for the status of the report until it is complete. Uses an
-        exponential backoff algorithm (up to a 10 second maximum delay) to
-        determine the appropriate amount of time to wait.
+        Poll for the status of the report until it is complete.
         """
-        delay = 1  # for backoff algorithm
-        readable = "a second"  # for human-readable output of delay
+        self.reset_backoff()
         while True:
             self.poll_report()
             if self.status == "FINISHED":
                 return
 
-            print(f"Report status: {self.status}. Waiting {readable}...")
-            time.sleep(delay)
-            delay = min(delay * 2, 10)
-            readable = f"{delay} seconds"
+            self.wait_backoff(f"Report status: {self.status}.")
 
     def run(self):
         """
