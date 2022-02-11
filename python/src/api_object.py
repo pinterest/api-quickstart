@@ -157,9 +157,9 @@ class ApiObject(ApiCommon):
             open(media, "r").close()
         except OSError:
             # media is not a readable file path. check whether it is a valid media_id
-            if re.match(r"^\w*\d+$", media):
+            if re.match(r"\d+$", media):
                 return media
-            raise ValueError(f"invalid media: {media}")
+            raise ValueError(f"invalid media: {media}") from None
 
         # valid file found
         return self.upload_video(media)

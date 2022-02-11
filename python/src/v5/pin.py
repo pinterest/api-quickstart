@@ -91,5 +91,6 @@ class Pin(ApiObject):
             if status == "succeeded":
                 return
             if status == "failed":
-                raise RuntimeError(f"upload to {media_path} failed with status: {status}")
+                raise RuntimeError(f"media upload {media_id} failed")
+
             self.wait_backoff(f"Media id {media_id} status: {status}.")
