@@ -1,6 +1,7 @@
-from api_object import ApiObject
+from api_media_object import ApiMediaObject
 
-class Pin(ApiObject):
+
+class Pin(ApiMediaObject):
     def __init__(self, pin_id, api_config, access_token):
         super().__init__(api_config, access_token)
         self.pin_id = pin_id
@@ -48,13 +49,10 @@ class Pin(ApiObject):
             create_data["media_source"] = {
                 "source_type": "video_id",
                 "cover_image_url": image_url,
-                "media_id": media_id
+                "media_id": media_id,
             }
         else:
-            create_data["media_source"] = {
-                "source_type": "image_url",
-                "url": image_url
-            }
+            create_data["media_source"] = {"source_type": "image_url", "url": image_url}
 
         if section:
             create_data["board_section_id"] = section
@@ -69,14 +67,15 @@ class Pin(ApiObject):
         return pin_data
 
     # https://developers.pinterest.com/docs/api/v5/#operation/media/create
-    def upload_video(self, media_path):
+    def upload_media(self, media_path):
         """
         Upload a video from the specified path and return a media_id.
+        Called by ApiMediaObject:media_to_media_id().
         """
         media_upload = self.post_data("/v5/media", {"media_type": "video"})
-        self.upload_file_multipart(media_upload["upload_url"],
-                                   media_path,
-                                   media_upload["upload_parameters"])
+        self.upload_file_multipart(
+            media_upload["upload_url"], media_path, media_upload["upload_parameters"]
+        )
         return media_upload["media_id"]
 
     # https://developers.pinterest.com/docs/api/v5/#operation/media/get

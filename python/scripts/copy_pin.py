@@ -29,7 +29,9 @@ def main(argv=[]):
     """
     parser = argparse.ArgumentParser(description="Copy a Pin")
     parser.add_argument("-p", "--pin-id", required=True, help="source pin identifier")
-    parser.add_argument("-m", "--media", help="media path or id") # TODO: for testing video pin
+    parser.add_argument(
+        "-m", "--media", help="media path or id"
+    )  # TODO: for testing video pin
     parser.add_argument(
         "-b", "--board-id", required=True, help="destination board identifier"
     )

@@ -7,8 +7,8 @@ from src.v3.pin import Pin
 
 
 class PinTest(unittest.TestCase):
-    @mock.patch("src.v3.pin.ApiObject.request_data")
-    @mock.patch("src.v3.pin.ApiObject.__init__")
+    @mock.patch("src.v3.pin.ApiMediaObject.request_data")
+    @mock.patch("src.v3.pin.ApiMediaObject.__init__")
     def test_pin_get(self, mock_api_object_init, mock_api_object_request_data):
         test_pin = Pin("test_pin_id", "test_api_uri", "test_access_token")
         mock_api_object_init.assert_called_once_with(
@@ -20,9 +20,9 @@ class PinTest(unittest.TestCase):
         mock_api_object_request_data.assert_called_once_with("/v3/pins/test_pin_id/")
         self.assertEqual(response, "test_response")
 
-    @mock.patch("src.v3.pin.ApiObject.put_data")
-    @mock.patch("src.v3.pin.ApiObject.request_data")
-    @mock.patch("src.v3.pin.ApiObject.__init__")
+    @mock.patch("src.v3.pin.ApiMediaObject.put_data")
+    @mock.patch("src.v3.pin.ApiMediaObject.request_data")
+    @mock.patch("src.v3.pin.ApiMediaObject.__init__")
     def test_pin_create(
         self,
         mock_api_object_init,

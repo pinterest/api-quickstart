@@ -32,9 +32,26 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 #   copy the boards from the TEST1 account to the TEST2 account.
 #   Finally, read the boards and pins from the TEST2 account.
 for VERSION in ${VERSIONS} ; do
-    printf "Delete all boards for ${TEST2}\nyes\nyes\n" | \
+    printf "Delete all boards for ${TEST2}\nyes\nyes\nyes\n" | \
         ./scripts/delete_board.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --all-boards
     ./scripts/copy_board.${EXT} -s ${TEST1}_${VERSION} -t ${TEST2}_${VERSION} -${VERSION} --all
-    ./scripts/get_user_boards.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
-    ./scripts/get_user_pins.${EXT} -a ${TEST2}_${VERSION} -${VERSION}
+    ./scripts/get_user_boards.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --page-size 100
+    ./scripts/get_user_pins.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --page-size 100
 done
+
+# The video file is required for this part of the test.
+if [ -r ${VIDEO_FILE} ] ; then
+    # use v5 to get the board with the pin to copy
+    VIDEO_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2}_v5 -v5 --page-size 100 | grep -B 1 "${VIDEO_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
+
+    # use v5 to get a single pin to copy
+    VIDEO_PIN_ID=$(./scripts/get_user_pins.${EXT} -a ${TEST2}_v5 -v5 --page-size 100 | grep -B 1 -m 1 "${VIDEO_PIN_DESCRIPTION}" | grep "Pin ID" | cut -d ' ' -f 3)
+
+    for VERSION in ${VERSIONS} ; do
+        # copy the pin, adding the video
+        ./scripts/copy_pin.${EXT} -a ${TEST2}_${VERSION} -${VERSION} -p $VIDEO_PIN_ID -b $VIDEO_BOARD_ID -m ${VIDEO_FILE}
+    done
+else
+    echo Skipping video pin creation test.
+    echo To enable this test, put a video file here: ${VIDEO_FILE}
+fi

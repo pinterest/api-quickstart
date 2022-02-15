@@ -56,6 +56,7 @@ def input_one_of(prompt, one_of_list, default):
         print()
         exit()
 
+
 def input_path_for_read(prompt, kind_of_file):
     if prompt:
         print(prompt)
@@ -71,6 +72,7 @@ def input_path_for_read(prompt, kind_of_file):
     except KeyboardInterrupt:
         print()
         exit()
+
 
 def input_path_for_write(prompt, default):
     if prompt:
