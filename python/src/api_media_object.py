@@ -18,7 +18,7 @@ class ApiMediaObject(ApiObject):
         The implementation of this function depends on the API version,
         so it must be overridden in the subclass for each version of the API.
         """
-        print("upload_media() must be overridden")
+        raise RuntimeError("upload_media() must be overridden")
 
     def media_to_media_id(self, media):
         """
