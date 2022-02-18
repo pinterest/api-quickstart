@@ -57,23 +57,6 @@ def input_one_of(prompt, one_of_list, default):
         exit()
 
 
-def input_path_for_read(prompt, kind_of_file):
-    if prompt:
-        print(prompt)
-
-    try:
-        while True:
-            path = input(f"[{kind_of_file}] ")
-            try:  # check whether the file can be read
-                open(path, "r").close()
-                return path
-            except OSError:
-                print("Error: can not read from this file.")
-    except KeyboardInterrupt:
-        print()
-        exit()
-
-
 def input_path_for_write(prompt, default):
     if prompt:
         print(prompt)
