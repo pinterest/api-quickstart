@@ -86,7 +86,9 @@ class Pin(ApiMediaObject):
         self.reset_backoff()
         while True:
             media_response = self.request_data(f"/v5/media/{media_id}")
-            status = media_response["status"]
+            status = media_response.get("status")
+            if not status:
+                raise RuntimeError(f"media upload {media_id} not found")
             if status == "succeeded":
                 return
             if status == "failed":

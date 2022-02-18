@@ -85,15 +85,17 @@ class Pin(ApiMediaObject):
             media_response = self.request_data(
                 f"/v3/media/uploads/?upload_ids={upload_id}"
             )
-            upload_record = media_response[upload_id]
+            upload_record = media_response.get(upload_id)
             if not upload_record:
                 raise RuntimeError(f"upload {upload_id} not found")
-            status = upload_record["status"]
+            status = upload_record.get("status")
+            if not status:
+                raise RuntimeError(f"upload {upload_id} has no status")
             if status == "succeeded":
                 return
             if status == "failed":
+                failure_code = upload_record.get("failure_code", "unknown")
                 raise RuntimeError(
-                    f"upload {upload_id} failed with code: "
-                    + f"{upload_record['failure_code']}"
+                    f"upload {upload_id} failed with code: {failure_code}"
                 )
             self.wait_backoff(f"Upload {upload_id} status: {status}.")
