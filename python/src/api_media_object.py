@@ -1,5 +1,3 @@
-import re
-
 import requests
 
 from api_object import ApiObject
@@ -39,7 +37,7 @@ class ApiMediaObject(ApiObject):
             open(media, "r").close()
         except OSError:
             # media is not a readable file path. check whether it is a valid media_id
-            if re.match(r"\d+$", media):
+            if media.isdigit():
                 return media
             raise ValueError(f"invalid media: {media}") from None
 
