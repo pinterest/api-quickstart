@@ -7,6 +7,14 @@ from api_object import ApiObject
 
 
 class ApiObjectTest(unittest.TestCase):
+    """
+    Tests for the generic ApiObject class that is used for all versions
+    of the Pinterest API.
+
+    Note: the reset_backoff and wait_backoff functions are tested with
+    the classes that call these functions instead of testing them in
+    this file.
+    """
 
     test_uri = "https://test_host"
     test_path = "/test_path"

@@ -1,3 +1,4 @@
+import time
 from urllib.parse import urlencode
 
 import requests
@@ -111,6 +112,26 @@ class ApiObject(ApiCommon):
             allow_redirects=False,
         )
         self.check(response)  # throws an exception if anything goes wrong
+
+    def reset_backoff(self):
+        """
+        Reset the exponential backoff algorithm.
+        """
+        self.backoff = 1  # delay for backoff algorithm in seconds
+        self.backoff_string = "a second"  # for human-readable output of delay
+
+    def wait_backoff(self, message=None):
+        """
+        Provides an exponential backoff algorithm (up to a 10 second maximum delay)
+        to determine the appropriate amount of time to wait between asynchronous
+        API requests
+        """
+        if message:
+            print(f"{message} Waiting {self.backoff_string}...")
+
+        time.sleep(self.backoff)
+        self.backoff = min(self.backoff * 2, 10)
+        self.backoff_string = f"{self.backoff} seconds"
 
     def add_query(self, path, query_parameters=None):
         if query_parameters:

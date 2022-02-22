@@ -29,6 +29,7 @@ def main(argv=[]):
     """
     parser = argparse.ArgumentParser(description="Copy a Pin")
     parser.add_argument("-p", "--pin-id", required=True, help="source pin identifier")
+    parser.add_argument("-m", "--media", help="media path or id")
     parser.add_argument(
         "-b", "--board-id", required=True, help="destination board identifier"
     )
@@ -51,7 +52,7 @@ def main(argv=[]):
     pin_data = pin.get()
     print("source pin:")
     Pin.print_summary(pin_data)
-    new_pin_data = pin.create(pin_data, args.board_id, args.section)
+    new_pin_data = pin.create(pin_data, args.board_id, args.section, args.media)
     print("new pin:")
     Pin.print_summary(new_pin_data)
 

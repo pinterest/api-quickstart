@@ -57,8 +57,7 @@ Below you will find a description of each script along with an example of its he
 ```
 $ ./scripts/get_access_token.py --help
 
-usage: get_access_token.py [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN]
-                           [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_access_token.py [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get Pinterest OAuth token
 
@@ -150,8 +149,7 @@ Demonstrates how to refresh an access token. This script is just meant to be sel
 ```
 $ ./scripts/refresh_example.py --help
 
-usage: refresh_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                          [-v API_VERSION]
+usage: refresh_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Refresh Pinterest OAuth token
 
@@ -170,8 +168,7 @@ optional arguments:
 ```
 $ ./scripts/refresh_access_token.py --help
 
-usage: refresh_access_token.py [-h] [-ct] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                               [-v API_VERSION]
+usage: refresh_access_token.py [-h] [-ct] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Refresh Pinterest OAuth token
 
@@ -192,8 +189,7 @@ optional arguments:
 ```
 $ ./scripts/get_pin.py --help
 
-usage: get_pin.py [-h] -p PIN_ID [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                  [-v API_VERSION]
+usage: get_pin.py [-h] -p PIN_ID [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get a Pin
 
@@ -215,8 +211,7 @@ optional arguments:
 ```
 $ ./scripts/get_board.py --help
 
-usage: get_board.py [-h] -b BOARD_ID [--pins] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                    [-v API_VERSION]
+usage: get_board.py [-h] -b BOARD_ID [--pins] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get a Board
 
@@ -239,8 +234,7 @@ optional arguments:
 ```
 $ ./scripts/get_user_pins.py --help
 
-usage: get_user_pins.py [-h] [-ps PAGE_SIZE] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                        [-v API_VERSION]
+usage: get_user_pins.py [-h] [-ps PAGE_SIZE] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get A User's Pins
 
@@ -262,10 +256,8 @@ optional arguments:
 ```
 $ ./scripts/get_user_boards.py --help
 
-usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty]
-                          [--no-include-empty] [--include-archived]
-                          [--no-include-archived] [-a ACCESS_TOKEN]
-                          [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived]
+                          [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get A User's Boards
 
@@ -286,13 +278,13 @@ optional arguments:
 ```
 
 ### [copy_pin.py](./scripts/copy_pin.py)
- Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/create) or the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
+ Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/create) or the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest. Note that `copy_pin.py` can create a video pin from an image pin by suppling the `-m/--media` argument, which is either a Pinterest media identifier (a number) or the path name of a file that contains a video.
 <!--gen-->
 ```
 $ ./scripts/copy_pin.py --help
 
-usage: copy_pin.py [-h] -p PIN_ID -b BOARD_ID [-s SECTION] [-a ACCESS_TOKEN]
-                   [-l LOG_LEVEL] [-v API_VERSION]
+usage: copy_pin.py [-h] -p PIN_ID [-m MEDIA] -b BOARD_ID [-s SECTION] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                   [-v API_VERSION]
 
 Copy a Pin
 
@@ -300,6 +292,8 @@ optional arguments:
   -h, --help            show this help message and exit
   -p PIN_ID, --pin-id PIN_ID
                         source pin identifier
+  -m MEDIA, --media MEDIA
+                        media path or id
   -b BOARD_ID, --board-id BOARD_ID
                         destination board identifier
   -s SECTION, --section SECTION
@@ -318,9 +312,8 @@ optional arguments:
 ```
 $ ./scripts/copy_board.py --help
 
-usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN]
-                     [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run]
-                     [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all]
+                     [--dry-run] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Copy one Board or all Boards
 
@@ -349,8 +342,7 @@ optional arguments:
 ```
 $ ./scripts/get_ads.py --help
 
-usage: get_ads.py [-h] [--all-ads] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                  [-v API_VERSION]
+usage: get_ads.py [-h] [--all-ads] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Advertisers API Example
 
@@ -371,9 +363,8 @@ optional arguments:
 ```
 $ ./scripts/get_analytics.py --help
 
-usage: get_analytics.py [-h]
-                        [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}]
-                        [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_analytics.py [-h] [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}] [-a ACCESS_TOKEN]
+                        [-l LOG_LEVEL] [-v API_VERSION]
 
 Get Analytics
 
@@ -395,8 +386,7 @@ optional arguments:
 ```
 $ ./scripts/get_businesses.py --help
 
-usage: get_businesses.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                         [-v API_VERSION]
+usage: get_businesses.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get User Businesses
 
@@ -417,8 +407,7 @@ optional arguments:
 ```
 $ ./scripts/analytics_api_example.py --help
 
-usage: analytics_api_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                                [-v API_VERSION]
+usage: analytics_api_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Analytics API Example
 
