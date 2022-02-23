@@ -40,6 +40,8 @@ ${uri_attributes}`;
     this._url = poll_data.url;
   }
 
+  // TODO: refactor with backoff in ApiObject
+
   // Polls for the status of the report until it is complete. Uses an
   // exponential backoff algorithm (up to a 10 second maximum delay) to
   // determine the appropriate amount of time to wait.

@@ -27,6 +27,7 @@ async function main(argv) {
   });
   parser.add_argument('-p', '--pin-id', { required: true, help: 'source pin identifier' });
   parser.add_argument('-b', '--board-id', { required: true, help: 'destination board identifier' });
+  parser.add_argument('-m', '--media', { help: 'media path or id' });
   parser.add_argument('-s', '--section', { help: 'destination board section' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
@@ -48,7 +49,10 @@ async function main(argv) {
   const pin_data = await pin.get();
   console.log('source pin:');
   Pin.print_summary(pin_data);
-  const new_pin_data = await pin.create(pin_data, args.board_id, { section: args.section });
+  const new_pin_data = await pin.create(pin_data, args.board_id, {
+    section: args.section,
+    media: args.media
+  });
   console.log('new pin:');
   Pin.print_summary(new_pin_data);
 }
