@@ -35,7 +35,7 @@ export class ApiMediaObject extends ApiObject {
     try {
       let fd = openSync(media, 'r');
       closeSync(fd);
-      return await this.upload_media(media); // TODO: remove await because caller will await return value?
+      return this.upload_media(media); // await not necessary because caller checks status
     } catch {
       // ignore errors, check for media id
     }

@@ -116,7 +116,7 @@ export class ApiObject extends ApiCommon {
   // API requests.
   async wait_backoff({ message }) {
     if (message) {
-      console.log(`${message} Waiting ${this.backoff_string}`);
+      console.log(`${message} Waiting ${this.backoff_string}...`);
     }
 
     await new Promise(resolve => setTimeout(resolve, this.backoff * 1000));

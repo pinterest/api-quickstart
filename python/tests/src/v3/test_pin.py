@@ -99,7 +99,7 @@ class PinTest(unittest.TestCase):
             {"oops_bad_media_id": {"status": "failed", "failure_code": 2718}},
             # fifth call to create
             {"93428665": {"not status": "failed"}},
-            # fifth call: seven responses
+            # sixth call: seven responses
             {"67890": {"status": "registered"}},
             {"67890": {"status": "processing"}},
             {"67890": {"status": "processing"}},
@@ -164,7 +164,7 @@ class PinTest(unittest.TestCase):
 
         # sixth call takes some (simulated) time
         mock_api_object_m2mi.return_value = "67890"
-        response = test_pin.create(new_pin_data, "test_board_id", media="test_media_id")
+        test_pin.create(new_pin_data, "test_board_id", media="test_media_id")
         mock_print.assert_has_calls(
             [
                 call("Upload 67890 status: registered. Waiting a second..."),

@@ -80,11 +80,11 @@ export class Pin extends ApiMediaObject {
       { type: 'video' }
     );
 
-    // TODO: dot notation for structure attributes?
-    await this.upload_file_multipart(media_upload['upload_url'],
+    // upload the video file
+    await this.upload_file_multipart(media_upload.upload_url,
                                      media_path,
-                                     media_upload['upload_parameters']);
-    return media_upload['upload_id'];
+                                     media_upload.upload_parameters);
+    return media_upload.upload_id;
   }
 
   // Poll for the status of the media until it is complete.
@@ -101,17 +101,17 @@ export class Pin extends ApiMediaObject {
       }
       var status = upload_record['status'];
       if (!status) {
-        throw Error(`media upload ${media_id} has no status`);
+        throw Error(`upload ${upload_id} has no status`);
       }
       if (status === 'succeeded') {
         return;
       }
       if (status === 'failed') {
         const failure_code = upload_record['failure_code'] || 'unknown';
-        throw Error(`media upload ${media_id} failed with code: ${failure_code}`);
+        throw Error(`upload ${upload_id} failed with code: ${failure_code}`);
       }
       await this.wait_backoff({
-        message: `Upload ${upload_id} status: ${status}`
+        message: `Upload ${upload_id} status: ${status}.`
       });
     }
   }
