@@ -1,5 +1,4 @@
 import { ApiMediaObject } from './api_media_object.js';
-import FormData from 'form-data';
 import fs from 'fs';
 
 jest.mock('fs');
@@ -24,7 +23,7 @@ jest.mock('form-data', () => {
  * this file.
  */
 describe('api_media_object tests', () => {
-  test('test upload_media', async() => {
+  test('upload_media', async() => {
     const api_media_object = new ApiMediaObject(jest.fn(), jest.fn());
 
     await expect(async() => {
@@ -32,12 +31,12 @@ describe('api_media_object tests', () => {
     }).rejects.toThrowError(new Error('upload_media() must be overridden'));
   });
 
-  test('test media_to_media_id', async() => {
+  test('media_to_media_id', async() => {
     const api_media_object = new ApiMediaObject(jest.fn(), jest.fn());
 
     // falsy returns falsy
     expect(await api_media_object.media_to_media_id(null))
-      .toBeNull()
+      .toBeNull();
 
     await expect(async() => {
       await api_media_object.upload_media('test_media');
@@ -46,12 +45,12 @@ describe('api_media_object tests', () => {
     // media id returns media id
     fs.openSync
       .mockImplementationOnce(
-        (path, mode) => { throw new Error('file does not exist') })
+        (path, mode) => { throw new Error('file does not exist'); });
     expect(await api_media_object.media_to_media_id('12345'))
-      .toEqual('12345')
+      .toEqual('12345');
 
     // valid file calls closeSync and upload_media
-    fs.openSync.mockReturnValueOnce('test_media_fd')
+    fs.openSync.mockReturnValueOnce('test_media_fd');
     await expect(async() => {
       await api_media_object.media_to_media_id('test_media');
     }).rejects.toThrowError(new Error('upload_media() must be overridden'));
@@ -60,20 +59,20 @@ describe('api_media_object tests', () => {
     // invalid media throws error
     fs.openSync
       .mockImplementationOnce(
-        (path, mode) => { throw new Error('file does not exist') })
+        (path, mode) => { throw new Error('file does not exist'); })
       .mockImplementationOnce(
-        (path, mode) => { throw new Error('file does not exist') })
+        (path, mode) => { throw new Error('file does not exist'); });
 
     await expect(async() => {
       await api_media_object.media_to_media_id('3.14159');
-    }).rejects.toThrowError(new Error('invalid media: 3.14159'))
+    }).rejects.toThrowError(new Error('invalid media: 3.14159'));
 
     await expect(async() => {
       await api_media_object.media_to_media_id('-314159');
-    }).rejects.toThrowError(new Error('invalid media: -314159'))
+    }).rejects.toThrowError(new Error('invalid media: -314159'));
   });
 
-  test('test upload_file_multipart', async() => {
+  test('upload_file_multipart', async() => {
     const api_config = jest.fn();
     api_config.credentials_warning = jest.fn();
     const api_media_object = new ApiMediaObject(api_config, jest.fn());
@@ -107,7 +106,7 @@ describe('api_media_object tests', () => {
 
     expect(fs.createReadStream.mock.calls).toEqual([
       ['test_file_path_1'],
-      ['test_file_path_2'],
+      ['test_file_path_2']
     ]);
     expect(api_config.credentials_warning).toHaveBeenCalledTimes(1);
     expect(mockFormAppend.mock.calls).toEqual([
@@ -118,7 +117,7 @@ describe('api_media_object tests', () => {
     ]);
     expect(mockFormSubmit.mock.calls).toEqual([
       ['test_url_1', expect.any(Function)],
-      ['test_url_2', expect.any(Function)],
+      ['test_url_2', expect.any(Function)]
     ]);
     expect(console.log.mock.calls).toEqual([
       ['POST', 'test_url_1', 'from', 'test_file_path_1'],

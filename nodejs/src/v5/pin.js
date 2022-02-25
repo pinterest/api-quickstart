@@ -33,7 +33,7 @@ export class Pin extends ApiMediaObject {
       'alt_text'
     ];
     const create_data = {
-      board_id: board_id,
+      board_id: board_id
     };
 
     // https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
@@ -42,13 +42,13 @@ export class Pin extends ApiMediaObject {
     const image_url = pin_data.media.images.originals.url;
     if (media_id) {
       await this.check_media_id(media_id);
-      create_data['media_source'] = {
+      create_data.media_source = {
         source_type: 'video_id',
         cover_image_url: image_url,
         media_id: media_id
       };
     } else {
-      create_data['media_source'] = {
+      create_data.media_source = {
         source_type: 'image_url',
         url: image_url
       };
@@ -80,8 +80,8 @@ export class Pin extends ApiMediaObject {
 
     // upload the video file
     await this.upload_file_multipart(media_upload.upload_url,
-                                     media_path,
-                                     media_upload.upload_parameters);
+      media_path,
+      media_upload.upload_parameters);
     return media_upload.media_id;
   }
 
@@ -90,8 +90,8 @@ export class Pin extends ApiMediaObject {
   async check_media_id(media_id) {
     this.reset_backoff();
     while (true) {
-      var media_response = await this.request_data(`/v5/media/${media_id}`);
-      var status = media_response['status'];
+      const media_response = await this.request_data(`/v5/media/${media_id}`);
+      const status = media_response.status;
       if (!status) {
         throw Error(`media upload ${media_id} not found`);
       }

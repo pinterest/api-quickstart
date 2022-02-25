@@ -44,7 +44,7 @@ export class Pin extends ApiMediaObject {
     const media_id = await this.media_to_media_id(media);
     if (media_id) {
       await this.check_upload_id(media_id);
-      create_data['media_upload_id'] = media_id;
+      create_data.media_upload_id = media_id;
     }
 
     if (section) {
@@ -82,8 +82,8 @@ export class Pin extends ApiMediaObject {
 
     // upload the video file
     await this.upload_file_multipart(media_upload.upload_url,
-                                     media_path,
-                                     media_upload.upload_parameters);
+      media_path,
+      media_upload.upload_parameters);
     return media_upload.upload_id;
   }
 
@@ -92,14 +92,14 @@ export class Pin extends ApiMediaObject {
   async check_upload_id(upload_id) {
     this.reset_backoff();
     while (true) {
-      var media_response = await this.request_data(
+      const media_response = await this.request_data(
         `/v3/media/uploads/?upload_ids=${upload_id}`
       );
-      var upload_record = media_response[upload_id];
+      const upload_record = media_response[upload_id];
       if (!upload_record) {
         throw Error(`upload ${upload_id} not found`);
       }
-      var status = upload_record['status'];
+      const status = upload_record.status;
       if (!status) {
         throw Error(`upload ${upload_id} has no status`);
       }
@@ -107,7 +107,7 @@ export class Pin extends ApiMediaObject {
         return;
       }
       if (status === 'failed') {
-        const failure_code = upload_record['failure_code'] || 'unknown';
+        const failure_code = upload_record.failure_code || 'unknown';
         throw Error(`upload ${upload_id} failed with code: ${failure_code}`);
       }
       await this.wait_backoff({

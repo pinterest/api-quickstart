@@ -108,7 +108,7 @@ export class ApiObject extends ApiCommon {
   // Reset the exponential backoff algorithm.
   reset_backoff() {
     this.backoff = 1; // delay for backoff algorithm in seconds
-    this.backoff_string = "a second" // for human-readable output of delay
+    this.backoff_string = 'a second'; // for human-readable output of delay
   }
 
   // Provides an exponential backoff algorithm (up to a 10 second maximum delay)

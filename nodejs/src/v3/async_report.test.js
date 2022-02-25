@@ -73,9 +73,9 @@ test_report2_url/x-y-z/metrics_report.txt?Very-long-credentials-string';
     // unmock the backoff functions
     const api_object = new api_object_actual.ApiObject('test1', 'test2');
     jest.spyOn(ApiObject.prototype, 'reset_backoff')
-      .mockImplementation(api_object.reset_backoff)
+      .mockImplementation(api_object.reset_backoff);
     jest.spyOn(ApiObject.prototype, 'wait_backoff')
-      .mockImplementation(api_object.wait_backoff)
+      .mockImplementation(api_object.wait_backoff);
 
     await test_report2.run('test_report2_attributes');
 

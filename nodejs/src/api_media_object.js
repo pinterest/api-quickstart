@@ -6,14 +6,10 @@ import { ApiObject } from './api_object.js';
  * Subclass of an ApiObject with media functionality.
  */
 export class ApiMediaObject extends ApiObject {
-  constructor(api_config, access_token) {
-    super(api_config, access_token);
-  }
-
   // The implementation of this function depends on the API version,
   // so it must be overridden in the subclass for each version of the API.
   async upload_media(self, media) {
-    throw new Error ('upload_media() must be overridden');
+    throw new Error('upload_media() must be overridden');
   }
 
   /*
@@ -33,7 +29,7 @@ export class ApiMediaObject extends ApiObject {
     }
 
     try {
-      let fd = openSync(media, 'r');
+      const fd = openSync(media, 'r');
       closeSync(fd);
       return this.upload_media(media); // await not necessary because caller checks status
     } catch {
@@ -41,7 +37,7 @@ export class ApiMediaObject extends ApiObject {
     }
 
     // verify that media_id is a positive integer
-    let media_id = Number(media);
+    const media_id = Number(media);
     if (Number.isInteger(media_id) && media_id > 0) {
       return media;
     }
@@ -53,28 +49,28 @@ export class ApiMediaObject extends ApiObject {
   // Upload a file in a form. For example, use this function
   // for uploading a file to Amazon S3 with the parameters
   // returned from the Pinterest media API.
-   async upload_file_multipart(url, file_path, post_data) {
-     if (this.api_config.verbosity >= 2) {
-       console.log('POST', url, 'from', file_path);
-     }
+  async upload_file_multipart(url, file_path, post_data) {
+    if (this.api_config.verbosity >= 2) {
+      console.log('POST', url, 'from', file_path);
+    }
 
-     if (this.api_config.verbosity >= 3) {
-       this.api_config.credentials_warning();
-       console.log(post_data);
-     }
+    if (this.api_config.verbosity >= 3) {
+      this.api_config.credentials_warning();
+      console.log(post_data);
+    }
 
-     // set up the form to be submitted with the video
-     let form = new FormData();
-     if (post_data) {
-       for (const [attr, value] of Object.entries(post_data)) {
-         form.append(attr, value);
-       }
-     }
-     form.append('file', createReadStream(file_path));
+    // set up the form to be submitted with the video
+    const form = new FormData();
+    if (post_data) {
+      for (const [attr, value] of Object.entries(post_data)) {
+        form.append(attr, value);
+      }
+    }
+    form.append('file', createReadStream(file_path));
 
-     // submit the form with the video
-     form.submit(url, function(err, res) {
-       if (err) throw err;
-     });
+    // submit the form with the video
+    form.submit(url, function(err, res) {
+      if (err) throw err;
+    });
   }
 }

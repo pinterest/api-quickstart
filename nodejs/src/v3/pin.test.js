@@ -82,32 +82,32 @@ describe('v3 pin tests', () => {
     mock_request_data // simulated responses to upload status
       // first call to create
       .mockResolvedValueOnce({
-        test_media_id: {status: 'succeeded'}
+        test_media_id: { status: 'succeeded' }
       })
       // second call to create
       .mockResolvedValueOnce({
-        '12345': {status: 'failed'}
+        12345: { status: 'failed' }
       })
       // third call to create
       .mockResolvedValueOnce({
-        '314159265': {status: 'failed', failure_code: 2718}
+        314159265: { status: 'failed', failure_code: 2718 }
       })
       // fourth call to create
       .mockResolvedValueOnce({
-        oops_bad_media_id: {status: 'failed', failure_code: 2718}
+        oops_bad_media_id: { status: 'failed', failure_code: 2718 }
       })
       // fifth call to create
       .mockResolvedValueOnce({
-        '93428665': {'not status': 'failed'}
+        93428665: { 'not status': 'failed' }
       })
       // sixth call: seven responses
-      .mockResolvedValueOnce({'67890': {status: 'registered'}})
-      .mockResolvedValueOnce({'67890': {status: 'processing'}})
-      .mockResolvedValueOnce({'67890': {status: 'processing'}})
-      .mockResolvedValueOnce({'67890': {status: 'processing'}})
-      .mockResolvedValueOnce({'67890': {status: 'processing'}})
-      .mockResolvedValueOnce({'67890': {status: 'processing'}})
-      .mockResolvedValueOnce({'67890': {status: 'succeeded'}});
+      .mockResolvedValueOnce({ 67890: { status: 'registered' } })
+      .mockResolvedValueOnce({ 67890: { status: 'processing' } })
+      .mockResolvedValueOnce({ 67890: { status: 'processing' } })
+      .mockResolvedValueOnce({ 67890: { status: 'processing' } })
+      .mockResolvedValueOnce({ 67890: { status: 'processing' } })
+      .mockResolvedValueOnce({ 67890: { status: 'processing' } })
+      .mockResolvedValueOnce({ 67890: { status: 'succeeded' } });
 
     const mock_m2mi = jest.spyOn(ApiMediaObject.prototype, 'media_to_media_id');
     mock_m2mi // simulated responses to media_to_media_id
@@ -116,7 +116,7 @@ describe('v3 pin tests', () => {
       .mockResolvedValueOnce('314159265')
       .mockResolvedValueOnce('314159265')
       .mockResolvedValueOnce('93428665')
-      .mockResolvedValueOnce('67890')
+      .mockResolvedValueOnce('67890');
 
     const pin_data = {
       link: 'test_pin_link',
@@ -130,7 +130,7 @@ describe('v3 pin tests', () => {
     const mock_put_data = jest.spyOn(ApiMediaObject.prototype, 'put_data');
     const created_data = { id: 'created_pin_id' };
     mock_put_data.mockResolvedValue(created_data);
-    const response = await test_pin.create(pin_data, 'test_board_id', {media: 'test_media_id'});
+    const response = await test_pin.create(pin_data, 'test_board_id', { media: 'test_media_id' });
     expect(created_data).toEqual(response);
     const expected_put_data = {
       board_id: 'test_board_id',
@@ -143,30 +143,30 @@ describe('v3 pin tests', () => {
     expect(mock_put_data.mock.calls[0]).toEqual(['/v3/pins/', expected_put_data]);
     expect(test_pin.pin_id).toEqual('created_pin_id');
 
-    expect(async () => {
+    await expect(async() => {
       // second call to create
-      await test_pin.create(pin_data, 'test_board_id', {media: 'file_name'})
+      await test_pin.create(pin_data, 'test_board_id', { media: 'file_name' });
     }).rejects.toThrowError(
       new Error('upload 12345 failed with code: unknown')
     );
 
-    expect(async () => {
+    await expect(async() => {
       // third call to create
-      await test_pin.create(pin_data, 'test_board_id', {media: 'file_name'})
+      await test_pin.create(pin_data, 'test_board_id', { media: 'file_name' });
     }).rejects.toThrowError(
       new Error('upload 314159265 failed with code: 2718')
     );
 
-    expect(async () => {
+    await expect(async() => {
       // fourth call to create
-      await test_pin.create(pin_data, 'test_board_id', {media: 'file_name'})
+      await test_pin.create(pin_data, 'test_board_id', { media: 'file_name' });
     }).rejects.toThrowError(
       new Error('upload 314159265 not found')
     );
 
-    expect(async () => {
+    await expect(async() => {
       // fifth call to create
-      await test_pin.create(pin_data, 'test_board_id', {media: 'file_name'})
+      await test_pin.create(pin_data, 'test_board_id', { media: 'file_name' });
     }).rejects.toThrowError(
       new Error('upload 93428665 has no status')
     );
@@ -186,9 +186,9 @@ describe('v3 pin tests', () => {
     // unmock the backoff functions
     const api_media_object = new amo_actual.ApiMediaObject('test1', 'test2');
     jest.spyOn(ApiMediaObject.prototype, 'reset_backoff')
-      .mockImplementation(api_media_object.reset_backoff)
+      .mockImplementation(api_media_object.reset_backoff);
     jest.spyOn(ApiMediaObject.prototype, 'wait_backoff')
-      .mockImplementation(api_media_object.wait_backoff)
+      .mockImplementation(api_media_object.wait_backoff);
 
     // sixth call to create
     await test_pin.create(pin_data, 'test_board_id', { media: 'test_media_id' });
@@ -211,7 +211,7 @@ describe('v3 pin tests', () => {
   test('v3 upload media', async() => {
     const test_pin = new Pin('test_pin_id', 'test_api_config', 'test_access_token');
 
-    const test_upload_parameters = {key1: 'value1', key2: 'value2'};
+    const test_upload_parameters = { key1: 'value1', key2: 'value2' };
 
     const mock_post_data = jest.spyOn(ApiMediaObject.prototype, 'post_data');
     mock_post_data.mockResolvedValue({
@@ -227,7 +227,7 @@ describe('v3 pin tests', () => {
     const media_id = await test_pin.upload_media('test_media_path');
     expect(media_id).toEqual('test_media_id');
     expect(mock_post_data.mock.calls).toEqual([[
-      '/v3/media/uploads/register/', {type: 'video'}
+      '/v3/media/uploads/register/', { type: 'video' }
     ]]);
     expect(mock_upload_file_multipart.mock.calls).toEqual([[
       'test_upload_url', 'test_media_path', test_upload_parameters
