@@ -105,6 +105,25 @@ export class ApiObject extends ApiCommon {
     }
   }
 
+  // Reset the exponential backoff algorithm.
+  reset_backoff() {
+    this.backoff = 1; // delay for backoff algorithm in seconds
+    this.backoff_string = 'a second'; // for human-readable output of delay
+  }
+
+  // Provides an exponential backoff algorithm (up to a 10 second maximum delay)
+  // to determine the appropriate amount of time to wait between asynchronous
+  // API requests.
+  async wait_backoff({ message }) {
+    if (message) {
+      console.log(`${message} Waiting ${this.backoff_string}...`);
+    }
+
+    await new Promise(resolve => setTimeout(resolve, this.backoff * 1000));
+    this.backoff = Math.min(this.backoff * 2, 10);
+    this.backoff_string = `${this.backoff} seconds`;
+  }
+
   // Concatenate the query parameters to the path with appropriate delimiters.
   add_query(path, query_parameters) {
     if (query_parameters) {

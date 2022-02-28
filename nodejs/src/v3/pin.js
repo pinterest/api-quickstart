@@ -1,6 +1,6 @@
-import { ApiObject } from '../api_object.js';
+import { ApiMediaObject } from '../api_media_object.js';
 
-export class Pin extends ApiObject {
+export class Pin extends ApiMediaObject {
   constructor(pin_id, api_config, access_token) {
     super(api_config, access_token);
     this.pin_id = pin_id;
@@ -29,7 +29,7 @@ export class Pin extends ApiObject {
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT
-  async create(pin_data, board_id, { section }) {
+  async create(pin_data, board_id, { section, media }) {
     const OPTIONAL_ATTRIBUTES = [
       'alt_text',
       'description',
@@ -39,6 +39,14 @@ export class Pin extends ApiObject {
       board_id: board_id,
       image_url: pin_data.image_large_url
     };
+
+    // https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
+    const media_id = await this.media_to_media_id(media);
+    if (media_id) {
+      await this.check_upload_id(media_id);
+      create_data.media_upload_id = media_id;
+    }
+
     if (section) {
       create_data.section = section;
     }
@@ -61,5 +69,50 @@ export class Pin extends ApiObject {
     const new_pin_data = await this.put_data('/v3/pins/', create_data);
     this.pin_id = new_pin_data.id;
     return new_pin_data;
+  }
+
+  // Upload a video from the specified path and return a media_id.
+  // Called by ApiMediaObject:media_to_media_id().
+  // https://developers.pinterest.com/docs/redoc/#operation/register_media_upload_POST
+  async upload_media(media_path) {
+    const media_upload = await this.post_data(
+      '/v3/media/uploads/register/',
+      { type: 'video' }
+    );
+
+    // upload the video file
+    await this.upload_file_multipart(media_upload.upload_url,
+      media_path,
+      media_upload.upload_parameters);
+    return media_upload.upload_id;
+  }
+
+  // Poll for the status of the media until it is complete.
+  // https://developers.pinterest.com/docs/redoc/#operation/get_media_uploads_GET
+  async check_upload_id(upload_id) {
+    this.reset_backoff();
+    while (true) {
+      const media_response = await this.request_data(
+        `/v3/media/uploads/?upload_ids=${upload_id}`
+      );
+      const upload_record = media_response[upload_id];
+      if (!upload_record) {
+        throw Error(`upload ${upload_id} not found`);
+      }
+      const status = upload_record.status;
+      if (!status) {
+        throw Error(`upload ${upload_id} has no status`);
+      }
+      if (status === 'succeeded') {
+        return;
+      }
+      if (status === 'failed') {
+        const failure_code = upload_record.failure_code || 'unknown';
+        throw Error(`upload ${upload_id} failed with code: ${failure_code}`);
+      }
+      await this.wait_backoff({
+        message: `Upload ${upload_id} status: ${status}.`
+      });
+    }
   }
 }

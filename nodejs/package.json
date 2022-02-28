@@ -6,6 +6,7 @@
   "dependencies": {
     "argparse": "^2.0.1",
     "enum": "^3.0.4",
+    "form-data": "^4.0.0",
     "global-agent": "^3.0.0",
     "got": "^11.8.2",
     "open": "^8.0.2",

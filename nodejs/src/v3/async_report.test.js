@@ -2,6 +2,7 @@ import { ApiObject } from '../api_object.js';
 import { AsyncReport } from './async_report.js';
 
 jest.mock('../api_object');
+const api_object_actual = jest.requireActual('../api_object');
 
 describe('async report tests', () => {
   afterEach(() => {
@@ -9,11 +10,11 @@ describe('async report tests', () => {
   });
 
   test('v3 async report methods', async() => {
+    const mock_constructor = jest.spyOn(ApiObject.prototype, 'constructor');
     const test_report1 = new AsyncReport(
       'test_report1', 'test_api_config', 'test_access_token', 'test_advertiser_id'
     );
-    expect(ApiObject.mock.instances.length).toBe(1);
-    expect(ApiObject.mock.calls[0]).toEqual(['test_api_config', 'test_access_token']);
+    expect(mock_constructor.mock.calls).toEqual([['test_api_config', 'test_access_token']]);
     const mock_post_data = jest.spyOn(ApiObject.prototype, 'post_data');
     mock_post_data.mockResolvedValueOnce({ token: 'test_report1_token' });
     await test_report1.request_report('test_report1_attributes');
@@ -68,6 +69,13 @@ test_report2_url/x-y-z/metrics_report.txt?Very-long-credentials-string';
       timeout_calls.push(timeout); // save the requested timeout
       callback(); // run the timer callback immediately
     });
+
+    // unmock the backoff functions
+    const api_object = new api_object_actual.ApiObject('test1', 'test2');
+    jest.spyOn(ApiObject.prototype, 'reset_backoff')
+      .mockImplementation(api_object.reset_backoff);
+    jest.spyOn(ApiObject.prototype, 'wait_backoff')
+      .mockImplementation(api_object.wait_backoff);
 
     await test_report2.run('test_report2_attributes');
 

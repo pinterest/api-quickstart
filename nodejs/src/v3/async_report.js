@@ -40,12 +40,9 @@ ${uri_attributes}`;
     this._url = poll_data.url;
   }
 
-  // Polls for the status of the report until it is complete. Uses an
-  // exponential backoff algorithm (up to a 10 second maximum delay) to
-  // determine the appropriate amount of time to wait.
+  // Polls for the status of the report until it is complete.
   async wait_report() {
-    let delay = 1; // for backoff algorithm
-    let readable = 'a second'; // for human-readable output of delay
+    this.reset_backoff();
 
     while (true) {
       await this.poll_report();
@@ -53,10 +50,9 @@ ${uri_attributes}`;
         return;
       }
 
-      console.log(`Report status: ${this.status}. Waiting ${readable}...`);
-      await new Promise(resolve => setTimeout(resolve, delay * 1000));
-      delay = Math.min(delay * 2, 10);
-      readable = `${delay} seconds`;
+      await this.wait_backoff({
+        message: `Report status: ${this.status}.`
+      });
     }
   }
 

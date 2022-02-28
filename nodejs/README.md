@@ -58,8 +58,7 @@ Quick start code that demonstrates the OAuth 2.0 flow and tests the authenticati
 ```
 $ ./scripts/get_access_token.js --help
 
-usage: get_access_token.js [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN]
-                           [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_access_token.js [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get Pinterest OAuth token
 
@@ -151,8 +150,7 @@ Demonstrates how to refresh an access token. This script is just meant to be sel
 ```
 $ ./scripts/refresh_example.js --help
 
-usage: refresh_example.js [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                          [-v API_VERSION]
+usage: refresh_example.js [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get Pinterest OAuth token
 
@@ -173,8 +171,7 @@ Refreshes an access token stored by using `./scripts/get_access_token.js` with t
 ```
 $ ./scripts/refresh_access_token.js --help
 
-usage: refresh_access_token.js [-h] [-ct] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                               [-v API_VERSION]
+usage: refresh_access_token.js [-h] [-ct] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Refresh Pinterest OAuth token
 
@@ -196,8 +193,7 @@ Retrieves the information for a specific board with the `/v5/pins/{pin_id}` [end
 ```
 $ ./scripts/get_pin.js --help
 
-usage: get_pin.js [-h] -p PIN_ID [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                  [-v API_VERSION]
+usage: get_pin.js [-h] -p PIN_ID [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get A Pin
 
@@ -220,8 +216,7 @@ Retrieves the information for a specific board with the `/v5/boards/{board_id}` 
 ```
 $ ./scripts/get_board.js --help
 
-usage: get_board.js [-h] -b BOARD_ID [--pins] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                    [-v API_VERSION]
+usage: get_board.js [-h] -b BOARD_ID [--pins] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get A Board
 
@@ -245,8 +240,7 @@ Retrieves all of the pins for a user with the `/v3/users/{users}/pins/` [endpoin
 ```
 $ ./scripts/get_user_pins.js --help
 
-usage: get_user_pins.js [-h] [-ps PAGE_SIZE] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                        [-v API_VERSION]
+usage: get_user_pins.js [-h] [-ps PAGE_SIZE] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get A User's Pins
 
@@ -269,10 +263,8 @@ Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://
 ```
 $ ./scripts/get_user_boards.js --help
 
-usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty]
-                          [--no-include-empty] [--include-archived]
-                          [--no-include-archived] [-a ACCESS_TOKEN]
-                          [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived]
+                          [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get A User's Boards
 
@@ -293,14 +285,14 @@ optional arguments:
 ```
 
 ### [copy_pin.js](./scripts/copy_pin.js)
-Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/create) or the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
+Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/create) or the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest. Note that `copy_pin.js` can create a video pin from an image pin by suppling the `-m/--media` argument, which is either a Pinterest media identifier (a number) or the path name of a file that contains a video.
 
 <!--gen-->
 ```
 $ ./scripts/copy_pin.js --help
 
-usage: copy_pin.js [-h] -p PIN_ID -b BOARD_ID [-s SECTION] [-a ACCESS_TOKEN]
-                   [-l LOG_LEVEL] [-v API_VERSION]
+usage: copy_pin.js [-h] -p PIN_ID -b BOARD_ID [-m MEDIA] [-s SECTION] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                   [-v API_VERSION]
 
 Copy A Pin
 
@@ -310,6 +302,8 @@ optional arguments:
                         source pin identifier
   -b BOARD_ID, --board-id BOARD_ID
                         destination board identifier
+  -m MEDIA, --media MEDIA
+                        media path or id
   -s SECTION, --section SECTION
                         destination board section
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
@@ -327,9 +321,8 @@ Demonstration of how to use the `POST /v3/boards` [endpoint](https://developers.
 ```
 $ ./scripts/copy_board.js --help
 
-usage: copy_board.js [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN]
-                     [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run]
-                     [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: copy_board.js [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all]
+                     [--dry-run] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Copy one Board or all Boards
 
@@ -359,8 +352,7 @@ Reads information about advertiser accounts, campaigns, ad groups, and ads. By d
 ```
 $ ./scripts/get_ads.js --help
 
-usage: get_ads.js [-h] [--all-ads] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                  [-v API_VERSION]
+usage: get_ads.js [-h] [--all-ads] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Advertisers API Example
 
@@ -382,9 +374,8 @@ Demonstrates how to use the API to retrieve analytics metrics with synchronous r
 ```
 $ ./scripts/get_analytics.js --help
 
-usage: get_analytics.js [-h]
-                        [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}]
-                        [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_analytics.js [-h] [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}] [-a ACCESS_TOKEN]
+                        [-l LOG_LEVEL] [-v API_VERSION]
 
 Get Analytics
 
@@ -407,8 +398,7 @@ Reads the `/v3/users/{user}/businesses/` [endpoint](https://developers.pinterest
 ```
 $ ./scripts/get_businesses.js --help
 
-usage: get_businesses.js [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                         [-v API_VERSION]
+usage: get_businesses.js [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get Pinterest OAuth token
 
@@ -429,8 +419,7 @@ Demonstrates how to use the API to generate an asynchronous delivery metrics rep
 ```
 $ ./scripts/analytics_api_example.js --help
 
-usage: analytics_api_example.js [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                                [-v API_VERSION]
+usage: analytics_api_example.js [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Analytics API Example
 

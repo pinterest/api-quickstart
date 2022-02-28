@@ -3,6 +3,14 @@ import got from 'got';
 
 jest.mock('got');
 
+/*
+ * Tests for the generic ApiObject class that is used for all versions
+ * of the Pinterest API.
+ *
+ * Note: the reset_backoff and wait_backoff functions are tested with
+ * the classes that call these functions instead of testing them in
+ * this file.
+ */
 describe('api_object tests', () => {
   test('add_query', () => {
     const api_object = new ApiObject(jest.fn(), jest.fn());
