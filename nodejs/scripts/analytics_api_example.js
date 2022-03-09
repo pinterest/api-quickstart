@@ -156,6 +156,7 @@ async function main(argv) {
       api_config, access_token, advertiser_id)
       .last_30_days()
       .level('PIN_PROMOTION')
+      .granularity('DAY')
       .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1'])
       .filters([{ field: 'PIN_PROMOTION_STATUS', operator: '=', value: 'APPROVED' }])
       .tag_version(3);
