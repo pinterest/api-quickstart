@@ -205,7 +205,7 @@ class AnalyticsAttributes:
         attributes = {"start_date": self._start_date, "end_date": self._end_date}
 
         metrics = self.metrics_array(required=metrics_required)
-        if metrics and len(metrics) > 0:
+        if metrics:
             attributes[metrics_parameter] = metrics
 
         # put other attributes into the dict
