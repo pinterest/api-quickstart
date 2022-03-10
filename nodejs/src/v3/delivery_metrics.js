@@ -54,6 +54,7 @@ export class DeliveryMetrics extends ApiObject {
  *          .start_date('2021-03-01') \
  *          .end_date('2021-03-31') \
  *          .level('PIN_PROMOTION') \
+ *          .granularity('DAY') \
  *          .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'}) \
  *          .report_format('csv')
  *

@@ -1,5 +1,4 @@
 import json
-from urllib.parse import quote
 
 from analytics_attributes import AdAnalyticsAttributes
 from api_object import ApiObject
@@ -30,7 +29,7 @@ class DeliveryMetrics(ApiObject):
         This call is not used much in day-to-day API code, but is a useful endpoint
         for learning about the metrics.
         """
-        return self.request_data("/ads/v3/resources/delivery_metrics/").get("metrics")
+        return self.request_data("/ads/v4/resources/delivery_metrics").get("metrics")
 
     def summary(self, delivery_metric):
         return f"{delivery_metric['name']}: {delivery_metric['definition']}"
@@ -58,13 +57,14 @@ class DeliveryMetricsAsyncReport(AdAnalyticsAttributes, AsyncReport):
     """
     Specifies all of the attributes for the async advertiser
     delivery metrics report. For more information, see:
-    https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST
+    https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler
 
     The attribute functions are chainable. For example:
     report = DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id) \
              .start_date('2021-03-01') \
              .end_date('2021-03-31') \
              .level('PIN_PROMOTION') \
+             .granularity('DAY') \
              .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'}) \
              .report_format('csv')
 
@@ -79,8 +79,9 @@ class DeliveryMetricsAsyncReport(AdAnalyticsAttributes, AsyncReport):
         super().__init__(api_config, access_token, advertiser_id)
         self.kind_of = "delivery_metrics"  # override required by superclass
 
-        # level is a required attribute
+        # set required attributes
         self.required_attrs.add("level")
+        self.required_attrs.add("granularity")
 
         # This dictionary lists values for attributes that are enumerated
         # in the API documentation. The keys are the names of the attributes,
@@ -157,7 +158,7 @@ class DeliveryMetricsAsyncReport(AdAnalyticsAttributes, AsyncReport):
         JSON separators are set to eliminate whitespace and to get the most
         compact JSON representation.
         """
-        self.attrs["filters"] = quote(json.dumps(filters, separators=(",", ":")))
+        self.attrs["filters"] = json.dumps(filters, separators=(",", ":"))
         return self
 
     def report_format(self, report_format):
@@ -175,8 +176,8 @@ class DeliveryMetricsAsyncReport(AdAnalyticsAttributes, AsyncReport):
         self.attrs["tag_version"] = tag_version
         return self
 
-    def post_uri_attributes(self):
+    def post_data_attributes(self):
         """
         This override is required by the superclass AsyncReport.
         """
-        return "?" + self.uri_attributes("metrics", False)  # metrics are not required
+        return self.data_attributes("columns", True)  # metrics are required
