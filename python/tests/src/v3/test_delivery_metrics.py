@@ -55,17 +55,29 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
             "test_api_config", "test_access_token", "test_advertiser_id"
         )
 
-        uri_attributes = dm_async_report.post_uri_attributes()
+        with self.assertRaisesRegex(
+            AttributeError, r"missing attributes: .*granularity"
+        ):
+            dm_async_report.post_data_attributes()
+
+        dm_async_report.granularity("DAY")
+
+        data_attributes = dm_async_report.post_data_attributes()
         self.assertEqual(
-            uri_attributes,
-            "?start_date=2021-03-01&end_date=2021-03-31"
-            + "&metrics=CLICKTHROUGH_1,IMPRESSION_1&level=PIN_PROMOTION"
-            + "&report_format=json",
+            data_attributes,
+            {
+                "start_date": "2021-03-01",
+                "end_date": "2021-03-31",
+                "columns": ["CLICKTHROUGH_1", "IMPRESSION_1"],
+                "level": "PIN_PROMOTION",
+                "granularity": "DAY",
+                "report_format": "json",
+            },
         )
 
         dm_async_report.date_range("2021-03-31", "2021-03-01")  # wrong order
         with self.assertRaisesRegex(ValueError, "start date after end date"):
-            dm_async_report.post_uri_attributes()
+            dm_async_report.post_data_attributes()
 
     @mock.patch("src.analytics_attributes.datetime.date", wraps=datetime.date)
     @mock.patch("src.v3.delivery_metrics.AsyncReport.__init__")
@@ -101,23 +113,30 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
             [{"field": "PIN_PROMOTION_STATUS", "operator": "=", "value": "APPROVED"}]
         )
 
-        uri_attributes = dm_async_report.post_uri_attributes()
+        data_attributes = dm_async_report.post_data_attributes()
         self.assertEqual(
-            uri_attributes,
-            "?start_date=2021-03-01&end_date=2021-03-31"
-            + "&metrics=INAPP_SEARCH_COST_PER_ACTION,INAPP_SEARCH_ROAS,"
-            + "TOTAL_CLICK_SEARCH,TOTAL_CLICK_SEARCH_QUANTITY"
-            + "&click_window_days=14"
-            + "&conversion_report_time=AD_EVENT"
-            + "&data_source=REALTIME"
-            + "&engagement_window_days=7"
-            + "&filters=%5B%7B%22field%22%3A%22PIN_PROMOTION_STATUS%22%2C%22"
-            + "operator%22%3A%22%3D%22%2C%22value%22%3A%22APPROVED%22%7D%5D"
-            + "&granularity=HOUR"
-            + "&level=SEARCH_QUERY"
-            + "&report_format=csv"
-            + "&tag_version=3"
-            + "&view_window_days=30",
+            data_attributes,
+            {
+                "start_date": "2021-03-01",
+                "end_date": "2021-03-31",
+                "columns": [
+                    "INAPP_SEARCH_COST_PER_ACTION",
+                    "INAPP_SEARCH_ROAS",
+                    "TOTAL_CLICK_SEARCH",
+                    "TOTAL_CLICK_SEARCH_QUANTITY",
+                ],
+                "click_window_days": 14,
+                "conversion_report_time": "AD_EVENT",
+                "data_source": "REALTIME",
+                "engagement_window_days": 7,
+                "filters": '[{"field":"PIN_PROMOTION_STATUS",'
+                '"operator":"=","value":"APPROVED"}]',
+                "granularity": "HOUR",
+                "level": "SEARCH_QUERY",
+                "report_format": "csv",
+                "tag_version": 3,
+                "view_window_days": 30,
+            },
         )
 
     @mock.patch("src.v3.delivery_metrics.AsyncReport.__init__")
@@ -128,14 +147,15 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
             )
             .date_range("2021-03-01", "2021-03-31")
             .level("oops")
+            .granularity("MONTH")
             .metrics({"IMPRESSION_1", "CLICKTHROUGH_1"})
         )
 
         with self.assertRaisesRegex(ValueError, "level: oops is not one of"):
-            dm_async_report.post_uri_attributes()
+            dm_async_report.post_data_attributes()
 
         dm_async_report.level("KEYWORD")
         dm_async_report.tag_version(4)
 
         with self.assertRaisesRegex(ValueError, "tag_version: 4 is not one of"):
-            dm_async_report.post_uri_attributes()
+            dm_async_report.post_data_attributes()

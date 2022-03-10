@@ -63,7 +63,7 @@ class Advertisers(ApiObject):
         """
         return self.get_iterator(
             f"/ads/v4/advertisers/{ad_account_id}/ad_groups?campaign_ids={campaign_id}",
-            query_parameters
+            query_parameters,
         )
 
     # https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_ads_handler
@@ -75,5 +75,5 @@ class Advertisers(ApiObject):
         return self.get_iterator(
             f"/ads/v4/advertisers/{ad_account_id}/ads"
             f"?campaign_ids={campaign_id}&ad_group_ids={ad_group_id}",
-            query_parameters
+            query_parameters,
         )

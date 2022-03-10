@@ -149,7 +149,10 @@ class AnalyticsAttributes:
         Returns the metrics as a comma-separated string, suitable
         for a GET or POST parameter.
         """
-        return ",".join(self.metrics_array(required=required))
+        metrics_array = self.metrics_array(required=required)
+        if not metrics_array:
+            return ""
+        return ",".join(metrics_array)
 
     def verify_attributes(self, metrics_required=False):
         # check the required start and end date attributes
@@ -199,10 +202,7 @@ class AnalyticsAttributes:
         """
         self.verify_attributes()
 
-        attributes = {
-            "start_date": self._start_date,
-            "end_date": self._end_date
-        }
+        attributes = {"start_date": self._start_date, "end_date": self._end_date}
 
         metrics = self.metrics_array(required=metrics_required)
         if metrics and len(metrics) > 0:

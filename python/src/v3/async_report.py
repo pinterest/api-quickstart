@@ -18,8 +18,8 @@ class AsyncReport(ApiObject):
         self.status = None
         self._url = None
 
-    def post_uri_attributes(self):
-        raise RuntimeError("subclass must override post_uri_attributes()")
+    def post_data_attributes(self):
+        raise RuntimeError("subclass must override post_data_attributes()")
 
     def request_report(self):
         """
