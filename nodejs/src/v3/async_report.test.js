@@ -20,9 +20,10 @@ describe('async report tests', () => {
     await test_report1.request_report('test_report1_attributes');
 
     expect(test_report1.token).toEqual('test_report1_token');
-    expect(mock_post_data.mock.calls).toEqual([['\
-/ads/v3/reports/async/test_advertiser_id/test_report1/\
-?test_report1_attributes']]);
+    expect(mock_post_data.mock.calls).toEqual([
+      ['/ads/v4/advertisers/test_advertiser_id/test_report1/async',
+        'test_report1_attributes']
+    ]);
 
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
     mock_request_data.mockResolvedValueOnce({
@@ -32,7 +33,7 @@ describe('async report tests', () => {
     await test_report1.wait_report();
     expect(test_report1.url()).toEqual('test_report1_url');
     expect(mock_request_data.mock.calls).toEqual([['\
-/ads/v3/reports/async/test_advertiser_id/test_report1/\
+/ads/v4/advertisers/test_advertiser_id/test_report1/async\
 ?token=test_report1_token']]);
   });
 
@@ -96,12 +97,13 @@ test_report2_url/x-y-z/metrics_report.txt?Very-long-credentials-string';
 
     expect(test_report2.url()).toEqual(test_report2_url); // verify returned URL
     // verify API requests
-    expect(mock_post_data.mock.calls).toEqual([['\
-/ads/v3/reports/async/test_advertiser_id/test_report2/\
-?test_report2_attributes']]);
+    expect(mock_post_data.mock.calls).toEqual([
+      ['/ads/v4/advertisers/test_advertiser_id/test_report2/async',
+        'test_report2_attributes']
+    ]);
     // request data will be called multiple times
     expect(mock_request_data).toHaveBeenCalledWith('\
-/ads/v3/reports/async/test_advertiser_id/test_report2/\
+/ads/v4/advertisers/test_advertiser_id/test_report2/async\
 ?token=test_report2_token');
 
     // verify filename

@@ -50,17 +50,18 @@ export class Advertisers extends ApiObject {
   // Get the ad groups associated with an Ad Account and Campaign.
   // https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_ad_groups_handler
   async get_ad_groups(ad_account_id, campaign_id, query_parameters) {
-    let qp = Object.assign({}, query_parameters);
-    qp.campaign_ids = [campaign_id];
-    return this.get_iterator(`/ads/v4/advertisers/${ad_account_id}/ad_groups`, qp);
+    return this.get_iterator(
+      `/ads/v4/advertisers/${ad_account_id}/ad_groups?campaign_ids=${campaign_id}`,
+      query_parameters
+    );
   }
 
   // Get the ads associated with an Ad Account, Campaign, and Ad Group.
   // https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_ads_handler
   async get_ads(ad_account_id, campaign_id, ad_group_id, query_parameters) {
-    let qp = Object.assign({}, query_parameters);
-    qp.campaign_ids = [campaign_id];
-    qp.ad_group_ids = [ad_group_id];
-    return this.get_iterator(`/ads/v4/advertisers/${ad_account_id}/ads`, qp);
+    return this.get_iterator(`\
+/ads/v4/advertisers/${ad_account_id}/ads\
+?campaign_ids=${campaign_id}&ad_group_ids=${ad_group_id}`,
+    query_parameters);
   }
 }

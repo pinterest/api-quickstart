@@ -151,7 +151,11 @@ export class AnalyticsAttributes {
   // Returns the metrics as a comma-separated string, suitable
   // for a GET or POST parameter.
   metrics_string(required) {
-    return this.metrics_array(required).join(',');
+    const metrics_array = this.metrics_array(required);
+    if (metrics_array) {
+      return metrics_array.join(',');
+    }
+    return '';
   }
 
   // check all of the attributes
@@ -207,13 +211,13 @@ export class AnalyticsAttributes {
   data_attributes(metrics_parameter, metrics_required) {
     this.verify_attributes(metrics_required);
 
-    let attributes = {
+    const attributes = {
       start_date: this._start_date,
       end_date: this._end_date
     };
 
     const metrics_array = this.metrics_array(metrics_required);
-    if (metrics_array && (metrics_array.length > 0)) {
+    if (metrics_array && metrics_array.length > 0) {
       attributes[metrics_parameter] = metrics_array;
     }
 

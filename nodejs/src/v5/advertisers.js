@@ -52,9 +52,9 @@ export class Advertisers extends ApiObject {
   // Get the ads associated with an Ad Account, Campaign, and Ad Group.
   // https://developers.pinterest.com/docs/api/v5/#operation/ads/list
   async get_ads(ad_account_id, campaign_id, ad_group_id, query_parameters) {
-    let qp = Object.assign({}, query_parameters);
-    qp.campaign_ids = [campaign_id];
-    qp.ad_group_ids = [ad_group_id];
-    return this.get_iterator(`/v5/ad_accounts/${ad_account_id}/ads`, qp);
+    return this.get_iterator(`\
+/v5/ad_accounts/${ad_account_id}/ads\
+?campaign_ids=${campaign_id}&ad_group_ids=${ad_group_id}`,
+    query_parameters);
   }
 }

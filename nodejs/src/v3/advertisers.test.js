@@ -19,7 +19,7 @@ describe('v3 advertisers tests', () => {
 
     let response = await adv.get();
     expect(mock_get_iterator.mock.calls[0]).toEqual([
-      '/ads/v3/advertisers/?owner_user_id=test_user&include_acl=true',
+      '/ads/v4/advertisers/?owner_user_id=test_user&include_acl=true',
       undefined]);
     expect(response).toEqual('test_iterator');
 
@@ -44,21 +44,22 @@ describe('v3 advertisers tests', () => {
 
     response = await adv.get_campaigns('ad_account_1', 'query_parameters_1');
     expect(mock_get_iterator.mock.calls[1]).toEqual([
-      '/ads/v3/advertisers/ad_account_1/campaigns/',
+      '/ads/v4/advertisers/ad_account_1/campaigns',
       'query_parameters_1']);
     expect(response).toEqual('test_iterator');
 
     response = await adv.get_ad_groups('ad_account_2', 'campaign_2');
     expect(mock_get_iterator.mock.calls[2]).toEqual([
-      '/ads/v3/campaigns/campaign_2/ad_groups/',
+      '/ads/v4/advertisers/ad_account_2/ad_groups?campaign_ids=campaign_2',
       undefined]);
     expect(response).toEqual('test_iterator');
 
     response = await adv.get_ads('ad_account_3', 'campaign_3', 'ad_group_3',
       'query_parameters_3');
-    expect(mock_get_iterator.mock.calls[3]).toEqual([
-      '/ads/v3/ad_groups/ad_group_3/pin_promotions/',
-      'query_parameters_3']);
+    expect(mock_get_iterator.mock.calls[3]).toEqual(['\
+/ads/v4/advertisers/ad_account_3/ads?\
+campaign_ids=campaign_3&ad_group_ids=ad_group_3',
+    'query_parameters_3']);
     expect(response).toEqual('test_iterator');
   });
 });
