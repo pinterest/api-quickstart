@@ -34,7 +34,7 @@ class AsyncReportTest(unittest.TestCase):
             "test_api_config", "test_access_token", "test_advertiser_id"
         )
         with self.assertRaisesRegex(
-            RuntimeError, "subclass must override post_uri_attributes()"
+            RuntimeError, "subclass must override post_data_attributes()"
         ):
             test_report.request_report()
 
@@ -43,8 +43,8 @@ class AsyncReportTest(unittest.TestCase):
                 super().__init__(api_config, access_token, advertiser_id)
                 self.kind_of = "test_report2"
 
-            def post_uri_attributes(self):
-                return "?test_report2_attributes"
+            def post_data_attributes(self):
+                return "test_report2_attributes"
 
         test_report2 = TestReport2(
             "test_api_config", "test_access_token", "test_advertiser_id"
@@ -53,8 +53,8 @@ class AsyncReportTest(unittest.TestCase):
         test_report2.request_report()
         self.assertEqual(test_report2.token, "test_report2_token")
         mock_post_data.assert_called_once_with(
-            "/ads/v3/reports/async/test_advertiser_id/test_report2/"
-            "?test_report2_attributes"
+            "/ads/v4/advertisers/test_advertiser_id/test_report2/async",
+            "test_report2_attributes",
         )
 
         mock_request_data.return_value = {
@@ -64,7 +64,7 @@ class AsyncReportTest(unittest.TestCase):
         test_report2.wait_report()
         self.assertEqual(test_report2.url(), "test_report2_url")
         mock_request_data.assert_called_once_with(
-            "/ads/v3/reports/async/test_advertiser_id/test_report2/"
+            "/ads/v4/advertisers/test_advertiser_id/test_report2/async"
             "?token=test_report2_token"
         )
 
@@ -86,8 +86,8 @@ class AsyncReportTest(unittest.TestCase):
                 super().__init__(api_config, access_token, advertiser_id)
                 self.kind_of = "test_report3"
 
-            def post_uri_attributes(self):
-                return "?test_report3_attributes"
+            def post_data_attributes(self):
+                return "test_report3_attributes"
 
         test_report3_url = (
             "test_report3_url/x-y-z/metrics_report.txt?Very-long-credentials-string"
@@ -126,11 +126,11 @@ class AsyncReportTest(unittest.TestCase):
 
         self.assertEqual(test_report3.url(), test_report3_url)  # verify returned URL
         mock_post_data.assert_called_once_with(
-            "/ads/v3/reports/async/test_advertiser_id/test_report3/"
-            "?test_report3_attributes"
+            "/ads/v4/advertisers/test_advertiser_id/test_report3/async",
+            "test_report3_attributes",
         )
         mock_request_data.assert_called_with(
-            "/ads/v3/reports/async/test_advertiser_id/test_report3/"
+            "/ads/v4/advertisers/test_advertiser_id/test_report3/async"
             "?token=test_report3_token"
         )
         self.assertEqual(

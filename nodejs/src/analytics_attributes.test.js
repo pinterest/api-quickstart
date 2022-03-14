@@ -8,6 +8,10 @@ describe('analytics_attributes tests', () => {
       attributes.uri_attributes('ignored', false);
     }).toThrowError(new Error('start date not set'));
 
+    expect(() => {
+      attributes.data_attributes('ignored', false);
+    }).toThrowError(new Error('start date not set'));
+
     attributes.start_date('oops');
     expect(() => {
       attributes.uri_attributes('ignored', false);
@@ -50,6 +54,11 @@ describe('analytics_attributes tests', () => {
     expect(attributes.uri_attributes('ignored', false)).toEqual(
       'start_date=2021-05-01&end_date=2021-05-31'
     );
+
+    expect(attributes.data_attributes('ignored', false)).toEqual({
+      start_date: '2021-05-01',
+      end_date: '2021-05-31'
+    });
 
     expect(() => {
       attributes.uri_attributes('ignored', true);
@@ -95,6 +104,16 @@ start_date=2021-05-01&end_date=2021-05-31\
 &statistics=METRIC_1,METRIC_2,METRIC_3\
 &animal=dog&fibonacci=5\
 &required_one=value_one&required_two=value_two');
+
+    expect(attributes.data_attributes('columns', false)).toEqual({
+      start_date: '2021-05-01',
+      end_date: '2021-05-31',
+      columns: ['METRIC_1', 'METRIC_2', 'METRIC_3'],
+      animal: 'dog',
+      fibonacci: 5,
+      required_one: 'value_one',
+      required_two: 'value_two'
+    });
   });
 
   test('ad analytics attributes', () => {

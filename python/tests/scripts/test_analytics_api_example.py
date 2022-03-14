@@ -1,5 +1,4 @@
 import json
-import re
 
 import mock
 import requests_mock
@@ -32,15 +31,11 @@ class AnalyticsApiExampleTest(IntegrationMocks):
     @requests_mock.Mocker()
     def test_analytics_api_example(self, rm):
         # request from AsyncReport.request_report
-        matcher = re.compile(
-            r"https://api.pinterest.com/ads/v3/reports/async/adv_2_id/delivery_metrics/"
-            r"\?start_date=2\d{3}-[01]\d-[0123]\d"
-            r"&end_date=2\d{3}-[01]\d-[0123]\d"
-            r"&metrics=CLICKTHROUGH_1,IMPRESSION_1"
-            r"&filters=[%0-9a-zA-z]+"
-            r"&level=PIN_PROMOTION&tag_version=3"
+        rm.post(
+            "https://api.pinterest.com/ads/v4/advertisers/"
+            "adv_2_id/delivery_metrics/async",
+            json={"data": {"token": "test-report-token"}},
         )
-        rm.post(matcher, json={"data": {"token": "test-report-token"}})
 
         # request from User.get
         rm.get(
@@ -57,7 +52,7 @@ class AnalyticsApiExampleTest(IntegrationMocks):
         )
         # request from Advertisers.get
         rm.get(
-            "https://api.pinterest.com/ads/v3/advertisers/"
+            "https://api.pinterest.com/ads/v4/advertisers/"
             "?owner_user_id=test_user_id&include_acl=true",
             json={
                 "data": [
@@ -70,7 +65,7 @@ class AnalyticsApiExampleTest(IntegrationMocks):
 
         # request from DeliveryMetrics.get
         rm.get(
-            "https://api.pinterest.com/ads/v3/resources/delivery_metrics/",
+            "https://api.pinterest.com/ads/v4/resources/delivery_metrics",
             json={
                 "data": {
                     "metrics": [
@@ -90,7 +85,8 @@ class AnalyticsApiExampleTest(IntegrationMocks):
 
         # request from AsyncReport.poll_report
         rm.get(
-            "https://api.pinterest.com/ads/v3/reports/async/adv_2_id/delivery_metrics/"
+            "https://api.pinterest.com/ads/v4/advertisers/"
+            "adv_2_id/delivery_metrics/async"
             "?token=test-report-token",
             json={"data": {"report_status": "FINISHED", "url": self.report_url}},
         )

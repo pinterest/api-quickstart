@@ -43,27 +43,36 @@ class AdvertisersTest(unittest.TestCase):
             test_advertisers.get_campaigns("test_account_id", "query_parameters_1"),
         )
         self.assertEqual(
-            "test_iterator", test_advertisers.get_ad_groups(None, "test_campaign_id")
+            "test_iterator",
+            test_advertisers.get_ad_groups("test_account_id_2", "test_campaign_id"),
         )
         self.assertEqual(
             "test_iterator",
             test_advertisers.get_ads(
-                None, None, "test_ad_group_id", "query_parameters_3"
+                "test_account_id_3",
+                "test_campaign_3",
+                "test_ad_group_id",
+                "query_parameters_3",
             ),
         )
         mock_get_iterator.assert_has_calls(
             [
                 call(
-                    "/ads/v3/advertisers/?owner_user_id=test_user_id&include_acl=true",
+                    "/ads/v4/advertisers/?owner_user_id=test_user_id&include_acl=true",
                     None,
                 ),
                 call(
-                    "/ads/v3/advertisers/test_account_id/campaigns/",
+                    "/ads/v4/advertisers/test_account_id/campaigns",
                     "query_parameters_1",
                 ),
-                call("/ads/v3/campaigns/test_campaign_id/ad_groups/", None),
                 call(
-                    "/ads/v3/ad_groups/test_ad_group_id/pin_promotions/",
+                    "/ads/v4/advertisers/test_account_id_2/ad_groups"
+                    "?campaign_ids=test_campaign_id",
+                    None,
+                ),
+                call(
+                    "/ads/v4/advertisers/test_account_id_3/ads"
+                    "?campaign_ids=test_campaign_3&ad_group_ids=test_ad_group_id",
                     "query_parameters_3",
                 ),
             ]

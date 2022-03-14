@@ -7,7 +7,7 @@ class AsyncReport(ApiObject):
 
     Subclasses must override:
        self.kind_of = String, The kind of report. Example: 'delivery_metrics'
-       self.post_uri_attributes() = Method that generates the attributes for the POST.
+       self.post_data_attributes() = Method that generates the data for the POST.
     """  # noqa: E501 because the long URL is okay
 
     def __init__(self, api_config, access_token, advertiser_id):
@@ -18,33 +18,30 @@ class AsyncReport(ApiObject):
         self.status = None
         self._url = None
 
-    def post_uri_attributes(self):
-        raise RuntimeError("subclass must override post_uri_attributes()")
+    def post_data_attributes(self):
+        raise RuntimeError("subclass must override post_data_attributes()")
 
     def request_report(self):
         """
         For documentation, see:
-          https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST
+          https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler
         """
         if not self.kind_of:
             raise RuntimeError("subclass must override the kind_of report")
 
         # create path and set required attributes
-        path = (
-            f"/ads/v3/reports/async/{self.advertiser_id}/{self.kind_of}/"
-            + self.post_uri_attributes()
-        )
-        self.token = self.post_data(path)["token"]
+        path = f"/ads/v4/advertisers/{self.advertiser_id}/{self.kind_of}/async"
+        self.token = self.post_data(path, self.post_data_attributes())["token"]
 
     def poll_report(self):
         """
         For documentation, see:
-          https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_advertiser_delivery_metrics_report_handler_GET
+          https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler
 
         Executes a single GET request to retrieve the status and (if available) the URL for the report.
         """  # noqa: E501 because the long URL is okay
         path = (
-            f"/ads/v3/reports/async/{self.advertiser_id}/{self.kind_of}/"
+            f"/ads/v4/advertisers/{self.advertiser_id}/{self.kind_of}/async"
             + f"?token={self.token}"
         )
         poll_data = self.request_data(path)

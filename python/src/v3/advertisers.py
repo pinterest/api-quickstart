@@ -6,7 +6,7 @@ class Advertisers(ApiObject):
         super().__init__(api_config, access_token)
         self.user_id = user_id
 
-    # https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_advertisers_by_owner_user_id_handler_GET
+    # https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_advertisers_handler
     def get(self, query_parameters=None):
         """
         Get the advertisers shared with the specified user_id.
@@ -14,7 +14,7 @@ class Advertisers(ApiObject):
         to return advertisers which are shared with your account.
         """
         return self.get_iterator(
-            "/ads/v3/advertisers/"
+            "/ads/v4/advertisers/"
             + f"?owner_user_id={self.user_id}"
             + "&include_acl=true",
             query_parameters,
@@ -47,30 +47,33 @@ class Advertisers(ApiObject):
             summary = f"[{idx+1}] {cls.summary(element, kind)}"
             print(summary)
 
-    # https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_advertiser_campaigns_handler_GET
+    # https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_campaigns_handler
     def get_campaigns(self, ad_account_id, query_parameters=None):
         """
         Get the campaigns associated with an Ad Account.
         """
         return self.get_iterator(
-            f"/ads/v3/advertisers/{ad_account_id}/campaigns/", query_parameters
+            f"/ads/v4/advertisers/{ad_account_id}/campaigns", query_parameters
         )
 
-    # https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_campaign_ad_groups_handler_GET
-    def get_ad_groups(self, _ad_account_id, campaign_id, query_parameters=None):
+    # https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_ad_groups_handler
+    def get_ad_groups(self, ad_account_id, campaign_id, query_parameters=None):
         """
         Get the ad groups associated with a Campaign.
         """
         return self.get_iterator(
-            f"/ads/v3/campaigns/{campaign_id}/ad_groups/", query_parameters
+            f"/ads/v4/advertisers/{ad_account_id}/ad_groups?campaign_ids={campaign_id}",
+            query_parameters,
         )
 
-    # https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_ad_group_pin_promotions_handler_GET
+    # https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_ads_handler
     # Note: Ads used to be called "promoted pins" or "pin promotions."
-    def get_ads(self, _ad_account_id, _campaign_id, ad_group_id, query_parameters=None):
+    def get_ads(self, ad_account_id, campaign_id, ad_group_id, query_parameters=None):
         """
         Get the ads associated with an Ad Group.
         """
         return self.get_iterator(
-            f"/ads/v3/ad_groups/{ad_group_id}/pin_promotions/", query_parameters
+            f"/ads/v4/advertisers/{ad_account_id}/ads"
+            f"?campaign_ids={campaign_id}&ad_group_ids={ad_group_id}",
+            query_parameters,
         )

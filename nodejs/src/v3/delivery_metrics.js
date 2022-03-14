@@ -17,13 +17,13 @@ export class DeliveryMetrics extends ApiObject {
   // should be called automagically. See:
   //   https://eslint.org/docs/rules/no-useless-constructor
 
-  // https://developers.pinterest.com/docs/redoc/#operation/ads_v3_get_delivery_metrics_handler_GET
+  // https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_available_metrics_definition_handler
   // Get the full list of all available delivery metrics.
   // This call is not used much in day-to-day API code, but is a useful endpoint
   // for learning about the metrics.
   async get() {
     return (await this.request_data(
-      '/ads/v3/resources/delivery_metrics/')).metrics;
+      '/ads/v4/resources/delivery_metrics')).metrics;
   }
 
   summary(delivery_metric) {
@@ -47,13 +47,14 @@ export class DeliveryMetrics extends ApiObject {
 /**
  * Specifies all of the attributes for the async advertiser
  * delivery metrics report. For more information, see:
- *    https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST
+ *    https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler
  *
  * The attribute functions are chainable. For example:
  * report = DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id) \
  *          .start_date('2021-03-01') \
  *          .end_date('2021-03-31') \
  *          .level('PIN_PROMOTION') \
+ *          .granularity('DAY') \
  *          .metrics({'IMPRESSION_1', 'CLICKTHROUGH_1'}) \
  *          .report_format('csv')
  *
@@ -70,8 +71,9 @@ export class DeliveryMetricsAsyncReport extends AdAnalyticsAttributes {
       'delivery_metrics', api_config, access_token, advertiser_id
     );
 
-    // level is a required attribute
+    // set required attributes
     this.required_attrs.add('level');
+    this.required_attrs.add('granularity');
 
     // This dictionary lists values for attributes that are enumerated
     // in the API documentation. The keys are the names of the attributes,
@@ -140,7 +142,7 @@ export class DeliveryMetricsAsyncReport extends AdAnalyticsAttributes {
 
   // Filters must be a list of structures with fields as specified by the API.
   filters(filters) {
-    this.attrs.filters = encodeURIComponent(JSON.stringify(filters));
+    this.attrs.filters = JSON.stringify(filters);
     return this;
   }
 
@@ -158,13 +160,14 @@ export class DeliveryMetricsAsyncReport extends AdAnalyticsAttributes {
   }
 
   // expose attributes for testing
-  post_uri_attributes() {
-    return this.uri_attributes('metrics', false);
+  post_data_attributes() {
+    // metrics are required
+    return this.data_attributes('columns', true);
   }
 
   // Pass attributes to AsyncReport.run().
   async run() {
-    await this.async_report.run(this.post_uri_attributes());
+    await this.async_report.run(this.post_data_attributes());
   }
 
   // Pass-through methods...

@@ -129,10 +129,9 @@ class AnalyticsAttributes:
         self._metrics.add(metric)
         return self
 
-    def metrics_string(self, required=True):
+    def metrics_array(self, required=True):
         """
-        Returns the metrics as a comma-separated string, suitable
-        for a GET or POST parameter.
+        Returns the metrics as a sorted array.
         """
         if not self._metrics:
             # raise an exception if metrics are required but not set
@@ -143,7 +142,17 @@ class AnalyticsAttributes:
         # set order is nondeterministic, so create a sorted list
         metrics_list = list(self._metrics)
         metrics_list.sort()  # sort makes error testing and debugging easier
-        return ",".join(metrics_list)
+        return metrics_list
+
+    def metrics_string(self, required=True):
+        """
+        Returns the metrics as a comma-separated string, suitable
+        for a GET or POST parameter.
+        """
+        metrics_array = self.metrics_array(required=required)
+        if not metrics_array:
+            return ""
+        return ",".join(metrics_array)
 
     def verify_attributes(self, metrics_required=False):
         # check the required start and end date attributes
@@ -183,6 +192,24 @@ class AnalyticsAttributes:
         attr_list.sort()  # sort makes error testing and debugging easier
         for attr in attr_list:
             attributes += f"&{attr}={self.attrs[attr]}"
+
+        return attributes
+
+    def data_attributes(self, metrics_parameter, metrics_required):
+        """
+        Provides the attributes as a dict to provide for the
+        POST that requests or initiates the report.
+        """
+        self.verify_attributes()
+
+        attributes = {"start_date": self._start_date, "end_date": self._end_date}
+
+        metrics = self.metrics_array(required=metrics_required)
+        if metrics:
+            attributes[metrics_parameter] = metrics
+
+        # put other attributes into the dict
+        attributes.update(self.attrs)
 
         return attributes
 

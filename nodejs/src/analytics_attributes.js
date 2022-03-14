@@ -132,9 +132,8 @@ export class AnalyticsAttributes {
     return this;
   }
 
-  // Returns the metrics as a comma-separated string, suitable
-  // for a GET or POST parameter.
-  metrics_string(required) {
+  // Returns the metrics as a sorted array.
+  metrics_array(required) {
     if (this._metrics.size === 0) {
       // throw an exception if metrics are required but not set
       if (required) {
@@ -146,7 +145,17 @@ export class AnalyticsAttributes {
     // set order is nondeterministic, so create a sorted array
     const metrics_array = Array.from(this._metrics);
     metrics_array.sort(); // sort makes error testing and debugging easier
-    return metrics_array.join(',');
+    return metrics_array;
+  }
+
+  // Returns the metrics as a comma-separated string, suitable
+  // for a GET or POST parameter.
+  metrics_string(required) {
+    const metrics_array = this.metrics_array(required);
+    if (metrics_array) {
+      return metrics_array.join(',');
+    }
+    return '';
   }
 
   // check all of the attributes
@@ -193,6 +202,27 @@ export class AnalyticsAttributes {
     for (const attr of attr_array) {
       attributes += `&${attr}=${this.attrs[attr]}`;
     }
+
+    return attributes;
+  }
+
+  // Provides the attributes as a structure that can be sent
+  // in POST data.
+  data_attributes(metrics_parameter, metrics_required) {
+    this.verify_attributes(metrics_required);
+
+    const attributes = {
+      start_date: this._start_date,
+      end_date: this._end_date
+    };
+
+    const metrics_array = this.metrics_array(metrics_required);
+    if (metrics_array && metrics_array.length > 0) {
+      attributes[metrics_parameter] = metrics_array;
+    }
+
+    // put other attributes into the object
+    Object.assign(attributes, this.attrs);
 
     return attributes;
   }

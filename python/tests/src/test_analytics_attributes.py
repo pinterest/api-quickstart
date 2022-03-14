@@ -13,6 +13,9 @@ class AnalyticsAttributesTest(unittest.TestCase):
         with self.assertRaisesRegex(AttributeError, "start date not set"):
             attributes.uri_attributes("ignored", False)
 
+        with self.assertRaisesRegex(AttributeError, "start date not set"):
+            attributes.data_attributes("ignored", False)
+
         attributes.start_date("oops")
         with self.assertRaisesRegex(
             ValueError, "start_date: oops needs to be a UTC date in YYYY-MM-DD format"
@@ -41,6 +44,14 @@ class AnalyticsAttributesTest(unittest.TestCase):
         self.assertEqual(
             attributes.uri_attributes("ignored", False),
             "start_date=2021-05-01&end_date=2021-05-31",
+        )
+
+        self.assertEqual(
+            attributes.data_attributes("ignored", False),
+            {
+                "start_date": "2021-05-01",
+                "end_date": "2021-05-31",
+            },
         )
 
         with self.assertRaisesRegex(AttributeError, "metrics not set"):
@@ -92,6 +103,19 @@ class AnalyticsAttributesTest(unittest.TestCase):
             "&statistics=METRIC_1,METRIC_2,METRIC_3"
             "&animal=dog&fibonacci=5"
             "&required_one=value_one&required_two=value_two",
+        )
+
+        self.assertEqual(
+            attributes.data_attributes("columns", True),
+            {
+                "start_date": "2021-05-01",
+                "end_date": "2021-05-31",
+                "columns": ["METRIC_1", "METRIC_2", "METRIC_3"],
+                "animal": "dog",
+                "fibonacci": 5,
+                "required_one": "value_one",
+                "required_two": "value_two",
+            },
         )
 
 

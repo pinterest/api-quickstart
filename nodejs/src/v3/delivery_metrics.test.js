@@ -49,15 +49,27 @@ describe('delivery_metrics tests', () => {
       'delivery_metrics', 'test_api_config', 'test_access_token', 'test_advertiser_id'
     ]);
 
-    expect(dm_async_report.post_uri_attributes())
-      .toEqual('\
-start_date=2021-03-01&end_date=2021-03-31\
-&metrics=CLICKTHROUGH_1,IMPRESSION_1&level=PIN_PROMOTION\
-&report_format=json');
+    expect(() => {
+      dm_async_report.post_data_attributes();
+    }).toThrowError(
+      new Error('missing attributes: granularity')
+    );
+
+    dm_async_report.granularity('DAY');
+
+    expect(dm_async_report.post_data_attributes())
+      .toEqual({
+        start_date: '2021-03-01',
+        end_date: '2021-03-31',
+        columns: ['CLICKTHROUGH_1', 'IMPRESSION_1'],
+        level: 'PIN_PROMOTION',
+        granularity: 'DAY',
+        report_format: 'json'
+      });
 
     dm_async_report.date_range('2021-03-31', '2021-03-01'); // wrong order
     expect(() => {
-      dm_async_report.post_uri_attributes();
+      dm_async_report.post_data_attributes();
     }).toThrowError(
       new Error('start date after end date')
     );
@@ -99,32 +111,39 @@ start_date=2021-03-01&end_date=2021-03-31\
     const mock_run = jest.spyOn(AsyncReport.prototype, 'run');
     dm_async_report.run();
 
-    expect(mock_run.mock.calls).toEqual([['\
-start_date=2021-05-01&end_date=2021-05-31\
-&metrics=INAPP_SEARCH_COST_PER_ACTION,INAPP_SEARCH_ROAS,\
-TOTAL_CLICK_SEARCH,TOTAL_CLICK_SEARCH_QUANTITY\
-&click_window_days=14\
-&conversion_report_time=AD_EVENT\
-&data_source=REALTIME\
-&engagement_window_days=7\
-&filters=%5B%7B%22field%22%3A%22PIN_PROMOTION_STATUS%22%2C%22\
-operator%22%3A%22%3D%22%2C%22value%22%3A%22APPROVED%22%7D%5D\
-&granularity=HOUR\
-&level=SEARCH_QUERY\
-&report_format=csv\
-&tag_version=3\
-&view_window_days=30']]);
+    expect(mock_run.mock.calls).toEqual([[{
+      start_date: '2021-05-01',
+      end_date: '2021-05-31',
+      columns: ['INAPP_SEARCH_COST_PER_ACTION',
+        'INAPP_SEARCH_ROAS',
+        'TOTAL_CLICK_SEARCH',
+        'TOTAL_CLICK_SEARCH_QUANTITY'],
+      click_window_days: 14,
+      conversion_report_time: 'AD_EVENT',
+      data_source: 'REALTIME',
+      engagement_window_days: 7,
+      filters: '\
+[{"field":"PIN_PROMOTION_STATUS",\
+"operator":"=",\
+"value":"APPROVED"}]',
+      granularity: 'HOUR',
+      level: 'SEARCH_QUERY',
+      report_format: 'csv',
+      tag_version: 3,
+      view_window_days: 30
+    }]]);
   });
 
   test('delivery metrics async report attribute errors', async() => {
     const dm_async_report = new DeliveryMetricsAsyncReport(
       'test_api_config', 'test_access_token', 'test_advertiser_id')
       .date_range('2021-03-01', '2021-03-31')
+      .granularity('DAY')
       .level('oops')
       .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1']);
 
     expect(() => {
-      dm_async_report.post_uri_attributes();
+      dm_async_report.post_data_attributes();
     }).toThrowError(
       new Error('\
 level: oops is not one of ADVERTISER,AD_GROUP,CAMPAIGN,ITEM,\
@@ -136,7 +155,7 @@ PRODUCT_GROUP_TARGETING,PRODUCT_ITEM,SEARCH_QUERY')
     dm_async_report.tag_version(4);
 
     expect(() => {
-      dm_async_report.post_uri_attributes();
+      dm_async_report.post_data_attributes();
     }).toThrowError(
       new Error('tag_version: 4 is not one of 2,3,2,3')
     );
