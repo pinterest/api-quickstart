@@ -52,7 +52,7 @@ class AnalyticsTest(unittest.TestCase):
             "&from_claimed_content=Both&pin_format=regular"
         )
         mock_request_data.reset_mock()
-        #testing with tablet app type
+        # testing with tablet app type
         analytics.app_types("tablet")
         self.assertEqual("test_response", analytics.get())
         mock_request_data.assert_called_once_with(
@@ -63,7 +63,7 @@ class AnalyticsTest(unittest.TestCase):
             "&from_claimed_content=Both&pin_format=regular"
         )
         mock_request_data.reset_mock()
-        #testing with mobile app type
+        # testing with mobile app type
         analytics.app_types("mobile")
         self.assertEqual("test_response", analytics.get())
         mock_request_data.assert_called_once_with(
@@ -74,7 +74,7 @@ class AnalyticsTest(unittest.TestCase):
             "&from_claimed_content=Both&pin_format=regular"
         )
         mock_request_data.reset_mock()
-        #testing with all app types
+        # testing with all app types
         analytics.app_types("all")
         self.assertEqual("test_response", analytics.get())
         mock_request_data.assert_called_once_with(
