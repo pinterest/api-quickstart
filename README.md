@@ -4,7 +4,7 @@ Code that makes it easy to get started with the Pinterest API.
 
 ## Purpose
 
-This repository has code that is intended to provide a quick start for working with the [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/), and also supports [Pinterest API v3](https://developers.pinterest.com/docs/redoc/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code with essentially the same functionality, and a bash script that demonstrates the OAuth authentication and authorization flow. Over time, we plan to add more demonstrations of API functionality and additional languages -- likely Ruby and maybe Go or PHP.
+This repository has code that is intended to provide a quick start for working with the [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/), and also supports [Pinterest API v3](https://developers.pinterest.com/docs/redoc/). However, all newly created apps are to be used exclusively with [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code with essentially the same functionality, and a bash script that demonstrates the OAuth authentication and authorization flow. Over time, we plan to add more demonstrations of API functionality and additional languages -- likely Ruby and maybe Go or PHP.
 
 ## Quick Start
 
