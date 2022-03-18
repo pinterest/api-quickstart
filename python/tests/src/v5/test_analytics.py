@@ -21,7 +21,6 @@ class AnalyticsTest(unittest.TestCase):
         mock_init.assert_called_once_with("test_api_config", "test_access_token")
 
         mock_request_data.return_value = "test_response"
-
         self.assertEqual(
             "test_response", analytics.get(ad_account_id="test_ad_account")
         )
@@ -50,6 +49,39 @@ class AnalyticsTest(unittest.TestCase):
             "start_date=2021-03-01&end_date=2021-03-31"
             "&metric_types=IMPRESSION,PIN_CLICK_RATE"
             "&app_types=web"
+            "&from_claimed_content=Both&pin_format=regular"
+        )
+        mock_request_data.reset_mock()
+        # testing with tablet app type
+        analytics.app_types("tablet")
+        self.assertEqual("test_response", analytics.get())
+        mock_request_data.assert_called_once_with(
+            "/v5/user_account/analytics?"
+            "start_date=2021-03-01&end_date=2021-03-31"
+            "&metric_types=IMPRESSION,PIN_CLICK_RATE"
+            "&app_types=tablet"
+            "&from_claimed_content=Both&pin_format=regular"
+        )
+        mock_request_data.reset_mock()
+        # testing with mobile app type
+        analytics.app_types("mobile")
+        self.assertEqual("test_response", analytics.get())
+        mock_request_data.assert_called_once_with(
+            "/v5/user_account/analytics?"
+            "start_date=2021-03-01&end_date=2021-03-31"
+            "&metric_types=IMPRESSION,PIN_CLICK_RATE"
+            "&app_types=mobile"
+            "&from_claimed_content=Both&pin_format=regular"
+        )
+        mock_request_data.reset_mock()
+        # testing with all app types
+        analytics.app_types("all")
+        self.assertEqual("test_response", analytics.get())
+        mock_request_data.assert_called_once_with(
+            "/v5/user_account/analytics?"
+            "start_date=2021-03-01&end_date=2021-03-31"
+            "&metric_types=IMPRESSION,PIN_CLICK_RATE"
+            "&app_types=all"
             "&from_claimed_content=Both&pin_format=regular"
         )
         mock_request_data.reset_mock()
