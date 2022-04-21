@@ -42,14 +42,14 @@ async function main(argv) {
   // and response statuses. To see the complete responses, set verbosity to 3.
 
   // Set API version to 3, because this script does not work with 5 yet.
-  if (args.api_version !== '3') {
-    console.log('WARNING: Asynchronous analytics only works with API version v3.');
-    console.log('Forcing version 3...');
-  }
+  // if (args.api_version !== '3') {
+  //  console.log('WARNING: Asynchronous analytics only works with API version v3.');
+  //  console.log('Forcing version 3...');
+  // }
 
   const api_config = new ApiConfig({
     verbosity: args.log_level,
-    version: '3'
+    version: args.api_version
   });
 
   // imports that depend on the version of the API
