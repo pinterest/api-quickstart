@@ -147,6 +147,9 @@ export class AdAnalytics extends AdAnalyticsAttributes {
   }
 
   async request(request_uri) {
+    // Note that the uri_attributes method takes care of encoding the parameters.
+    // For example, the metrics are sent in the 'columns' parameter as a
+    // comma-delimited string.
     return await this.api_object.request_data(
       request_uri + this.uri_attributes('columns', true));
   }
