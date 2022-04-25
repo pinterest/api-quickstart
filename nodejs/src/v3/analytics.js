@@ -9,7 +9,7 @@ import { ApiObject } from '../api_object.js';
 
 /*
  * This class retrieves user (sometimes called "organic") metrics
- * using the v5 interface.
+ * using the v3 interface.
  *
  * The attribute functions are chainable. For example:
  *    Analytics(user_me_data['id'], api_config, access_token)
@@ -147,6 +147,9 @@ export class AdAnalytics extends AdAnalyticsAttributes {
   }
 
   async request(request_uri) {
+    // Note that the uri_attributes method takes care of encoding the parameters.
+    // For example, the metrics are sent in the 'columns' parameter as a
+    // comma-separated string.
     return await this.api_object.request_data(
       request_uri + this.uri_attributes('columns', true));
   }

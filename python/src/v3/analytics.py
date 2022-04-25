@@ -11,7 +11,7 @@ from api_object import ApiObject
 class Analytics(AnalyticsAttributes, ApiObject):
     """
     This class retrieves user (sometimes called "organic") metrics
-    using the v5 interface.
+    using the v3 interface.
     """
 
     def __init__(self, user_id, api_config, access_token):
@@ -112,6 +112,11 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
         )
 
     def request(self, request_uri):
+        """
+        Note that the uri_attributes method takes care of encoding the parameters.
+        For example, the metrics are sent in the "columns" parameter as a
+        comma-separated string.
+        """
         return self.request_data(request_uri + self.uri_attributes("columns", True))
 
     # https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_advertiser_delivery_metrics_handler
