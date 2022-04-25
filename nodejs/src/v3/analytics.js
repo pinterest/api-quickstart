@@ -9,7 +9,7 @@ import { ApiObject } from '../api_object.js';
 
 /*
  * This class retrieves user (sometimes called "organic") metrics
- * using the v5 interface.
+ * using the v3 interface.
  *
  * The attribute functions are chainable. For example:
  *    Analytics(user_me_data['id'], api_config, access_token)

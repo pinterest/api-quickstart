@@ -11,7 +11,7 @@ from api_object import ApiObject
 class Analytics(AnalyticsAttributes, ApiObject):
     """
     This class retrieves user (sometimes called "organic") metrics
-    using the v4 interface.
+    using the v3 interface.
     """
 
     def __init__(self, user_id, api_config, access_token):
