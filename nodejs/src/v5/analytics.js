@@ -108,7 +108,7 @@ ${this.uri_attributes('metric_types', false)}`);
  * are common to all advertising reports.
  *
  * Note that in v5, the metrics are provided to the API using the
- * 'columns' parameter, which is encoded as a comma-delimited string.
+ * 'columns' parameter, which is encoded as a comma-separated string.
  *
  * The ApiObject container implements the REST transaction used
  * to fetch the metrics.
@@ -127,7 +127,7 @@ export class AdAnalytics extends AdAnalyticsAttributes {
   async request(request_uri) {
     // Note that the uri_attributes method takes care of encoding the parameters.
     // For example, the metrics are sent in the 'columns' parameter as a
-    // comma-delimited string.
+    // comma-separated string.
     return await this.api_object.request_data(
       request_uri + this.uri_attributes('columns', true));
   }

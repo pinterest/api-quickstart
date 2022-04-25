@@ -115,7 +115,7 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
         """
         Note that the uri_attributes method takes care of encoding the parameters.
         For example, the metrics are sent in the "columns" parameter as a
-        comma-delimited string.
+        comma-separated string.
         """
         return self.request_data(request_uri + self.uri_attributes("columns", True))
 

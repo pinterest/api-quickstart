@@ -19,7 +19,7 @@ class Analytics(AnalyticsAttributes, ApiObject):
        .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
 
     Note that in v5, the metrics are provided to the API using the
-    "columns" parameter, which is encoded as a comma-delimited string.
+    "columns" parameter, which is encoded as a comma-separated string.
 
     The AnalyticsAttributes parent class implements parameters that
     are common to all analytics reports.
@@ -127,7 +127,7 @@ class AdAnalytics(AdAnalyticsAttributes, ApiObject):
         """
         Note that the uri_attributes method takes care of encoding the parameters.
         For example, the metrics are sent in the "columns" parameter as a
-        comma-delimited string.
+        comma-separated string.
         """
         return self.request_data(request_uri + self.uri_attributes("columns", True))
 
