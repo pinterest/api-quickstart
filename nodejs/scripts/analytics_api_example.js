@@ -145,7 +145,7 @@ async function main(argv) {
     } catch (error) {
       // This endpoint is not essential, and is not supported by all API versions.
       // So, just print the error and move along.
-      console.log(error);
+      console.log(error.message);
     } finally {
       api_config.verbosity = verbosity; // restore verbosity
     }

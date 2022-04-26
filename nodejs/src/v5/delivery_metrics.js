@@ -19,6 +19,7 @@ export class DeliveryMetrics extends ApiObject {
 
   // The full list of all available delivery metrics is available in v3 but not v5.
   async get() {
+    // TODO: verify that this error is correct...
     throw new Error('Metric definitions are not available in API version v5.');
   }
 }
