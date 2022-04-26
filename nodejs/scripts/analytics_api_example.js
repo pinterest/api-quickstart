@@ -128,21 +128,27 @@ async function main(argv) {
     // Get the full list of all delivery metrics.
     // This call is not used much in day-to-day API code, but is a useful endpoint
     // for learning about the metrics.
-    const delivery_metrics = new DeliveryMetrics(api_config, access_token);
-    const metrics = await delivery_metrics.get();
+    try {
+      const delivery_metrics = new DeliveryMetrics(api_config, access_token);
+      const metrics = await delivery_metrics.get();
 
-    api_config.verbosity = verbosity; // restore verbosity
-
-    console.log('Here are a couple of interesting metrics...');
-    for (const metric of metrics) {
-      if (metric.name === 'CLICKTHROUGH_1' ||
-          metric.name === 'IMPRESSION_1') {
-        delivery_metrics.print(metric);
+      console.log('Here are a couple of interesting metrics...');
+      for (const metric of metrics) {
+        if (metric.name === 'CLICKTHROUGH_1' ||
+            metric.name === 'IMPRESSION_1') {
+          delivery_metrics.print(metric);
+        }
       }
-    }
 
-    // To print the long list of all metrics, uncomment the next line.
-    // delivery_metrics.print_all(metrics);
+      // To print the long list of all metrics, uncomment the next line.
+      // delivery_metrics.print_all(metrics);
+    } catch (error) {
+      // This endpoint is not essential, and is not supported by all API versions.
+      // So, just print the error and move along.
+      console.log(error);
+    } finally {
+      api_config.verbosity = verbosity; // restore verbosity
+    }
 
     // Step 4: Configure the options for the report
     // For documentation on async reports, see:
@@ -152,14 +158,19 @@ async function main(argv) {
     // Configure the report. Request 30 days of data, up to the current date.
     // For a complete set of options, see the report documentation,
     // for the code in ../src/delivery_metrics.py
+
+    // TODO: There are some issues with the API to work out before merging this code...
+    // See TPP-1880 for details.
     const report = new DeliveryMetricsAsyncReport(
       api_config, access_token, advertiser_id)
       .last_30_days()
       .level('PIN_PROMOTION')
-      .granularity('DAY')
-      .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1'])
-      .filters([{ field: 'PIN_PROMOTION_STATUS', operator: '=', value: 'APPROVED' }])
-      .tag_version(3);
+      .granularity('TOTAL') // TODO: DAY works for v4 but not v5, TOTAL works for v5 but not v4
+      .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1']);
+      // TODO: find filters that work in v4 and v5?
+      // .filters([{ field: 'PIN_PROMOTION_STATUS', operator: '=', value: 'APPROVED' }])
+      // TODO: tag_version supported by v4 but not v5?
+      // .tag_version(3);
 
     // Request (POST) and wait (GET) for the report until it is ready.
     // This is an async process with two API calls. The first is placing a request
