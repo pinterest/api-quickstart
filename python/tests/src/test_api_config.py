@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from src.api_config import ApiConfig
+from api_config import ApiConfig
 
 
 class ApiConfigTest(unittest.TestCase):

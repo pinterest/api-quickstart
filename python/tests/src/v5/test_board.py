@@ -1,12 +1,12 @@
 import unittest
 from unittest import mock
 
-from src.v5.board import Board
+from v5.board import Board
 
 
 class BoardTest(unittest.TestCase):
-    @mock.patch("src.v5.board.ApiObject.request_data")
-    @mock.patch("src.v5.board.ApiObject.__init__")
+    @mock.patch("v5.board.ApiObject.request_data")
+    @mock.patch("v5.board.ApiObject.__init__")
     def test_board_get(self, mock_api_object_init, mock_api_object_request_data):
         test_board = Board("test_board_id", "test_api_uri", "test_access_token")
         mock_api_object_init.assert_called_once_with(
@@ -18,10 +18,10 @@ class BoardTest(unittest.TestCase):
         mock_api_object_request_data.assert_called_once_with("/v5/boards/test_board_id")
         self.assertEqual(response, "test_response")
 
-    @mock.patch("src.v5.board.ApiObject.delete_and_check")
-    @mock.patch("src.v5.board.ApiObject.get_iterator")
-    @mock.patch("src.v5.board.ApiObject.post_data")
-    @mock.patch("src.v5.board.ApiObject.__init__")
+    @mock.patch("v5.board.ApiObject.delete_and_check")
+    @mock.patch("v5.board.ApiObject.get_iterator")
+    @mock.patch("v5.board.ApiObject.post_data")
+    @mock.patch("v5.board.ApiObject.__init__")
     def test_board_actions(
         self,
         mock_api_object_init,

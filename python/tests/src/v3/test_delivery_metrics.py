@@ -3,13 +3,13 @@ import unittest
 from unittest import mock
 from unittest.mock import call
 
-from src.v3.delivery_metrics import DeliveryMetrics, DeliveryMetricsAsyncReport
+from v3.delivery_metrics import DeliveryMetrics, DeliveryMetricsAsyncReport
 
 
 class DeliveryMetricsTest(unittest.TestCase):
     @mock.patch("builtins.print")
-    @mock.patch("src.v3.user.ApiObject.request_data")
-    @mock.patch("src.v3.delivery_metrics.ApiObject.__init__")
+    @mock.patch("v3.user.ApiObject.request_data")
+    @mock.patch("v3.delivery_metrics.ApiObject.__init__")
     def test_delivery_metrics(
         self, mock_api_object_init, mock_api_object_request_data, mock_print
     ):
@@ -37,7 +37,7 @@ class DeliveryMetricsTest(unittest.TestCase):
 
 
 class DeliveryMetricsAsyncReportTest(unittest.TestCase):
-    @mock.patch("src.v3.delivery_metrics.AsyncReport.__init__")
+    @mock.patch("v3.delivery_metrics.AsyncReport.__init__")
     def test_dm_async_report(self, mock_async_report_init):
         dm_async_report = (
             DeliveryMetricsAsyncReport(
@@ -78,8 +78,8 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "start date after end date"):
             dm_async_report.post_data_attributes()
 
-    @mock.patch("src.analytics_attributes.datetime.date", wraps=datetime.date)
-    @mock.patch("src.v3.delivery_metrics.AsyncReport.__init__")
+    @mock.patch("analytics_attributes.datetime.date", wraps=datetime.date)
+    @mock.patch("v3.delivery_metrics.AsyncReport.__init__")
     def test_dm_async_report_attributes_1(self, mock_async_report_init, mock_date):
         mock_date.today.return_value = datetime.datetime(
             2021, 3, 31
@@ -138,7 +138,7 @@ class DeliveryMetricsAsyncReportTest(unittest.TestCase):
             },
         )
 
-    @mock.patch("src.v3.delivery_metrics.AsyncReport.__init__")
+    @mock.patch("v3.delivery_metrics.AsyncReport.__init__")
     def test_dm_async_report_attributes_2(self, mock_async_report_init):
         dm_async_report = (
             DeliveryMetricsAsyncReport(

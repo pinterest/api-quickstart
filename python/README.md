@@ -436,7 +436,7 @@ $ . ./venv/api/bin/activate # always run in a vitualenv
 $ pip install -r dev-requirements.txt # only needed with a new virtualenv or when requirements change
 $ make tests
 ```
-The `Makefile` shows how to run the tests with the `nosetests` command. More information is in the [nose documentation](https://nose.readthedocs.io/en/latest/usage.html).
+The `Makefile` shows how to run the tests with the `pytest` command. More information is in the [pytest](https://docs.pytest.org/).
 
 ## PyCharm
 

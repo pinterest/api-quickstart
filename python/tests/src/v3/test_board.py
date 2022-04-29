@@ -1,12 +1,12 @@
 import unittest
 from unittest import mock
 
-from src.v3.board import Board
+from v3.board import Board
 
 
 class BoardTest(unittest.TestCase):
-    @mock.patch("src.v3.board.ApiObject.request_data")
-    @mock.patch("src.v3.board.ApiObject.__init__")
+    @mock.patch("v3.board.ApiObject.request_data")
+    @mock.patch("v3.board.ApiObject.__init__")
     def test_board_get(self, mock_api_object_init, mock_api_object_request_data):
         test_board = Board("test_board_id", "test_api_uri", "test_access_token")
         mock_api_object_init.assert_called_once_with(
@@ -20,9 +20,9 @@ class BoardTest(unittest.TestCase):
         )
         self.assertEqual(response, "test_response")
 
-    @mock.patch("src.v3.board.ApiObject.put_data")
-    @mock.patch("src.v3.board.ApiObject.request_data")
-    @mock.patch("src.v3.board.ApiObject.__init__")
+    @mock.patch("v3.board.ApiObject.put_data")
+    @mock.patch("v3.board.ApiObject.request_data")
+    @mock.patch("v3.board.ApiObject.__init__")
     def test_board_create(
         self,
         mock_api_object_init,
@@ -46,8 +46,8 @@ class BoardTest(unittest.TestCase):
         self.assertEqual(test_board.board_id, "new_board_id")
         mock_api_object_put_data.assert_called_once_with("/v3/boards/", new_board_data)
 
-    @mock.patch("src.v5.board.ApiObject.get_iterator")
-    @mock.patch("src.v5.board.ApiObject.__init__")
+    @mock.patch("v5.board.ApiObject.get_iterator")
+    @mock.patch("v5.board.ApiObject.__init__")
     def test_board_get_pins_and_sections(
         self, mock_api_object_init, mock_api_object_get_iterator
     ):

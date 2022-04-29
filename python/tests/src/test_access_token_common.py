@@ -2,7 +2,7 @@ import json
 import unittest
 from unittest import mock
 
-from src.access_token_common import AccessTokenCommon
+from access_token_common import AccessTokenCommon
 
 
 class AccessTokenCommonTest(unittest.TestCase):

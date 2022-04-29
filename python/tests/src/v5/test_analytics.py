@@ -1,12 +1,12 @@
 import unittest
 from unittest import mock
 
-from src.v5.analytics import AdAnalytics, Analytics
+from v5.analytics import AdAnalytics, Analytics
 
 
 class AnalyticsTest(unittest.TestCase):
-    @mock.patch("src.v5.analytics.ApiObject.request_data")
-    @mock.patch("src.v5.analytics.ApiObject.__init__")
+    @mock.patch("v5.analytics.ApiObject.request_data")
+    @mock.patch("v5.analytics.ApiObject.__init__")
     def test_analytics(self, mock_init, mock_request_data):
         analytics = (
             Analytics("test_user_id", "test_api_config", "test_access_token")
@@ -87,8 +87,8 @@ class AnalyticsTest(unittest.TestCase):
 
 
 class AdAnalyticsTest(unittest.TestCase):
-    @mock.patch("src.v5.analytics.ApiObject.request_data")
-    @mock.patch("src.v5.analytics.ApiObject.__init__")
+    @mock.patch("v5.analytics.ApiObject.request_data")
+    @mock.patch("v5.analytics.ApiObject.__init__")
     def test_adanalytics(self, mock_init, mock_request_data):
         analytics = (
             AdAnalytics("test_api_config", "test_access_token")

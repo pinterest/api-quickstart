@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 from unittest.mock import call
 
-from src.generic_requests import download_file
+from generic_requests import download_file
 
 
 class GenericRequestsTest(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from src.v3.oauth_scope import Scope, lookup_scope
+from v3.oauth_scope import Scope, lookup_scope
 
 
 class OAuthScopeTest(unittest.TestCase):
