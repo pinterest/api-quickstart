@@ -1,7 +1,6 @@
 import unittest
-
-import mock
-from mock import call
+from unittest import mock
+from unittest.mock import call
 
 from src.v5.pin import Pin
 

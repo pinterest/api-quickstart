@@ -1,6 +1,5 @@
 import unittest
-
-import mock
+from unittest import mock
 
 from api_common import ApiCommon, RateLimitException, SpamException
 

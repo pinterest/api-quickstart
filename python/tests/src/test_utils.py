@@ -1,6 +1,5 @@
 import unittest
-
-import mock
+from unittest import mock
 
 from src.utils import input_number, input_one_of, input_path_for_write
 

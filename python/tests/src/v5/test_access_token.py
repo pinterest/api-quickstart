@@ -1,6 +1,6 @@
 import unittest
+from unittest import mock
 
-import mock
 import requests_mock
 
 from src.v5.access_token import AccessToken
