@@ -1,14 +1,14 @@
 unit_tests:
 	@echo generic unit tests...
-	nosetests --rednose ./tests/src
+	python -m pytest ./tests/src
 	@echo v3 unit tests...
-	nosetests --rednose ./tests/src/v3
+	python -m pytest ./tests/src/v3
 	@echo v5 unit tests...
-	nosetests --rednose ./tests/src/v5
+	python -m pytest ./tests/src/v5
 
 integration_tests:
 	@echo integration tests...
-	nosetests --rednose ./tests/scripts
+	python -m pytest ./tests/scripts
 
 e2e_setup:
 	@echo end to end tests set up...

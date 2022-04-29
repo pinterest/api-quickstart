@@ -3,12 +3,12 @@ import unittest
 from unittest import mock
 from unittest.mock import call
 
-from src.v3.pin import Pin
+from v3.pin import Pin
 
 
 class PinTest(unittest.TestCase):
-    @mock.patch("src.v3.pin.ApiMediaObject.request_data")
-    @mock.patch("src.v3.pin.ApiMediaObject.__init__")
+    @mock.patch("v3.pin.ApiMediaObject.request_data")
+    @mock.patch("v3.pin.ApiMediaObject.__init__")
     def test_pin_get(self, mock_api_object_init, mock_api_object_request_data):
         test_pin = Pin("test_pin_id", "test_api_uri", "test_access_token")
         mock_api_object_init.assert_called_once_with(
@@ -20,9 +20,9 @@ class PinTest(unittest.TestCase):
         mock_api_object_request_data.assert_called_once_with("/v3/pins/test_pin_id/")
         self.assertEqual(response, "test_response")
 
-    @mock.patch("src.v3.pin.ApiMediaObject.put_data")
-    @mock.patch("src.v3.pin.ApiMediaObject.request_data")
-    @mock.patch("src.v3.pin.ApiMediaObject.__init__")
+    @mock.patch("v3.pin.ApiMediaObject.put_data")
+    @mock.patch("v3.pin.ApiMediaObject.request_data")
+    @mock.patch("v3.pin.ApiMediaObject.__init__")
     def test_pin_create(
         self,
         mock_api_object_init,
@@ -69,10 +69,10 @@ class PinTest(unittest.TestCase):
 
     @mock.patch("time.sleep")
     @mock.patch("builtins.print")
-    @mock.patch("src.v3.pin.ApiMediaObject.media_to_media_id")
-    @mock.patch("src.v3.pin.ApiMediaObject.put_data")
-    @mock.patch("src.v3.pin.ApiMediaObject.request_data")
-    @mock.patch("src.v3.pin.ApiMediaObject.__init__")
+    @mock.patch("v3.pin.ApiMediaObject.media_to_media_id")
+    @mock.patch("v3.pin.ApiMediaObject.put_data")
+    @mock.patch("v3.pin.ApiMediaObject.request_data")
+    @mock.patch("v3.pin.ApiMediaObject.__init__")
     def test_video_pin_create(
         self,
         mock_api_object_init,
@@ -179,9 +179,9 @@ class PinTest(unittest.TestCase):
             [call(1), call(2), call(4), call(8), call(10), call(10)]
         )
 
-    @mock.patch("src.v3.pin.ApiMediaObject.upload_file_multipart")
-    @mock.patch("src.v3.pin.ApiMediaObject.post_data")
-    @mock.patch("src.v3.pin.ApiMediaObject.__init__")
+    @mock.patch("v3.pin.ApiMediaObject.upload_file_multipart")
+    @mock.patch("v3.pin.ApiMediaObject.post_data")
+    @mock.patch("v3.pin.ApiMediaObject.__init__")
     def test_upload_media(
         self,
         mock_api_object_init,

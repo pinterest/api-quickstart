@@ -2,13 +2,13 @@ import unittest
 from unittest import mock
 from unittest.mock import call
 
-from src.v3.advertisers import Advertisers
+from v3.advertisers import Advertisers
 
 
 class AdvertisersTest(unittest.TestCase):
     @mock.patch("builtins.print")
-    @mock.patch("src.v3.user.ApiObject.get_iterator")
-    @mock.patch("src.v3.user.ApiObject.__init__")
+    @mock.patch("v3.user.ApiObject.get_iterator")
+    @mock.patch("v3.user.ApiObject.__init__")
     def test_user_get(self, mock_api_object_init, mock_get_iterator, mock_print):
         test_advertisers = Advertisers(
             "test_user_id", "test_api_uri", "test_access_token"

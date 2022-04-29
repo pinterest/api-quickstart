@@ -1,14 +1,14 @@
 import unittest
 from unittest import mock
 
-from src.user_auth import HTTPServerHandler, get_auth_code
-from src.v3.oauth_scope import Scope
+from user_auth import HTTPServerHandler, get_auth_code
+from v3.oauth_scope import Scope
 
 
 class UserAuthTest(unittest.TestCase):
-    @mock.patch("src.user_auth.secrets.token_hex")
-    @mock.patch("src.user_auth.HTTPServer")
-    @mock.patch("src.user_auth.open_new")
+    @mock.patch("user_auth.secrets.token_hex")
+    @mock.patch("user_auth.HTTPServer")
+    @mock.patch("user_auth.open_new")
     def test_get_auth_code(self, mock_open_new, mock_http_server, mock_token_hex):
         class MockHttpServer:
             def __init__(self):
@@ -77,10 +77,10 @@ class UserAuthTest(unittest.TestCase):
         ):
             auth_code = get_auth_code(mock_api_config)
 
-    @mock.patch("src.user_auth.BaseHTTPRequestHandler.end_headers")
-    @mock.patch("src.user_auth.BaseHTTPRequestHandler.send_header")
-    @mock.patch("src.user_auth.BaseHTTPRequestHandler.send_response")
-    @mock.patch("src.user_auth.super")
+    @mock.patch("user_auth.BaseHTTPRequestHandler.end_headers")
+    @mock.patch("user_auth.BaseHTTPRequestHandler.send_header")
+    @mock.patch("user_auth.BaseHTTPRequestHandler.send_response")
+    @mock.patch("user_auth.super")
     def test_http_server_handler(
         self, mock_super, mock_send_response, mock_send_header, mock_end_headers
     ):

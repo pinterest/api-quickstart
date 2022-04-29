@@ -2,11 +2,11 @@ import datetime
 import unittest
 from unittest import mock
 
-from src.v3.analytics import AdAnalyticsAttributes, AnalyticsAttributes
+from v3.analytics import AdAnalyticsAttributes, AnalyticsAttributes
 
 
 class AnalyticsAttributesTest(unittest.TestCase):
-    @mock.patch("src.analytics_attributes.datetime.date", wraps=datetime.date)
+    @mock.patch("analytics_attributes.datetime.date", wraps=datetime.date)
     def test_analytics_attributes(self, mock_date):
         attributes = AnalyticsAttributes()
         with self.assertRaisesRegex(AttributeError, "start date not set"):

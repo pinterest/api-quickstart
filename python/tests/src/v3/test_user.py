@@ -1,12 +1,12 @@
 import unittest
 from unittest import mock
 
-from src.v3.user import User
+from v3.user import User
 
 
 class UserTest(unittest.TestCase):
-    @mock.patch("src.v3.user.ApiObject.request_data")
-    @mock.patch("src.v3.user.ApiObject.__init__")
+    @mock.patch("v3.user.ApiObject.request_data")
+    @mock.patch("v3.user.ApiObject.__init__")
     def test_user_get(self, mock_api_object_init, mock_api_object_request_data):
         test_user = User("test_user", "test_api_config", "test_access_token")
         mock_api_object_init.assert_called_once_with(
@@ -18,8 +18,8 @@ class UserTest(unittest.TestCase):
         mock_api_object_request_data.assert_called_once_with("/v3/users/test_user/")
         self.assertEqual(response, "test_response")
 
-    @mock.patch("src.v3.user.ApiObject.request_data")
-    @mock.patch("src.v3.user.ApiObject.__init__")
+    @mock.patch("v3.user.ApiObject.request_data")
+    @mock.patch("v3.user.ApiObject.__init__")
     def test_user_get_businesses(
         self, mock_api_object_init, mock_api_object_request_data
     ):
@@ -35,8 +35,8 @@ class UserTest(unittest.TestCase):
         )
         self.assertEqual(response, "test_businesses_response")
 
-    @mock.patch("src.v5.user.ApiObject.get_iterator")
-    @mock.patch("src.v5.user.ApiObject.__init__")
+    @mock.patch("v5.user.ApiObject.get_iterator")
+    @mock.patch("v5.user.ApiObject.__init__")
     def test_user_get_boards(self, mock_api_object_init, mock_api_object_get_iterator):
         test_user = User("test_user", "test_api_config", "test_access_token")
 
@@ -66,8 +66,8 @@ class UserTest(unittest.TestCase):
             "/v3/users/test_user_id3/boards/feed/", {"paramA": "valueA"}
         )
 
-    @mock.patch("src.v5.user.ApiObject.get_iterator")
-    @mock.patch("src.v5.user.ApiObject.__init__")
+    @mock.patch("v5.user.ApiObject.get_iterator")
+    @mock.patch("v5.user.ApiObject.__init__")
     def test_user_get_pins(self, mock_api_object_init, mock_api_object_get_iterator):
         test_user = User("test_user", "test_api_config", "test_access_token")
 

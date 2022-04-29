@@ -2,13 +2,13 @@ import unittest
 from unittest import mock
 from unittest.mock import call
 
-from src.v3.async_report import AsyncReport
+from v3.async_report import AsyncReport
 
 
 class AsyncReportTest(unittest.TestCase):
-    @mock.patch("src.v3.async_report.ApiObject.request_data")
-    @mock.patch("src.v3.async_report.ApiObject.post_data")
-    @mock.patch("src.v3.async_report.ApiObject.__init__")
+    @mock.patch("v3.async_report.ApiObject.request_data")
+    @mock.patch("v3.async_report.ApiObject.post_data")
+    @mock.patch("v3.async_report.ApiObject.__init__")
     def test_async_report(
         self, mock_api_object_init, mock_post_data, mock_request_data
     ):
@@ -69,9 +69,9 @@ class AsyncReportTest(unittest.TestCase):
 
     @mock.patch("builtins.print")
     @mock.patch("time.sleep")
-    @mock.patch("src.v3.async_report.ApiObject.request_data")
-    @mock.patch("src.v3.async_report.ApiObject.post_data")
-    @mock.patch("src.v3.async_report.ApiObject.__init__")
+    @mock.patch("v3.async_report.ApiObject.request_data")
+    @mock.patch("v3.async_report.ApiObject.post_data")
+    @mock.patch("v3.async_report.ApiObject.__init__")
     def test_async_report_run(
         self,
         mock_api_object_init,

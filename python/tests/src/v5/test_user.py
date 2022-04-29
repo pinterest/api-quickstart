@@ -1,12 +1,12 @@
 import unittest
 from unittest import mock
 
-from src.v5.user import User
+from v5.user import User
 
 
 class UserTest(unittest.TestCase):
-    @mock.patch("src.v5.user.ApiObject.request_data")
-    @mock.patch("src.v5.user.ApiObject.__init__")
+    @mock.patch("v5.user.ApiObject.request_data")
+    @mock.patch("v5.user.ApiObject.__init__")
     def test_user_get(self, mock_api_object_init, mock_api_object_request_data):
         test_user = User("test_user", "test_api_config", "test_access_token")
         mock_api_object_init.assert_called_once_with(
@@ -18,8 +18,8 @@ class UserTest(unittest.TestCase):
         mock_api_object_request_data.assert_called_once_with("/v5/user_account")
         self.assertEqual(response, "test_response")
 
-    @mock.patch("src.v5.user.ApiObject.request_data")
-    @mock.patch("src.v5.user.ApiObject.__init__")
+    @mock.patch("v5.user.ApiObject.request_data")
+    @mock.patch("v5.user.ApiObject.__init__")
     def test_user_get_businesses(
         self, mock_api_object_init, mock_api_object_request_data
     ):
@@ -29,8 +29,8 @@ class UserTest(unittest.TestCase):
         mock_api_object_request_data.assert_not_called()
         self.assertEqual(response, None)
 
-    @mock.patch("src.v5.user.ApiObject.get_iterator")
-    @mock.patch("src.v5.user.ApiObject.__init__")
+    @mock.patch("v5.user.ApiObject.get_iterator")
+    @mock.patch("v5.user.ApiObject.__init__")
     def test_user_get_boards(self, mock_api_object_init, mock_api_object_get_iterator):
         test_user = User("test_user", "test_api_config", "test_access_token")
 
@@ -56,7 +56,7 @@ class UserTest(unittest.TestCase):
             "/v5/boards", {"param1": "value1"}
         )
 
-    @mock.patch("src.v5.user.ApiObject.get_iterator")
+    @mock.patch("v5.user.ApiObject.get_iterator")
     def test_user_get_pins(self, mock_api_object_get_iterator):
         # mock board.get_pins() with static data
         class BoardMock:
@@ -88,7 +88,7 @@ class UserTest(unittest.TestCase):
         # these pins should be returned by the above mock iterator with static data
         expected_pins = ["board1_pin1", "board1_pin2", "board3_pin1"]
         test_user = User("test_user", mock_api_config, "test_access_token")
-        with mock.patch("src.v5.user.Board", BoardMock):
+        with mock.patch("v5.user.Board", BoardMock):
             for index, pin in enumerate(
                 test_user.get_pins(
                     "test_user_data", query_parameters={"param1": "value1"}
