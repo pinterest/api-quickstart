@@ -1,4 +1,5 @@
-import mock
+from unittest import mock
+
 import requests_mock
 from integration_mocks import IntegrationMocks
 

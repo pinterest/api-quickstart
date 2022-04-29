@@ -1,8 +1,7 @@
 import datetime
 import unittest
-
-import mock
-from mock import call
+from unittest import mock
+from unittest.mock import call
 
 from src.v3.delivery_metrics import DeliveryMetrics, DeliveryMetricsAsyncReport
 

@@ -1,7 +1,6 @@
 import datetime
 import unittest
-
-import mock
+from unittest import mock
 
 from src.v3.analytics import AdAnalyticsAttributes, AnalyticsAttributes
 

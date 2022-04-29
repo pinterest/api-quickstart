@@ -1,6 +1,5 @@
 import unittest
-
-import mock
+from unittest import mock
 
 from src.v5.oauth_scope import Scope, lookup_scope
 
