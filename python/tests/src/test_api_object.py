@@ -1,6 +1,6 @@
 import unittest
+from unittest import mock
 
-import mock
 import requests_mock
 
 from api_object import ApiObject

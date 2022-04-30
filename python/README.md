@@ -401,7 +401,7 @@ optional arguments:
 ```
 
 ### [analytics_api_example.py](./scripts/analytics_api_example.py)
- Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [request](https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_create_advertiser_delivery_metrics_report_POST) and [get](https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_advertiser_delivery_metrics_report_handler_GET) endpoints. This script only works for Pinterest API v3.
+ Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler) and [get](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler) endpoints. This script currently works only with Pinterest API v4, but we're working on supporting the same functionality in v5.
 
 <!--gen-->
 ```
@@ -436,7 +436,7 @@ $ . ./venv/api/bin/activate # always run in a vitualenv
 $ pip install -r dev-requirements.txt # only needed with a new virtualenv or when requirements change
 $ make tests
 ```
-The `Makefile` shows how to run the tests with the `nosetests` command. More information is in the [nose documentation](https://nose.readthedocs.io/en/latest/usage.html).
+The `Makefile` shows how to run the tests with the `pytest` command. More information is in the [pytest documentation](https://docs.pytest.org/).
 
 ## PyCharm
 

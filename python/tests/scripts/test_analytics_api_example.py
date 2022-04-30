@@ -1,9 +1,9 @@
 import json
+from unittest import mock
+from unittest.mock import call
 
-import mock
 import requests_mock
 from integration_mocks import IntegrationMocks
-from mock import call
 
 
 class AnalyticsApiExampleTest(IntegrationMocks):
