@@ -54,9 +54,9 @@ async function main(argv) {
 
   // imports that depend on the version of the API
   const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
+  const { AdMetricsAsyncReport } = await import(`../src/${api_config.version}/ad_metrics_async_report.js`);
   const { Advertisers } = await import(`../src/${api_config.version}/advertisers.js`);
-  const { DeliveryMetrics, DeliveryMetricsAsyncReport } =
-        await import(`../src/${api_config.version}/delivery_metrics.js`);
+  const { DeliveryMetrics } = await import(`../src/${api_config.version}/delivery_metrics.js`);
   const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
   const { User } = await import(`../src/${api_config.version}/user.js`);
 
@@ -159,18 +159,13 @@ async function main(argv) {
     // For a complete set of options, see the report documentation,
     // for the code in ../src/delivery_metrics.py
 
-    // TODO: There are some issues with the API to work out before merging this code...
-    // See TPP-1880 for details.
-    const report = new DeliveryMetricsAsyncReport(
+    const report = new AdMetricsAsyncReport(
       api_config, access_token, advertiser_id)
       .last_30_days()
       .level('PIN_PROMOTION')
-      .granularity('TOTAL') // TODO: DAY works for v4 but not v5, TOTAL works for v5 but not v4
+      .granularity('DAY')
+      .report_format('CSV')
       .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1']);
-      // TODO: find filters that work in v4 and v5?
-      // .filters([{ field: 'PIN_PROMOTION_STATUS', operator: '=', value: 'APPROVED' }])
-      // TODO: tag_version supported by v4 but not v5?
-      // .tag_version(3);
 
     // Request (POST) and wait (GET) for the report until it is ready.
     // This is an async process with two API calls. The first is placing a request

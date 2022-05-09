@@ -3,33 +3,36 @@ import { ApiObject } from './api_object.js';
 /**
  * For documentation, see the version-specific implementations of AsyncReport.
  */
-export class AsyncReportCommon extends ApiObject {
-  constructor(api_config, access_token) {
+export class AsyncReport extends ApiObject {
+  constructor(api_config, access_token, path) {
     super(api_config, access_token);
+    this.path = path;
     this.token = null;
     this.status = null;
     this._url = null;
   }
 
-  async request_report(path, post_data_attributes) {
-    this.token = (await this.post_data(path, post_data_attributes)).token;
+  // For documentation, see:
+  // https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report
+  async request_report(post_data_attributes) {
+    this.token = (await this.post_data(this.path, post_data_attributes)).token;
     return this.token; // so that tests can verify the token
   }
 
   // Executes a single GET request to retrieve the status and (if available)
   // the URL for the report.
-  async poll_report(path) {
-    const poll_data = await this.request_data(path);
+  async poll_report() {
+    const poll_data = await this.request_data(`${this.path}?token=${this.token}`);
     this.status = poll_data.report_status;
     this._url = poll_data.url;
   }
 
   // Polls for the status of the report until it is complete.
-  async wait_report(path) {
+  async wait_report() {
     this.reset_backoff();
 
     while (true) {
-      await this.poll_report(path);
+      await this.poll_report(`${this.path}?token=${this.token}`);
       if (this.status === 'FINISHED') {
         return;
       }
@@ -38,6 +41,13 @@ export class AsyncReportCommon extends ApiObject {
         message: `Report status: ${this.status}.`
       });
     }
+  }
+
+  // Executes the POST request to initiate the report and then the GET requests
+  // to retrieve the report.
+  async run(attributes) {
+    await this.request_report(attributes);
+    await this.wait_report();
   }
 
   url() {
