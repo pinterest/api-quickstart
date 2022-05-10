@@ -40,13 +40,6 @@ async function main(argv) {
   // Get configuration from defaults and/or the environment.
   // Set the API configuration verbosity to 2 to show all of requests
   // and response statuses. To see the complete responses, set verbosity to 3.
-
-  // Set API version to 3, because this script does not work with 5 yet.
-  // if (args.api_version !== '3') {
-  //  console.log('WARNING: Asynchronous analytics only works with API version v3.');
-  //  console.log('Forcing version 3...');
-  // }
-
   const api_config = new ApiConfig({
     verbosity: args.log_level,
     version: args.api_version
@@ -165,6 +158,7 @@ async function main(argv) {
       .level('PIN_PROMOTION')
       .granularity('DAY')
       .report_format('CSV')
+      .filters([{ field: 'SPEND_IN_DOLLAR', operator: 'GREATER_THAN', values: [1] }])
       .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1']);
 
     // Request (POST) and wait (GET) for the report until it is ready.
