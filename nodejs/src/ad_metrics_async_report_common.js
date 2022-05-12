@@ -5,7 +5,7 @@ import { AdAnalyticsAttributes } from './analytics_attributes.js';
  * metrics report. For more information, see:
  *  v4: https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler
  *  v5: https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report
- *    
+ *
  *
  * The attribute functions are chainable. For example:
  * report = AdMetricsAsyncReport(api_config, access_token, advertiser_id) \

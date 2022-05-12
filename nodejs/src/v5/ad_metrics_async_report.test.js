@@ -15,6 +15,7 @@ describe('ad_metrics_async_report tests', () => {
       'test_api_config', 'test_access_token', 'test_advertiser_id'
     );
 
+    expect(ad_async_report).toBeInstanceOf(AdMetricsAsyncReport);
     expect(AsyncReport.mock.instances.length).toBe(1);
     expect(AsyncReport.mock.calls[0]).toEqual([
       'test_api_config',
