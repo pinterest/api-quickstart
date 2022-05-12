@@ -34,6 +34,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 OUTPUT_PREFIX=e2etest
 
 # delete output files to avoid overwrite confirmations by scripts
+rm -f ${OUTPUT_PREFIX}_*.csv
 rm -f ${OUTPUT_PREFIX}_*.json
 
 # first refresh the tokens in case it has been a while since the tests were last run
@@ -41,11 +42,16 @@ for VERSION in ${VERSIONS} ; do
     ./scripts/refresh_access_token.${EXT} -a ${TEST3}_${VERSION} -${VERSION}
 done
 
-# get asynchronous analytics report (v3 only)
-DOCNAME=${OUTPUT_PREFIX}_metrics_report.json
-printf "3\n${DOCNAME}\n" | \
-    ./scripts/analytics_api_example.${EXT} -a ${TEST3}_v3
-wc ${DOCNAME}
+# get asynchronous analytics report
+for VERSION in ${VERSIONS} ; do
+    # python does not yet support v5...
+    if [[ "${VERSION}" == "v3" || "${EXT}" == "js" ]] ; then
+        DOCNAME=${OUTPUT_PREFIX}_${VERSION}_metrics_report.csv
+        printf "3\n${DOCNAME}\n" | \
+            ./scripts/analytics_api_example.${EXT} -a ${TEST3}_${VERSION} -${VERSION}
+        wc ${DOCNAME}
+    fi
+done
 
 # get all of the ads-related data for the test account
 for VERSION in ${VERSIONS} ; do
@@ -100,3 +106,4 @@ done
 
 # all tests existed successfully: delete output files
 rm -f ${OUTPUT_PREFIX}_*.json
+rm -f ${OUTPUT_PREFIX}_*.csv
