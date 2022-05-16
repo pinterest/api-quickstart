@@ -1,18 +1,18 @@
-import { ApiObject } from '../api_object.js';
+import { ApiObject } from './api_object.js';
 import { AsyncReport } from './async_report.js';
 
-jest.mock('../api_object');
-const api_object_actual = jest.requireActual('../api_object');
+jest.mock('./api_object');
+const api_object_actual = jest.requireActual('./api_object');
 
 describe('async report tests', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  test('v3 async report methods', async() => {
+  test('async report methods', async() => {
     const mock_constructor = jest.spyOn(ApiObject.prototype, 'constructor');
     const test_report1 = new AsyncReport(
-      'test_report1', 'test_api_config', 'test_access_token', 'test_advertiser_id'
+      'test_api_config', 'test_access_token', '/test/path1'
     );
     expect(mock_constructor.mock.calls).toEqual([['test_api_config', 'test_access_token']]);
     const mock_post_data = jest.spyOn(ApiObject.prototype, 'post_data');
@@ -21,8 +21,7 @@ describe('async report tests', () => {
 
     expect(test_report1.token).toEqual('test_report1_token');
     expect(mock_post_data.mock.calls).toEqual([
-      ['/ads/v4/advertisers/test_advertiser_id/test_report1/async',
-        'test_report1_attributes']
+      ['/test/path1', 'test_report1_attributes']
     ]);
 
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
@@ -32,17 +31,17 @@ describe('async report tests', () => {
     });
     await test_report1.wait_report();
     expect(test_report1.url()).toEqual('test_report1_url');
-    expect(mock_request_data.mock.calls).toEqual([['\
-/ads/v4/advertisers/test_advertiser_id/test_report1/async\
-?token=test_report1_token']]);
+    expect(mock_request_data.mock.calls).toEqual([[
+      '/test/path1?token=test_report1_token'
+    ]]);
   });
 
-  test('v3 async report run', async() => {
+  test('async report run', async() => {
     const test_report2_url = '\
 test_report2_url/x-y-z/metrics_report.txt?Very-long-credentials-string';
 
     const test_report2 = new AsyncReport(
-      'test_report2', 'test_api_config', 'test_access_token', 'test_advertiser_id'
+      'test_api_config', 'test_access_token', '/test/path2'
     );
 
     const mock_post_data = jest.spyOn(ApiObject.prototype, 'post_data');
@@ -98,13 +97,12 @@ test_report2_url/x-y-z/metrics_report.txt?Very-long-credentials-string';
     expect(test_report2.url()).toEqual(test_report2_url); // verify returned URL
     // verify API requests
     expect(mock_post_data.mock.calls).toEqual([
-      ['/ads/v4/advertisers/test_advertiser_id/test_report2/async',
-        'test_report2_attributes']
+      ['/test/path2', 'test_report2_attributes']
     ]);
     // request data will be called multiple times
-    expect(mock_request_data).toHaveBeenCalledWith('\
-/ads/v4/advertisers/test_advertiser_id/test_report2/async\
-?token=test_report2_token');
+    expect(mock_request_data).toHaveBeenCalledWith(
+      '/test/path2?token=test_report2_token'
+    );
 
     // verify filename
     expect(test_report2.filename()).toEqual('metrics_report.txt');

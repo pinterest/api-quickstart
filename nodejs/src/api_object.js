@@ -51,7 +51,7 @@ export class ApiObject extends ApiCommon {
     if (this.api_config.verbosity >= 2) {
       console.log('PUT', full_uri);
       if (this.api_config.verbosity >= 3) {
-        console.log(put_data);
+        console.log(JSON.stringify(put_data));
       }
     }
     try {
@@ -74,7 +74,7 @@ export class ApiObject extends ApiCommon {
     if (this.api_config.verbosity >= 2) {
       console.log('POST', full_uri);
       if (this.api_config.verbosity >= 3) {
-        console.log(post_data);
+        console.log(JSON.stringify(post_data));
       }
     }
     try {

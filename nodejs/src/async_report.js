@@ -1,40 +1,28 @@
-import { ApiObject } from '../api_object.js';
+import { ApiObject } from './api_object.js';
 
 /**
- * For documentation, see: https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
- *
+ * For documentation, see the version-specific implementations of AsyncReport.
  */
 export class AsyncReport extends ApiObject {
-  constructor(kind_of_report, api_config, access_token, advertiser_id) {
+  constructor(api_config, access_token, path) {
     super(api_config, access_token);
-    this.advertiser_id = advertiser_id;
-    this.kind_of = kind_of_report;
+    this.path = path;
     this.token = null;
     this.status = null;
     this._url = null;
   }
 
   // For documentation, see:
-  // https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler
+  // https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report
   async request_report(post_data_attributes) {
-    // create path and set required attributes
-    const path = `\
-/ads/v4/advertisers/${this.advertiser_id}/${this.kind_of}/async`;
-
-    this.token = (await this.post_data(path, post_data_attributes)).token;
+    this.token = (await this.post_data(this.path, post_data_attributes)).token;
     return this.token; // so that tests can verify the token
   }
 
   // Executes a single GET request to retrieve the status and (if available)
   // the URL for the report.
-  // For documentation, see:
-  //   https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler
   async poll_report() {
-    const path = `\
-/ads/v4/advertisers/${this.advertiser_id}/${this.kind_of}/async\
-?token=${this.token}`;
-
-    const poll_data = await this.request_data(path);
+    const poll_data = await this.request_data(`${this.path}?token=${this.token}`);
     this.status = poll_data.report_status;
     this._url = poll_data.url;
   }
@@ -44,7 +32,7 @@ export class AsyncReport extends ApiObject {
     this.reset_backoff();
 
     while (true) {
-      await this.poll_report();
+      await this.poll_report(`${this.path}?token=${this.token}`);
       if (this.status === 'FINISHED') {
         return;
       }

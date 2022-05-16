@@ -40,23 +40,16 @@ async function main(argv) {
   // Get configuration from defaults and/or the environment.
   // Set the API configuration verbosity to 2 to show all of requests
   // and response statuses. To see the complete responses, set verbosity to 3.
-
-  // Set API version to 3, because this script does not work with 5 yet.
-  if (args.api_version !== '3') {
-    console.log('WARNING: Asynchronous analytics only works with API version v3.');
-    console.log('Forcing version 3...');
-  }
-
   const api_config = new ApiConfig({
     verbosity: args.log_level,
-    version: '3'
+    version: args.api_version
   });
 
   // imports that depend on the version of the API
   const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
+  const { AdMetricsAsyncReport } = await import(`../src/${api_config.version}/ad_metrics_async_report.js`);
   const { Advertisers } = await import(`../src/${api_config.version}/advertisers.js`);
-  const { DeliveryMetrics, DeliveryMetricsAsyncReport } =
-        await import(`../src/${api_config.version}/delivery_metrics.js`);
+  const { DeliveryMetrics } = await import(`../src/${api_config.version}/delivery_metrics.js`);
   const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
   const { User } = await import(`../src/${api_config.version}/user.js`);
 
@@ -128,21 +121,27 @@ async function main(argv) {
     // Get the full list of all delivery metrics.
     // This call is not used much in day-to-day API code, but is a useful endpoint
     // for learning about the metrics.
-    const delivery_metrics = new DeliveryMetrics(api_config, access_token);
-    const metrics = await delivery_metrics.get();
+    try {
+      const delivery_metrics = new DeliveryMetrics(api_config, access_token);
+      const metrics = await delivery_metrics.get();
 
-    api_config.verbosity = verbosity; // restore verbosity
-
-    console.log('Here are a couple of interesting metrics...');
-    for (const metric of metrics) {
-      if (metric.name === 'CLICKTHROUGH_1' ||
-          metric.name === 'IMPRESSION_1') {
-        delivery_metrics.print(metric);
+      console.log('Here are a couple of interesting metrics...');
+      for (const metric of metrics) {
+        if (metric.name === 'CLICKTHROUGH_1' ||
+            metric.name === 'IMPRESSION_1') {
+          delivery_metrics.print(metric);
+        }
       }
-    }
 
-    // To print the long list of all metrics, uncomment the next line.
-    // delivery_metrics.print_all(metrics);
+      // To print the long list of all metrics, uncomment the next line.
+      // delivery_metrics.print_all(metrics);
+    } catch (error) {
+      // This endpoint is not essential, and is not supported by all API versions.
+      // So, just print the error and move along.
+      console.log(error.message);
+    } finally {
+      api_config.verbosity = verbosity; // restore verbosity
+    }
 
     // Step 4: Configure the options for the report
     // For documentation on async reports, see:
@@ -152,14 +151,15 @@ async function main(argv) {
     // Configure the report. Request 30 days of data, up to the current date.
     // For a complete set of options, see the report documentation,
     // for the code in ../src/delivery_metrics.py
-    const report = new DeliveryMetricsAsyncReport(
+
+    const report = new AdMetricsAsyncReport(
       api_config, access_token, advertiser_id)
       .last_30_days()
       .level('PIN_PROMOTION')
       .granularity('DAY')
-      .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1'])
-      .filters([{ field: 'PIN_PROMOTION_STATUS', operator: '=', value: 'APPROVED' }])
-      .tag_version(3);
+      .report_format('CSV')
+      .filters([{ field: 'SPEND_IN_DOLLAR', operator: 'GREATER_THAN', values: [1] }])
+      .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1']);
 
     // Request (POST) and wait (GET) for the report until it is ready.
     // This is an async process with two API calls. The first is placing a request
