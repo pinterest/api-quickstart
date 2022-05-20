@@ -20,18 +20,23 @@ def find_and_get_analytics(
     """
     entity = ads_entities[level]
     kind = entity["kind"]
-    entity_list = list(entity["get"](*get_args))
-    n_entities = len(entity_list)
 
-    if not n_entities:
-        print(f"This {entity['parent']} has no {kind}s.")
-        return None
+    if entity["identifier"]:
+        entity_id = entity["identifier"]
+        print(f"Using the {kind} with identifier: {entity_id}")
+    else:
+        entity_list = list(entity["get"](*get_args))
+        n_entities = len(entity_list)
 
-    advertisers.print_enumeration(entity_list, kind)
-    # Prompt to get the entity index.
-    prompt = f"Please select the {kind} number between 1 and {n_entities}:"
-    index = input_number(prompt, 1, n_entities)
-    entity_id = entity_list[index - 1]["id"]
+        if not n_entities:
+            print(f"This {entity['parent']} has no {kind}s.")
+            return None
+
+        advertisers.print_enumeration(entity_list, kind)
+        # Prompt to get the entity index.
+        prompt = f"Please select the {kind} number between 1 and {n_entities}:"
+        index = input_number(prompt, 1, n_entities)
+        entity_id = entity_list[index - 1]["id"]
 
     get_args += [entity_id]
 
@@ -72,8 +77,29 @@ def main(argv=[]):
         choices=["user", "ad_account_user", "ad_account", "campaign", "ad_group", "ad"],
         help="kind of object used to fetch analytics",
     )
+    parser.add_argument(
+        "--ad-account-id", help="Get analytics for this ad account identifier."
+    )
+    parser.add_argument(
+        "--campaign-id", help="Get analytics for this campaign identifier."
+    )
+    parser.add_argument(
+        "--ad-group-id", help="Get analytics for this ad group identifier."
+    )
+    parser.add_argument("--ad-id", help="Get analytics for this ad identifier.")
     common_arguments(parser)
     args = parser.parse_args(argv)
+
+    # Specifying identifier at one level requires specifying identifier at levels above.
+    if args.campaign_id and not args.ad_account_id:
+        print("Ad account identifier must be specified when using campaign identifier")
+        exit(1)
+    if args.ad_group_id and not args.campaign_id:
+        print("Campaign identifier must be specified when using ad group identifier")
+        exit(1)
+    if args.ad_id and not args.ad_ad_group_id:
+        print("Ad group identifier must be specified when using ad identifier")
+        exit(1)
 
     api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
@@ -132,6 +158,7 @@ def main(argv=[]):
                 "parent": "User",
                 "get": advertisers.get,
                 "analytics": analytics.get,
+                "identifier": args.ad_account_id,
             }
         ]
         results = find_and_get_analytics(advertisers, "ad_account", ads_entities, [], 0)
@@ -151,6 +178,7 @@ def main(argv=[]):
                 "parent": "User",
                 "get": advertisers.get,
                 "analytics": analytics.get_ad_account,
+                "identifier": args.ad_account_id,
             },
             {
                 "object": "campaign",
@@ -158,6 +186,7 @@ def main(argv=[]):
                 "parent": "Ad Account",
                 "get": advertisers.get_campaigns,
                 "analytics": analytics.get_campaign,
+                "identifier": args.campaign_id,
             },
             {
                 "object": "ad_group",
@@ -165,6 +194,7 @@ def main(argv=[]):
                 "parent": "Campaign",
                 "get": advertisers.get_ad_groups,
                 "analytics": analytics.get_ad_group,
+                "identifier": args.ad_group_id,
             },
             {
                 "object": "ad",
@@ -172,6 +202,7 @@ def main(argv=[]):
                 "parent": "Ad Group",
                 "get": advertisers.get_ads,
                 "analytics": analytics.get_ad,
+                "identifier": args.ad_id,
             },
         ]
         results = find_and_get_analytics(

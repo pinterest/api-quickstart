@@ -25,8 +25,17 @@ async function fetch_and_print(
   // Note: Array.from does not work with asynchronous iterators.
   const iterator = await advertisers[entity.getfn](...get_args);
   const entity_list = [];
-  for await (const entity of iterator) {
-    entity_list.push(entity);
+  if (entity.id) {
+    // create a single entity with minimal information
+    entity_list.push({
+      id: entity.id,
+      name: '<Unknown: ID specified as argument>'
+    });
+  } else {
+    // get all of this kind of entity
+    for await (const entity of iterator) {
+      entity_list.push(entity);
+    }
   }
 
   const n_entities = entity_list.length; // number of entities found
@@ -76,8 +85,34 @@ async function main(argv) {
     action: 'store_true',
     help: 'print all ads information'
   });
+  parser.add_argument('--ad-account-id', {
+    help: 'Get analytics for this ad account identifier.'
+  });
+  parser.add_argument('--campaign-id', {
+    help: 'Get analytics for this campaign identifier.'
+  });
+  parser.add_argument('--ad-group-id', {
+    help: 'Get analytics for this ad group identifier.'
+  });
+  parser.add_argument('--ad-id', {
+    help: 'Get analytics for this ad identifier.'
+  });
   common_arguments(parser);
   const args = parser.parse_args(argv);
+
+  // Specifying identifier at one level requires specifying identifier at levels above.
+  if (args.campaign_id && !args.ad_account_id) {
+    console.log('Ad account identifier must be specified when using campaign identifier');
+    process.exit(1);
+  }
+  if (args.ad_group_id && !args.campaign_id) {
+    console.log('Campaign identifier must be specified when using ad group identifier');
+    process.exit(1);
+  }
+  if (args.ad_id && !args.ad_ad_group_id) {
+    console.log('Ad group identifier must be specified when using ad identifier');
+    process.exit(1);
+  }
 
   const api_config = new ApiConfig({
     verbosity: args.log_level,
@@ -120,10 +155,10 @@ async function main(argv) {
     user_me_data.id, api_config, access_token);
 
   const ads_entities = [
-    { kind: 'Ad Account', parent: 'User', getfn: 'get' },
-    { kind: 'Campaign', parent: 'Ad Account', getfn: 'get_campaigns' },
-    { kind: 'Ad Group', parent: 'Campaign', getfn: 'get_ad_groups' },
-    { kind: 'Ad', parent: 'Ad Group', getfn: 'get_ads' }
+    { kind: 'Ad Account', parent: 'User', getfn: 'get', id: args.ad_account_id },
+    { kind: 'Campaign', parent: 'Ad Account', getfn: 'get_campaigns', id: args.campaign_id },
+    { kind: 'Ad Group', parent: 'Campaign', getfn: 'get_ad_groups', id: args.ad_group_id },
+    { kind: 'Ad', parent: 'Ad Group', getfn: 'get_ads', id: args.ad_id }
   ];
 
   const input = args.all_ads ? null : new Input();

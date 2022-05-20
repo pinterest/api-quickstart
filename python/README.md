@@ -283,8 +283,7 @@ optional arguments:
 ```
 $ ./scripts/copy_pin.py --help
 
-usage: copy_pin.py [-h] -p PIN_ID [-m MEDIA] -b BOARD_ID [-s SECTION] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                   [-v API_VERSION]
+usage: copy_pin.py [-h] -p PIN_ID [-m MEDIA] -b BOARD_ID [-s SECTION] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Copy a Pin
 
@@ -312,8 +311,8 @@ optional arguments:
 ```
 $ ./scripts/copy_board.py --help
 
-usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all]
-                     [--dry-run] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run]
+                     [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Copy one Board or all Boards
 
@@ -363,7 +362,8 @@ optional arguments:
 ```
 $ ./scripts/get_analytics.py --help
 
-usage: get_analytics.py [-h] [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}] [-a ACCESS_TOKEN]
+usage: get_analytics.py [-h] [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}] [--ad-account-id AD_ACCOUNT_ID]
+                        [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN]
                         [-l LOG_LEVEL] [-v API_VERSION]
 
 Get Analytics
@@ -372,6 +372,13 @@ optional arguments:
   -h, --help            show this help message and exit
   -o {user,ad_account_user,ad_account,campaign,ad_group,ad}, --analytics-object {user,ad_account_user,ad_account,campaign,ad_group,ad}
                         kind of object used to fetch analytics
+  --ad-account-id AD_ACCOUNT_ID
+                        Get analytics for this ad account identifier.
+  --campaign-id CAMPAIGN_ID
+                        Get analytics for this campaign identifier.
+  --ad-group-id AD_GROUP_ID
+                        Get analytics for this ad group identifier.
+  --ad-id AD_ID         Get analytics for this ad identifier.
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL

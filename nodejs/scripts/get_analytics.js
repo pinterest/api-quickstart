@@ -25,12 +25,13 @@ import { Input } from '../src/utils.js';
 
 // This class encapsulates information about a level of the Ads structure.
 class AdsEntity {
-  constructor(object, kind, parent, getfn, analyticsfn) {
+  constructor(object, kind, parent, getfn, analyticsfn, identifier) {
     this.object = object; // name as specified in command-line arguments
     this.kind = kind; // name for printing on the console
     this.parent = parent; // name of the parent entity for printing
     this.getfn = getfn; // advertisers function used to get the entity
     this.analyticsfn = analyticsfn; // analytics function used for the entity
+    this.identifier = identifier; // identifier specified at this level (may be null)
   }
 }
 
@@ -51,27 +52,33 @@ class FindAndGetAnalytics {
     let level = get_args.length;
     const entity = this.ads_entities[level]; // information about the entity
     const kind = entity.kind; // human readable entity type
+    let entity_id;
 
-    // Get all of the entities using the paged iterator.
-    // Note: Array.from does not work with asynchronous iterators.
-    const iterator = await this.advertisers[entity.getfn](...get_args);
-    const entity_list = [];
-    for await (const entity of iterator) {
-      entity_list.push(entity);
+    if (entity.identifier) {
+      entity_id = entity.identifier;
+      console.log(`Using the ${kind} with identifier: ${entity_id}`);
+    } else {
+      // Get all of the entities using the paged iterator.
+      // Note: Array.from does not work with asynchronous iterators.
+      const iterator = await this.advertisers[entity.getfn](...get_args);
+      const entity_list = [];
+      for await (const entity of iterator) {
+        entity_list.push(entity);
+      }
+
+      const n_entities = entity_list.length; // number of entities found
+
+      if (n_entities === 0) { // no entities found
+        console.log(`This ${entity.parent} has no ${kind}s.`);
+        return null;
+      }
+
+      this.advertisers.print_enumeration(entity_list, kind);
+      // Prompt to get the entity index.
+      const prompt = `Please select the ${kind} number between 1 and ${n_entities}:`;
+      const index = await this.input.number(prompt, 1, n_entities);
+      entity_id = entity_list[index - 1].id;
     }
-
-    const n_entities = entity_list.length; // number of entities found
-
-    if (n_entities === 0) { // no entities found
-      console.log(`This ${entity.parent} has no ${kind}s.`);
-      return null;
-    }
-
-    this.advertisers.print_enumeration(entity_list, kind);
-    // Prompt to get the entity index.
-    const prompt = `Please select the ${kind} number between 1 and ${n_entities}:`;
-    const index = await this.input.number(prompt, 1, n_entities);
-    const entity_id = entity_list[index - 1].id;
 
     get_args.push(entity_id);
 
@@ -100,8 +107,34 @@ async function main(argv) {
     choices: ['user', 'ad_account_user', 'ad_account', 'campaign', 'ad_group', 'ad'],
     help: 'kind of object used to fetch analytics'
   });
+  parser.add_argument('--ad-account-id', {
+    help: 'Get analytics for this ad account identifier.'
+  });
+  parser.add_argument('--campaign-id', {
+    help: 'Get analytics for this campaign identifier.'
+  });
+  parser.add_argument('--ad-group-id', {
+    help: 'Get analytics for this ad group identifier.'
+  });
+  parser.add_argument('--ad-id', {
+    help: 'Get analytics for this ad identifier.'
+  });
   common_arguments(parser);
   const args = parser.parse_args(argv);
+
+  // Specifying identifier at one level requires specifying identifier at levels above.
+  if (args.campaign_id && !args.ad_account_id) {
+    console.log('Ad account identifier must be specified when using campaign identifier');
+    process.exit(1);
+  }
+  if (args.ad_group_id && !args.campaign_id) {
+    console.log('Campaign identifier must be specified when using ad group identifier');
+    process.exit(1);
+  }
+  if (args.ad_id && !args.ad_ad_group_id) {
+    console.log('Ad group identifier must be specified when using ad identifier');
+    process.exit(1);
+  }
 
   const api_config = new ApiConfig({
     verbosity: args.log_level,
@@ -160,7 +193,7 @@ async function main(argv) {
       // an ad_account_id argument.
       const finder = new FindAndGetAnalytics(
         advertisers, analytics, 'ad_account', input, [
-          new AdsEntity('ad_account', 'Ad Account', 'User', 'get', 'get')
+          new AdsEntity('ad_account', 'Ad Account', 'User', 'get', 'get', args.ad_account_id)
         ]);
       results = await finder.run([]);
     } else {
@@ -174,13 +207,13 @@ async function main(argv) {
       const finder = new FindAndGetAnalytics(
         advertisers, analytics, args.analytics_object, input, [
           new AdsEntity(
-            'ad_account', 'Ad Account', 'User', 'get', 'get_ad_account'),
+            'ad_account', 'Ad Account', 'User', 'get', 'get_ad_account', args.ad_account_id),
           new AdsEntity(
-            'campaign', 'Campaign', 'Ad Account', 'get_campaigns', 'get_campaign'),
+            'campaign', 'Campaign', 'Ad Account', 'get_campaigns', 'get_campaign', args.campaign_id),
           new AdsEntity(
-            'ad_group', 'Ad Group', 'Campaign', 'get_ad_groups', 'get_ad_group'),
+            'ad_group', 'Ad Group', 'Campaign', 'get_ad_groups', 'get_ad_group', args.ad_group_id),
           new AdsEntity(
-            'ad', 'Ad', 'Ad Group', 'get_ads', 'get_ad')
+            'ad', 'Ad', 'Ad Group', 'get_ads', 'get_ad', args.ad_id)
         ]);
       results = await finder.run([]);
     }

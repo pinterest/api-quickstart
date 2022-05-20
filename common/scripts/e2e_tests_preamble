@@ -32,7 +32,11 @@ esac
 # Test accounts used by Pinterest to run the integration test.
 TEST1=pindexterp
 TEST2=penelopepintridge
-TEST3=dchaiken3407
+TEST3=322007579515566576
+TEST4=406450072528652334
+
+TEST3_AD_ACCOUNT_ID=549756064600
+TEST3_CAMPAIGN_ID=626744374247
 
 # Objects associated with the TEST1 account to be used in the integration tests.
 PIN=1097963584125248823
