@@ -37,9 +37,12 @@ OUTPUT_PREFIX=e2etest
 rm -f ${OUTPUT_PREFIX}_*.csv
 rm -f ${OUTPUT_PREFIX}_*.json
 
-# first refresh the tokens in case it has been a while since the tests were last run
+# Note: Pinterest ads test account tokens need to be recreated manually
+# once every 30 days. The following commands test to see whether the token
+# is valid.
 for VERSION in ${VERSIONS} ; do
-    ./scripts/refresh_access_token.${EXT} -a ${TEST3}_${VERSION} -${VERSION}
+    ./scripts/get_access_token.${EXT} -a ${TEST3}_${VERSION} -${VERSION}
+    ./scripts/get_access_token.${EXT} -a ${TEST4}_${VERSION} -${VERSION}
 done
 
 # get asynchronous analytics report
@@ -47,7 +50,7 @@ for VERSION in ${VERSIONS} ; do
     # python does not yet support v5...
     if [[ "${VERSION}" == "v3" || "${EXT}" == "js" ]] ; then
         DOCNAME=${OUTPUT_PREFIX}_${VERSION}_metrics_report.csv
-        printf "3\n${DOCNAME}\n" | \
+        printf "1\n${DOCNAME}\n" | \
             ./scripts/analytics_api_example.${EXT} -a ${TEST3}_${VERSION} -${VERSION}
         wc ${DOCNAME}
     fi
@@ -55,7 +58,7 @@ done
 
 # get all of the ads-related data for the test account
 for VERSION in ${VERSIONS} ; do
-    ./scripts/get_ads.${EXT} -a ${TEST3}_${VERSION} -${VERSION} --all-ads
+    ./scripts/get_ads.${EXT} -a ${TEST4}_${VERSION} -${VERSION} --all-ads
 done
 
 # get user analytics
@@ -68,14 +71,14 @@ done
 
 # get ad_account_user analytics (only available for v5)
 DOCNAME=${OUTPUT_PREFIX}_ad_account_user_analytics_v5.json
-printf "3\n${DOCNAME}\n" | \
+printf "1\n${DOCNAME}\n" | \
     ./scripts/get_analytics.${EXT} -a ${TEST3}_v5 -v5 -o ad_account_user
 wc ${DOCNAME}
 
 # get ad_account analytics
 for VERSION in ${VERSIONS} ; do
     DOCNAME=${OUTPUT_PREFIX}_ad_account_analytics_${VERSION}.json
-    printf "3\n${DOCNAME}\n" | \
+    printf "1\n${DOCNAME}\n" | \
          ./scripts/get_analytics.${EXT} -a ${TEST3}_${VERSION} -${VERSION} -o ad_account
     wc ${DOCNAME}
 done
@@ -83,24 +86,24 @@ done
 # get campaign analytics
 for VERSION in ${VERSIONS} ; do
     DOCNAME=${OUTPUT_PREFIX}_campaign_analytics_${VERSION}.json
-    printf "3\n2\n${DOCNAME}\n" | \
-         ./scripts/get_analytics.${EXT} -a ${TEST3}_${VERSION} -${VERSION} -o campaign
+    printf "${DOCNAME}\n" | \
+         ./scripts/get_analytics.${EXT} -a ${TEST3}_${VERSION} -${VERSION} -o campaign --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
     wc ${DOCNAME}
 done
 
 # get ad group analytics
 for VERSION in ${VERSIONS} ; do
     DOCNAME=${OUTPUT_PREFIX}_ad_group_analytics_${VERSION}.json
-    printf "3\n2\n${DOCNAME}\n" | \
-         ./scripts/get_analytics.${EXT} -a ${TEST3}_${VERSION} -${VERSION} -o ad_group
+    printf "${DOCNAME}\n" | \
+         ./scripts/get_analytics.${EXT} -a ${TEST3}_${VERSION} -${VERSION} -o ad_group --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
     wc ${DOCNAME}
 done
 
 # get ad analytics
 for VERSION in ${VERSIONS} ; do
     DOCNAME=${OUTPUT_PREFIX}_ad_analytics_${VERSION}.json
-    printf "3\n2\n${DOCNAME}\n" | \
-         ./scripts/get_analytics.${EXT} -a ${TEST3}_${VERSION} -${VERSION} -o ad
+    printf "${DOCNAME}\n" | \
+         ./scripts/get_analytics.${EXT} -a ${TEST3}_${VERSION} -${VERSION} -o ad --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
     wc ${DOCNAME}
 done
 

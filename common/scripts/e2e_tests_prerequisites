@@ -46,17 +46,14 @@ if (! ./scripts/refresh_access_token.${EXT} -a ${TEST2}_v3 -v3) ; then
     ./scripts/get_access_token.${EXT} -a ${TEST2}_v3 -v3 -w -s read_pins,write_pins,read_boards,write_boards,read_users
 fi
 
-LOGIN_MESSAGE="Log into the ${TEST3} (ads test) account in your web browser and hit any key to continue..."
-if (! ./scripts/refresh_access_token.${EXT} -a ${TEST3}_v5 -v5) ; then
-    LOGIN_ACCOUNT=${TEST3}
-    read -s -n 1 -p "${LOGIN_MESSAGE}"
-    echo "authorizing v5 token for ${TEST3}"
-    ./scripts/get_access_token.${EXT} -a ${TEST3}_v5 -w -s ads:read,pins:read,boards:read,user_accounts:read
-fi
-if (! ./scripts/refresh_access_token.${EXT} -a ${TEST3}_v3 -v3) ; then
-    if [ "${LOGIN_ACCOUNT}" != "${TEST3}" ] ; then
-        read -s -n 1 -p "${LOGIN_MESSAGE}"
-    fi
-    echo "authorizing v3 token for ${TEST3}"
-    ./scripts/get_access_token.${EXT} -a ${TEST3}_v3 -v3 -w -s read_advertisers,read_campaigns,read_pin_promotions,read_pins,read_boards,read_users
-fi
+echo "Ensure that there is a valid v3 access token for the ${TEST3} (ads test) account"
+./scripts/get_access_token.${EXT} -a ${TEST3}_v3 -v3
+
+echo "Ensure that there is a valid v5 access token for the ${TEST3} (ads test) account"
+./scripts/get_access_token.${EXT} -a ${TEST3}_v5 -v5
+
+echo "Ensure that there is a valid v3 access token for the ${TEST4} (ads test) account"
+./scripts/get_access_token.${EXT} -a ${TEST4}_v3 -v3
+
+echo "Ensure that there is a valid v5 access token for the ${TEST4} (ads test) account"
+./scripts/get_access_token.${EXT} -a ${TEST4}_v5 -v5

@@ -32,7 +32,10 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 #   copy the boards from the TEST1 account to the TEST2 account.
 #   Finally, read the boards and pins from the TEST2 account.
 for VERSION in ${VERSIONS} ; do
-    printf "Delete all boards for ${TEST2}\nyes\nyes\nyes\n" | \
+    # Note that the confirmation text in the following printf is not parameterized
+    # in order to avoid deleting all the boards from an account other than
+    # penelopepintridge.
+    printf "Delete all boards for penelopepintridge\nyes\nyes\nyes\n" | \
         ./scripts/delete_board.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --all-boards
     ./scripts/copy_board.${EXT} -s ${TEST1}_${VERSION} -t ${TEST2}_${VERSION} -${VERSION} --all
     ./scripts/get_user_boards.${EXT} -a ${TEST2}_${VERSION} -${VERSION} --page-size 100
