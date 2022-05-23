@@ -69,13 +69,13 @@ def main(argv=[]):
     """
     Sample: Get my user id
     For a future call we need to know the user id associated with
-    the access token being used.
+    the access token being used (for API version v4).
     """
     user_me = User("me", api_config, access_token)
     user_me_data = user_me.get()
     user_me.print_summary(user_me_data)
 
-    user_id = user_me_data["id"]
+    user_id = user_me_data.get("id")
     print(f"User id: {user_id}")
 
     """
