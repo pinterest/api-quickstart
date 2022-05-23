@@ -46,18 +46,13 @@ def main(argv=[]):
     Set the API configuration verbosity to 2 to show all of requests
     and response statuses. To see the complete responses, set verbosity to 3.
     """
-
-    # Set API version to 3, because this script does not work with 5 yet.
-    if args.api_version != "3":
-        print("WARNING: Asynchronous analytics only works with API version v3.")
-        print("Forcing version 3...")
-
-    api_config = ApiConfig(verbosity=args.log_level, version="3")
+    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # imports that depend on the version of the API
     from access_token import AccessToken
+    from ad_metrics_async_report import AdMetricsAsyncReport
     from advertisers import Advertisers
-    from delivery_metrics import DeliveryMetrics, DeliveryMetricsAsyncReport
+    from delivery_metrics import DeliveryMetrics
     from oauth_scope import Scope
     from user import User
 
@@ -126,23 +121,27 @@ def main(argv=[]):
     verbosity = api_config.verbosity
     api_config.verbosity = min(verbosity, 2)
 
-    # Get the full list of all delivery metrics.
-    # This call is not used much in day-to-day API code, but is a useful endpoint
-    # for learning about the metrics.
-    delivery_metrics = DeliveryMetrics(api_config, access_token)
-    metrics = delivery_metrics.get()
+    try:
+        # Get the full list of all delivery metrics.
+        # This call is not used much in day-to-day API code, but is a useful endpoint
+        # for learning about the metrics.
+        delivery_metrics = DeliveryMetrics(api_config, access_token)
+        metrics = delivery_metrics.get()
 
-    api_config.verbosity = verbosity  # restore verbosity
+        print("Here are a couple of interesting metrics...")
+        for metric in metrics:
+            if metric["name"] == "CLICKTHROUGH_1" or metric["name"] == "IMPRESSION_1":
+                delivery_metrics.print(metric)
 
-    print("Here are a couple of interesting metrics...")
-    for metric in metrics:
-        if metric["name"] == "CLICKTHROUGH_1" or metric["name"] == "IMPRESSION_1":
-            delivery_metrics.print(metric)
+        """
+        To print the long list of all metrics, uncomment the next line.
+        delivery_metrics.print_all(metrics)
+        """
+    except RuntimeError as error:
+        print(error)
+    finally:
+        api_config.verbosity = verbosity  # restore verbosity
 
-    """
-    To print the long list of all metrics, uncomment the next line.
-    delivery_metrics.print_all(metrics)
-    """
 
     """
     Step 4: Configure the options for the report
@@ -157,15 +156,15 @@ def main(argv=[]):
     for the code in ../src/delivery_metrics.py
     """
     report = (
-        DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id)
+        AdMetricsAsyncReport(api_config, access_token, advertiser_id)
         .last_30_days()
         .level("PIN_PROMOTION")
         .granularity("DAY")
-        .metrics({"IMPRESSION_1", "CLICKTHROUGH_1"})
+        .report_format("CSV")
         .filters(
-            [{"field": "PIN_PROMOTION_STATUS", "operator": "=", "value": "APPROVED"}]
+            [{"field": "SPEND_IN_DOLLAR", "operator": "GREATER_THAN", "values": [1]}]
         )
-        .tag_version(3)
+        .metrics({"IMPRESSION_1", "CLICKTHROUGH_1"})
     )
 
     """

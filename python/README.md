@@ -408,7 +408,7 @@ optional arguments:
 ```
 
 ### [analytics_api_example.py](./scripts/analytics_api_example.py)
- Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler) and [get](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler) endpoints. This script currently works only with Pinterest API v4, but we're working on supporting the same functionality in v5.
+ Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler) and [get](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler) endpoints.
 
 <!--gen-->
 ```
