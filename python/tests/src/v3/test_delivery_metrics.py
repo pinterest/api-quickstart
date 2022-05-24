@@ -1,7 +1,6 @@
 import unittest
 from unittest import mock
-
-from mock import call
+from unittest.mock import call
 
 from v3.delivery_metrics import DeliveryMetrics
 
