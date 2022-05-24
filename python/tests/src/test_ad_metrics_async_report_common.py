@@ -1,9 +1,9 @@
 import datetime
 import unittest
 from unittest import mock
-from unittest.mock import call
 
 from ad_metrics_async_report_common import AdMetricsAsyncReportCommon
+
 
 class AdMetricsAsyncReportCommonTest(unittest.TestCase):
     @mock.patch("async_report.AsyncReport.__init__")
@@ -49,7 +49,9 @@ class AdMetricsAsyncReportCommonTest(unittest.TestCase):
 
     @mock.patch("analytics_attributes.datetime.date", wraps=datetime.date)
     @mock.patch("async_report.AsyncReport.__init__")
-    def test_am_async_report_common_attributes_1(self, mock_async_report_init, mock_date):
+    def test_am_async_report_common_attributes_1(
+        self, mock_async_report_init, mock_date
+    ):
         mock_date.today.return_value = datetime.datetime(
             2021, 3, 31
         )  # for call to last_30_days below
@@ -71,7 +73,9 @@ class AdMetricsAsyncReportCommonTest(unittest.TestCase):
             .view_window_days(30)
         )
         # specify metrics with multiple calls
-        am_async_report_common.metrics({"INAPP_SEARCH_ROAS", "INAPP_SEARCH_COST_PER_ACTION"})
+        am_async_report_common.metrics(
+            {"INAPP_SEARCH_ROAS", "INAPP_SEARCH_COST_PER_ACTION"}
+        )
         am_async_report_common.metric("TOTAL_CLICK_SEARCH_QUANTITY")
         am_async_report_common.metric("TOTAL_CLICK_SEARCH")
 
@@ -95,9 +99,13 @@ class AdMetricsAsyncReportCommonTest(unittest.TestCase):
                 "click_window_days": 14,
                 "conversion_report_time": "AD_EVENT",
                 "engagement_window_days": 7,
-                "filters": [{"field": "SPEND_IN_DOLLAR",
-                             "operator":"GREATER_THAN",
-                             "values": [1]}],
+                "filters": [
+                    {
+                        "field": "SPEND_IN_DOLLAR",
+                        "operator": "GREATER_THAN",
+                        "values": [1],
+                    }
+                ],
                 "granularity": "HOUR",
                 "level": "SEARCH_QUERY",
                 "report_format": "CSV",

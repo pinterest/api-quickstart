@@ -1,7 +1,7 @@
-import datetime
 import unittest
 from unittest import mock
-from unittest.mock import call
+
+from mock import call
 
 from v3.delivery_metrics import DeliveryMetrics
 

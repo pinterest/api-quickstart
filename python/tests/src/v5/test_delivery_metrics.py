@@ -1,6 +1,5 @@
 import unittest
 from unittest import mock
-from unittest.mock import call
 
 from v5.delivery_metrics import DeliveryMetrics
 
@@ -12,6 +11,6 @@ class DeliveryMetricsTest(unittest.TestCase):
         mock_api_object_init.assert_not_called()
 
         with self.assertRaisesRegex(
-                RuntimeError, "Metric definitions are not available in API version v5."
+            RuntimeError, "Metric definitions are not available in API version v5."
         ):
             test_dm.get()

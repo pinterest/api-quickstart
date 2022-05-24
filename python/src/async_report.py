@@ -13,17 +13,22 @@ class AsyncReport(ApiObject):
         self.status = None
         self._url = None
 
+    def post_data_attributes(self):
+        raise RuntimeError("subclass must override post_data_attributes()")
+
     def request_report(self):
         """
         For documentation, see:
           https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report
         """
         self.token = self.post_data(self.path, self.post_data_attributes())["token"]
-        return self.token; # so that tests can verify the token
+        return self.token
+        # so that tests can verify the token
 
     def poll_report(self):
         """
-        Executes a single GET request to retrieve the status and (if available) the URL for the report.
+        Executes a single GET request to retrieve the status and
+        (if available) the URL for the report.
         """
         poll_data = self.request_data(f"{self.path}?token={self.token}")
         self.status = poll_data["report_status"]

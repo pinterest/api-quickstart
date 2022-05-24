@@ -142,7 +142,6 @@ def main(argv=[]):
     finally:
         api_config.verbosity = verbosity  # restore verbosity
 
-
     """
     Step 4: Configure the options for the report
     For documentation on async reports, see:

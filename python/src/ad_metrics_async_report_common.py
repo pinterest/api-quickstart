@@ -1,7 +1,6 @@
-import json
-
 from analytics_attributes import AdAnalyticsAttributes
 from async_report import AsyncReport
+
 
 # The unit tests mock AsyncReport, so the first parent needs to be
 # AdMetricsAsyncReportCommon to make the multiple inheritance work correctly.
@@ -96,12 +95,7 @@ class AdMetricsAsyncReportCommon(AdAnalyticsAttributes, AsyncReport):
     def filters(self, filters):
         """
         Filters must be a list of structures with fields as specified by the API.
-        JSON separators are set to eliminate whitespace and to get the most
-        compact JSON representation.
         """
-
-        # TODO: VERIFY WHETHER json.dumps IS STILL NECESSARY
-        # self.attrs["filters"] = json.dumps(filters, separators=(",", ":"))
         self.attrs["filters"] = filters
         return self
 

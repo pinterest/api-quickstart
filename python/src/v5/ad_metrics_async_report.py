@@ -1,5 +1,5 @@
 from ad_metrics_async_report_common import AdMetricsAsyncReportCommon
-from async_report import AsyncReport
+
 
 class AdMetricsAsyncReport(AdMetricsAsyncReportCommon):
     """
@@ -9,7 +9,5 @@ class AdMetricsAsyncReport(AdMetricsAsyncReportCommon):
 
     def __init__(self, api_config, access_token, advertiser_id):
         super().__init__(
-            api_config,
-            access_token,
-            f"/v5/ad_accounts/{advertiser_id}/reports"
+            api_config, access_token, f"/v5/ad_accounts/{advertiser_id}/reports"
         )

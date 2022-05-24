@@ -1,5 +1,6 @@
 from api_object import ApiObject
 
+
 class DeliveryMetrics(ApiObject):
     """
     Use this class to get and to print all of the available
