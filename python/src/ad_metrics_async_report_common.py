@@ -1,8 +1,13 @@
 import json
 
 from analytics_attributes import AdAnalyticsAttributes
+from async_report import AsyncReport
 
-class AdMetricsAsyncReportCommon(AdAnalyticsAttributes):
+# The unit tests mock AsyncReport, so the first parent needs to be
+# AdMetricsAsyncReportCommon to make the multiple inheritance work correctly.
+# In particular, if AdMetricsAsyncReportCommon is not first in the order,
+# the __init__ functions aren't called correctly.
+class AdMetricsAsyncReportCommon(AdAnalyticsAttributes, AsyncReport):
     """
     Specifies all of the attributes for the async advertiser
     delivery metrics report. For more information, see:
@@ -36,7 +41,6 @@ class AdMetricsAsyncReportCommon(AdAnalyticsAttributes):
         # and the dictionary values are sets of API-defined values.
         self.enumerated_values.update(
             {
-                "data_source": {"OFFLINE", "REALTIME"},
                 "entity_fields": {
                     "AD_GROUP_ID",
                     "AD_GROUP_NAME",
