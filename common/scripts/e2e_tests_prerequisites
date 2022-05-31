@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -ex
+#!/usr/bin/env bash
 #
 # This script runs the commands in one of the programming language directories
 # using access tokens associated with test accounts on Pinterest. Run the
