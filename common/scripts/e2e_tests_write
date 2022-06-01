@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -ex
+#!/usr/bin/env bash
 #
 # NOTE: This script DELETES ALL OF THE BOARDS AND PINS for the second test
 # (TEST2) account, which is intended to be used only as a blank repository

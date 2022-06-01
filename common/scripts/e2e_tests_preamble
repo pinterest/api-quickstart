@@ -12,6 +12,9 @@
 # in the same way that the api_app_credentials are factored out of api_env.
 #
 
+# exit on error, print all commands
+set -ex
+
 # check if the environment is set up for the quickstart
 if [ "$PINTEREST_APP_ID" == "" ] || [ "$PINTEREST_APP_SECRET" == "" ] ; then
    echo "This test requires the quickstart environment to be set."
