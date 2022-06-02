@@ -47,13 +47,10 @@ done
 
 # get asynchronous analytics report
 for VERSION in ${VERSIONS} ; do
-    # python does not yet support v5...
-    if [[ "${VERSION}" == "v3" || "${EXT}" == "js" ]] ; then
-        DOCNAME=${OUTPUT_PREFIX}_${VERSION}_metrics_report.csv
-        printf "1\n${DOCNAME}\n" | \
-            ./scripts/analytics_api_example.${EXT} -a ${TEST3}_${VERSION} -${VERSION}
-        wc ${DOCNAME}
-    fi
+    DOCNAME=${OUTPUT_PREFIX}_${VERSION}_metrics_report.csv
+    printf "1\n${DOCNAME}\n" | \
+        ./scripts/analytics_api_example.${EXT} -a ${TEST3}_${VERSION} -${VERSION}
+    wc ${DOCNAME}
 done
 
 # get all of the ads-related data for the test account

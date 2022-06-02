@@ -3,17 +3,12 @@ from api_object import ApiObject
 
 class AsyncReport(ApiObject):
     """
-    For documentation, see: https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
+    For documentation, see the version-specific implementations of AsyncReport.
+    """
 
-    Subclasses must override:
-       self.kind_of = String, The kind of report. Example: 'delivery_metrics'
-       self.post_data_attributes() = Method that generates the data for the POST.
-    """  # noqa: E501 because the long URL is okay
-
-    def __init__(self, api_config, access_token, advertiser_id):
+    def __init__(self, api_config, access_token, path):
         super().__init__(api_config, access_token)
-        self.advertiser_id = advertiser_id
-        self.kind_of = None  # must be overridden by subclass
+        self.path = path
         self.token = None
         self.status = None
         self._url = None
@@ -24,27 +19,18 @@ class AsyncReport(ApiObject):
     def request_report(self):
         """
         For documentation, see:
-          https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler
+          https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report
         """
-        if not self.kind_of:
-            raise RuntimeError("subclass must override the kind_of report")
-
-        # create path and set required attributes
-        path = f"/ads/v4/advertisers/{self.advertiser_id}/{self.kind_of}/async"
-        self.token = self.post_data(path, self.post_data_attributes())["token"]
+        self.token = self.post_data(self.path, self.post_data_attributes())["token"]
+        return self.token
+        # so that tests can verify the token
 
     def poll_report(self):
         """
-        For documentation, see:
-          https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler
-
-        Executes a single GET request to retrieve the status and (if available) the URL for the report.
-        """  # noqa: E501 because the long URL is okay
-        path = (
-            f"/ads/v4/advertisers/{self.advertiser_id}/{self.kind_of}/async"
-            + f"?token={self.token}"
-        )
-        poll_data = self.request_data(path)
+        Executes a single GET request to retrieve the status and
+        (if available) the URL for the report.
+        """
+        poll_data = self.request_data(f"{self.path}?token={self.token}")
         self.status = poll_data["report_status"]
         self._url = poll_data.get("url")
 

@@ -2,57 +2,49 @@ import unittest
 from unittest import mock
 from unittest.mock import call
 
-from v3.async_report import AsyncReport
+from async_report import AsyncReport
 
 
 class AsyncReportTest(unittest.TestCase):
-    @mock.patch("v3.async_report.ApiObject.request_data")
-    @mock.patch("v3.async_report.ApiObject.post_data")
-    @mock.patch("v3.async_report.ApiObject.__init__")
+    @mock.patch("async_report.ApiObject.request_data")
+    @mock.patch("async_report.ApiObject.post_data")
+    @mock.patch("async_report.ApiObject.__init__")
     def test_async_report(
         self, mock_api_object_init, mock_post_data, mock_request_data
     ):
         test_async_report = AsyncReport(
-            "test_api_config", "test_access_token", "test_advertiser_id"
+            "test_api_config", "test_access_token", "/test/path1"
         )
+        self.assertIsInstance(test_async_report, AsyncReport)
         mock_api_object_init.assert_called_once_with(
             "test_api_config", "test_access_token"
         )
 
-        with self.assertRaisesRegex(
-            RuntimeError, "subclass must override the kind_of report"
-        ):
-            test_async_report.request_report()
-
         class TestReport(AsyncReport):
-            def __init__(self, api_config, access_token, advertiser_id):
-                super().__init__(api_config, access_token, advertiser_id)
-                self.kind_of = "test_report"
+            def __init__(self, api_config, access_token, report_path):
+                super().__init__(api_config, access_token, report_path)
 
-        test_report = TestReport(
-            "test_api_config", "test_access_token", "test_advertiser_id"
-        )
+        test_report = TestReport("test_api_config", "test_access_token", "/test/path")
         with self.assertRaisesRegex(
             RuntimeError, "subclass must override post_data_attributes()"
         ):
             test_report.request_report()
 
         class TestReport2(AsyncReport):
-            def __init__(self, api_config, access_token, advertiser_id):
-                super().__init__(api_config, access_token, advertiser_id)
-                self.kind_of = "test_report2"
+            def __init__(self, api_config, access_token, report_path):
+                super().__init__(api_config, access_token, report_path)
 
             def post_data_attributes(self):
                 return "test_report2_attributes"
 
         test_report2 = TestReport2(
-            "test_api_config", "test_access_token", "test_advertiser_id"
+            "test_api_config", "test_access_token", "/test/path2"
         )
         mock_post_data.return_value = {"token": "test_report2_token"}
         test_report2.request_report()
         self.assertEqual(test_report2.token, "test_report2_token")
         mock_post_data.assert_called_once_with(
-            "/ads/v4/advertisers/test_advertiser_id/test_report2/async",
+            "/test/path2",
             "test_report2_attributes",
         )
 
@@ -63,15 +55,14 @@ class AsyncReportTest(unittest.TestCase):
         test_report2.wait_report()
         self.assertEqual(test_report2.url(), "test_report2_url")
         mock_request_data.assert_called_once_with(
-            "/ads/v4/advertisers/test_advertiser_id/test_report2/async"
-            "?token=test_report2_token"
+            "/test/path2?token=test_report2_token"
         )
 
     @mock.patch("builtins.print")
     @mock.patch("time.sleep")
-    @mock.patch("v3.async_report.ApiObject.request_data")
-    @mock.patch("v3.async_report.ApiObject.post_data")
-    @mock.patch("v3.async_report.ApiObject.__init__")
+    @mock.patch("async_report.ApiObject.request_data")
+    @mock.patch("async_report.ApiObject.post_data")
+    @mock.patch("async_report.ApiObject.__init__")
     def test_async_report_run(
         self,
         mock_api_object_init,
@@ -81,9 +72,8 @@ class AsyncReportTest(unittest.TestCase):
         mock_print,
     ):
         class TestReport3(AsyncReport):
-            def __init__(self, api_config, access_token, advertiser_id):
-                super().__init__(api_config, access_token, advertiser_id)
-                self.kind_of = "test_report3"
+            def __init__(self, api_config, access_token, report_path):
+                super().__init__(api_config, access_token, report_path)
 
             def post_data_attributes(self):
                 return "test_report3_attributes"
@@ -92,7 +82,7 @@ class AsyncReportTest(unittest.TestCase):
             "test_report3_url/x-y-z/metrics_report.txt?Very-long-credentials-string"
         )
         test_report3 = TestReport3(
-            "test_api_config", "test_access_token", "test_advertiser_id"
+            "test_api_config", "test_access_token", "/test/path3"
         )
         mock_post_data.return_value = {"token": "test_report3_token"}
         mock_request_data.side_effect = [  # simulate time required to generate the test
@@ -125,13 +115,10 @@ class AsyncReportTest(unittest.TestCase):
 
         self.assertEqual(test_report3.url(), test_report3_url)  # verify returned URL
         mock_post_data.assert_called_once_with(
-            "/ads/v4/advertisers/test_advertiser_id/test_report3/async",
+            "/test/path3",
             "test_report3_attributes",
         )
-        mock_request_data.assert_called_with(
-            "/ads/v4/advertisers/test_advertiser_id/test_report3/async"
-            "?token=test_report3_token"
-        )
+        mock_request_data.assert_called_with("/test/path3?token=test_report3_token")
         self.assertEqual(
             test_report3.filename(), "metrics_report.txt"
         )  # verify filename()

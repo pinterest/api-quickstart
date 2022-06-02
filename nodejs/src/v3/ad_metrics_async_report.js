@@ -2,7 +2,8 @@ import { AdMetricsAsyncReportCommon } from '../ad_metrics_async_report_common.js
 import { AsyncReport } from '../async_report.js';
 
 /**
- * For documentation, see: https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
+ * For documentation, see:
+ *   https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler
  *
  * AdMetricsAsyncReport is a subclass of the API-version-independent
  * AdMetricsAsyncReportCommon class and contains the API-version-specific

@@ -363,8 +363,8 @@ optional arguments:
 $ ./scripts/get_analytics.py --help
 
 usage: get_analytics.py [-h] [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}] [--ad-account-id AD_ACCOUNT_ID]
-                        [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN]
-                        [-l LOG_LEVEL] [-v API_VERSION]
+                        [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                        [-v API_VERSION]
 
 Get Analytics
 
@@ -408,7 +408,7 @@ optional arguments:
 ```
 
 ### [analytics_api_example.py](./scripts/analytics_api_example.py)
- Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler) and [get](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler) endpoints. This script currently works only with Pinterest API v4, but we're working on supporting the same functionality in v5.
+Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler) and [get](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler) v4 endpoints, or the [create](https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report) and [get](https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report) endpoints for v5.
 
 <!--gen-->
 ```

@@ -32,7 +32,7 @@ export class AsyncReport extends ApiObject {
     this.reset_backoff();
 
     while (true) {
-      await this.poll_report(`${this.path}?token=${this.token}`);
+      await this.poll_report();
       if (this.status === 'FINISHED') {
         return;
       }
