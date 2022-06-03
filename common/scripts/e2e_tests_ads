@@ -31,8 +31,6 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 # source the common test script code
 . ${SCRIPT_DIR}/e2e_tests_preamble
 
-OUTPUT_PREFIX=e2etest
-
 # delete output files to avoid overwrite confirmations by scripts
 rm -f ${OUTPUT_PREFIX}_*.csv
 rm -f ${OUTPUT_PREFIX}_*.json

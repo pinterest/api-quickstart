@@ -159,7 +159,7 @@ async function main(argv) {
   }
 
   // Requesting pin analytics requires a pin_id.
-  if ((args.analytics_object === 'pin') && !args.pin_id) {
+  if (args.analytics_object === 'pin' && !args.pin_id) {
     console.log('Pin analytics require a pin identifier.');
     process.exit(1);
   }
