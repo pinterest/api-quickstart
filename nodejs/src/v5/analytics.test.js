@@ -36,13 +36,8 @@ start_date=2021-03-01&end_date=2021-03-31\
 &ad_account_id=test_ad_account\
 &from_claimed_content=Both&pin_format=regular');
 
-    analytics.app_types('web');
-
-    expect(() => {
-      analytics.split_field('SOURCE');
-    }).toThrowError(
-      new Error('split_field attribute not yet implemented in the Pinterest API')
-    );
+    // add a couple of fields
+    analytics.app_types('web').split_field('PIN_FORMAT');
 
     // verifies additional parameters and no ad_account_id
     expect(await analytics.get(null)).toEqual('test_response');
@@ -52,7 +47,8 @@ start_date=2021-03-01&end_date=2021-03-31\
 start_date=2021-03-01&end_date=2021-03-31\
 &metric_types=IMPRESSION,PIN_CLICK_RATE\
 &app_types=web\
-&from_claimed_content=Both&pin_format=regular');
+&from_claimed_content=Both&pin_format=regular\
+&split_field=PIN_FORMAT');
   });
 
   test('v5 pin analytics', async() => {
