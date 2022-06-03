@@ -2,8 +2,9 @@ import { AnalyticsAttributes, AdAnalyticsAttributes } from '../analytics_attribu
 import { ApiObject } from '../api_object.js';
 
 /**
- * This module uses Pinterest API v5 in two classes:
- * - Analytics synchronously retrieves user (organic) reports.
+ * This module uses Pinterest API v5 in three classes:
+ * - UserAnalytics synchronously retrieves user (organic) reports.
+ * - PinAnalytics synchronously retrieves pin (organic) reports.
  * - AdAnalytics synchronously retrieves advertising reports.
  */
 
@@ -12,7 +13,7 @@ import { ApiObject } from '../api_object.js';
  * using the v5 interface.
  *
  * The attribute functions are chainable. For example:
- *    Analytics(null, api_config, access_token)
+ *    UserAnalytics(null, api_config, access_token)
  *    .last_30_days()
  *    .metrics(['IMPRESSION', 'PIN_CLICK_RATE'])
  *
@@ -22,7 +23,7 @@ import { ApiObject } from '../api_object.js';
  * The ApiObject container implements the REST transaction used
  * to fetch the metrics.
  */
-export class Analytics extends AnalyticsAttributes {
+export class UserAnalytics extends AnalyticsAttributes {
   // https://developers.pinterest.com/docs/api/v5/#operation/user_account/analytics
   constructor(_user_id, api_config, access_token) {
     super();
@@ -87,6 +88,65 @@ export class Analytics extends AnalyticsAttributes {
     try {
       return await this.api_object.request_data(`\
 /v5/user_account/analytics?\
+${this.uri_attributes('metric_types', false)}`);
+    } finally {
+      delete this.attrs.ad_account_id;
+    }
+  }
+}
+
+/*
+ * This class retrieves pin (also "organic") metrics
+ * using the v5 interface.
+ *
+ * The attribute functions are chainable. For example:
+ *    PinAnalytics(null, api_config, access_token)
+ *    .last_30_days()
+ *    .metrics(['IMPRESSION', 'PIN_CLICK_RATE'])
+ *
+ * The AnalyticsAttributes parent class implements parameters that
+ * are common to all analytics reports.
+ *
+ * The ApiObject container implements the REST transaction used
+ * to fetch the metrics.
+ */
+export class PinAnalytics extends AnalyticsAttributes {
+  // https://developers.pinterest.com/docs/api/v5/#operation/pins/analytics
+  constructor(pin_id, api_config, access_token) {
+    super();
+    this.pin_id = pin_id;
+    this.api_object = new ApiObject(api_config, access_token);
+    Object.assign(this.enumerated_values, {
+      app_types: ['ALL', 'MOBILE', 'TABLET', 'WEB'],
+      split_field: [
+        'NO_SPLIT',
+        'APP_TYPE'
+      ]
+    });
+  }
+
+  // chainable attribute setters...
+
+  app_types(app_types) {
+    this.attrs.app_types = app_types;
+    return this;
+  }
+
+  split_field(split_field) {
+    this.attrs.split_field = split_field;
+    return this;
+  }
+
+  // Get analytics for the pin. If ad_account_id is set, get pin
+  // analytics associated with the specified Ad Account.
+  async get(ad_account_id) {
+    if (ad_account_id) {
+      this.attrs.ad_account_id = ad_account_id;
+    }
+
+    try {
+      return await this.api_object.request_data(`\
+/v5/pins/${this.pin_id}/analytics?\
 ${this.uri_attributes('metric_types', false)}`);
     } finally {
       delete this.attrs.ad_account_id;
