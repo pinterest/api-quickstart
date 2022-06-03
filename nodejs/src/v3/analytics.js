@@ -118,7 +118,7 @@ ${this.uri_attributes('metric_types', false)}`);
  */
 export class PinAnalytics {
   constructor(_pin_id, _api_config, _access_token) {
-    throw new Error('Pin analytics are not supported in API v3. try v5 instead.');
+    throw new Error('Pin analytics are supported in API v5, but not v3 or v4.');
   }
 }
 

@@ -71,7 +71,7 @@ start_date=2021-03-01&end_date=2021-03-31\
         'test_user_id', 'test_api_config', 'test_access_token');
       /* eslint-enable no-unused-vars */
     }).toThrowError(
-      new Error('Pin analytics are not supported in API v3. try v5 instead.'));
+      new Error('Pin analytics are supported in API v5, but not v3 or v4.'));
   });
 
   test('v4 ads analytics', async() => {
