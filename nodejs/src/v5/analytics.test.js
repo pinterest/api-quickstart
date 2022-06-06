@@ -1,4 +1,4 @@
-import { Analytics, AdAnalytics } from './analytics.js';
+import { UserAnalytics, PinAnalytics, AdAnalytics } from './analytics.js';
 import { ApiObject } from '../api_object.js';
 
 jest.mock('../api_object');
@@ -8,8 +8,8 @@ describe('v5 analytics tests', () => {
     jest.clearAllMocks();
   });
 
-  test('v5 analytics', async() => {
-    const analytics = new Analytics(
+  test('v5 user analytics', async() => {
+    const analytics = new UserAnalytics(
       'test_user_id', 'test_api_config', 'test_access_token')
       .start_date('2021-03-01')
       .end_date('2021-03-31')
@@ -36,13 +36,8 @@ start_date=2021-03-01&end_date=2021-03-31\
 &ad_account_id=test_ad_account\
 &from_claimed_content=Both&pin_format=regular');
 
-    analytics.app_types('web');
-
-    expect(() => {
-      analytics.split_field('SOURCE');
-    }).toThrowError(
-      new Error('split_field attribute not yet implemented in the Pinterest API')
-    );
+    // add a couple of fields
+    analytics.app_types('web').split_field('PIN_FORMAT');
 
     // verifies additional parameters and no ad_account_id
     expect(await analytics.get(null)).toEqual('test_response');
@@ -52,7 +47,46 @@ start_date=2021-03-01&end_date=2021-03-31\
 start_date=2021-03-01&end_date=2021-03-31\
 &metric_types=IMPRESSION,PIN_CLICK_RATE\
 &app_types=web\
-&from_claimed_content=Both&pin_format=regular');
+&from_claimed_content=Both&pin_format=regular\
+&split_field=PIN_FORMAT');
+  });
+
+  test('v5 pin analytics', async() => {
+    const analytics = new PinAnalytics(
+      'test_pin_id', 'test_api_config', 'test_access_token')
+      .start_date('2021-03-01')
+      .end_date('2021-03-31')
+      .metrics(['PIN_CLICK', 'IMPRESSION']);
+
+    expect(ApiObject.mock.instances.length).toBe(1);
+    expect(ApiObject.mock.calls[0]).toEqual(
+      ['test_api_config', 'test_access_token']);
+
+    const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
+    mock_request_data.mockResolvedValue('test_response');
+
+    expect(await analytics.get('test_ad_account'))
+      .toEqual('test_response');
+
+    // note that metrics should be sorted
+    expect(mock_request_data.mock.calls[0][0])
+      .toEqual('\
+/v5/pins/test_pin_id/analytics?\
+start_date=2021-03-01&end_date=2021-03-31\
+&metric_types=IMPRESSION,PIN_CLICK\
+&ad_account_id=test_ad_account');
+
+    analytics.app_types('WEB');
+    analytics.split_field('APP_TYPE');
+
+    // verifies additional parameters and no ad_account_id
+    expect(await analytics.get(null)).toEqual('test_response');
+    expect(mock_request_data.mock.calls[1][0])
+      .toEqual('\
+/v5/pins/test_pin_id/analytics?\
+start_date=2021-03-01&end_date=2021-03-31\
+&metric_types=IMPRESSION,PIN_CLICK\
+&app_types=WEB&split_field=APP_TYPE');
   });
 
   test('v5 ads analytics', async() => {

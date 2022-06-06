@@ -3,16 +3,20 @@ import { ApiObject } from '../api_object.js';
 
 /**
  * This module uses Pinterest API v3 and v4 in two classes:
- * - Analytics synchronously retrieves user (organic) reports.
+ * - UserAnalytics synchronously retrieves user (organic) reports.
  * - AdAnalytics synchronously retrieves advertising reports.
+ *
+ * It also provides an implementation of the PinAnalytics class that
+ * just throws an error indicating that analytics for pins are only
+ * supported in API version 5.
  */
 
 /*
  * This class retrieves user (sometimes called "organic") metrics
- * using the v3 interface.
+ * for users with the v3 interface.
  *
  * The attribute functions are chainable. For example:
- *    Analytics(user_me_data['id'], api_config, access_token)
+ *    UserAnalytics(user_me_data['id'], api_config, access_token)
  *    .last_30_days()
  *    .metrics(['IMPRESSION', 'PIN_CLICK_RATE'])
  *
@@ -22,7 +26,7 @@ import { ApiObject } from '../api_object.js';
  * The ApiObject container implements the REST transaction used
  * to fetch the metrics.
  */
-export class Analytics extends AnalyticsAttributes {
+export class UserAnalytics extends AnalyticsAttributes {
   // https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/v3_analytics_partner_metrics_GET
   constructor(user_id, api_config, access_token) {
     super();
@@ -105,6 +109,16 @@ export class Analytics extends AnalyticsAttributes {
     return await this.api_object.request_data(`\
 /v3/partners/analytics/users/${this.user_id}/metrics/?\
 ${this.uri_attributes('metric_types', false)}`);
+  }
+}
+
+/*
+ * This class throws an error that indicates that pin
+ * analytics are not supported in v3.
+ */
+export class PinAnalytics {
+  constructor(_pin_id, _api_config, _access_token) {
+    throw new Error('Pin analytics are supported in API v5, but not v3 or v4.');
   }
 }
 

@@ -104,8 +104,11 @@ async function main(argv) {
   });
   parser.add_argument('-o', '--analytics-object', {
     default: 'user',
-    choices: ['user', 'ad_account_user', 'ad_account', 'campaign', 'ad_group', 'ad'],
+    choices: ['user', 'pin', 'ad_account_user', 'ad_account', 'campaign', 'ad_group', 'ad'],
     help: 'kind of object used to fetch analytics'
+  });
+  parser.add_argument('--pin-id', {
+    help: 'Get analytics for this pin identifier.'
   });
   parser.add_argument('--ad-account-id', {
     help: 'Get analytics for this ad account identifier.'
@@ -144,9 +147,22 @@ async function main(argv) {
   // imports that depend on the version of the API
   const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
   const { Advertisers } = await import(`../src/${api_config.version}/advertisers.js`);
-  const { Analytics, AdAnalytics } = await import(`../src/${api_config.version}/analytics.js`);
+  const { UserAnalytics, PinAnalytics, AdAnalytics } = await import(`../src/${api_config.version}/analytics.js`);
   const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
   const { User } = await import(`../src/${api_config.version}/user.js`);
+
+  // This API edge case is best handled up right after API set-up...
+  if (api_config.version < 'v5' && args.analytics_object === 'pin') {
+    console.log('Pin analytics are supported by Pinterest API v5, but not v3 or v4.');
+    console.log('Try using -v5 or an analytics object besides pin.');
+    process.exit(1);
+  }
+
+  // Requesting pin analytics requires a pin_id.
+  if (args.analytics_object === 'pin' && !args.pin_id) {
+    console.log('Pin analytics require a pin identifier.');
+    process.exit(1);
+  }
 
   // This API edge case is best handled up right after API set-up...
   if (api_config.version < 'v5' && args.analytics_object === 'ad_account_user') {
@@ -175,15 +191,23 @@ async function main(argv) {
   try {
     if (args.analytics_object === 'user') {
       // Get analytics for the user account associated with the access token.
-      const analytics = new Analytics(
+      const analytics = new UserAnalytics(
         user_me_data.id, api_config, access_token)
         .last_30_days()
         .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);
 
       results = await analytics.get(null); // not calling with an ad_account_id argument
+    } else if (args.analytics_object === 'pin') {
+      // Get analytics for the pin.
+      const analytics = new PinAnalytics(
+        args.pin_id, api_config, access_token)
+        .last_30_days()
+        .metrics(['IMPRESSION', 'PIN_CLICK']);
+
+      results = await analytics.get(args.ad_account_id);
     } else if (args.analytics_object === 'ad_account_user') {
       // Get analytics for the user account associated with an ad account.
-      const analytics = new Analytics(
+      const analytics = new UserAnalytics(
         user_me_data.id, api_config, access_token)
         .last_30_days()
         .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);

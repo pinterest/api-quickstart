@@ -1,4 +1,4 @@
-import { Analytics, AdAnalytics } from './analytics.js';
+import { UserAnalytics, PinAnalytics, AdAnalytics } from './analytics.js';
 import { ApiObject } from '../api_object.js';
 
 jest.mock('../api_object');
@@ -8,8 +8,8 @@ describe('v3 analytics tests', () => {
     jest.clearAllMocks();
   });
 
-  test('v3 analytics', async() => {
-    const analytics = new Analytics(
+  test('v3 user analytics', async() => {
+    const analytics = new UserAnalytics(
       'test_user_id', 'test_api_config', 'test_access_token')
       .start_date('2021-03-01')
       .end_date('2021-03-31')
@@ -62,6 +62,16 @@ start_date=2021-03-01&end_date=2021-03-31\
 &from_owned_content=1\
 &in_profile=0&include_curated=1&paid=2\
 &pin_format=standard&publish_types=all');
+  });
+
+  test('v3 pin analytics', async() => {
+    expect(() => {
+      /* eslint-disable no-unused-vars */
+      const analytics = new PinAnalytics(
+        'test_user_id', 'test_api_config', 'test_access_token');
+      /* eslint-enable no-unused-vars */
+    }).toThrowError(
+      new Error('Pin analytics are supported in API v5, but not v3 or v4.'));
   });
 
   test('v4 ads analytics', async() => {
