@@ -86,9 +86,9 @@ ${this.uri_attributes('metric_types', false)}`);
  * using the v5 interface.
  *
  * The attribute functions are chainable. For example:
- *    PinAnalytics(null, api_config, access_token)
+ *    PinAnalytics(pin_id, api_config, access_token)
  *    .last_30_days()
- *    .metrics(['IMPRESSION', 'PIN_CLICK_RATE'])
+ *    .metrics(['IMPRESSION', 'PIN_CLICK'])
  *
  * The AnalyticsAttributes parent class implements parameters that
  * are common to all analytics reports.
