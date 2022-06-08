@@ -162,7 +162,7 @@ def main(argv=[]):
             .last_30_days()
             .metrics({"IMPRESSION", "PIN_CLICK"})
         )
-        results = analytics.get(args.account_id)  # account id may be None
+        results = analytics.get(args.ad_account_id)  # ad account id may be None
     elif args.analytics_object == "ad_account_user":
         # Get analytics for the user account associated with an ad account.
         analytics = (
