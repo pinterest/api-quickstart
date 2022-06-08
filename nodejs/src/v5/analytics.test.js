@@ -77,7 +77,7 @@ start_date=2021-03-01&end_date=2021-03-31\
 &ad_account_id=test_ad_account');
 
     analytics.app_types('WEB');
-    analytics.split_field('APP_TYPE');
+    analytics.split_field('NO_SPLIT');
 
     // verifies additional parameters and no ad_account_id
     expect(await analytics.get(null)).toEqual('test_response');
@@ -86,7 +86,7 @@ start_date=2021-03-01&end_date=2021-03-31\
 /v5/pins/test_pin_id/analytics?\
 start_date=2021-03-01&end_date=2021-03-31\
 &metric_types=IMPRESSION,PIN_CLICK\
-&app_types=WEB&split_field=APP_TYPE');
+&app_types=WEB&split_field=NO_SPLIT');
   });
 
   test('v5 ads analytics', async() => {
