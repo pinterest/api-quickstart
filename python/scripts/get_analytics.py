@@ -74,12 +74,18 @@ def main(argv=[]):
         "-o",
         "--analytics-object",
         default="user",
-        choices=["user", "pin", "ad_account_user", "ad_account", "campaign", "ad_group", "ad"],
+        choices=[
+            "user",
+            "pin",
+            "ad_account_user",
+            "ad_account",
+            "campaign",
+            "ad_group",
+            "ad",
+        ],
         help="kind of object used to fetch analytics",
     )
-    parser.add_argument(
-        "--pin-id", help="Get analytics for this pin identifier."
-    )
+    parser.add_argument("--pin-id", help="Get analytics for this pin identifier.")
     parser.add_argument(
         "--ad-account-id", help="Get analytics for this ad account identifier."
     )

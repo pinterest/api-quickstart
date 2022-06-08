@@ -99,6 +99,7 @@ class PinAnalytics(AnalyticsAttributes, ApiObject):
     This class throws an error that indicates that pin
     analytics are not supported in v3.
     """
+
     def __init__(self, _user_id, _api_config, _access_token):
         raise RuntimeError("Pin analytics are supported in API v5, but not v3 or v4.")
 

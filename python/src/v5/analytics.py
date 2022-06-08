@@ -108,7 +108,7 @@ class PinAnalytics(AnalyticsAttributes, ApiObject):
                 "split_field": {
                     "NO_SPLIT",
                     "APP_TYPE",
-                 },
+                },
             }
         )
 
