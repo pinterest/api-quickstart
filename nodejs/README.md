@@ -263,8 +263,8 @@ Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://
 ```
 $ ./scripts/get_user_boards.js --help
 
-usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived]
-                          [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived] [--no-include-archived]
+                          [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get A User's Boards
 
@@ -351,13 +351,21 @@ Reads information about advertiser accounts, campaigns, ad groups, and ads. By d
 ```
 $ ./scripts/get_ads.js --help
 
-usage: get_ads.js [-h] [--all-ads] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_ads.js [-h] [--all-ads] [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID]
+                  [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Advertisers API Example
 
 optional arguments:
   -h, --help            show this help message and exit
   --all-ads             print all ads information
+  --ad-account-id AD_ACCOUNT_ID
+                        Get analytics for this ad account identifier.
+  --campaign-id CAMPAIGN_ID
+                        Get analytics for this campaign identifier.
+  --ad-group-id AD_GROUP_ID
+                        Get analytics for this ad group identifier.
+  --ad-id AD_ID         Get analytics for this ad identifier.
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
@@ -373,16 +381,17 @@ Demonstrates how to use the API to retrieve analytics metrics with synchronous r
 ```
 $ ./scripts/get_analytics.js --help
 
-usage: get_analytics.js [-h] [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}] [--ad-account-id AD_ACCOUNT_ID]
-                        [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN]
-                        [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_analytics.js [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID]
+                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
+                        [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get Analytics
 
 optional arguments:
   -h, --help            show this help message and exit
-  -o {user,ad_account_user,ad_account,campaign,ad_group,ad}, --analytics-object {user,ad_account_user,ad_account,campaign,ad_group,ad}
+  -o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}, --analytics-object {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}
                         kind of object used to fetch analytics
+  --pin-id PIN_ID       Get analytics for this pin identifier.
   --ad-account-id AD_ACCOUNT_ID
                         Get analytics for this ad account identifier.
   --campaign-id CAMPAIGN_ID

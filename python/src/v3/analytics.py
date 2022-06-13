@@ -4,11 +4,14 @@ from api_object import ApiObject
 #
 # This module uses Pinterest API v3 and v4 in two classes:
 # * Analytics synchronously retrieves user (organic) reports.
-# * AdAnalytics synchronously retrieves advertising reports.
+# * UserAnalytics synchronously retrieves advertising reports.
 #
+# It also provides an implementation of the PinAnalytics class that
+# just throws an error indicating that analytics for pins are only
+# supported in API version 5.
 
 
-class Analytics(AnalyticsAttributes, ApiObject):
+class UserAnalytics(AnalyticsAttributes, ApiObject):
     """
     This class retrieves user (sometimes called "organic") metrics
     using the v3 interface.
@@ -89,6 +92,16 @@ class Analytics(AnalyticsAttributes, ApiObject):
     def include_curated(self, include_curated):
         self.attrs["include_curated"] = include_curated
         return self
+
+
+class PinAnalytics(AnalyticsAttributes, ApiObject):
+    """
+    This class throws an error that indicates that pin
+    analytics are not supported in v3.
+    """
+
+    def __init__(self, _user_id, _api_config, _access_token):
+        raise RuntimeError("Pin analytics are supported in API v5, but not v3 or v4.")
 
 
 class AdAnalytics(AdAnalyticsAttributes, ApiObject):

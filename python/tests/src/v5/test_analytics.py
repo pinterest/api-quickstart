@@ -1,15 +1,15 @@
 import unittest
 from unittest import mock
 
-from v5.analytics import AdAnalytics, Analytics
+from v5.analytics import AdAnalytics, PinAnalytics, UserAnalytics
 
 
-class AnalyticsTest(unittest.TestCase):
+class UserAnalyticsTest(unittest.TestCase):
     @mock.patch("v5.analytics.ApiObject.request_data")
     @mock.patch("v5.analytics.ApiObject.__init__")
-    def test_analytics(self, mock_init, mock_request_data):
+    def test_user_analytics(self, mock_init, mock_request_data):
         analytics = (
-            Analytics("test_user_id", "test_api_config", "test_access_token")
+            UserAnalytics("test_user_id", "test_api_config", "test_access_token")
             .start_date("2021-03-01")
             .end_date("2021-03-31")
             .metrics({"PIN_CLICK_RATE", "IMPRESSION"})
@@ -34,12 +34,7 @@ class AnalyticsTest(unittest.TestCase):
         mock_request_data.reset_mock()
 
         analytics.app_types("web")
-
-        with self.assertRaisesRegex(
-            AttributeError,
-            "split_field attribute not yet implemented in the Pinterest API",
-        ):
-            analytics.split_field("SOURCE")
+        analytics.split_field("PIN_FORMAT")
 
         # verifies additional parameters and no ad_account_id
         self.assertEqual("test_response", analytics.get())
@@ -49,6 +44,7 @@ class AnalyticsTest(unittest.TestCase):
             "&metric_types=IMPRESSION,PIN_CLICK_RATE"
             "&app_types=web"
             "&from_claimed_content=Both&pin_format=regular"
+            "&split_field=PIN_FORMAT"
         )
         mock_request_data.reset_mock()
         # testing with tablet app type
@@ -60,6 +56,7 @@ class AnalyticsTest(unittest.TestCase):
             "&metric_types=IMPRESSION,PIN_CLICK_RATE"
             "&app_types=tablet"
             "&from_claimed_content=Both&pin_format=regular"
+            "&split_field=PIN_FORMAT"
         )
         mock_request_data.reset_mock()
         # testing with mobile app type
@@ -71,6 +68,7 @@ class AnalyticsTest(unittest.TestCase):
             "&metric_types=IMPRESSION,PIN_CLICK_RATE"
             "&app_types=mobile"
             "&from_claimed_content=Both&pin_format=regular"
+            "&split_field=PIN_FORMAT"
         )
         mock_request_data.reset_mock()
         # testing with all app types
@@ -82,6 +80,82 @@ class AnalyticsTest(unittest.TestCase):
             "&metric_types=IMPRESSION,PIN_CLICK_RATE"
             "&app_types=all"
             "&from_claimed_content=Both&pin_format=regular"
+            "&split_field=PIN_FORMAT"
+        )
+        mock_request_data.reset_mock()
+
+
+class PinAnalyticsTest(unittest.TestCase):
+    @mock.patch("v5.analytics.ApiObject.request_data")
+    @mock.patch("v5.analytics.ApiObject.__init__")
+    def test_pin_analytics(self, mock_init, mock_request_data):
+        analytics = (
+            PinAnalytics("test_user_id", "test_api_config", "test_access_token")
+            .start_date("2021-03-01")
+            .end_date("2021-03-31")
+            .metrics({"PIN_CLICK", "IMPRESSION"})
+        )
+
+        mock_init.assert_called_once_with("test_api_config", "test_access_token")
+
+        mock_request_data.return_value = "test_response"
+        self.assertEqual(
+            "test_response", analytics.get(ad_account_id="test_ad_account")
+        )
+        # note that metrics should be sorted
+        mock_request_data.assert_called_once_with(
+            "/v5/pins/test_user_id/analytics?"
+            "start_date=2021-03-01&end_date=2021-03-31"
+            "&metric_types=IMPRESSION,PIN_CLICK"
+            "&ad_account_id=test_ad_account"
+        )
+        mock_request_data.reset_mock()
+
+        analytics.app_types("web")
+        analytics.split_field("NO_SPLIT")
+
+        # verifies additional parameters and no ad_account_id
+        self.assertEqual("test_response", analytics.get())
+        mock_request_data.assert_called_once_with(
+            "/v5/pins/test_user_id/analytics?"
+            "start_date=2021-03-01&end_date=2021-03-31"
+            "&metric_types=IMPRESSION,PIN_CLICK"
+            "&app_types=web"
+            "&split_field=NO_SPLIT"
+        )
+        mock_request_data.reset_mock()
+
+        # testing with tablet app type
+        analytics.app_types("tablet")
+        self.assertEqual("test_response", analytics.get())
+        mock_request_data.assert_called_once_with(
+            "/v5/pins/test_user_id/analytics?"
+            "start_date=2021-03-01&end_date=2021-03-31"
+            "&metric_types=IMPRESSION,PIN_CLICK"
+            "&app_types=tablet"
+            "&split_field=NO_SPLIT"
+        )
+        mock_request_data.reset_mock()
+        # testing with mobile app type
+        analytics.app_types("mobile")
+        self.assertEqual("test_response", analytics.get())
+        mock_request_data.assert_called_once_with(
+            "/v5/pins/test_user_id/analytics?"
+            "start_date=2021-03-01&end_date=2021-03-31"
+            "&metric_types=IMPRESSION,PIN_CLICK"
+            "&app_types=mobile"
+            "&split_field=NO_SPLIT"
+        )
+        mock_request_data.reset_mock()
+        # testing with all app types
+        analytics.app_types("all")
+        self.assertEqual("test_response", analytics.get())
+        mock_request_data.assert_called_once_with(
+            "/v5/pins/test_user_id/analytics?"
+            "start_date=2021-03-01&end_date=2021-03-31"
+            "&metric_types=IMPRESSION,PIN_CLICK"
+            "&app_types=all"
+            "&split_field=NO_SPLIT"
         )
         mock_request_data.reset_mock()
 

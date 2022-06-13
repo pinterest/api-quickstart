@@ -256,8 +256,8 @@ optional arguments:
 ```
 $ ./scripts/get_user_boards.py --help
 
-usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived]
-                          [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived] [--no-include-archived]
+                          [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get A User's Boards
 
@@ -311,8 +311,8 @@ optional arguments:
 ```
 $ ./scripts/copy_board.py --help
 
-usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run]
-                     [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run] [-a ACCESS_TOKEN]
+                     [-l LOG_LEVEL] [-v API_VERSION]
 
 Copy one Board or all Boards
 
@@ -362,16 +362,17 @@ optional arguments:
 ```
 $ ./scripts/get_analytics.py --help
 
-usage: get_analytics.py [-h] [-o {user,ad_account_user,ad_account,campaign,ad_group,ad}] [--ad-account-id AD_ACCOUNT_ID]
-                        [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
-                        [-v API_VERSION]
+usage: get_analytics.py [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID]
+                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
+                        [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
 
 Get Analytics
 
 optional arguments:
   -h, --help            show this help message and exit
-  -o {user,ad_account_user,ad_account,campaign,ad_group,ad}, --analytics-object {user,ad_account_user,ad_account,campaign,ad_group,ad}
+  -o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}, --analytics-object {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}
                         kind of object used to fetch analytics
+  --pin-id PIN_ID       Get analytics for this pin identifier.
   --ad-account-id AD_ACCOUNT_ID
                         Get analytics for this ad account identifier.
   --campaign-id CAMPAIGN_ID

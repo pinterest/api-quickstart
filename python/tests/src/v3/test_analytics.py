@@ -1,15 +1,15 @@
 import unittest
 from unittest import mock
 
-from v3.analytics import AdAnalytics, Analytics
+from v3.analytics import AdAnalytics, PinAnalytics, UserAnalytics
 
 
-class AnalyticsTest(unittest.TestCase):
+class UserAnalyticsTest(unittest.TestCase):
     @mock.patch("v3.analytics.ApiObject.request_data")
     @mock.patch("v3.analytics.ApiObject.__init__")
-    def test_analytics(self, mock_init, mock_request_data):
+    def test_user_analytics(self, mock_init, mock_request_data):
         analytics = (
-            Analytics("test_user_id", "test_api_config", "test_access_token")
+            UserAnalytics("test_user_id", "test_api_config", "test_access_token")
             .start_date("2021-03-01")
             .end_date("2021-03-31")
             .metrics({"TOTAL_CLICKTHROUGH", "SPEND_IN_DOLLAR"})
@@ -55,6 +55,15 @@ class AnalyticsTest(unittest.TestCase):
             ValueError, r"downstream: not_valid is not one of \[0, 1, 2\]"
         ):
             analytics.get()
+
+
+class PinAnalyticsTest(unittest.TestCase):
+    def test_user_analytics(self):
+        # verify that instantiating a PinAnalytics object throws an error
+        with self.assertRaisesRegex(
+            RuntimeError, "Pin analytics are supported in API v5, but not v3 or v4."
+        ):
+            PinAnalytics("test_pin_id", "test_api_config", "test_access_token")
 
 
 class AdAnalyticsTest(unittest.TestCase):

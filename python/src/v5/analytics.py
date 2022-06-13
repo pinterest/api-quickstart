@@ -2,19 +2,20 @@ from analytics_attributes import AdAnalyticsAttributes, AnalyticsAttributes
 from api_object import ApiObject
 
 #
-# This module uses Pinterest API v5 in two classes:
-# * Analytics synchronously retrieves user (organic) reports.
+# This module uses Pinterest API v5 in three classes:
+# * UserAnalytics synchronously retrieves user (organic) reports.
+# * PinAnalytics synchronously retrieves pin (organic) reports.
 # * AdAnalytics synchronously retrieves advertising reports.
 #
 
 
-class Analytics(AnalyticsAttributes, ApiObject):
+class UserAnalytics(AnalyticsAttributes, ApiObject):
     """
     This class retrieves user (sometimes called "organic") metrics
     using the v5 interface.
 
     The attribute functions are chainable. For example:
-       Analytics(user_me_data.get("id"), api_config, access_token)
+       UserAnalytics(user_me_data.get("id"), api_config, access_token)
        .last_30_days()
        .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
 
@@ -38,11 +39,8 @@ class Analytics(AnalyticsAttributes, ApiObject):
                 "split_field": {
                     "NO_SPLIT",
                     "APP_TYPE",
-                    "CONTENT_TYPE",
                     "OWNED_CONTENT",
-                    "SOURCE",
-                    "PIN_FORMAT_CONVERSION_TYPE",
-                    "ATTRIBUTION_EVENT",
+                    "PIN_FORMAT",
                 },
             }
         )
@@ -62,23 +60,8 @@ class Analytics(AnalyticsAttributes, ApiObject):
         return self
 
     def split_field(self, split_field):
-        """
-        The split_field attribute is not yet implemented in the Pinterest API.
-        To work around this issue, use the appropriate filter attribute
-        and send multiple requests. For example, instead of setting
-        split_field to app_type, send three requests -- each with one of
-        the possible app_types: mobile, tablet, and web.
-        """
-        raise AttributeError(
-            "split_field attribute not yet implemented in the Pinterest API"
-        )
-
-        # When the split_field attribute is implemented in the Pinterest API,
-        # remove the above comment and Error and uncomment the next two lines
-        # of code.
-
-        # self.attrs["split_field"] = split_field
-        # return self
+        self.attrs["split_field"] = split_field
+        return self
 
     # https://developers.pinterest.com/docs/api/v5/#operation/user_account/analytics
     def get(self, ad_account_id=None):
@@ -91,6 +74,65 @@ class Analytics(AnalyticsAttributes, ApiObject):
         try:
             return self.request_data(
                 "/v5/user_account/analytics?"
+                + self.uri_attributes("metric_types", False)
+            )
+        finally:
+            self.attrs.pop("ad_account_id", None)
+
+
+class PinAnalytics(AnalyticsAttributes, ApiObject):
+    """
+    This class retrieves pin (also "organic") metrics
+    using the v5 interface.
+
+    https://developers.pinterest.com/docs/api/v5/#operation/pins/analytics
+
+    The attribute functions are chainable. For example:
+       PinAnalytics(user_id, api_config, access_token)
+       .last_30_days()
+       .metrics({"IMPRESSION", "PIN_CLICK"})
+
+    The AnalyticsAttributes parent class implements parameters that
+    are common to all analytics reports.
+
+    The ApiObject parent class implements the REST transaction used
+    to fetch the metrics.
+    """
+
+    def __init__(self, pin_id, api_config, access_token):
+        super().__init__(api_config, access_token)
+        self.pin_id = pin_id
+        self.enumerated_values.update(
+            {
+                "app_types": {"all", "mobile", "tablet", "web"},
+                "split_field": {
+                    "NO_SPLIT",
+                    "APP_TYPE",
+                },
+            }
+        )
+
+        # chainable attribute setters...
+
+    def app_types(self, app_types):
+        self.attrs["app_types"] = app_types
+        return self
+
+    def split_field(self, split_field):
+        self.attrs["split_field"] = split_field
+        return self
+
+    # https://developers.pinterest.com/docs/api/v5/#operation/user_account/analytics
+    def get(self, ad_account_id=None):
+        """
+        Get analytics for the pin. If ad_account_id is set, get pin
+        analytics associated with the specified Ad Account.
+        """
+        if ad_account_id:
+            self.attrs["ad_account_id"] = ad_account_id
+        try:
+            return self.request_data(
+                f"/v5/pins/{self.pin_id}/analytics?"
                 + self.uri_attributes("metric_types", False)
             )
         finally:

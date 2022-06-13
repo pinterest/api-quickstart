@@ -74,9 +74,18 @@ def main(argv=[]):
         "-o",
         "--analytics-object",
         default="user",
-        choices=["user", "ad_account_user", "ad_account", "campaign", "ad_group", "ad"],
+        choices=[
+            "user",
+            "pin",
+            "ad_account_user",
+            "ad_account",
+            "campaign",
+            "ad_group",
+            "ad",
+        ],
         help="kind of object used to fetch analytics",
     )
+    parser.add_argument("--pin-id", help="Get analytics for this pin identifier.")
     parser.add_argument(
         "--ad-account-id", help="Get analytics for this ad account identifier."
     )
@@ -104,16 +113,27 @@ def main(argv=[]):
     api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
     # This API edge case is best handled up right after API set-up...
+    if api_config.version < "v5" and args.analytics_object == "pin":
+        print("Pin analytics for shared accounts are")
+        print("supported by Pinterest API v5, but not v3 or v4.")
+        print("Try using -v5 or an analytics object besides pin.")
+        exit(1)
+
     if api_config.version < "v5" and args.analytics_object == "ad_account_user":
         print("User account analytics for shared accounts are")
         print("supported by Pinterest API v5, but not v3 or v4.")
         print("Try using -v5 or an analytics object besides ad_account_user.")
         exit(1)
 
+    # Requesting pin analytics requires a pin_id.
+    if args.analytics_object == "pin" and not args.pin_id:
+        print("Pin analytics require a pin identifier.")
+        exit(1)
+
     # imports that depend on the version of the API
     from access_token import AccessToken
     from advertisers import Advertisers
-    from analytics import AdAnalytics, Analytics
+    from analytics import AdAnalytics, PinAnalytics, UserAnalytics
     from oauth_scope import Scope
     from user import User
 
@@ -136,15 +156,23 @@ def main(argv=[]):
     if args.analytics_object == "user":
         # Get analytics for the user account associated with the access token.
         analytics = (
-            Analytics(user_me_data.get("id"), api_config, access_token)
+            UserAnalytics(user_me_data.get("id"), api_config, access_token)
             .last_30_days()
             .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
         )
         results = analytics.get()  # not calling with an ad_account_id argument
+    elif args.analytics_object == "pin":
+        # Get analytics for the pin.
+        analytics = (
+            PinAnalytics(args.pin_id, api_config, access_token)
+            .last_30_days()
+            .metrics({"IMPRESSION", "PIN_CLICK"})
+        )
+        results = analytics.get(args.ad_account_id)  # ad account id may be None
     elif args.analytics_object == "ad_account_user":
         # Get analytics for the user account associated with an ad account.
         analytics = (
-            Analytics(user_me_data.get("id"), api_config, access_token)
+            UserAnalytics(user_me_data.get("id"), api_config, access_token)
             .last_30_days()
             .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
         )

@@ -62,12 +62,10 @@ for VERSION in ${VERSIONS} ; do
 done
 
 # Pin analytics only work with v5. For now, only nodejs. Python is on the backlog.
-if [[ "${EXT}" == "js" ]] ; then
-    DOCNAME=${OUTPUT_PREFIX}_pin_analytics.json
-    printf "${DOCNAME}\n" | \
-        ./scripts/get_analytics.${EXT} -a ${TEST1}_v5 -v5 -o pin --pin-id ${PIN}
-    wc ${DOCNAME}
-fi
+DOCNAME=${OUTPUT_PREFIX}_pin_analytics.json
+printf "${DOCNAME}\n" | \
+    ./scripts/get_analytics.${EXT} -a ${TEST1}_v5 -v5 -o pin --pin-id ${PIN}
+wc ${DOCNAME}
 
 # delete output files
 rm -f ${OUTPUT_PREFIX}_*.json
