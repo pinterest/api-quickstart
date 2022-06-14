@@ -1,5 +1,8 @@
+SCRIPTS=scripts/*.sh scripts/*/*.sh
 lint:
-	shellcheck scripts/*.sh scripts/*/*.sh
+	shellcheck $(SCRIPTS)
 
+# Empty input causes "git apply" to terminate with "error: unrecognized input" and a non-zero exit code.
+# So, run the lint fixer if there is something to fix.
 lint-fix:
-	shellcheck --format diff scripts/*.sh scripts/*/*.sh | git apply
+	shellcheck $(SCRIPTS) > /dev/null || shellcheck --format diff $(SCRIPTS) | git apply
