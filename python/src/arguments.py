@@ -1,4 +1,4 @@
-# functions relating to command-line arguments
+# functions relating to command-line arguments used by scripts
 import argparse
 
 
