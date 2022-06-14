@@ -12,10 +12,10 @@
 #
 
 # Get configuration from environment or defaults.
-: ${REDIRECT_PORT:=8085}
-: ${PINTEREST_API_URI:=https://api.pinterest.com}
-: ${PINTEREST_OAUTH_URI:=https://www.pinterest.com}
-: ${REDIRECT_LANDING_URI:=https://developers.pinterest.com/apps/${PINTEREST_APP_ID}}
+: "${REDIRECT_PORT:=8085}"
+: "${PINTEREST_API_URI:=https://api.pinterest.com}"
+: "${PINTEREST_OAUTH_URI:=https://www.pinterest.com}"
+: "${REDIRECT_LANDING_URI:=https://developers.pinterest.com/apps/${PINTEREST_APP_ID}}"
 REDIRECT_URI="http://localhost:${REDIRECT_PORT}/"
 
 # Note that the application id and secrect have no defaults,
@@ -56,7 +56,7 @@ echo 'exchanging auth_code for access_token...'
 OAUTH_RESPONSE=$(curl --silent -X POST --header "Authorization:Basic ${B64AUTH}" --header 'Content-Type: application/x-www-form-urlencoded' --data-urlencode 'grant_type=authorization_code' --data-urlencode "code=${AUTH_CODE}" --data-urlencode "redirect_uri=${REDIRECT_URI}" "${PINTEREST_API_URI}/v5/oauth/token")
 
 RESPONSE_TYPE=$(echo "$OAUTH_RESPONSE" | jq -r '.["response_type"]')
-echo response_type: $RESPONSE_TYPE
+echo response_type: "$RESPONSE_TYPE"
 
 # Parse the JSON returned by the exchange call and retrieve the access token.
 ACCESS_TOKEN=$(echo "$OAUTH_RESPONSE" | jq -r '.["access_token"]')
@@ -64,7 +64,7 @@ ACCESS_TOKEN=$(echo "$OAUTH_RESPONSE" | jq -r '.["access_token"]')
 # The scope returned in the response includes all of the scopes that
 # have been approved now or in the past by the user.
 SCOPE=$(echo "$OAUTH_RESPONSE" | jq -r '.["scope"]')
-echo scope: $SCOPE
+echo scope: "$SCOPE"
 
 # Demonstrate how to use the access token to get information about the associated user.
 echo 'getting user data using the access token'
@@ -77,13 +77,13 @@ USER_RESPONSE=$(curl --silent -X GET --header "Authorization:Bearer ${ACCESS_TOK
 #   --oauth2-bearer "${ACCESS_TOKEN}"
 
 # Parse the JSON response and print the data associated with the user.
-ACCOUNT_TYPE=$(echo ${USER_RESPONSE} | jq -r '.["account_type"]')
-USERNAME=$(echo ${USER_RESPONSE} | jq -r '.["username"]')
-PROFILE_IMAGE=$(echo ${USER_RESPONSE} | jq -r '.["profile_image"]')
-WEBSITE_URL=$(echo ${USER_RESPONSE} | jq -r '.["website_url"]')
+ACCOUNT_TYPE=$(echo "${USER_RESPONSE}" | jq -r '.["account_type"]')
+USERNAME=$(echo "${USER_RESPONSE}" | jq -r '.["username"]')
+PROFILE_IMAGE=$(echo "${USER_RESPONSE}" | jq -r '.["profile_image"]')
+WEBSITE_URL=$(echo "${USER_RESPONSE}" | jq -r '.["website_url"]')
 echo '--- User Summary ---'
-echo Account Type: $ACCOUNT_TYPE
-echo Username: $USERNAME
-echo Profile Image: $PROFILE_IMAGE
-echo Website URL: $WEBSITE_URL
+echo Account Type: "$ACCOUNT_TYPE"
+echo Username: "$USERNAME"
+echo Profile Image: "$PROFILE_IMAGE"
+echo Website URL: "$WEBSITE_URL"
 echo '--------------------'

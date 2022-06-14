@@ -12,10 +12,10 @@
 #
 
 # Get configuration from environment or defaults.
-: ${REDIRECT_PORT:=8085}
-: ${PINTEREST_API_URI:=https://api.pinterest.com}
-: ${PINTEREST_OAUTH_URI:=https://www.pinterest.com}
-: ${REDIRECT_LANDING_URI:=https://developers.pinterest.com/apps/${PINTEREST_APP_ID}}
+: "${REDIRECT_PORT:=8085}"
+: "${PINTEREST_API_URI:=https://api.pinterest.com}"
+: "${PINTEREST_OAUTH_URI:=https://www.pinterest.com}"
+: "${REDIRECT_LANDING_URI:=https://developers.pinterest.com/apps/${PINTEREST_APP_ID}}"
 REDIRECT_URI="http://localhost:${REDIRECT_PORT}/"
 
 # Note that the application id and secrect have no defaults,
@@ -65,7 +65,7 @@ OAUTH_RESPONSE=$(curl --silent -X PUT --header "Authorization:Basic ${B64AUTH}" 
 #   --basic --user "${PINTEREST_APP_ID}:${PINTEREST_APP_SECRET}"
 
 STATUS=$(echo "$OAUTH_RESPONSE" | jq -r '.["status"]')
-echo status: $STATUS
+echo status: "$STATUS"
 
 # Parse the JSON returned by the exchange call and retrieve the access token.
 ACCESS_TOKEN=$(echo "$OAUTH_RESPONSE" | jq -r '.["access_token"]')
@@ -73,7 +73,7 @@ ACCESS_TOKEN=$(echo "$OAUTH_RESPONSE" | jq -r '.["access_token"]')
 # The scope returned in the response includes all of the scopes that
 # have been approved now or in the past by the user.
 SCOPE=$(echo "$OAUTH_RESPONSE" | jq -r '.["scope"]')
-echo scope: $SCOPE
+echo scope: "$SCOPE"
 
 # Demonstrate how to use the access token to get information about the associated user.
 echo 'getting user data using the access token'
@@ -86,15 +86,15 @@ USER_RESPONSE=$(curl --silent -X GET --header "Authorization:Bearer ${ACCESS_TOK
 #   --oauth2-bearer "${ACCESS_TOKEN}"
 
 # Parse the JSON response and print the data associated with the user.
-USER_ID=$(echo ${USER_RESPONSE} | jq -r '.["data"]["id"]')
-FULL_NAME=$(echo ${USER_RESPONSE} | jq -r '.["data"]["full_name"]')
-ABOUT=$(echo ${USER_RESPONSE} | jq -r '.["data"]["about"]')
-PROFILE_URL=$(echo ${USER_RESPONSE} | jq -r '.["data"]["profile_url"]')
-PIN_COUNT=$(echo ${USER_RESPONSE} | jq -r '.["data"]["pin_count"]')
+USER_ID=$(echo "${USER_RESPONSE}" | jq -r '.["data"]["id"]')
+FULL_NAME=$(echo "${USER_RESPONSE}" | jq -r '.["data"]["full_name"]')
+ABOUT=$(echo "${USER_RESPONSE}" | jq -r '.["data"]["about"]')
+PROFILE_URL=$(echo "${USER_RESPONSE}" | jq -r '.["data"]["profile_url"]')
+PIN_COUNT=$(echo "${USER_RESPONSE}" | jq -r '.["data"]["pin_count"]')
 echo '--- User Summary ---'
-echo ID: $USER_ID
-echo Full Name: $FULL_NAME
-echo About: $ABOUT
-echo Profile URL: $PROFILE_URL
-echo Pin Count: $PIN_COUNT
+echo ID: "$USER_ID"
+echo Full Name: "$FULL_NAME"
+echo About: "$ABOUT"
+echo Profile URL: "$PROFILE_URL"
+echo Pin Count: "$PIN_COUNT"
 echo '--------------------'
