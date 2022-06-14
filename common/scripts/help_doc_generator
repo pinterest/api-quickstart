@@ -74,4 +74,4 @@ perl -0777 -p -i -e 's/
       # run the reference command
       $2
     )
-  /megx' $1 # execute the perl command, passing along the first script argument
+  /megx' "$1" # execute the perl command, passing along the first script argument

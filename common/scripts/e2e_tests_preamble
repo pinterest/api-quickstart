@@ -11,6 +11,9 @@
 # the API entities (TEST1, TEST2, TEST3, PIN, BOARD) could be factored out
 # in the same way that the api_app_credentials are factored out of api_env.
 #
+# The point of this script is to set up variables for other scripts,
+# so disable the associated shellcheck warning:
+#   shellcheck disable=SC2034 
 
 # exit on error, print all commands
 set -ex
@@ -24,7 +27,7 @@ fi
 
 # Verify that this script is being run in an appropriate directory,
 # and select the corresponding script filename extension.
-case "$(basename $(pwd))" in
+case "$(basename "$(pwd)")" in
     python) EXT=py ;;
     nodejs) EXT=js ;;
     *)
@@ -49,7 +52,7 @@ VIDEO_PIN_DESCRIPTION="Khao Phanom Bencha National Park"
 
 # A video file is required to test video pin creation.
 # The test will verify that the file is readable.
-BASE_DIR=$(cd ${SCRIPT_DIR}/../../../; pwd)
+BASE_DIR=$(cd "${SCRIPT_DIR}"/../../../; pwd)
 VIDEO_FILE=${BASE_DIR}/test-media/test-video.mov
 
 # Versions to test. This variable should not need to change.

@@ -22,43 +22,45 @@
 #
 
 # get the location of this script
-SCRIPT_DIR=$(cd $(dirname $0); pwd)
+# shellcheck disable=SC2164 # because the directory definitely exists
+SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
 
 # source the common test script code
-. ${SCRIPT_DIR}/e2e_tests_preamble
+# shellcheck source=./e2e_tests_preamble
+. "${SCRIPT_DIR}"/e2e_tests_preamble
 
 # verify the user_account fetch
 for VERSION in ${VERSIONS} ; do
-    ./scripts/get_access_token.${EXT} -a ${TEST1}_${VERSION} -${VERSION}
+    ./scripts/get_access_token.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}"
 done
 
 # run the refresh example script
 for VERSION in ${VERSIONS} ; do
-    ./scripts/refresh_example.${EXT} -a ${TEST1}_${VERSION} -${VERSION}
+    ./scripts/refresh_example.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}"
 done
 
 for VERSION in ${VERSIONS} ; do
-    ./scripts/get_pin.${EXT} -p ${PIN} -a ${TEST1}_${VERSION} -${VERSION}
+    ./scripts/get_pin.${EXT} -p ${PIN} -a "${TEST1}_${VERSION}" -"${VERSION}"
 done
 
 # get the user pins for the pindexter account
 for VERSION in ${VERSIONS} ; do
-    ./scripts/get_user_pins.${EXT} --page-size 100 -a ${TEST1}_${VERSION} -${VERSION}
+    ./scripts/get_user_pins.${EXT} --page-size 100 -a "${TEST1}_${VERSION}" -"${VERSION}"
 done
 
 # get a specific board for the pindexter account
 for VERSION in ${VERSIONS} ; do
-    ./scripts/get_board.${EXT} -a ${TEST1}_${VERSION} -${VERSION} -b ${BOARD}
+    ./scripts/get_board.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}" -b ${BOARD}
 done
 
 # get a specific board and the pins on the board
 for VERSION in ${VERSIONS} ; do
-    ./scripts/get_board.${EXT} -a ${TEST1}_${VERSION} -${VERSION} -b ${BOARD} --pins
+    ./scripts/get_board.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}" -b ${BOARD} --pins
 done
 
 # get the user boards with the pins for the pindexter account
 for VERSION in ${VERSIONS} ; do
-    ./scripts/get_user_boards.${EXT} -a ${TEST1}_${VERSION} -${VERSION}
+    ./scripts/get_user_boards.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}"
 done
 
 # Pin analytics only work with v5. For now, only nodejs. Python is on the backlog.
