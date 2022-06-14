@@ -14,4 +14,4 @@ SCRIPT_DIR=$(cd "$(dirname "${SCRIPT_NAME}")"; pwd)
 
 VERSION_SPECIFIC_SCRIPT="${SCRIPT_DIR}/${PINTEREST_API_VERSION}/get_access_token.sh"
 echo running version specific script: "${VERSION_SPECIFIC_SCRIPT}"
-exec ${VERSION_SPECIFIC_SCRIPT}
+exec "${VERSION_SPECIFIC_SCRIPT}"
