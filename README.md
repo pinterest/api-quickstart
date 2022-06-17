@@ -88,6 +88,12 @@ Code that implements OAuth is available for each language in this repo. The loca
   * `tests` contains unit and integration tests.
 * Code that is specific to versions of the Pinterest API is in subdirectories of `src` (in the case of python and nodejs) or `scripts` (in the case of bash). The two versions supported by this quickstart are v3 and v5.
 
+## Code Conventions
+
+The README file in each language-specific directory provides details for the code conventions for the associated programming language.
+
+All shell scripts in this respository are written for bash and are linted with [ShellCheck](https://www.shellcheck.net/).
+
 ## Other Resources
 
   * [Pinterest Developers](https://developers.pinterest.com/)

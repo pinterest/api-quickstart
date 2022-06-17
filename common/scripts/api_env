@@ -8,10 +8,11 @@ else
     SCRIPT_NAME="$0"
 fi
 
-echo $SCRIPT_NAME
+echo "$SCRIPT_NAME"
 
 # get the location of this script
-SCRIPT_DIR=$(cd $(dirname ${SCRIPT_NAME}); pwd)
+# shellcheck disable=SC2164 # because the directory definitely exists
+SCRIPT_DIR=$(cd "$(dirname "${SCRIPT_NAME}")"; pwd)
 
 if [ ! -f "${SCRIPT_DIR}/api_app_credentials" ] ; then
   echo "Please create an application credentials file here:"
@@ -19,7 +20,9 @@ if [ ! -f "${SCRIPT_DIR}/api_app_credentials" ] ; then
   echo 'For more information, see the "Put your app ID and secret" section of the top-level README in this repo.'
   return
 fi
-. ${SCRIPT_DIR}/api_app_credentials
+
+# shellcheck source=./api_app_credentials.template
+. "${SCRIPT_DIR}"/api_app_credentials
 unset PINTEREST_API_URI
 unset PINTEREST_OAUTH_URI
 
