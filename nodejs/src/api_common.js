@@ -28,9 +28,13 @@ export class ApiCommon {
   print_response(response) {
     if (this.api_config.verbosity >= 1) {
       console.log(`<Response [${response.statusCode}]>`);
-      if (this.api_config.verbosity >= 3) {
+      if (this.api_config.verbosity == 3) {
         console.log('x-pinterest-rid:', response.headers['x-pinterest-rid']);
         console.log(response.body);
+      }
+      if (this.api_config.verbosity >= 4) {
+        console.log(response.headers);
+        console.log(JSON.stringify(response.body));
       }
     }
   }
@@ -48,6 +52,10 @@ export class ApiCommon {
       console.log('error response:', error.response);
       throw new RequestFailedError('error without a response body');
     }
+    if (!error.response.headers) {
+      console.log('error response headers:', error.response.headers);
+      throw new RequestFailedError('error without response headers');
+    }
     if (!error.response.body.message) {
       console.log('error response body:', error.response.body);
       throw new RequestFailedError('error without a response body message');
@@ -56,7 +64,11 @@ export class ApiCommon {
     if (this.api_config.verbosity >= 1) {
       console.log(`<Response [${error.response.statusCode}]>`);
       console.log(error_message);
-      if (this.api_config.verbosity >= 2) {
+      if (this.api_config.verbosity >= 4) {
+        console.log(error.response.headers);
+        console.log(JSON.stringify(error.response.body));
+      }
+      else if (this.api_config.verbosity >= 2) {
         console.log('x-pinterest-rid:', error.response.headers['x-pinterest-rid']);
         console.log(error.response.body);
       }
