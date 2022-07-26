@@ -1,7 +1,7 @@
 import Enum from 'enum';
 
 // Enumerate the valid OAuth scopes.
-// For details, see: https://developers.pinterest.com/docs/api/v5/#tag/Scopes
+// For details, see: https://developers.pinterest.com/docs/getting-started/scopes/
 export const Scope = new Enum({
   // scopes names that are compatible across different API versions
   READ_ADS: 'ads:read',
@@ -49,5 +49,5 @@ Valid OAuth 2.0 scopes for Pinterest API version v5:
   user_accounts:read  Read access to user accounts
 
 For more information, see:
-  https://developers.pinterest.com/docs/api/v5/#tag/Scopes`);
+  https://developers.pinterest.com/docs/getting-started/scopes/`);
 }
