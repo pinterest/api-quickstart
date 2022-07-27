@@ -28,6 +28,19 @@ export class Pin extends ApiMediaObject {
     console.log('--------------------');
   }
 
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_partner_save_handler_POST
+  async save(board_id, { section }) {
+    if (!this.pin_id) {
+      throw new Error('pin_id must be set to save a pin');
+    }
+    const save_data = { board_id: board_id };
+    if (section) {
+      save_data['board_section_id'] = section; // TODO: does this work?
+    }
+    // TODO: is await needed here?
+    return await this.post_data(`/v3/partners/pins/${this.pin_id}/save/`, save_data);
+  }
+
   // https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT
   async create(pin_data, board_id, { section, media }) {
     const OPTIONAL_ATTRIBUTES = [
