@@ -27,14 +27,13 @@ export class Pin extends ApiMediaObject {
   // https://developers.pinterest.com/docs/api/v5/#operation/pins/save
   async save(board_id, { section }) {
     if (!this.pin_id) {
-      throw new Error('pin_id must be set to get a pin');
+      throw new Error('pin_id must be set to save a pin');
     }
     const save_data = { board_id: board_id };
     if (section) {
       save_data['board_section_id'] = section;
     }
-    // TODO: is await needed here?
-    return await this.post_data(`/v5/pins/${this.pin_id}/save`, save_data);
+    return this.post_data(`/v5/pins/${this.pin_id}/save`, save_data);
   }
 
   // https://developers.pinterest.com/docs/api/v5/#operation/pins/create
