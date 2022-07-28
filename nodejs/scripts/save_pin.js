@@ -27,15 +27,14 @@ async function main(argv) {
   const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   const access_token = new AccessToken(api_config, { name: args.access_token });
-  // TODO: is READ_USERS necessary?
-  const scopes = [Scope.READ_USERS, Scope.READ_PINS, Scope.WRITE_PINS, Scope.READ_BOARDS, Scope.WRITE_BOARDS];
+  const scopes = [Scope.READ_PINS, Scope.WRITE_PINS, Scope.READ_BOARDS, Scope.WRITE_BOARDS];
 
   await access_token.fetch({ scopes: scopes });
 
   const pin = new Pin(args.pin_id, api_config, access_token);
 
   const saved_pin_data = await pin.save(args.board_id, { section: args.section });
-  console.log('saved pin');
+  console.log('saved pin:');
   Pin.print_summary(saved_pin_data);
 }
 

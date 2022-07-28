@@ -48,6 +48,7 @@ TEST3_CAMPAIGN_ID=626744374247
 PIN=1097963584125248823
 BOARD=1097963652843192243
 VIDEO_BOARD_NAME="Thailand"
+SAVE_BOARD_NAME="Tequila"
 VIDEO_PIN_DESCRIPTION="Khao Phanom Bencha National Park"
 
 # A video file is required to test video pin creation.
