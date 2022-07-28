@@ -31,7 +31,7 @@ export class Pin extends ApiMediaObject {
     }
     const save_data = { board_id: board_id };
     if (section) {
-      save_data['board_section_id'] = section;
+      save_data.board_section_id = section;
     }
     return this.post_data(`/v5/pins/${this.pin_id}/save`, save_data);
   }

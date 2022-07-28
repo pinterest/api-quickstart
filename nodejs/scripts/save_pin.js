@@ -23,7 +23,6 @@ async function main(argv) {
 
   // imports that depend on the version of the API
   const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Board } = await import(`../src/${api_config.version}/board.js`);
   const { Pin } = await import(`../src/${api_config.version}/pin.js`);
   const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
 

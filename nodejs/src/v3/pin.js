@@ -29,16 +29,18 @@ export class Pin extends ApiMediaObject {
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_partner_save_handler_POST
+  // This method is only for the sake of completeness. In general, it's better to use
+  // API version 5. In the v3 API, this endpoint is limited to certain kinds of partners
+  // (e.g. the "pinner_app" category).
   async save(board_id, { section }) {
     if (!this.pin_id) {
       throw new Error('pin_id must be set to save a pin');
     }
     const save_data = { board_id: board_id };
     if (section) {
-      save_data['board_section_id'] = section; // TODO: does this work?
+      save_data.board_section_id = section;
     }
-    // TODO: is await needed here?
-    return await this.post_data(`/v3/partners/pins/${this.pin_id}/save/`, save_data);
+    return this.post_data(`/v3/partners/pins/${this.pin_id}/save/`, save_data);
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT

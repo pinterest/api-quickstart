@@ -68,7 +68,8 @@ describe('v5 pin tests', () => {
     await test_pin.save('test_save_board_id2', { section: 'test_section_id' });
     expect(mock_post_data.mock.calls[3]).toEqual([
       '/v5/pins/created_pin_id2/save',
-      { board_id: 'test_save_board_id2',
+      {
+        board_id: 'test_save_board_id2',
         board_section_id: 'test_section_id'
       }
     ]);
