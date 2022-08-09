@@ -45,11 +45,8 @@ for VERSION in ${VERSIONS} ; do
 done
 
 # Saving a pin using v3 requires special app configuration, so test just v5.
-# Right now, save_pin is only implemented in nodejs. Python is coming soon.
-if [ "${EXT}" == "js" ] ; then
-    SAVE_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2}_v5 -v5 --page-size 100 | grep -B 1 "${SAVE_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
-    ./scripts/save_pin.${EXT} -a ${TEST2}_v5 -v5 -p ${PIN} -b ${SAVE_BOARD_ID}
-fi
+SAVE_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2}_v5 -v5 --page-size 100 | grep -B 1 "${SAVE_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
+./scripts/save_pin.${EXT} -a ${TEST2}_v5 -v5 -p ${PIN} -b ${SAVE_BOARD_ID}
 
 # The video file is required for this part of the test.
 if [ -r "${VIDEO_FILE}" ] ; then

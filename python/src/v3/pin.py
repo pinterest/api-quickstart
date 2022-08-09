@@ -18,14 +18,29 @@ class Pin(ApiMediaObject):
     def print_summary(cls, pin_data):
         print("--- Pin Summary ---")
         print(f"Pin ID: {pin_data['id']}")
-        print(f"Type: {pin_data['type']}")
-        if pin_data["type"] == "pin":
+        pin_type = pin_data.get("type")
+        print(f"Type: {pin_type}")
+        if not pin_type or pin_type == "pin":
             print(f"Description: {pin_data.get('description')}")
             print(f"Domain: {pin_data.get('domain')}")
             print(f"Native format type: {pin_data.get('native_format_type')}")
-        elif pin_data["type"] == "story":
+        elif pin_type == "story":
             print(f"Story type: {pin_data.get('story_type')}")
         print("--------------------")
+
+    # https://developers.pinterest.com/docs/redoc/#operation/v3_partner_save_handler_POST
+    # This method is only for the sake of completeness. In general, it's better to use
+    # API version 5. In the v3 API, this endpoint is limited to certain kinds of
+    # partners (e.g. the "pinner_app" category).
+    def save(self, board_id, section=None):
+        if not self.pin_id:
+            raise RuntimeError("pin_id must be set to save a pin")
+
+        save_data = {"board_id": board_id}
+        if section:
+            save_data["board_section_id"] = section
+
+        return self.post_data(f"/v3/partners/pins/{self.pin_id}/save/", save_data)
 
     # https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT
     def create(self, pin_data, board_id, section=None, media=None):

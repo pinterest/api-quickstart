@@ -18,7 +18,7 @@ export class Pin extends ApiMediaObject {
     console.log('--- Pin Summary ---');
     console.log(`Pin ID: ${pin_data.id}`);
     console.log(`Type: ${pin_data.type}`);
-    if (pin_data.type === 'pin') {
+    if (!pin_data.type || (pin_data.type === 'pin')) {
       console.log(`Description: ${pin_data.description}`);
       console.log(`Domain: ${pin_data.domain}`);
       console.log(`Native format type: ${pin_data.native_format_type}`);
