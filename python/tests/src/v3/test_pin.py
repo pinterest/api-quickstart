@@ -67,6 +67,35 @@ class PinTest(unittest.TestCase):
         self.assertEqual(test_pin.pin_id, "new_pin_id")
         mock_api_object_put_data.assert_called_once_with("/v3/pins/", expected_put_data)
 
+    @mock.patch("v3.pin.ApiMediaObject.post_data")
+    @mock.patch("v3.pin.ApiMediaObject.__init__")
+    def test_pin_save(
+        self,
+        mock_api_init,
+        mock_post_data,
+    ):
+        test_pin = Pin("test_save_pin_id", "test_api_uri", "test_access_token")
+
+        # save pin without a section
+        mock_post_data.return_value = "test_save_response_1"
+        response = test_pin.save("test_save_board_id1")
+        self.assertEqual(response, "test_save_response_1")
+        mock_post_data.assert_called_once_with(
+            "/v3/partners/pins/test_save_pin_id/save/",
+            {"board_id": "test_save_board_id1"},
+        )
+
+        mock_post_data.reset_mock()
+
+        # save pin with a section
+        mock_post_data.return_value = "test_save_response_2"
+        response = test_pin.save("test_save_board_id2", section="test_section_id")
+        self.assertEqual(response, "test_save_response_2")
+        mock_post_data.assert_called_once_with(
+            "/v3/partners/pins/test_save_pin_id/save/",
+            {"board_id": "test_save_board_id2", "board_section_id": "test_section_id"},
+        )
+
     @mock.patch("time.sleep")
     @mock.patch("builtins.print")
     @mock.patch("v3.pin.ApiMediaObject.media_to_media_id")

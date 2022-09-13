@@ -44,6 +44,16 @@ for VERSION in ${VERSIONS} ; do
     ./scripts/get_user_pins.${EXT} -a "${TEST2}_${VERSION}" -"${VERSION}" --page-size 100
 done
 
+# Saving a pin using v3 requires special app configuration, so test just v5.
+SAVE_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2}_v5 -v5 --page-size 100 | grep -B 1 "${SAVE_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
+./scripts/save_pin.${EXT} -a ${TEST2}_v5 -v5 -p ${PIN} -b "${SAVE_BOARD_ID}"
+
+# The board used to test saves should have a section.
+# There may be some deduplication logic that prevents this save from happening
+# if it is exactly the same pin as the previous save, so use a different pin ID.
+SAVE_SECTION_ID=$(./scripts/get_board.${EXT} -a ${TEST2}_v5 -b "${SAVE_BOARD_ID}" | grep -m 1 'Section ID' | cut -d ' ' -f 3 )
+./scripts/save_pin.${EXT} -a ${TEST2}_v5 -v5 -p ${PIN2} -b "${SAVE_BOARD_ID}" -s "${SAVE_SECTION_ID}"
+
 # The video file is required for this part of the test.
 if [ -r "${VIDEO_FILE}" ] ; then
     # use v5 to get the board with the pin to copy

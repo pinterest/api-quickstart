@@ -46,8 +46,10 @@ TEST3_CAMPAIGN_ID=626744374247
 
 # Objects associated with the TEST1 account to be used in the integration tests.
 PIN=1097963584125248823
+PIN2=1097963584125248822
 BOARD=1097963652843192243
 VIDEO_BOARD_NAME="Thailand"
+SAVE_BOARD_NAME="Tequila"
 VIDEO_PIN_DESCRIPTION="Khao Phanom Bencha National Park"
 
 # A video file is required to test video pin creation.

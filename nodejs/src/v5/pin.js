@@ -24,6 +24,18 @@ export class Pin extends ApiMediaObject {
     console.log('--------------------');
   }
 
+  // https://developers.pinterest.com/docs/api/v5/#operation/pins/save
+  async save(board_id, { section }) {
+    if (!this.pin_id) {
+      throw new Error('pin_id must be set to save a pin');
+    }
+    const save_data = { board_id: board_id };
+    if (section) {
+      save_data.board_section_id = section;
+    }
+    return this.post_data(`/v5/pins/${this.pin_id}/save`, save_data);
+  }
+
   // https://developers.pinterest.com/docs/api/v5/#operation/pins/create
   async create(pin_data, board_id, { section, media }) {
     const OPTIONAL_ATTRIBUTES = [

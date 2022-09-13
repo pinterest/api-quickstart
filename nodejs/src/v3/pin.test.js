@@ -71,6 +71,44 @@ describe('v3 pin tests', () => {
     expected_put_data.section = 'test_section_id';
     delete expected_put_data.source_url;
     expect(mock_put_data.mock.calls[1]).toEqual(['/v3/pins/', expected_put_data]);
+
+    // save pin without a section
+    const mock_post_data = jest.spyOn(ApiMediaObject.prototype, 'post_data');
+    mock_post_data.mockResolvedValue('test_save_response');
+    response = await test_pin.save('test_save_board_id1', {});
+    expect('test_save_response').toEqual(response);
+    expect(mock_post_data.mock.calls[0]).toEqual([
+      '/v3/partners/pins/created_pin_id2/save/',
+      { board_id: 'test_save_board_id1' }
+    ]);
+
+    // save pin with a section
+    await test_pin.save('test_save_board_id2', { section: 'test_section_id' });
+    expect(mock_post_data.mock.calls[1]).toEqual([
+      '/v3/partners/pins/created_pin_id2/save/',
+      {
+        board_id: 'test_save_board_id2',
+        board_section_id: 'test_section_id'
+      }
+    ]);
+  });
+
+  test('v5 pin method errors', async() => {
+    const test_pin = new Pin(null, 'test_api_config', 'test_access_token');
+
+    await expect(async() => {
+      // second call to create
+      await test_pin.get();
+    }).rejects.toThrowError(
+      new Error('pin_id must be set to get a pin')
+    );
+
+    await expect(async() => {
+      // second call to create
+      await test_pin.save('test_board_id', {});
+    }).rejects.toThrowError(
+      new Error('pin_id must be set to save a pin')
+    );
   });
 
   test('v3 create video pin', async() => {

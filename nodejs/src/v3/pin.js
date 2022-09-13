@@ -18,7 +18,7 @@ export class Pin extends ApiMediaObject {
     console.log('--- Pin Summary ---');
     console.log(`Pin ID: ${pin_data.id}`);
     console.log(`Type: ${pin_data.type}`);
-    if (pin_data.type === 'pin') {
+    if (!pin_data.type || pin_data.type === 'pin') {
       console.log(`Description: ${pin_data.description}`);
       console.log(`Domain: ${pin_data.domain}`);
       console.log(`Native format type: ${pin_data.native_format_type}`);
@@ -26,6 +26,21 @@ export class Pin extends ApiMediaObject {
       console.log(`Story type: ${pin_data.story_type}`);
     }
     console.log('--------------------');
+  }
+
+  // https://developers.pinterest.com/docs/redoc/#operation/v3_partner_save_handler_POST
+  // This method is only for the sake of completeness. In general, it's better to use
+  // API version 5. In the v3 API, this endpoint is limited to certain kinds of partners
+  // (e.g. the "pinner_app" category).
+  async save(board_id, { section }) {
+    if (!this.pin_id) {
+      throw new Error('pin_id must be set to save a pin');
+    }
+    const save_data = { board_id: board_id };
+    if (section) {
+      save_data.board_section_id = section;
+    }
+    return this.post_data(`/v3/partners/pins/${this.pin_id}/save/`, save_data);
   }
 
   // https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT

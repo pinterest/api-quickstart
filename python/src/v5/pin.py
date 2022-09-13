@@ -21,6 +21,17 @@ class Pin(ApiMediaObject):
         # print('Native format type: ' + pin_data['native_format_type'])
         print("--------------------")
 
+    # https://developers.pinterest.com/docs/api/v5/#operation/pins/save
+    def save(self, board_id, section=None):
+        if not self.pin_id:
+            raise RuntimeError("pin_id must be set to save a pin")
+
+        save_data = {"board_id": board_id}
+        if section:
+            save_data["board_section_id"] = section
+
+        return self.post_data(f"/v5/pins/{self.pin_id}/save", save_data)
+
     # https://developers.pinterest.com/docs/api/v5/#operation/pins/create
     def create(self, pin_data, board_id, section=None, media=None):
         """
