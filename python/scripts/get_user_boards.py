@@ -5,8 +5,12 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
 from api_config import ApiConfig
 from arguments import common_arguments, positive_integer
+from board import Board
+from oauth_scope import Scope
+from user import User
 
 
 def main(argv=[]):
@@ -45,12 +49,6 @@ def main(argv=[]):
 
     # get configuration from defaults and/or the environment
     api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from board import Board
-    from oauth_scope import Scope
-    from user import User
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.

@@ -5,8 +5,12 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
+from advertisers import Advertisers
 from api_config import ApiConfig
 from arguments import common_arguments
+from oauth_scope import Scope
+from user import User
 from utils import input_number
 
 
@@ -70,12 +74,6 @@ def main(argv=[]):
     args = parser.parse_args(argv)
 
     api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from advertisers import Advertisers
-    from oauth_scope import Scope
-    from user import User
 
     """
     Step 1: Fetch an access token and print summary data about the User.

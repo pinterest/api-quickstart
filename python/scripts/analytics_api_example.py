@@ -5,9 +5,15 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
+from ad_metrics_async_report import AdMetricsAsyncReport
+from advertisers import Advertisers
 from api_config import ApiConfig
 from arguments import common_arguments
+from delivery_metrics import DeliveryMetrics
 from generic_requests import download_file
+from oauth_scope import Scope
+from user import User
 from utils import input_number, input_path_for_write
 
 
@@ -47,14 +53,6 @@ def main(argv=[]):
     and response statuses. To see the complete responses, set verbosity to 3.
     """
     api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from ad_metrics_async_report import AdMetricsAsyncReport
-    from advertisers import Advertisers
-    from delivery_metrics import DeliveryMetrics
-    from oauth_scope import Scope
-    from user import User
 
     """
     Step 1: Fetch an access token and print summary data about the User.
