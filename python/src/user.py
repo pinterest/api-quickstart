@@ -1,5 +1,5 @@
 from api_object import ApiObject
-from v5.board import Board
+from board import Board
 
 
 class UserPinIterator:
