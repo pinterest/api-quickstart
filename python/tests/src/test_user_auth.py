@@ -1,8 +1,9 @@
 import unittest
 from unittest import mock
 
-from user_auth import HTTPServerHandler, get_auth_code
 from v3.oauth_scope import Scope
+
+from user_auth import HTTPServerHandler, get_auth_code
 
 
 class UserAuthTest(unittest.TestCase):

@@ -1,8 +1,8 @@
 import requests
 
 from access_token_common import AccessTokenCommon
-from user_auth import get_auth_code
 from oauth_scope import Scope
+from user_auth import get_auth_code
 
 
 class AccessToken(AccessTokenCommon):

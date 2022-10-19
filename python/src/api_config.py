@@ -1,6 +1,4 @@
 import os  # for environment variables
-import sys  # for sys.path.append
-from os.path import abspath, dirname, join
 
 # Construct the redirect_uri for the OAuth process. The REDIRECT_URI must
 # be literally the same as configured at https://developers.pinterest.com/apps/.
@@ -50,9 +48,6 @@ class ApiConfig:
         # swizzle oauth and api hosts, based on environment
         self.oauth_uri = os.environ.get("PINTEREST_OAUTH_URI") or DEFAULT_OAUTH_URI
         self.api_uri = os.environ.get("PINTEREST_API_URI") or DEFAULT_API_URI
-
-        # set up to load the code modules for this version of the API
-        sys.path.append(abspath(join(dirname(__file__), self.version)))
 
     def get_application_id(self):
         """

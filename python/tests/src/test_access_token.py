@@ -2,7 +2,6 @@ import unittest
 from unittest import mock
 
 import requests_mock
-
 from v5.access_token import AccessToken
 
 
