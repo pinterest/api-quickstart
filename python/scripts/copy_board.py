@@ -159,9 +159,9 @@ def main(argv=[]):
     target_pin = Pin(None, api_config, target_token)
 
     if args.all_boards:  # copy all boards for the source user
-        user_me = User("me", api_config, source_token)
-        user_me_data = user_me.get()
-        boards = user_me.get_boards(user_me_data)
+        user = User(api_config, source_token)
+        user_data = user.get()
+        boards = user.get_boards(user_data)
         source_board = Board(
             None, api_config, source_token
         )  # board_id set in loop below

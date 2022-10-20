@@ -41,9 +41,9 @@ def main(argv=[]):
 
     # Use the access token to get information about the user. The purpose of this
     # call is to verify that the access token is working.
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user = User(api_config, access_token)
+    user_data = user.get()
+    user.print_summary(user_data)
 
     print("writing access token")
     access_token.write()

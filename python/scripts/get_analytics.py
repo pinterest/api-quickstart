@@ -134,14 +134,14 @@ def main(argv=[]):
 
     # Get the user record. Some versions of the Pinterest API require the
     # user id associated with the access token.
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user = User(api_config, access_token)
+    user_data = user.get()
+    user.print_summary(user_data)
 
     if args.analytics_object == "user":
         # Get analytics for the user account associated with the access token.
         analytics = (
-            UserAnalytics(user_me_data.get("id"), api_config, access_token)
+            UserAnalytics(user_data.get("id"), api_config, access_token)
             .last_30_days()
             .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
         )
@@ -157,11 +157,11 @@ def main(argv=[]):
     elif args.analytics_object == "ad_account_user":
         # Get analytics for the user account associated with an ad account.
         analytics = (
-            UserAnalytics(user_me_data.get("id"), api_config, access_token)
+            UserAnalytics(user_data.get("id"), api_config, access_token)
             .last_30_days()
             .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
         )
-        advertisers = Advertisers(user_me_data.get("id"), api_config, access_token)
+        advertisers = Advertisers(user_data.get("id"), api_config, access_token)
         # When using find_and_get_analytics, analytics.get() will be called with
         # an ad_account_id argument.
         ads_entities = [
@@ -183,7 +183,7 @@ def main(argv=[]):
             .metrics({"SPEND_IN_DOLLAR", "TOTAL_CLICKTHROUGH"})
             .granularity("DAY")
         )
-        advertisers = Advertisers(user_me_data.get("id"), api_config, access_token)
+        advertisers = Advertisers(user_data.get("id"), api_config, access_token)
         ads_entities = [
             {
                 "object": "ad_account",

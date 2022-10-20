@@ -42,9 +42,9 @@ def main(argv=[]):
     print("hashed refresh token: " + access_token.hashed_refresh_token())
 
     # use the access token to get information about the user
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user = User(api_config, access_token)
+    user_data = user.get()
+    user.print_summary(user_data)
 
     # Doing refreshes too quickly can result in the same access_token being generated.
     # In practice, this isn't a problem because tokens should be refreshed after
@@ -65,8 +65,8 @@ def main(argv=[]):
     print("hashed access token: " + hashed)
 
     print("accessing with refreshed access_token...")
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user_data = user.get()
+    user.print_summary(user_data)
 
     print("wait a second to avoid getting the same token on the second refresh...")
     time.sleep(1)
@@ -81,8 +81,8 @@ def main(argv=[]):
     print("hashed access token: " + hashed)
 
     print("accessing with second refreshed access_token...")
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user_data = user.get()
+    user.print_summary(user_data)
 
 
 if __name__ == "__main__":

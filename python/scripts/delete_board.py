@@ -46,10 +46,10 @@ def main(argv=[]):
     access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_BOARDS, Scope.WRITE_BOARDS])
 
     if args.all_boards:  # delete all boards for the user
-        user_me = User("me", api_config, access_token)
-        user_me_data = user_me.get()
-        boards = user_me.get_boards(user_me_data)
-        confirmation = f"Delete all boards for {user_me_data['username']}"
+        user = User(api_config, access_token)
+        user_data = user.get()
+        boards = user.get_boards(user_data)
+        confirmation = f"Delete all boards for {user_data['username']}"
     else:  # copy just the board designated by board_id
         deletion_board = Board(args.board_id, api_config, access_token)
         board_data = deletion_board.get()

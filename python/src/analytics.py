@@ -15,7 +15,7 @@ class UserAnalytics(AnalyticsAttributes, ApiObject):
     using the v5 interface.
 
     The attribute functions are chainable. For example:
-       UserAnalytics(user_me_data.get("id"), api_config, access_token)
+       UserAnalytics(user_data.get("id"), api_config, access_token)
        .last_30_days()
        .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
 

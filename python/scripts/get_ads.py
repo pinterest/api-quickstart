@@ -90,9 +90,9 @@ def main(argv=[]):
     For a future call we need to know the user id associated with
     the access token being used.
     """
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user = User(api_config, access_token)
+    user_data = user.get()
+    user.print_summary(user_data)
 
     """
     Step 2: Get Ad Accounts available to my access token and select one of them.
@@ -107,7 +107,7 @@ def main(argv=[]):
     This process is also touched on in the API docs:
       https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
     """  # noqa: E501 because the long URL is okay
-    advertisers = Advertisers(user_me_data.get("id"), api_config, access_token)
+    advertisers = Advertisers(user_data.get("id"), api_config, access_token)
 
     ads_entities = [
         {"kind": "Ad Account", "parent": "User", "get": advertisers.get},

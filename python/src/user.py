@@ -31,9 +31,8 @@ class UserPinIterator:
 
 
 class User(ApiObject):
-    def __init__(self, user, api_config, access_token):
+    def __init__(self, api_config, access_token):
         super().__init__(api_config, access_token)
-        self.user = user
 
     # https://developers.pinterest.com/docs/api/v5/#tag/user_account
     def get(self):

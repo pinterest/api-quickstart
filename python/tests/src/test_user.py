@@ -8,7 +8,7 @@ class UserTest(unittest.TestCase):
     @mock.patch("user.ApiObject.request_data")
     @mock.patch("user.ApiObject.__init__")
     def test_user_get(self, mock_api_object_init, mock_api_object_request_data):
-        test_user = User("test_user", "test_api_config", "test_access_token")
+        test_user = User("test_api_config", "test_access_token")
         mock_api_object_init.assert_called_once_with(
             "test_api_config", "test_access_token"
         )
@@ -21,7 +21,7 @@ class UserTest(unittest.TestCase):
     @mock.patch("user.ApiObject.get_iterator")
     @mock.patch("user.ApiObject.__init__")
     def test_user_get_boards(self, mock_api_object_init, mock_api_object_get_iterator):
-        test_user = User("test_user", "test_api_config", "test_access_token")
+        test_user = User("test_api_config", "test_access_token")
 
         mock_api_object_get_iterator.return_value = "test_iterator"
         response = test_user.get_boards(
@@ -76,7 +76,7 @@ class UserTest(unittest.TestCase):
 
         # these pins should be returned by the above mock iterator with static data
         expected_pins = ["board1_pin1", "board1_pin2", "board3_pin1"]
-        test_user = User("test_user", mock_api_config, "test_access_token")
+        test_user = User(mock_api_config, "test_access_token")
         with mock.patch("user.Board", BoardMock):
             for index, pin in enumerate(
                 test_user.get_pins(
