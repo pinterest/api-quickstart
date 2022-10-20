@@ -115,7 +115,7 @@ def main(argv=[]):
         print("Ad group identifier must be specified when using ad identifier")
         exit(1)
 
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
+    api_config = ApiConfig(verbosity=args.log_level)
 
     # Requesting pin analytics requires a pin_id.
     if args.analytics_object == "pin" and not args.pin_id:

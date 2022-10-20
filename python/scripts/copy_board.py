@@ -112,7 +112,7 @@ def main(argv=[]):
         exit(1)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
+    api_config = ApiConfig(verbosity=args.log_level)
 
     # helper function to copy a pin
     def copy_pin(pin, pin_data, target_board_id, target_section_id=None):

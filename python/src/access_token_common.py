@@ -13,7 +13,7 @@ class AccessTokenCommon(ApiCommon):
         if name:
             self.name = name
         else:
-            self.name = "access_token_" + api_config.version
+            self.name = "access_token"
 
         self.api_config = api_config
         self.path = pathlib.Path(api_config.oauth_token_dir) / (self.name + ".json")

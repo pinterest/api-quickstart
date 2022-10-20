@@ -25,7 +25,7 @@ def main(argv=[]):
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
+    api_config = ApiConfig(verbosity=args.log_level)
 
     access_token = AccessToken(api_config, name=args.access_token)
     access_token.read()

@@ -18,7 +18,6 @@ class AccessTokenTest(unittest.TestCase):
         mock_api_config.api_uri = "https://test-api-uri"
         mock_api_config.redirect_uri = "test-redirect-uri"
         mock_api_config.oauth_token_dir = "test-token-dir"
-        mock_api_config.version = "v5"
         mock_api_config.verbosity = 2
 
         rm.post(

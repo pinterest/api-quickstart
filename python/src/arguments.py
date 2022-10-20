@@ -25,6 +25,3 @@ def common_arguments(parser):
     parser.add_argument(
         "-l", "--log-level", type=int, default=2, help="level of logging verbosity"
     )
-    parser.add_argument(
-        "-v", "--api-version", type=positive_integer, help="version of the API to use"
-    )

@@ -44,7 +44,6 @@ $ . ../common/scripts/api_env
 After running the Quick Start, you should be able to run any of the use cases in the scripts directory. Scripts that accept arguments use `argparse`, which ensures that the `-h` or `--help` argument shows usage documentation. In addition, the code for each script has a comment that documents its intended purpose.
 
 Here is a list of common arguments that work with all scripts:
-  * `-v <version>` or `--api-version <version>`: The version of the Pinterest API to use. The two choices are `3` and `5`.
   * `-a <name>` or `--access-token <name>`: The name of the access token for the script. This name is helpful with the `-w` or `--write` option to `get_access_token.py`, which will store the access token in a file that can be used by other scripts.
   * `-l <level>` or `--log-level <level>`: The level of logging verbosity for the script. `0` is only critical output. `1` generates a bit more output. `2` is the default, and prints a lot of useful information for developers learning the API. `3` is maximal verbosity.
 
@@ -57,7 +56,7 @@ Below you will find a description of each script along with an example of its he
 ```
 $ ./scripts/get_access_token.py --help
 
-usage: get_access_token.py [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_access_token.py [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get Pinterest OAuth token
 
@@ -71,14 +70,12 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
-Use `--scopes help` to get a list of all possible scopes for v5:
+Use `--scopes help` to get a list of all possible scopes:
 <!--gen-->
 ```
-$ ./scripts/get_access_token.py -v 5 --scopes help
+$ ./scripts/get_access_token.py --scopes help
 
 Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.
 Valid OAuth 2.0 scopes for Pinterest API version v5:
@@ -100,48 +97,6 @@ For more information, see:
   https://developers.pinterest.com/docs/getting-started/scopes/
 ```
 
-Use `--scopes help` to get a list of all possible scopes for v3:
-
-<!--gen-->
-```
-$ ./scripts/get_access_token.py -v 3 --scopes help
-
-Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.
-Valid OAuth 2.0 scopes for Pinterest API version v3:
-  read_domains         Get your website's most clicked Pins, see top saved Pins, etc.
-  read_boards          See all your boards (including secret and group boards)
-  write_boards         Create new boards and change board settings
-  read_pins            See all public Pins and comments
-  write_pins           Create new Pins
-  read_users           See public data about a user (including boards, following, profile)
-  write_users          Change a user's following information
-  read_secret_boards   See secret boards
-  read_secret_pins     See secret pins
-  read_user_followers  Access a user's follows and followers
-  write_user_followees Follow things for a user
-
-  read_advertisers     See a user's advertising profile and settings
-  write_advertisers    Create and manage a user's advertising profile
-  read_campaigns       See data on ad campaigns, including spend, budget and performance
-  write_campaigns      Create and manage ad campaigns
-  read_merchants       See a user's Catalog (shopping feed)
-  write_merchants      Manage a user's Catalog (shopping feed)
-  read_pin_promotions  See ads and ad creatives
-  write_pin_promotions Create and manage ads and ad creatives
-
-  Composite scopes...
-  read_organic         See all of a user's public data.
-  write_organic        Create new Pins and boards, update public data
-  manage_organic       See, update, and add to public data
-  read_secret          See secret boards and secret Pins
-  read_ads             See data on ad campaigns, including spend, budget and performance
-  write_ads            Manage ad campaigns and see data including spend, budget and performance
-  manage_merchants     See and manage a user's Catalog (shopping feed)
-
-For more information, see:
- https://developers.pinterest.com/docs/redoc/#section/User-Authorization/OAuth-scopes
-```
-
 ### [refresh_example.py](./scripts/refresh_example.py)
 
 Demonstrates how to refresh an access token. This script is just meant to be self-contained example. Use refresh_access_token if you need to refresh and to store an existing access token.
@@ -149,7 +104,7 @@ Demonstrates how to refresh an access token. This script is just meant to be sel
 ```
 $ ./scripts/refresh_example.py --help
 
-usage: refresh_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: refresh_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Refresh Pinterest OAuth token
 
@@ -159,8 +114,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 ### [refresh_access_token.py](./scripts/refresh_access_token.py)
  Refreshes an access token stored by using `./scripts/get_access_token.py` with the `-w` (write) argument.
@@ -168,7 +121,7 @@ optional arguments:
 ```
 $ ./scripts/refresh_access_token.py --help
 
-usage: refresh_access_token.py [-h] [-ct] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: refresh_access_token.py [-h] [-ct] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Refresh Pinterest OAuth token
 
@@ -179,8 +132,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ### [get_pin.py](./scripts/get_pin.py)
@@ -189,7 +140,7 @@ optional arguments:
 ```
 $ ./scripts/get_pin.py --help
 
-usage: get_pin.py [-h] -p PIN_ID [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_pin.py [-h] -p PIN_ID [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get a Pin
 
@@ -201,8 +152,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ### [get_board.py](./scripts/get_board.py)
@@ -211,7 +160,7 @@ optional arguments:
 ```
 $ ./scripts/get_board.py --help
 
-usage: get_board.py [-h] -b BOARD_ID [--pins] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_board.py [-h] -b BOARD_ID [--pins] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get a Board
 
@@ -224,8 +173,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ### [get_user_pins.py](./scripts/get_user_pins.py)
@@ -234,7 +181,7 @@ optional arguments:
 ```
 $ ./scripts/get_user_pins.py --help
 
-usage: get_user_pins.py [-h] [-ps PAGE_SIZE] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_user_pins.py [-h] [-ps PAGE_SIZE] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get A User's Pins
 
@@ -246,8 +193,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ### [get_user_boards.py](./scripts/get_user_boards.py)
@@ -256,8 +201,7 @@ optional arguments:
 ```
 $ ./scripts/get_user_boards.py --help
 
-usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived] [--no-include-archived]
-                          [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived] [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get A User's Boards
 
@@ -273,8 +217,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ### [copy_pin.py](./scripts/copy_pin.py)
@@ -283,7 +225,7 @@ optional arguments:
 ```
 $ ./scripts/copy_pin.py --help
 
-usage: copy_pin.py [-h] -p PIN_ID [-m MEDIA] -b BOARD_ID [-s SECTION] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: copy_pin.py [-h] -p PIN_ID [-m MEDIA] -b BOARD_ID [-s SECTION] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Copy a Pin
 
@@ -301,8 +243,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ### [copy_board.py](./scripts/copy_board.py)
@@ -311,8 +251,7 @@ optional arguments:
 ```
 $ ./scripts/copy_board.py --help
 
-usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run] [-a ACCESS_TOKEN]
-                     [-l LOG_LEVEL] [-v API_VERSION]
+usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Copy one Board or all Boards
 
@@ -331,8 +270,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ### [get_ads.py](./scripts/get_ads.py)
@@ -341,7 +278,7 @@ optional arguments:
 ```
 $ ./scripts/get_ads.py --help
 
-usage: get_ads.py [-h] [--all-ads] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_ads.py [-h] [--all-ads] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Advertisers API Example
 
@@ -352,8 +289,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ### [get_analytics.py](./scripts/get_analytics.py)
@@ -362,9 +297,8 @@ optional arguments:
 ```
 $ ./scripts/get_analytics.py --help
 
-usage: get_analytics.py [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID]
-                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
-                        [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: get_analytics.py [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID] [--ad-account-id AD_ACCOUNT_ID]
+                        [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get Analytics
 
@@ -384,8 +318,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ### [analytics_api_example.py](./scripts/analytics_api_example.py)
@@ -395,7 +327,7 @@ Demonstrates how to use the API to generate an asynchronous delivery metrics rep
 ```
 $ ./scripts/analytics_api_example.py --help
 
-usage: analytics_api_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
+usage: analytics_api_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Analytics API Example
 
@@ -405,8 +337,6 @@ optional arguments:
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
                         level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
 ```
 
 ## Proxy Configuration

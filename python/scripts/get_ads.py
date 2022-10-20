@@ -73,7 +73,7 @@ def main(argv=[]):
     common_arguments(parser)
     args = parser.parse_args(argv)
 
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
+    api_config = ApiConfig(verbosity=args.log_level)
 
     """
     Step 1: Fetch an access token and print summary data about the User.

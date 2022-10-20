@@ -52,7 +52,7 @@ def main(argv=[]):
     Set the API configuration verbosity to 2 to show all of requests
     and response statuses. To see the complete responses, set verbosity to 3.
     """
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
+    api_config = ApiConfig(verbosity=args.log_level)
 
     """
     Step 1: Fetch an access token and print summary data about the User.
@@ -66,7 +66,6 @@ def main(argv=[]):
 
     """
     Sample: Get my user id
-    For a future call we need to know the user id associated with
     the access token being used (for API version v4).
     """
     user_me = User("me", api_config, access_token)

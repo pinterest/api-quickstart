@@ -62,7 +62,6 @@ class ApiObjectTest(unittest.TestCase):
         api_config = mock.Mock()
         api_config.api_uri = self.test_uri
         api_config.verbosity = 2
-        api_config.version = "v5"
 
         access_token = mock.Mock()
         access_token_header = {"access_token_key": "access_token_value"}
@@ -107,7 +106,6 @@ class ApiObjectTest(unittest.TestCase):
         api_config = mock.Mock()
         api_config.api_uri = self.test_uri
         api_config.verbosity = 2
-        api_config.version = "v5"
 
         access_token = mock.Mock()
         access_token_header = {"access_token_key": "access_token_value"}
@@ -129,7 +127,6 @@ class ApiObjectTest(unittest.TestCase):
             self.assertEqual(expected_values[index], value)
         self.assertFalse(rm.last_request.allow_redirects)
 
-        api_config.version = "v5"
         rm.get(
             self.test_uri + "/v5_iterpath?key1=value1",
             headers=access_token_header,

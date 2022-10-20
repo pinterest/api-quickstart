@@ -39,7 +39,7 @@ def main(argv=[]):
         exit(1)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
+    api_config = ApiConfig(verbosity=args.log_level)
 
     # get access token
     access_token = AccessToken(api_config, name=args.access_token)
