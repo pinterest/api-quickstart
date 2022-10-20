@@ -2,14 +2,14 @@ import datetime
 import unittest
 from unittest import mock
 
-from ad_metrics_async_report_common import AdMetricsAsyncReportCommon
+from ad_metrics_async_report import AdMetricsAsyncReport
 
 
-class AdMetricsAsyncReportCommonTest(unittest.TestCase):
+class AdMetricsAsyncReportTest(unittest.TestCase):
     @mock.patch("async_report.AsyncReport.__init__")
-    def test_am_async_report_common(self, mock_async_report_init):
-        am_async_report_common = (
-            AdMetricsAsyncReportCommon(
+    def test_am_async_report(self, mock_async_report_init):
+        am_async_report = (
+            AdMetricsAsyncReport(
                 "test_api_config", "test_access_token", "test_advertiser_id"
             )
             .start_date("2021-03-01")
@@ -20,17 +20,19 @@ class AdMetricsAsyncReportCommonTest(unittest.TestCase):
         )
 
         mock_async_report_init.assert_called_once_with(
-            "test_api_config", "test_access_token", "test_advertiser_id"
+            "test_api_config",
+            "test_access_token",
+            "/v5/ad_accounts/test_advertiser_id/reports"
         )
 
         with self.assertRaisesRegex(
             AttributeError, r"missing attributes: .*granularity"
         ):
-            am_async_report_common.post_data_attributes()
+            am_async_report.post_data_attributes()
 
-        am_async_report_common.granularity("DAY")
+        am_async_report.granularity("DAY")
 
-        data_attributes = am_async_report_common.post_data_attributes()
+        data_attributes = am_async_report.post_data_attributes()
         self.assertEqual(
             data_attributes,
             {
@@ -43,13 +45,13 @@ class AdMetricsAsyncReportCommonTest(unittest.TestCase):
             },
         )
 
-        am_async_report_common.date_range("2021-03-31", "2021-03-01")  # wrong order
+        am_async_report.date_range("2021-03-31", "2021-03-01")  # wrong order
         with self.assertRaisesRegex(ValueError, "start date after end date"):
-            am_async_report_common.post_data_attributes()
+            am_async_report.post_data_attributes()
 
     @mock.patch("analytics_attributes.datetime.date", wraps=datetime.date)
     @mock.patch("async_report.AsyncReport.__init__")
-    def test_am_async_report_common_attributes_1(
+    def test_am_async_report_attributes_1(
         self, mock_async_report_init, mock_date
     ):
         mock_date.today.return_value = datetime.datetime(
@@ -58,8 +60,8 @@ class AdMetricsAsyncReportCommonTest(unittest.TestCase):
 
         # These attributes might not actually make any sense, but they are
         # valid and test most of the attribute functions.
-        am_async_report_common = (
-            AdMetricsAsyncReportCommon(
+        am_async_report = (
+            AdMetricsAsyncReport(
                 "test_api_config", "test_access_token", "test_advertiser_id"
             )
             .last_30_days()
@@ -73,18 +75,18 @@ class AdMetricsAsyncReportCommonTest(unittest.TestCase):
             .view_window_days(30)
         )
         # specify metrics with multiple calls
-        am_async_report_common.metrics(
+        am_async_report.metrics(
             {"INAPP_SEARCH_ROAS", "INAPP_SEARCH_COST_PER_ACTION"}
         )
-        am_async_report_common.metric("TOTAL_CLICK_SEARCH_QUANTITY")
-        am_async_report_common.metric("TOTAL_CLICK_SEARCH")
+        am_async_report.metric("TOTAL_CLICK_SEARCH_QUANTITY")
+        am_async_report.metric("TOTAL_CLICK_SEARCH")
 
         # specify filter
-        am_async_report_common.filters(
+        am_async_report.filters(
             [{"field": "SPEND_IN_DOLLAR", "operator": "GREATER_THAN", "values": [1]}]
         )
 
-        data_attributes = am_async_report_common.post_data_attributes()
+        data_attributes = am_async_report.post_data_attributes()
         self.assertEqual(
             data_attributes,
             {
@@ -115,9 +117,9 @@ class AdMetricsAsyncReportCommonTest(unittest.TestCase):
         )
 
     @mock.patch("async_report.AsyncReport.__init__")
-    def test_am_async_report_common_attributes_2(self, mock_async_report_init):
-        am_async_report_common = (
-            AdMetricsAsyncReportCommon(
+    def test_am_async_report_attributes_2(self, mock_async_report_init):
+        am_async_report = (
+            AdMetricsAsyncReport(
                 "test_api_config", "test_access_token", "test_advertiser_id"
             )
             .date_range("2021-03-01", "2021-03-31")
@@ -127,10 +129,10 @@ class AdMetricsAsyncReportCommonTest(unittest.TestCase):
         )
 
         with self.assertRaisesRegex(ValueError, "level: oops is not one of"):
-            am_async_report_common.post_data_attributes()
+            am_async_report.post_data_attributes()
 
-        am_async_report_common.level("KEYWORD")
-        am_async_report_common.tag_version(4)
+        am_async_report.level("KEYWORD")
+        am_async_report.tag_version(4)
 
         with self.assertRaisesRegex(ValueError, "tag_version: 4 is not one of"):
-            am_async_report_common.post_data_attributes()
+            am_async_report.post_data_attributes()

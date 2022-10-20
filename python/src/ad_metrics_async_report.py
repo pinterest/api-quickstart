@@ -3,14 +3,13 @@ from async_report import AsyncReport
 
 
 # The unit tests mock AsyncReport, so the first parent needs to be
-# AdMetricsAsyncReportCommon to make the multiple inheritance work correctly.
-# In particular, if AdMetricsAsyncReportCommon is not first in the order,
+# AdAnalyticsAttributes to make the multiple inheritance work correctly.
+# In particular, if AdAnalyticsAttributes is not first in the order,
 # the __init__ functions aren't called correctly.
-class AdMetricsAsyncReportCommon(AdAnalyticsAttributes, AsyncReport):
+class AdMetricsAsyncReport(AdAnalyticsAttributes, AsyncReport):
     """
-    Specifies all of the attributes for the async advertiser
-    delivery metrics report. For more information, see:
-    https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler
+    For documentation, see:
+    https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report
 
     The attribute functions are chainable. For example:
     report = DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id) \
@@ -28,8 +27,12 @@ class AdMetricsAsyncReportCommon(AdAnalyticsAttributes, AsyncReport):
     and waiting for the asynchronous report to be ready.
     """
 
-    def __init__(self, *args):
-        super().__init__(*args)  # forward all args to allow multiple inheritance
+    def __init__(self, api_config, access_token, advertiser_id):
+        super().__init__(
+            api_config, access_token, f"/v5/ad_accounts/{advertiser_id}/reports"
+        )
+        # def __init__(self, *args):
+        # super().__init__(*args)  # forward all args to allow multiple inheritance
 
         # set required attributes
         self.required_attrs.add("level")
