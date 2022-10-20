@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from v5.ad_metrics_async_report import AdMetricsAsyncReport
+from ad_metrics_async_report import AdMetricsAsyncReport
 
 
 class AdMetricsAsyncReportTest(unittest.TestCase):

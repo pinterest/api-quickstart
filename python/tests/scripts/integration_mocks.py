@@ -60,7 +60,7 @@ class IntegrationMocks(unittest.TestCase):
     mock_os_environ = {
         "PINTEREST_APP_ID": "test-app-id",
         "PINTEREST_APP_SECRET": "test-app-secret",
-        "PINTEREST_API_VERSION": "v3",
+        "PINTEREST_API_VERSION": "v5",
     }
 
     """

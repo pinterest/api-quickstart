@@ -2,12 +2,13 @@ import unittest
 from unittest import mock
 
 import requests_mock
-from v5.access_token import AccessToken
+
+from access_token import AccessToken
 
 
 class AccessTokenTest(unittest.TestCase):
     @requests_mock.Mocker()
-    @mock.patch("v5.access_token.get_auth_code")
+    @mock.patch("access_token.get_auth_code")
     def test_access_token(self, rm, mock_get_auth_code):
         mock_get_auth_code.return_value = "test-auth-code"
 

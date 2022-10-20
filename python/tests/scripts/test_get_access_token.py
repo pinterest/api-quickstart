@@ -9,25 +9,25 @@ class GetAccessTokenTest(IntegrationMocks):
     @requests_mock.Mocker(real_http=True)
     @mock.patch("builtins.print")
     def test_get_access_token(self, rm, mock_print):
-        rm.put(
-            "https://api.pinterest.com/v3/oauth/access_token/",
+        rm.post(
+            "https://api.pinterest.com/v5/oauth/token",
             json={
-                "status": "test-status",
-                "scope": "test-scope",
                 "access_token": "test-access-token",
-                "data": {"refresh_token": "test-refresh-token"},
+                "refresh_token": "test-refresh-token",
+                "response_type": "authorization_code",
+                "token_type": "bearer",
+                "expires_in": "2592000",
+                "refresh_token_expires_in": 31536000,
+                "scope": "test-scope",
             },
         )
         rm.get(
-            "https://api.pinterest.com/v3/users/me/",
+            "https://api.pinterest.com/v5/user_account",
             json={
-                "data": {
-                    "full_name": "test fullname",
-                    "id": "test user id",
-                    "about": "test about",
-                    "profile_url": "test profile url",
-                    "pin_count": "pin count",
-                }
+                "account_type": "BUSINESS",
+                "profile_image": "test profile url",
+                "website_url": "test website url",
+                "username": "pindexterp",
             },
         )
 
@@ -44,7 +44,9 @@ class GetAccessTokenTest(IntegrationMocks):
             "mock_open_new: "
             + "https://www.pinterest.com/oauth/?consumer_id=test-app-id"
             + "&redirect_uri=http://localhost:8085/&response_type=code"
-            + "&refreshable=True&state=test-token-hex"
+            + "&refreshable=True"
+            + "&scope=user_accounts:read,pins:read,boards:read"
+            + "&state=test-token-hex"
         )
         mock_print.assert_any_call(
             "hashed access token: "

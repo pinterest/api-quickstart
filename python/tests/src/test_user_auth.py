@@ -1,7 +1,7 @@
 import unittest
 from unittest import mock
 
-from v3.oauth_scope import Scope
+from oauth_scope import Scope
 
 from user_auth import HTTPServerHandler, get_auth_code
 
@@ -53,7 +53,7 @@ class UserAuthTest(unittest.TestCase):
             +
             # non-default values appear in the URI here
             "&refreshable=False"
-            + "&scope=read_users,read_advertisers"
+            + "&scope=user_accounts:read,ads:read"
             + "&state=test-token-hex"
         )
         auth_code = get_auth_code(

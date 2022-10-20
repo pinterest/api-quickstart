@@ -1,12 +1,12 @@
 import unittest
 from unittest import mock
 
-from v5.analytics import AdAnalytics, PinAnalytics, UserAnalytics
+from analytics import AdAnalytics, PinAnalytics, UserAnalytics
 
 
 class UserAnalyticsTest(unittest.TestCase):
-    @mock.patch("v5.analytics.ApiObject.request_data")
-    @mock.patch("v5.analytics.ApiObject.__init__")
+    @mock.patch("analytics.ApiObject.request_data")
+    @mock.patch("analytics.ApiObject.__init__")
     def test_user_analytics(self, mock_init, mock_request_data):
         analytics = (
             UserAnalytics("test_user_id", "test_api_config", "test_access_token")
@@ -86,8 +86,8 @@ class UserAnalyticsTest(unittest.TestCase):
 
 
 class PinAnalyticsTest(unittest.TestCase):
-    @mock.patch("v5.analytics.ApiObject.request_data")
-    @mock.patch("v5.analytics.ApiObject.__init__")
+    @mock.patch("analytics.ApiObject.request_data")
+    @mock.patch("analytics.ApiObject.__init__")
     def test_pin_analytics(self, mock_init, mock_request_data):
         analytics = (
             PinAnalytics("test_user_id", "test_api_config", "test_access_token")
@@ -161,8 +161,8 @@ class PinAnalyticsTest(unittest.TestCase):
 
 
 class AdAnalyticsTest(unittest.TestCase):
-    @mock.patch("v5.analytics.ApiObject.request_data")
-    @mock.patch("v5.analytics.ApiObject.__init__")
+    @mock.patch("analytics.ApiObject.request_data")
+    @mock.patch("analytics.ApiObject.__init__")
     def test_adanalytics(self, mock_init, mock_request_data):
         analytics = (
             AdAnalytics("test_api_config", "test_access_token")

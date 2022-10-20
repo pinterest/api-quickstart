@@ -2,7 +2,7 @@ import datetime
 import unittest
 from unittest import mock
 
-from v3.analytics import AdAnalyticsAttributes, AnalyticsAttributes
+from analytics import AdAnalyticsAttributes, AnalyticsAttributes
 
 
 class AnalyticsAttributesTest(unittest.TestCase):

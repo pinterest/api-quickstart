@@ -59,7 +59,6 @@ class ApiCommon:
           response) but for v3 includes only the "cooked" data container inside
           the response.
         """
-
         self._check(response)
 
         # Save a human-readable status for output and error handling.
