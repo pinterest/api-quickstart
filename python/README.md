@@ -388,26 +388,6 @@ optional arguments:
                         version of the API to use
 ```
 
-### [get_businesses.py](./scripts/get_businesses.py)
- Reads the `/v3/users/{user}/businesses/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_linked_business_accounts_GET). This script will generate a 400 error if your application does not have access to the `read_advertisers` scope. To see any data, the authorized account needs to have linked business acounts. There is not an equivalent v5 endpoint.
-<!--gen-->
-```
-$ ./scripts/get_businesses.py --help
-
-usage: get_businesses.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL] [-v API_VERSION]
-
-Get User Businesses
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
-                        access token name
-  -l LOG_LEVEL, --log-level LOG_LEVEL
-                        level of logging verbosity
-  -v API_VERSION, --api-version API_VERSION
-                        version of the API to use
-```
-
 ### [analytics_api_example.py](./scripts/analytics_api_example.py)
 Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler) and [get](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler) v4 endpoints, or the [create](https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report) and [get](https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report) endpoints for v5.
 

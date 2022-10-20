@@ -39,10 +39,6 @@ class User(ApiObject):
     def get(self):
         return self.request_data("/v5/user_account")
 
-    def get_businesses(self):
-        print("Businesses endpoint is not available in v5.")
-        return None
-
     def print_summary(self, user_data):
         print("--- User Summary ---")
         print("Username:", user_data.get("username"))

@@ -18,17 +18,6 @@ class UserTest(unittest.TestCase):
         mock_api_object_request_data.assert_called_once_with("/v5/user_account")
         self.assertEqual(response, "test_response")
 
-    @mock.patch("user.ApiObject.request_data")
-    @mock.patch("user.ApiObject.__init__")
-    def test_user_get_businesses(
-        self, mock_api_object_init, mock_api_object_request_data
-    ):
-        test_user = User("test_user", "test_api_config", "test_access_token")
-
-        response = test_user.get_businesses()
-        mock_api_object_request_data.assert_not_called()
-        self.assertEqual(response, None)
-
     @mock.patch("user.ApiObject.get_iterator")
     @mock.patch("user.ApiObject.__init__")
     def test_user_get_boards(self, mock_api_object_init, mock_api_object_get_iterator):
