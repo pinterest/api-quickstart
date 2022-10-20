@@ -98,8 +98,4 @@ class ApiCommon:
             print("x-pinterest-rid:", response.headers.get("x-pinterest-rid"))
             print(unpacked)
 
-        if raw or self.api_config.version == "v5":
-            return unpacked
-
-        # API version v3 uses a data container that is useful to unpack
-        return unpacked.get("data")
+        return unpacked

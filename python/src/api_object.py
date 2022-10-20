@@ -20,7 +20,7 @@ class PagedIterator:
         response = self.api_object.get_response(path_maybe_with_bookmark)
         unpacked = self.api_object.unpack(response)
         # the field with the items container is determined in the iterator constructor
-        self.items = unpacked.get(self.items_field)
+        self.items = unpacked.get("items")
         self.bookmark = unpacked.get("bookmark")
         self.index = 0
 
@@ -30,10 +30,6 @@ class PagedIterator:
         """
         self.api_object = api_object
         self.path = path  # to be used with the bookmark on subsequent requests
-        if api_object.api_config.version == "v3":
-            self.items_field = "data"  # data container has items returned from request
-        else:
-            self.items_field = "items"  # v5 response has a designated items container
         self._get_response(path)  # first time, get response without bookmark
 
     def __iter__(self):

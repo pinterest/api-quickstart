@@ -117,19 +117,6 @@ def main(argv=[]):
 
     api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
 
-    # This API edge case is best handled up right after API set-up...
-    if api_config.version < "v5" and args.analytics_object == "pin":
-        print("Pin analytics for shared accounts are")
-        print("supported by Pinterest API v5, but not v3 or v4.")
-        print("Try using -v5 or an analytics object besides pin.")
-        exit(1)
-
-    if api_config.version < "v5" and args.analytics_object == "ad_account_user":
-        print("User account analytics for shared accounts are")
-        print("supported by Pinterest API v5, but not v3 or v4.")
-        print("Try using -v5 or an analytics object besides ad_account_user.")
-        exit(1)
-
     # Requesting pin analytics requires a pin_id.
     if args.analytics_object == "pin" and not args.pin_id:
         print("Pin analytics require a pin identifier.")
