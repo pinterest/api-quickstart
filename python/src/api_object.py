@@ -71,7 +71,7 @@ class ApiObject(ApiCommon):
         )
 
     def request_data(self, path):
-        return self.unpack(self.get_response(path), raw=False)
+        return self.unpack(self.get_response(path))
 
     def put_data(self, path, put_data):
         if self.api_config.verbosity >= 2:
@@ -84,7 +84,7 @@ class ApiObject(ApiCommon):
             headers=self.access_token.header(),
             allow_redirects=False,
         )
-        return self.unpack(response, raw=False)
+        return self.unpack(response)
 
     def post_data(self, path, post_data=None):
         if self.api_config.verbosity >= 2:
@@ -97,7 +97,7 @@ class ApiObject(ApiCommon):
             headers=self.access_token.header(),
             allow_redirects=False,
         )
-        return self.unpack(response, raw=False)
+        return self.unpack(response)
 
     def delete_and_check(self, path):
         if self.api_config.verbosity >= 2:
