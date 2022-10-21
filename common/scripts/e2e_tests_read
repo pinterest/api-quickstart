@@ -30,43 +30,30 @@ SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
 . "${SCRIPT_DIR}"/e2e_tests_preamble
 
 # verify the user_account fetch
-for VERSION in ${VERSIONS} ; do
-    ./scripts/get_access_token.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}"
-done
+./scripts/get_access_token.${EXT} -a "${TEST1}"
 
 # run the refresh example script
-for VERSION in ${VERSIONS} ; do
-    ./scripts/refresh_example.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}"
-done
+./scripts/refresh_example.${EXT} -a "${TEST1}"
 
-for VERSION in ${VERSIONS} ; do
-    ./scripts/get_pin.${EXT} -p ${PIN} -a "${TEST1}_${VERSION}" -"${VERSION}"
-done
+# get a single pin
+./scripts/get_pin.${EXT} -p ${PIN} -a "${TEST1}"
 
 # get the user pins for the pindexter account
-for VERSION in ${VERSIONS} ; do
-    ./scripts/get_user_pins.${EXT} --page-size 100 -a "${TEST1}_${VERSION}" -"${VERSION}"
-done
+./scripts/get_user_pins.${EXT} --page-size 100 -a "${TEST1}"
 
 # get a specific board for the pindexter account
-for VERSION in ${VERSIONS} ; do
-    ./scripts/get_board.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}" -b ${BOARD}
-done
+./scripts/get_board.${EXT} -a "${TEST1}" -b ${BOARD}
 
 # get a specific board and the pins on the board
-for VERSION in ${VERSIONS} ; do
-    ./scripts/get_board.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}" -b ${BOARD} --pins
-done
+./scripts/get_board.${EXT} -a "${TEST1}" -b ${BOARD} --pins
 
-# get the user boards with the pins for the pindexter account
-for VERSION in ${VERSIONS} ; do
-    ./scripts/get_user_boards.${EXT} -a "${TEST1}_${VERSION}" -"${VERSION}"
-done
+# get the user boards for the pindexter account
+./scripts/get_user_boards.${EXT} -a "${TEST1}"
 
-# Pin analytics only work with v5. For now, only nodejs. Python is on the backlog.
+# get pin analytics
 DOCNAME=${OUTPUT_PREFIX}_pin_analytics.json
 printf "${DOCNAME}\n" | \
-    ./scripts/get_analytics.${EXT} -a ${TEST1}_v5 -v5 -o pin --pin-id ${PIN}
+    ./scripts/get_analytics.${EXT} -a ${TEST1} -o pin --pin-id ${PIN}
 wc ${DOCNAME}
 
 # delete output files

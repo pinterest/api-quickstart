@@ -22,7 +22,7 @@ class AdMetricsAsyncReportTest(unittest.TestCase):
         mock_async_report_init.assert_called_once_with(
             "test_api_config",
             "test_access_token",
-            "/v5/ad_accounts/test_advertiser_id/reports"
+            "/v5/ad_accounts/test_advertiser_id/reports",
         )
 
         with self.assertRaisesRegex(
@@ -51,9 +51,7 @@ class AdMetricsAsyncReportTest(unittest.TestCase):
 
     @mock.patch("analytics_attributes.datetime.date", wraps=datetime.date)
     @mock.patch("async_report.AsyncReport.__init__")
-    def test_am_async_report_attributes_1(
-        self, mock_async_report_init, mock_date
-    ):
+    def test_am_async_report_attributes_1(self, mock_async_report_init, mock_date):
         mock_date.today.return_value = datetime.datetime(
             2021, 3, 31
         )  # for call to last_30_days below
@@ -75,9 +73,7 @@ class AdMetricsAsyncReportTest(unittest.TestCase):
             .view_window_days(30)
         )
         # specify metrics with multiple calls
-        am_async_report.metrics(
-            {"INAPP_SEARCH_ROAS", "INAPP_SEARCH_COST_PER_ACTION"}
-        )
+        am_async_report.metrics({"INAPP_SEARCH_ROAS", "INAPP_SEARCH_COST_PER_ACTION"})
         am_async_report.metric("TOTAL_CLICK_SEARCH_QUANTITY")
         am_async_report.metric("TOTAL_CLICK_SEARCH")
 

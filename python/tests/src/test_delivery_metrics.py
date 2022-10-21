@@ -1,5 +1,4 @@
 import unittest
-from unittest import mock
 
 from delivery_metrics import DeliveryMetrics
 

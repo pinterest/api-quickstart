@@ -42,7 +42,7 @@ def main(argv=[]):
     pin_iterator = user.get_pins(
         user_data, query_parameters={"page_size": args.page_size}
     )
-    user       .print_multiple(args.page_size, "pin", Pin, pin_iterator)
+    user.print_multiple(args.page_size, "pin", Pin, pin_iterator)
 
 
 if __name__ == "__main__":

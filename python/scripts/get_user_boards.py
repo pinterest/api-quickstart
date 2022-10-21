@@ -66,7 +66,7 @@ def main(argv=[]):
     if args.include_archived:
         query_parameters["include_archived"] = args.include_archived
     board_iterator = user.get_boards(user_data, query_parameters)
-    user       .print_multiple(args.page_size, "board", Board, board_iterator)
+    user.print_multiple(args.page_size, "board", Board, board_iterator)
 
 
 if __name__ == "__main__":

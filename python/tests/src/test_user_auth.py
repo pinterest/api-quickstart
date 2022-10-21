@@ -2,7 +2,6 @@ import unittest
 from unittest import mock
 
 from oauth_scope import Scope
-
 from user_auth import HTTPServerHandler, get_auth_code
 
 

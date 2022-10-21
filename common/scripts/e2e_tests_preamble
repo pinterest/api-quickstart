@@ -57,9 +57,6 @@ VIDEO_PIN_DESCRIPTION="Khao Phanom Bencha National Park"
 BASE_DIR=$(cd "${SCRIPT_DIR}"/../../../; pwd)
 VIDEO_FILE=${BASE_DIR}/test-media/test-video.mov
 
-# Versions to test. This variable should not need to change.
-VERSIONS="v3 v5"
-
 # Start the names of output files with this string so that they
 # are easy to remove at the end of tests.
 OUTPUT_PREFIX=e2etestout

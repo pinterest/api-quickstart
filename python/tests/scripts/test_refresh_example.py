@@ -34,8 +34,8 @@ class RefreshExampleTest(IntegrationMocks):
                 "account_type": "BUSINESS",
                 "profile_image": "test_profile_image",
                 "website_url": "test_website_url",
-                "username": "test user name"
-            }
+                "username": "test user name",
+            },
         )
 
         from scripts.refresh_example import main  # import here to see monkeypatches

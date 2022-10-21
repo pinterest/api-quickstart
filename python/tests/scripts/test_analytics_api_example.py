@@ -32,12 +32,8 @@ class AnalyticsApiExampleTest(IntegrationMocks):
     def test_analytics_api_example(self, rm):
         # request from AsyncReport.request_report
         rm.post(
-            "https://api.pinterest.com/v5/ad_accounts/"
-            "adv_2_id/reports",
-            json={
-                "report_status": "IN_PROGRESS",
-                "token": "test-report-token"
-            }
+            "https://api.pinterest.com/v5/ad_accounts/" "adv_2_id/reports",
+            json={"report_status": "IN_PROGRESS", "token": "test-report-token"},
         )
 
         # request from User.get
@@ -47,8 +43,8 @@ class AnalyticsApiExampleTest(IntegrationMocks):
                 "account_type": "BUSINESS",
                 "profile_image": "test_profile_image",
                 "website_url": "test_website_url",
-                "username": "test user name"
-            }
+                "username": "test user name",
+            },
         )
         # request from Advertisers.get
         rm.get(
