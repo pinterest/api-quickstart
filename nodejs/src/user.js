@@ -12,11 +12,6 @@ export class User extends ApiObject {
     return await super.request_data('/v5/user_account');
   }
 
-  async get_businesses() {
-    console.log('Businesses endpoint is not available in v5.');
-    return null;
-  }
-
   print_summary(user_data) {
     console.log('--- User Summary ---');
     console.log('Username:', user_data.username);

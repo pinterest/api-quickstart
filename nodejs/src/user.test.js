@@ -30,12 +30,6 @@ describe('v5 user tests', () => {
     expect(mock_request_data.mock.calls[0][0]).toEqual('/v5/user_account');
     expect(response).toEqual('test_response');
 
-    console.log = jest.fn(); // test output
-
-    response = await test_user.get_businesses();
-    expect(console.log.mock.calls[0][0]).toEqual('Businesses endpoint is not available in v5.');
-    expect(response).toEqual(null);
-
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');
     mock_get_iterator.mockResolvedValue('test_iterator');
     const iterator = await test_user.get_boards('test_user_data', 'query_parameters');
