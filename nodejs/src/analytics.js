@@ -1,5 +1,5 @@
-import { AnalyticsAttributes, AdAnalyticsAttributes } from '../analytics_attributes.js';
-import { ApiObject } from '../api_object.js';
+import { AnalyticsAttributes, AdAnalyticsAttributes } from './analytics_attributes.js';
+import { ApiObject } from './api_object.js';
 
 /**
  * This module uses Pinterest API v5 in three classes:

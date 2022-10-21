@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 import fs from 'fs';
 
+import { AccessToken } from '../src/access_token.js';
+import { Advertisers } from '../src/advertisers.js';
+import { UserAnalytics, PinAnalytics, AdAnalytics } from '../src/analytics.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 import { ArgumentParser } from 'argparse';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
@@ -143,13 +148,6 @@ async function main(argv) {
     verbosity: args.log_level,
     version: args.api_version
   });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Advertisers } = await import(`../src/${api_config.version}/advertisers.js`);
-  const { UserAnalytics, PinAnalytics, AdAnalytics } = await import(`../src/${api_config.version}/analytics.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
 
   // This API edge case is best handled up right after API set-up...
   if (api_config.version < 'v5' && args.analytics_object === 'pin') {

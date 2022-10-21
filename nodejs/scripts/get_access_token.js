@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import { ArgumentParser } from 'argparse';
 
+import { AccessToken } from '../src/access_token.js';
+import { User } from '../src/user.js';
+import { Scope, print_scopes } from '../src/oauth_scope.js';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
 
@@ -38,11 +41,6 @@ async function main(argv) {
 
   // get configuration from defaults and/or the environment
   const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
-  const { Scope, print_scopes } = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.

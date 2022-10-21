@@ -1,8 +1,8 @@
 import got from 'got';
 
-import { AccessTokenCommon } from '../access_token_common.js';
+import { AccessTokenCommon } from './access_token_common.js';
 import { Scope } from './oauth_scope.js';
-import get_auth_code from '../user_auth.js';
+import get_auth_code from './user_auth.js';
 
 export class AccessToken extends AccessTokenCommon {
   constructor(api_config, { name }) {

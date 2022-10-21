@@ -1,7 +1,7 @@
 import { AdMetricsAsyncReport } from './ad_metrics_async_report.js';
-import { AsyncReport } from '../async_report.js';
+import { AsyncReport } from './async_report.js';
 
-jest.mock('../async_report');
+jest.mock('./async_report');
 
 describe('ad_metrics_async_report tests', () => {
   afterEach(() => {

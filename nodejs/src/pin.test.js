@@ -1,8 +1,8 @@
-import { ApiMediaObject } from '../api_media_object.js';
+import { ApiMediaObject } from './api_media_object.js';
 import { Pin } from './pin.js';
 
-jest.mock('../api_media_object');
-const amo_actual = jest.requireActual('../api_media_object');
+jest.mock('./api_media_object');
+const amo_actual = jest.requireActual('./api_media_object');
 
 describe('v5 pin tests', () => {
   afterEach(() => {

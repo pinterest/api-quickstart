@@ -1,5 +1,5 @@
-import { AdMetricsAsyncReportCommon } from '../ad_metrics_async_report_common.js';
-import { AsyncReport } from '../async_report.js';
+import { AdMetricsAsyncReportCommon } from './ad_metrics_async_report_common.js';
+import { AsyncReport } from './async_report.js';
 
 /**
  * For documentation, see: https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report

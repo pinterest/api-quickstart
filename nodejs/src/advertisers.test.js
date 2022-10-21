@@ -1,7 +1,7 @@
 import { Advertisers } from './advertisers.js';
-import { ApiObject } from '../api_object.js';
+import { ApiObject } from './api_object.js';
 
-jest.mock('../api_object');
+jest.mock('./api_object');
 
 describe('v5 advertisers tests', () => {
   afterEach(() => {

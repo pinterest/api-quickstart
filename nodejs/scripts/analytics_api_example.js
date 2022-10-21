@@ -1,9 +1,16 @@
 #!/usr/bin/env node
 import { ArgumentParser } from 'argparse';
+
+import { AccessToken } from '../src/access_token.js';
+import { AdMetricsAsyncReport } from '../src/ad_metrics_async_report.js';
+import { Advertisers } from '../src/advertisers.js';
 import { ApiConfig } from '../src/api_config.js';
+import { DeliveryMetrics } from '../src/delivery_metrics.js';
 import { common_arguments } from '../src/arguments.js';
-import { Input } from '../src/utils.js';
 import { download_file } from '../src/generic_requests.js';
+import { Input } from '../src/utils.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 
 /**
  * This script shows how to use the Pinterest API asynchronous report functionality
@@ -44,14 +51,6 @@ async function main(argv) {
     verbosity: args.log_level,
     version: args.api_version
   });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { AdMetricsAsyncReport } = await import(`../src/${api_config.version}/ad_metrics_async_report.js`);
-  const { Advertisers } = await import(`../src/${api_config.version}/advertisers.js`);
-  const { DeliveryMetrics } = await import(`../src/${api_config.version}/delivery_metrics.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
 
   // Step 1: Fetch an access token and print summary data about the User.
   // Note that the OAuth will fail if your application does not

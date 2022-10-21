@@ -1,4 +1,4 @@
-import { ApiMediaObject } from '../api_media_object.js';
+import { ApiMediaObject } from './api_media_object.js';
 
 export class Pin extends ApiMediaObject {
   constructor(pin_id, api_config, access_token) {

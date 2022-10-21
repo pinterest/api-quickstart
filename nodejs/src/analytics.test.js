@@ -1,7 +1,7 @@
 import { UserAnalytics, PinAnalytics, AdAnalytics } from './analytics.js';
-import { ApiObject } from '../api_object.js';
+import { ApiObject } from './api_object.js';
 
-jest.mock('../api_object');
+jest.mock('./api_object');
 
 describe('v5 analytics tests', () => {
   afterEach(() => {

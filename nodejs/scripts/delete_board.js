@@ -5,6 +5,10 @@
  */
 import { ArgumentParser } from 'argparse';
 
+import { AccessToken } from '../src/access_token.js';
+import { Board } from '../src/board.js';
+import { User } from '../src/user.js';
+import { Scope } from '../src/oauth_scope.js';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
 import { Input } from '../src/utils.js';
@@ -32,12 +36,6 @@ async function main(argv) {
 
   // get configuration from defaults and/or the environment
   const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Board } = await import(`../src/${api_config.version}/board.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
 
   // get access token
   const access_token = new AccessToken(api_config, { name: args.access_token });

@@ -1,8 +1,8 @@
-import { ApiObject } from '../api_object.js';
+import { ApiObject } from './api_object.js';
 import { Board } from './board.js';
 import { User } from './user.js';
 
-jest.mock('../api_object');
+jest.mock('./api_object');
 jest.mock('./board');
 
 describe('v5 user tests', () => {

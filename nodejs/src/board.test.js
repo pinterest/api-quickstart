@@ -1,7 +1,7 @@
-import { ApiObject } from '../api_object.js';
+import { ApiObject } from './api_object.js';
 import { Board } from './board.js';
 
-jest.mock('../api_object');
+jest.mock('./api_object');
 
 describe('v5 board tests', () => {
   afterEach(() => {

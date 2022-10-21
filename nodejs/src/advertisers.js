@@ -1,4 +1,4 @@
-import { ApiObject } from '../api_object.js';
+import { ApiObject } from './api_object.js';
 
 export class Advertisers extends ApiObject {
   constructor(_user_id, api_config, access_token) {
