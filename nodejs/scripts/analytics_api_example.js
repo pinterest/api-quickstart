@@ -111,7 +111,7 @@ async function main(argv) {
     // and clicks my ads got in the last 30 days.
 
     // Step 3: Learn more about the metrics available
-    //   https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_delivery_metrics_handler_GET
+    //   https://developers.pinterest.com/docs/api/v5/#operation/delivery_metrics/get
 
     // the output of delivery_metrics.get() is too long to be printed
     const verbosity = api_config.verbosity;

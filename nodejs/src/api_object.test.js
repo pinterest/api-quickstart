@@ -4,8 +4,7 @@ import got from 'got';
 jest.mock('got');
 
 /*
- * Tests for the generic ApiObject class that is used for all versions
- * of the Pinterest API.
+ * Tests for the generic ApiObject class.
  *
  * Note: the reset_backoff and wait_backoff functions are tested with
  * the classes that call these functions instead of testing them in
@@ -57,42 +56,10 @@ describe('api_object tests', () => {
       .toBe('hello?good=bye&cruel=world&and=farewell');
   });
 
-  test('v3 api_object', async() => {
-    const mock_api_config = jest.fn();
-    mock_api_config.api_uri = 'test_uri';
-    mock_api_config.verbosity = 2;
-    mock_api_config.version = 'v3';
-
-    const mock_access_token = jest.fn();
-    mock_access_token.header = jest.fn();
-    mock_access_token.header.mockReturnValueOnce('test_headers');
-
-    got.get.mockResolvedValueOnce({
-      body: { data: 'test_response_data' },
-      statusCode: 200
-    });
-
-    // check output
-    console.log = jest.fn();
-
-    const api_object = new ApiObject(mock_api_config, mock_access_token);
-    const response = await api_object.request_data('/test_path');
-    expect(response).toEqual('test_response_data');
-    expect(got.get.mock.calls[0][0]).toEqual('test_uri/test_path');
-    expect(got.get.mock.calls[0][1]).toEqual({
-      headers: 'test_headers',
-      followRedirect: false,
-      responseType: 'json'
-    });
-    expect(console.log.mock.calls[0]).toEqual(['GET', 'test_uri/test_path']);
-    expect(console.log.mock.calls[1][0]).toEqual('<Response [200]>');
-  });
-
   test('v5 api_object', async() => {
     const mock_api_config = jest.fn();
     mock_api_config.api_uri = 'test_uri';
     mock_api_config.verbosity = 2;
-    mock_api_config.version = 'v5';
 
     const mock_access_token = jest.fn();
     mock_access_token.header = jest.fn();
@@ -109,5 +76,46 @@ describe('api_object tests', () => {
     const api_object = new ApiObject(mock_api_config, mock_access_token);
     const response = await api_object.request_data('/test_path');
     expect(response).toEqual('test_response_data');
+  });
+
+  test('v5 api_object_iterator', async() => {
+    const mock_api_config = jest.fn();
+    mock_api_config.api_uri = 'test_uri';
+    mock_api_config.verbosity = 2;
+
+    const mock_access_token = jest.fn();
+    mock_access_token.header = jest.fn();
+    mock_access_token.header.mockReturnValue('test_headers');
+
+    got.get.mockReset();
+    got.get.mockResolvedValueOnce({
+      body: { items: ['one', 'two'], bookmark: 'BOOKMARK1' },
+      statusCode: 200
+    });
+    got.get.mockResolvedValueOnce({
+      body: { items: ['three'] },
+      statusCode: 200
+    });
+
+    const api_object = new ApiObject(mock_api_config, mock_access_token);
+    const test_iterator = await api_object.get_iterator('/test_iterpath', {
+      test_param1: 'test_value1',
+      test_param2: 'test value/2'
+    });
+
+    const expected_values = ['one', 'two', 'three'];
+    let index = 0;
+    for await (const item of test_iterator) {
+      expect(item).toEqual(expected_values[index]);
+      index += 1;
+    }
+
+    // need to check calls
+    expect(got.get.mock.calls[0][0]).toBe(
+      'test_uri/test_iterpath?test_param1=test_value1&test_param2=test+value%2F2'
+    );
+    expect(got.get.mock.calls[1][0]).toBe('\
+test_uri/test_iterpath?test_param1=test_value1&test_param2=test+value%2F2\
+&bookmark=BOOKMARK1');
   });
 });

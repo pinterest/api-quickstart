@@ -20,7 +20,6 @@ export class ApiMediaObject extends ApiObject {
    *   media_id    => an existing media identifier
    *
    * References:
-   *   v3: https://developers.pinterest.com/docs/redoc/#section/Using-video-APIs
    *   v5: https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
    */
   async media_to_media_id(media) {

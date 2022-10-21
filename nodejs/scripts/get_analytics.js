@@ -13,9 +13,7 @@ import { UserAnalytics, PinAnalytics, AdAnalytics } from '../src/analytics.js';
 
 /**
  * This script shows how to use the Pinterest API synchronous analytics endpoints
- * to download reports for a User, Ad Account, Campaign, Ad Group, or Ad. The
- * analytics_api_example script shows how to use Pinterest API v3 to retrieve
- * similar metrics using asynchronous reporting functionality.
+ * to download reports for a User, Ad Account, Campaign, Ad Group, or Ad.
  *
  * This script fetches user analytics by default, which just requires an
  * access token with READ_USERS scope.
@@ -149,24 +147,9 @@ async function main(argv) {
     version: args.api_version
   });
 
-  // This API edge case is best handled up right after API set-up...
-  if (api_config.version < 'v5' && args.analytics_object === 'pin') {
-    console.log('Pin analytics are supported by Pinterest API v5, but not v3 or v4.');
-    console.log('Try using -v5 or an analytics object besides pin.');
-    process.exit(1);
-  }
-
   // Requesting pin analytics requires a pin_id.
   if (args.analytics_object === 'pin' && !args.pin_id) {
     console.log('Pin analytics require a pin identifier.');
-    process.exit(1);
-  }
-
-  // This API edge case is best handled up right after API set-up...
-  if (api_config.version < 'v5' && args.analytics_object === 'ad_account_user') {
-    console.log('User account analytics for shared accounts are');
-    console.log('supported by Pinterest API v5, but not v3 or v4.');
-    console.log('Try using -v5 or an analytics object besides ad_account_user.');
     process.exit(1);
   }
 

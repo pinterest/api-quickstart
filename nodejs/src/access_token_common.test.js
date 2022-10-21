@@ -22,19 +22,11 @@ describe('access_token_common tests', () => {
     mock_api_config.oauth_token_dir = 'test-token-dir';
 
     process.env.ACCESS_TOKEN_FROM_ENV = 'access token 42';
-    let access_token = new AccessTokenCommon(mock_api_config,
+    const access_token = new AccessTokenCommon(mock_api_config,
       { name: 'access_token_from_env' });
     await access_token.fetch({});
     // echo -n 'access token 42' | shasum -a 256
     expect('553c1f363497ba07fecc989425e57e37c2b5f57ff7476c79dfd580ef0741db88')
-      .toEqual(access_token.hashed());
-
-    mock_api_config.version = 'v3';
-    access_token = new AccessTokenCommon(mock_api_config, {});
-    process.env.ACCESS_TOKEN_V3 = 'v3 access token';
-    await access_token.fetch({});
-    // echo -n 'access token 42' | shasum -a 256
-    expect('0186dba9997e23d7e180a711417e529e8647b2b296807d26781dc76b6edb726e')
       .toEqual(access_token.hashed());
   });
 

@@ -26,7 +26,7 @@ describe('v5 user tests', () => {
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
     mock_request_data.mockResolvedValue('test_response');
 
-    let response = await test_user.get();
+    const response = await test_user.get();
     expect(mock_request_data.mock.calls[0][0]).toEqual('/v5/user_account');
     expect(response).toEqual('test_response');
 
