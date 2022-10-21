@@ -40,7 +40,7 @@ async function main(argv) {
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
+  const api_config = new ApiConfig({ verbosity: args.log_level });
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.

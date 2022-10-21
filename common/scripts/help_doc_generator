@@ -56,7 +56,7 @@ perl -0777 -p -i -e 's/
     (?<=\<\!--gen--\>\n```\n)
 
     # capture reference command
-    ^(\$\s(\.\/scripts\/[a-z_]+\.(js|py)\s+(--help|(-v\s*[0-9]+\s+)?--scopes\s+help))\n\n)
+    ^(\$\s(\.\/scripts\/[a-z_]+\.(js|py)\s+(--help|--scopes\s+help))\n\n)
 
     # match the rest of the code-block
     (?^s:.*?)

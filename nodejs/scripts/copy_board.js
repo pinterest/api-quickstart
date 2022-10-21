@@ -100,7 +100,7 @@ async function main(argv) {
   }
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
+  const api_config = new ApiConfig({ verbosity: args.log_level });
 
   // helper function to copy a pin
   const copy_pin = async function(pin, pin_data, target_board_id, { target_section_id }) {

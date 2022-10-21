@@ -12,7 +12,7 @@ export class AccessTokenCommon extends ApiCommon {
     const b64auth = Buffer.from(auth).toString('base64');
     this.api_uri = api_config.api_uri;
     this.auth_headers = { Authorization: `Basic ${b64auth}` };
-    this.name = name || `access_token_${api_config.version}`;
+    this.name = name || 'access_token';
     this.path = path.join(api_config.oauth_token_dir, `${this.name}.json`);
   }
 

@@ -35,7 +35,7 @@ async function main(argv) {
   }
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
+  const api_config = new ApiConfig({ verbosity: args.log_level });
 
   // get access token
   const access_token = new AccessToken(api_config, { name: args.access_token });
