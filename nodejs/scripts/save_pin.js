@@ -2,10 +2,10 @@
 import { ArgumentParser } from 'argparse';
 
 import { AccessToken } from '../src/access_token.js';
-import { Pin } from '../src/pin.js';
-import { Scope } from '../src/oauth_scope.js';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
+import { Pin } from '../src/pin.js';
+import { Scope } from '../src/oauth_scope.js';
 
 /**
  * This script saves a pin to a board. This action is informally

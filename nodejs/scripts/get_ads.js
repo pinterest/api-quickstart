@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import { AccessToken } from '../src/access_token.js';
+import { Advertisers } from '../src/advertisers.js';
 import { ArgumentParser } from 'argparse';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
 import { Input } from '../src/utils.js';
-import { AccessToken } from '../src/access_token.js';
-import { Advertisers } from '../src/advertisers.js';
 import { Scope } from '../src/oauth_scope.js';
 import { User } from '../src/user.js';
 

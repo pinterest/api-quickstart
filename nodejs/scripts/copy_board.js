@@ -10,13 +10,13 @@
 import { ArgumentParser } from 'argparse';
 
 import { AccessToken } from '../src/access_token.js';
+import { ApiConfig } from '../src/api_config.js';
 import { Board } from '../src/board.js';
+import { common_arguments } from '../src/arguments.js';
 import { Pin } from '../src/pin.js';
 import { Scope } from '../src/oauth_scope.js';
-import { User } from '../src/user.js';
-import { ApiConfig } from '../src/api_config.js';
-import { common_arguments } from '../src/arguments.js';
 import { SpamError } from '../src/api_common.js';
+import { User } from '../src/user.js';
 
 /**
  * This script is intended primarily for developers who need to create a test copy

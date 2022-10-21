@@ -2,10 +2,10 @@
 import { ArgumentParser } from 'argparse';
 
 import { AccessToken } from '../src/access_token.js';
-import { Scope } from '../src/oauth_scope.js';
-import { User } from '../src/user.js';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 
 /**
  * This script was written primarily as a way for folks at Pinterest to

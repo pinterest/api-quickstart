@@ -6,12 +6,12 @@
 import { ArgumentParser } from 'argparse';
 
 import { AccessToken } from '../src/access_token.js';
-import { Board } from '../src/board.js';
-import { User } from '../src/user.js';
-import { Scope } from '../src/oauth_scope.js';
 import { ApiConfig } from '../src/api_config.js';
+import { Board } from '../src/board.js';
 import { common_arguments } from '../src/arguments.js';
 import { Input } from '../src/utils.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 
 /**
  * This script is intended primarily for developers who need to delete boards

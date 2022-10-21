@@ -2,10 +2,10 @@
 import { ArgumentParser } from 'argparse';
 
 import { AccessToken } from '../src/access_token.js';
-import { User } from '../src/user.js';
-import { Scope, print_scopes } from '../src/oauth_scope.js';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
+import { User } from '../src/user.js';
+import { Scope, print_scopes } from '../src/oauth_scope.js';
 
 /**
  * The arguments for this script are intended to be used as follows:
