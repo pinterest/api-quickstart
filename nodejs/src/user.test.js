@@ -11,7 +11,7 @@ describe('v5 user tests', () => {
   });
 
   test('v5 user get methods', async() => {
-    const test_user = new User('test_user', 'test_api_config', 'test_access_token');
+    const test_user = new User('test_api_config', 'test_access_token');
     expect(ApiObject.mock.instances.length).toBe(1);
     expect(ApiObject.mock.calls[0]).toEqual(['test_api_config', 'test_access_token']);
 
@@ -39,7 +39,7 @@ describe('v5 user tests', () => {
   });
 
   test('v5 user get pins', async() => {
-    const test_user = new User('test_user', 'test_api_config', 'test_access_token');
+    const test_user = new User('test_api_config', 'test_access_token');
 
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');
     // This value mocks the iterator in the get_boards() call.

@@ -44,10 +44,10 @@ async function main(argv) {
   let boards;
   let confirmation = null;
   if (args.all_boards) { // delete all boards for the user
-    const user_me = new User('me', api_config, access_token);
-    const user_me_data = await user_me.get();
-    boards = await user_me.get_boards(user_me_data, {});
-    confirmation = `Delete all boards for ${user_me_data.username}`;
+    const user = new User(api_config, access_token);
+    const user_data = await user.get();
+    boards = await user.get_boards(user_data, {});
+    confirmation = `Delete all boards for ${user_data.username}`;
   } else { // copy just the board designated by board_id
     const deletion_board = new Board(args.board_id, api_config, access_token);
     const board_data = await deletion_board.get();

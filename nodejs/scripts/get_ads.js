@@ -133,9 +133,9 @@ async function main(argv) {
   // Sample: Get my user id
   // For a future call we need to know the user id associated with
   // the access token being used.
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 
   // Step 2: Walk the ads entity structure.
   // One of the first challenges many developers run into is that the relationship
@@ -149,7 +149,7 @@ async function main(argv) {
   // This process is also touched on in the API docs:
   //   https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
   const advertisers = new Advertisers(
-    user_me_data.id, api_config, access_token);
+    user_data.id, api_config, access_token);
 
   const ads_entities = [
     { kind: 'Ad Account', parent: 'User', getfn: 'get', id: args.ad_account_id },

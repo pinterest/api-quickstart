@@ -2,9 +2,8 @@ import { ApiObject } from './api_object.js';
 import { Board } from './board.js';
 
 export class User extends ApiObject {
-  constructor(user, api_config, access_token) {
+  constructor(api_config, access_token) {
     super(api_config, access_token);
-    this.user = user;
   }
 
   // https://developers.pinterest.com/docs/api/v5/#tag/user_account

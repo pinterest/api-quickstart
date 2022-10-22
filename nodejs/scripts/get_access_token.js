@@ -97,9 +97,9 @@ async function main(argv) {
   }
 
   // use the access token to get information about the user
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 }
 
 if (!process.env.TEST_ENV) {

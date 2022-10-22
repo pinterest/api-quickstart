@@ -34,14 +34,14 @@ async function main(argv) {
   });
 
   // use the access token to get information about the user
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 
   // get information about all of the pins in the user's profile
-  const pin_iterator = await user_me.get_pins(user_me_data,
+  const pin_iterator = await user.get_pins(user_data,
     { query_parameters: { page_size: args.page_size } });
-  await user_me.print_multiple(args.page_size, 'pin', Pin, pin_iterator);
+  await user.print_multiple(args.page_size, 'pin', Pin, pin_iterator);
 }
 
 if (!process.env.TEST_ENV) {

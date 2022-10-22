@@ -62,11 +62,11 @@ async function main(argv) {
   // Sample: Get my user id
   // For a future call we need to know the user id associated with
   // the access token being used.
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 
-  const user_id = user_me_data.id;
+  const user_id = user_data.id;
   console.log(`User id: ${user_id}`);
 
   // Step 2: Get Advertiser IDs available to my access token and select one of them.

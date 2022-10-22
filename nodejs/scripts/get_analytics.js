@@ -162,9 +162,9 @@ async function main(argv) {
 
   // Get the user record. Some versions of the Pinterest API require the
   // user id associated with the access token.
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 
   let results;
   const input = new Input();
@@ -172,7 +172,7 @@ async function main(argv) {
     if (args.analytics_object === 'user') {
       // Get analytics for the user account associated with the access token.
       const analytics = new UserAnalytics(
-        user_me_data.id, api_config, access_token)
+        user_data.id, api_config, access_token)
         .last_30_days()
         .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);
 
@@ -188,11 +188,11 @@ async function main(argv) {
     } else if (args.analytics_object === 'ad_account_user') {
       // Get analytics for the user account associated with an ad account.
       const analytics = new UserAnalytics(
-        user_me_data.id, api_config, access_token)
+        user_data.id, api_config, access_token)
         .last_30_days()
         .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);
 
-      const advertisers = new Advertisers(user_me_data.id, api_config, access_token);
+      const advertisers = new Advertisers(user_data.id, api_config, access_token);
       // When using find_and_get_analytics, analytics.get() will be called with
       // an ad_account_id argument.
       const finder = new FindAndGetAnalytics(
@@ -207,7 +207,7 @@ async function main(argv) {
         .metrics(['SPEND_IN_DOLLAR', 'TOTAL_CLICKTHROUGH'])
         .granularity('DAY');
 
-      const advertisers = new Advertisers(user_me_data.id, api_config, access_token);
+      const advertisers = new Advertisers(user_data.id, api_config, access_token);
       const finder = new FindAndGetAnalytics(
         advertisers, analytics, args.analytics_object, input, [
           new AdsEntity(
