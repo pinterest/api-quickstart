@@ -2,10 +2,6 @@ import { ApiObject } from './api_object.js';
 import { Board } from './board.js';
 
 export class User extends ApiObject {
-  constructor(api_config, access_token) {
-    super(api_config, access_token);
-  }
-
   // https://developers.pinterest.com/docs/api/v5/#tag/user_account
   async get() {
     return await super.request_data('/v5/user_account');

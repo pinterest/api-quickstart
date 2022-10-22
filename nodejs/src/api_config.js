@@ -44,9 +44,9 @@ export class ApiConfig {
    * can not be found in the environment.
    */
   get_application_id() {
-    let env_app_id = 'PINTEREST_APP_ID';
-    let env_app_secret = 'PINTEREST_APP_SECRET';
-    
+    const env_app_id = 'PINTEREST_APP_ID';
+    const env_app_secret = 'PINTEREST_APP_SECRET';
+
     this.app_id = process.env[env_app_id];
     this.app_secret = process.env[env_app_secret];
 

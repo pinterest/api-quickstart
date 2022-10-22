@@ -48,7 +48,7 @@ async function main(argv) {
   // Set the API configuration verbosity to 2 to show all of requests
   // and response statuses. To see the complete responses, set verbosity to 3.
   const api_config = new ApiConfig({
-    verbosity: args.log_level,
+    verbosity: args.log_level
   });
 
   // Step 1: Fetch an access token and print summary data about the User.
