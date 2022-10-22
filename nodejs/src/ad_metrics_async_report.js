@@ -1,10 +1,10 @@
 import { AdAnalyticsAttributes } from './analytics_attributes.js';
+import { AsyncReport } from './async_report.js';
 
 /**
  * Specifies all of the attributes for the async advertiser
  * metrics report. For more information, see:
- *  v4: https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler
- *  v5: https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report
+ *  https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report
  *
  *
  * The attribute functions are chainable. For example:
@@ -18,10 +18,16 @@ import { AdAnalyticsAttributes } from './analytics_attributes.js';
  *
  * The parent class AdAnalyticsAttributes implements the parameters that
  * are shared between synchronous and asynchronous reports.
+ *
+ * The AsyncReport container is used to perform the process of requesting
+ * and waiting for the asynchronous report to be ready.
  */
-export class AdMetricsAsyncReportCommon extends AdAnalyticsAttributes {
-  constructor() {
+export class AdMetricsAsyncReport extends AdAnalyticsAttributes {
+  constructor(api_config, access_token, advertiser_id) {
     super();
+    this.async_report = new AsyncReport(
+      api_config, access_token, `/v5/ad_accounts/${advertiser_id}/reports`
+    );
 
     // set required attributes
     this.required_attrs.add('level');

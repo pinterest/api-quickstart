@@ -1,4 +1,7 @@
-import { AdMetricsAsyncReportCommon } from './ad_metrics_async_report_common.js';
+import { AdMetricsAsyncReport } from './ad_metrics_async_report.js';
+import { AsyncReport } from './async_report.js';
+
+jest.mock('./async_report');
 
 describe('ad_metrics_async_report_common tests', () => {
   afterEach(() => {
@@ -6,12 +9,21 @@ describe('ad_metrics_async_report_common tests', () => {
   });
 
   test('ad async report attributes', async() => {
-    const ad_async_report = new AdMetricsAsyncReportCommon()
+    const ad_async_report = new AdMetricsAsyncReport(
+      'test_api_config', 'test_access_token', 'test_advertiser_id')
       .start_date('2021-03-01')
       .end_date('2021-03-31')
       .level('PIN_PROMOTION')
       .metrics(['IMPRESSION_1', 'CLICKTHROUGH_1'])
       .report_format('JSON');
+
+    expect(ad_async_report).toBeInstanceOf(AdMetricsAsyncReport);
+    expect(AsyncReport.mock.instances.length).toBe(1);
+    expect(AsyncReport.mock.calls[0]).toEqual([
+      'test_api_config',
+      'test_access_token',
+      '/v5/ad_accounts/test_advertiser_id/reports'
+    ]);
 
     expect(() => {
       ad_async_report.post_data_attributes();
@@ -40,7 +52,8 @@ describe('ad_metrics_async_report_common tests', () => {
   });
 
   test('ad metrics async report attribute errors', async() => {
-    const ad_async_report = new AdMetricsAsyncReportCommon()
+    const ad_async_report = new AdMetricsAsyncReport(
+      'test_api_config', 'test_access_token', 'test_advertiser_id')
       .date_range('2021-03-01', '2021-03-31')
       .granularity('DAY')
       .level('oops')
