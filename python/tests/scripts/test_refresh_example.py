@@ -11,7 +11,7 @@ class RefreshExampleTest(IntegrationMocks):
     @mock.patch("builtins.print")
     def test_refresh_example(self, rm, mock_print, mock_sleep):
         # set up 4 different responses to
-        # PUT https://api.pinterest.com/v3/oauth/access_token/
+        # PUT https://api.pinterest.com/v5/oauth/token
         basic_response = {
             "scope": "test-scope",
             "access_token": "REPLACE ME",

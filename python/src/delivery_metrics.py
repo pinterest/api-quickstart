@@ -1,7 +1,6 @@
 class DeliveryMetrics:
     """
-    This class provides a compatible interface for an endpoint
-    that exists in v3 but not v5.
+    This module will provide access to delivery metrics when it becomes available.
     """
 
     def __init__(self, api_config, access_token):
@@ -9,6 +8,6 @@ class DeliveryMetrics:
 
     def get(self):
         """
-        The full list of all available delivery metrics is available in v3 but not v5.
+        The full list of all available delivery metrics will be available in v5 soon.
         """
         raise RuntimeError("Metric definitions are not available in API version v5.")

@@ -15,7 +15,7 @@ class Board(ApiObject):
     # provides a human-readable identifier for a board
     @classmethod
     def text_id(cls, board_data):
-        # simulate v3 URL to provide a text identifier
+        # simulate Pinterest URL to provide a text identifier
         return (
             "/"
             + board_data["owner"]["username"]

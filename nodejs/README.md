@@ -43,7 +43,6 @@ $ . ../common/scripts/api_env
 After running the Quick Start, you should be able to run any of the use cases in the `scripts/` directory. Scripts that accept arguments use `argparse`, which ensures that the `-h` or `--help` argument shows usage documentation. In addition, the code for each script has a comment that documents its intended purpose.
 
 Here is a list of common arguments that work with all scripts:
-  * `-v <version>` or `--api-version <version>`: The version of the Pinterest API to use. The two choices are `3` and `5`.
   * `-a <name>` or `--access-token <name>`: The name of the access token for the script. This name is helpful with the `-w` or `--write` option to `get_access_token.js`, which will store the access token in a file that can be used by other scripts.
   * `-l <level>` or `--log-level <level>`: The level of logging verbosity for the script. `0` is only critical output. `1` generates a bit more output. `2` is the default, and prints a lot of useful information for developers learning the API. `3` is maximal verbosity.
 
@@ -52,7 +51,7 @@ Below you will find a description of each script along with an example of its he
 
 
 ### [get_access_token.js](./scripts/get_access_token.js)
-Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v5/user_account` [endpoint](https://developers.pinterest.com/docs/api/v5/#tag/user_account) or the `/v3/users/{user}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_user_handler_GET). Running this script with the `-w` parameter (`./scripts/get_access_token.js -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use. Use `-w` parameter in combination with the `-a` (access token name) parameter to store separate access tokens for different purposes. When requesting an access token without specifying scopes, the script will default to `user_accounts:read` `pins:read` and `boards:read`. To see a complete list of scopes, refer to the Enums in [`./src/oauth_scope.js`](./src/oauth_scope.js). You can also run `./scripts/get_access_token.js -s help` to see the scopes.
+Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v5/user_account` [endpoint](https://developers.pinterest.com/docs/api/v5/#tag/user_account). Running this script with the `-w` parameter (`./scripts/get_access_token.js -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use. Use `-w` parameter in combination with the `-a` (access token name) parameter to store separate access tokens for different purposes. When requesting an access token without specifying scopes, the script will default to `user_accounts:read` `pins:read` and `boards:read`. To see a complete list of scopes, refer to the Enums in [`./src/oauth_scope.js`](./src/oauth_scope.js). You can also run `./scripts/get_access_token.js -s help` to see the scopes.
 
 <!--gen-->
 ```
@@ -74,7 +73,7 @@ optional arguments:
                         level of logging verbosity
 ```
 
-Use `--scopes help` to get a list of all possible scopes for v5:
+Use `--scopes help` to get a list of all possible scopes:
 <!--gen-->
 ```
 $ ./scripts/get_access_token.js --scopes help
@@ -139,7 +138,7 @@ optional arguments:
 ```
 
 ### [get_pin.js](./scripts/get_pin.js)
-Retrieves the information for a specific board with the `/v5/pins/{pin_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/get) or the `/v3/pins/{pin}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_pin_GET).
+Retrieves the information for a specific board with the `/v5/pins/{pin_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/get).
 
 <!--gen-->
 ```
@@ -160,7 +159,7 @@ optional arguments:
 ```
 
 ### [get_board.js](./scripts/get_board.js)
-Retrieves the information for a specific board with the `/v5/boards/{board_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/get) or the `/v3/boards/{board}/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_board_GET).
+Retrieves the information for a specific board with the `/v5/boards/{board_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/get).
 
 <!--gen-->
 ```
@@ -182,7 +181,7 @@ optional arguments:
 ```
 
 ### [get_user_pins.js](./scripts/get_user_pins.js)
-Retrieves all of the pins for a user with the `/v3/users/{users}/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_get_pins_handler_GET), using the paging mechanism of the API. There is not an equivalent v5 endpoint, so this script shows how to emulate the behavior in v5.
+Retrieves all of the pins for a user using several endpoints.
 
 <!--gen-->
 ```
@@ -203,13 +202,14 @@ optional arguments:
 ```
 
 ### [get_user_boards.js](./scripts/get_user_boards.js)
-Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/list) or the `/v3/users/{user}/boards/feed/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_user_profile_boards_feed_GET), using the paging mechanism of the API.
+Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/list), using the paging mechanism of the API.
 
 <!--gen-->
 ```
 $ ./scripts/get_user_boards.js --help
 
-usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived] [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived] [--no-include-archived]
+                          [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get A User's Boards
 
@@ -228,7 +228,7 @@ optional arguments:
 ```
 
 ### [copy_pin.js](./scripts/copy_pin.js)
-Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/create) or the `PUT /v3/pins/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_pin_handler_PUT) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest. Note that `copy_pin.js` can create a video pin from an image pin by suppling the `-m/--media` argument, which is either a Pinterest media identifier (a number) or the path name of a file that contains a video.
+Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/create) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest. Note that `copy_pin.js` can create a video pin from an image pin by suppling the `-m/--media` argument, which is either a Pinterest media identifier (a number) or the path name of a file that contains a video.
 
 <!--gen-->
 ```
@@ -255,13 +255,14 @@ optional arguments:
 ```
 
 ### [copy_board.js](./scripts/copy_board.js)
-Demonstration of how to use the `POST /v3/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/create) or the `PUT /v3/boards/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_board_PUT) to create a board. Also uses the `POST /boards/{board_id}/sections` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/board_sections/create) or the `PUT /v3/board/{self.board_id}/sections/` [endpoint](https://developers.pinterest.com/docs/redoc/#operation/v3_create_section_PUT) to create board sections. This script accepts source and target access tokens, so that a board can be copied from one account to another. It also provides an `--all` option that copies all of the boards and pins from a source account into a target account. Copying one or multiple boards can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
+Demonstration of how to use the `POST /v5/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/create) to create a board. Also uses the `POST /boards/{board_id}/sections` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/board_sections/create) to create board sections. This script accepts source and target access tokens, so that a board can be copied from one account to another. It also provides an `--all` option that copies all of the boards and pins from a source account into a target account. Copying one or multiple boards can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
 
 <!--gen-->
 ```
 $ ./scripts/copy_board.js --help
 
-usage: copy_board.js [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: copy_board.js [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run] [-a ACCESS_TOKEN]
+                     [-l LOG_LEVEL]
 
 Copy one Board or all Boards
 
@@ -289,7 +290,8 @@ Reads information about advertiser accounts, campaigns, ad groups, and ads. By d
 ```
 $ ./scripts/get_ads.js --help
 
-usage: get_ads.js [-h] [--all-ads] [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_ads.js [-h] [--all-ads] [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
+                  [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Advertisers API Example
 
@@ -316,8 +318,9 @@ Demonstrates how to use the API to retrieve analytics metrics with synchronous r
 ```
 $ ./scripts/get_analytics.js --help
 
-usage: get_analytics.js [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID] [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID]
-                        [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_analytics.js [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID]
+                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
+                        [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get Analytics
 
@@ -340,7 +343,7 @@ optional arguments:
 ```
 
 ### [analytics_api_example.js](./scripts/analytics_api_example.js)
-Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/create_async_delivery_metrics_handler) and [get](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/#operation/get_async_delivery_metrics_handler) v4 endpoints, or the [create](https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report) and [get](https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report) endpoints for v5.
+Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report) and [get](https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report) endpoints.
 
 <!--gen-->
 ```
@@ -373,7 +376,7 @@ $ export HTTPS_PROXY="http://localhost:8080"
 
 ## Tests
 
-Unit tests use the [Jest framework](https://jestjs.io/) and are in the `*.test.js` files that correspond to each source file. In addition, the [Babel JavaScript compiler](https://babeljs.io/) is required for Jest to run with the module structure used in this repo. The node dependencies for Jest should have been installed as part of the quickstart instructure, Unless you specified the `--production` flag with ```npm install```. To install the `jest` binary, you'll need to run `npm install jest --global` once on your development machine. (These instructions were written when the latest version of `jest` was 27.0.3). Then, run the tests with the `jest` command. No arguments are required, but you can specify the relative pathname of a test file as an argument. For example: `jest ./src/v3/user.test.js`
+Unit tests use the [Jest framework](https://jestjs.io/) and are in the `*.test.js` files that correspond to each source file. In addition, the [Babel JavaScript compiler](https://babeljs.io/) is required for Jest to run with the module structure used in this repo. The node dependencies for Jest should have been installed as part of the quickstart instructure, Unless you specified the `--production` flag with ```npm install```. To install the `jest` binary, you'll need to run `npm install jest --global` once on your development machine. (These instructions were written when the latest version of `jest` was 27.0.3). Then, run the tests with the `jest` command. No arguments are required, but you can specify the relative pathname of a test file as an argument. For example: `jest ./src/user.test.js`
 
 For compatibility with other languages in this repo, the `Makefile` is set up to run Jest with `make tests`.
 

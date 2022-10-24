@@ -116,7 +116,7 @@ class ApiObjectTest(unittest.TestCase):
             self.test_uri + "/test_iterpath",
             headers=access_token_header,
             json={"items": ["one", "two"], "bookmark": "BOOKMARK1"},
-        )  # v3 uses data
+        )
         rm.get(
             self.test_uri + "/test_iterpath?bookmark=BOOKMARK1",
             headers=access_token_header,
@@ -124,22 +124,5 @@ class ApiObjectTest(unittest.TestCase):
         )
         expected_values = ["one", "two", "three"]
         for index, value in enumerate(api_object.get_iterator("/test_iterpath")):
-            self.assertEqual(expected_values[index], value)
-        self.assertFalse(rm.last_request.allow_redirects)
-
-        rm.get(
-            self.test_uri + "/v5_iterpath?key1=value1",
-            headers=access_token_header,
-            json={"items": ["rabbit", "frog"], "bookmark": "BOOKMARK2"},
-        )  # v5 uses items
-        rm.get(
-            self.test_uri + "/v5_iterpath?key1=value1&bookmark=BOOKMARK2",
-            headers=access_token_header,
-            json={"items": ["stoat"]},
-        )
-        expected_values = ["rabbit", "frog", "stoat"]
-        for index, value in enumerate(
-            api_object.get_iterator("/v5_iterpath?key1=value1")
-        ):
             self.assertEqual(expected_values[index], value)
         self.assertFalse(rm.last_request.allow_redirects)

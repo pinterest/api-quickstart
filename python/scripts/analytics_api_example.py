@@ -66,7 +66,8 @@ def main(argv=[]):
 
     """
     Sample: Get my user id
-    the access token being used (for API version v4).
+    For a future call we need to know the user id associated with
+    the access token being used.
     """
     user = User(api_config, access_token)
     user_data = user.get()
@@ -111,7 +112,7 @@ def main(argv=[]):
 
     """
     Step 3: Learn more about the metrics available
-      https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_delivery_metrics_handler_GET
+      https://developers.pinterest.com/docs/api/v5/#operation/delivery_metrics/get
     """  # noqa: E501 because the long URL is okay
 
     # the output of delivery_metrics.get() is too long to be printed
