@@ -1,6 +1,7 @@
 class DeliveryMetrics:
     """
     This module will provide access to delivery metrics when it becomes available.
+      https://developers.pinterest.com/docs/api/v5/#operation/delivery_metrics/get
     """
 
     def __init__(self, api_config, access_token):
