@@ -6,6 +6,8 @@ Code that makes it easy to get started with the Pinterest API.
 
 This repository has code that is intended to provide a quick start for working with the [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code with essentially the same functionality, and a bash script that demonstrates the OAuth authentication and authorization flow.
 
+This quickstart used to support Pinterest API version v3 and v4, but that code has been removed so that everyone can focus on v5. If you're interested in code that shows the differences between using v3/v4 and v5, see [version 1.1](https://github.com/pinterest/api-quickstart/releases/tag/v1.1) of this repo.
+
 ## Quick Start
 
 1. Set up the environment with your credentials (app ID and secret). This configuration works with the code in all of the language-specific directories.
