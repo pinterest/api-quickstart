@@ -1,4 +1,4 @@
-SCRIPTS=scripts/*.sh scripts/*/*.sh
+SCRIPTS=scripts/*.sh
 lint:
 	shellcheck $(SCRIPTS)
 

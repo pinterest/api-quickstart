@@ -6,8 +6,13 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
+from advertisers import Advertisers
+from analytics import AdAnalytics, PinAnalytics, UserAnalytics
 from api_config import ApiConfig
 from arguments import common_arguments
+from oauth_scope import Scope
+from user import User
 from utils import input_number, input_path_for_write
 
 
@@ -55,9 +60,7 @@ def find_and_get_analytics(
 def main(argv=[]):
     """
     This script shows how to use the Pinterest API synchronous analytics endpoints
-    to download reports for a User, Ad Account, Campaign, Ad Group, or Ad. The
-    analytics_api_example script shows how to use Pinterest API v3 to retrieve
-    similar metrics using asynchronous reporting functionality.
+    to download reports for a User, Ad Account, Campaign, Ad Group, or Ad.
 
     This script fetches user analytics by default, which just requires an
     access token with READ_USERS scope.
@@ -110,32 +113,12 @@ def main(argv=[]):
         print("Ad group identifier must be specified when using ad identifier")
         exit(1)
 
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # This API edge case is best handled up right after API set-up...
-    if api_config.version < "v5" and args.analytics_object == "pin":
-        print("Pin analytics for shared accounts are")
-        print("supported by Pinterest API v5, but not v3 or v4.")
-        print("Try using -v5 or an analytics object besides pin.")
-        exit(1)
-
-    if api_config.version < "v5" and args.analytics_object == "ad_account_user":
-        print("User account analytics for shared accounts are")
-        print("supported by Pinterest API v5, but not v3 or v4.")
-        print("Try using -v5 or an analytics object besides ad_account_user.")
-        exit(1)
+    api_config = ApiConfig(verbosity=args.log_level)
 
     # Requesting pin analytics requires a pin_id.
     if args.analytics_object == "pin" and not args.pin_id:
         print("Pin analytics require a pin identifier.")
         exit(1)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from advertisers import Advertisers
-    from analytics import AdAnalytics, PinAnalytics, UserAnalytics
-    from oauth_scope import Scope
-    from user import User
 
     """
     Fetch an access token and print summary data about the User.
@@ -149,14 +132,14 @@ def main(argv=[]):
 
     # Get the user record. Some versions of the Pinterest API require the
     # user id associated with the access token.
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user = User(api_config, access_token)
+    user_data = user.get()
+    user.print_summary(user_data)
 
     if args.analytics_object == "user":
         # Get analytics for the user account associated with the access token.
         analytics = (
-            UserAnalytics(user_me_data.get("id"), api_config, access_token)
+            UserAnalytics(user_data.get("id"), api_config, access_token)
             .last_30_days()
             .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
         )
@@ -172,11 +155,11 @@ def main(argv=[]):
     elif args.analytics_object == "ad_account_user":
         # Get analytics for the user account associated with an ad account.
         analytics = (
-            UserAnalytics(user_me_data.get("id"), api_config, access_token)
+            UserAnalytics(user_data.get("id"), api_config, access_token)
             .last_30_days()
             .metrics({"IMPRESSION", "PIN_CLICK_RATE"})
         )
-        advertisers = Advertisers(user_me_data.get("id"), api_config, access_token)
+        advertisers = Advertisers(user_data.get("id"), api_config, access_token)
         # When using find_and_get_analytics, analytics.get() will be called with
         # an ad_account_id argument.
         ads_entities = [
@@ -198,7 +181,7 @@ def main(argv=[]):
             .metrics({"SPEND_IN_DOLLAR", "TOTAL_CLICKTHROUGH"})
             .granularity("DAY")
         )
-        advertisers = Advertisers(user_me_data.get("id"), api_config, access_token)
+        advertisers = Advertisers(user_data.get("id"), api_config, access_token)
         ads_entities = [
             {
                 "object": "ad_account",

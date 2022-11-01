@@ -38,71 +38,55 @@ rm -f ${OUTPUT_PREFIX}_*.csv
 rm -f ${OUTPUT_PREFIX}_*.json
 
 # Note: Pinterest ads test account tokens need to be recreated manually
-# once every 30 days. The following commands test to see whether the token
+# once every 7 days. The following commands test to see whether the token
 # is valid.
-for VERSION in ${VERSIONS} ; do
-    ./scripts/get_access_token.${EXT} -a "${TEST3}_${VERSION}" -"${VERSION}"
-    ./scripts/get_access_token.${EXT} -a "${TEST4}_${VERSION}" -"${VERSION}"
-done
+./scripts/get_access_token.${EXT} -a "${TEST3}"
+./scripts/get_access_token.${EXT} -a "${TEST4}"
 
 # get asynchronous analytics report
-for VERSION in ${VERSIONS} ; do
-    DOCNAME=${OUTPUT_PREFIX}_${VERSION}_metrics_report.csv
-    printf "1\n${DOCNAME}\n" | \
-        ./scripts/analytics_api_example.${EXT} -a "${TEST3}_${VERSION}" -"${VERSION}"
+DOCNAME=${OUTPUT_PREFIX}_metrics_report.csv
+printf "1\n${DOCNAME}\n" | \
+    ./scripts/analytics_api_example.${EXT} -a "${TEST3}"
     wc "${DOCNAME}"
-done
 
 # get all of the ads-related data for the test account
-for VERSION in ${VERSIONS} ; do
-    ./scripts/get_ads.${EXT} -a "${TEST4}_${VERSION}" -"${VERSION}" --all-ads
-done
+./scripts/get_ads.${EXT} -a "${TEST4}" --all-ads
 
 # get user analytics
-for VERSION in ${VERSIONS} ; do
-    DOCNAME=${OUTPUT_PREFIX}_user_analytics_${VERSION}.json
-    echo "${DOCNAME}" | \
-         ./scripts/get_analytics.${EXT} -a "${TEST3}_${VERSION}" -"${VERSION}"
-    wc "${DOCNAME}"
-done
+DOCNAME=${OUTPUT_PREFIX}_user_analytics.json
+echo "${DOCNAME}" | \
+    ./scripts/get_analytics.${EXT} -a "${TEST3}"
+wc "${DOCNAME}"
 
-# get ad_account_user analytics (only available for v5)
-DOCNAME=${OUTPUT_PREFIX}_ad_account_user_analytics_v5.json
+# get ad_account_user analytics
+DOCNAME=${OUTPUT_PREFIX}_ad_account_user_analytics.json
 printf "1\n${DOCNAME}\n" | \
-    ./scripts/get_analytics.${EXT} -a ${TEST3}_v5 -v5 -o ad_account_user
+    ./scripts/get_analytics.${EXT} -a ${TEST3} -o ad_account_user
 wc ${DOCNAME}
 
 # get ad_account analytics
-for VERSION in ${VERSIONS} ; do
-    DOCNAME=${OUTPUT_PREFIX}_ad_account_analytics_${VERSION}.json
-    printf "1\n${DOCNAME}\n" | \
-         ./scripts/get_analytics.${EXT} -a "${TEST3}_${VERSION}" -"${VERSION}" -o ad_account
-    wc "${DOCNAME}"
-done
+DOCNAME=${OUTPUT_PREFIX}_ad_account_analytics.json
+printf "1\n${DOCNAME}\n" | \
+    ./scripts/get_analytics.${EXT} -a "${TEST3}" -o ad_account
+wc "${DOCNAME}"
 
 # get campaign analytics
-for VERSION in ${VERSIONS} ; do
-    DOCNAME=${OUTPUT_PREFIX}_campaign_analytics_${VERSION}.json
-    printf "${DOCNAME}\n" | \
-         ./scripts/get_analytics.${EXT} -a "${TEST3}_${VERSION}" -"${VERSION}" -o campaign --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
-    wc "${DOCNAME}"
-done
+DOCNAME=${OUTPUT_PREFIX}_campaign_analytics.json
+printf "${DOCNAME}\n" | \
+    ./scripts/get_analytics.${EXT} -a "${TEST3}" -o campaign --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
+wc "${DOCNAME}"
 
 # get ad group analytics
-for VERSION in ${VERSIONS} ; do
-    DOCNAME=${OUTPUT_PREFIX}_ad_group_analytics_${VERSION}.json
+DOCNAME=${OUTPUT_PREFIX}_ad_group_analytics.json
     printf "${DOCNAME}\n" | \
-         ./scripts/get_analytics.${EXT} -a "${TEST3}_${VERSION}" -"${VERSION}" -o ad_group --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
+         ./scripts/get_analytics.${EXT} -a "${TEST3}" -o ad_group --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
     wc "${DOCNAME}"
-done
 
 # get ad analytics
-for VERSION in ${VERSIONS} ; do
-    DOCNAME=${OUTPUT_PREFIX}_ad_analytics_${VERSION}.json
-    printf "${DOCNAME}\n" | \
-         ./scripts/get_analytics.${EXT} -a "${TEST3}_${VERSION}" -"${VERSION}" -o ad --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
-    wc "${DOCNAME}"
-done
+DOCNAME=${OUTPUT_PREFIX}_ad_analytics.json
+printf "${DOCNAME}\n" | \
+    ./scripts/get_analytics.${EXT} -a "${TEST3}" -o ad --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
+wc "${DOCNAME}"
 
 # all tests existed successfully: delete output files
 rm -f ${OUTPUT_PREFIX}_*.json

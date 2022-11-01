@@ -9,9 +9,14 @@
  */
 import { ArgumentParser } from 'argparse';
 
+import { AccessToken } from '../src/access_token.js';
 import { ApiConfig } from '../src/api_config.js';
+import { Board } from '../src/board.js';
 import { common_arguments } from '../src/arguments.js';
+import { Pin } from '../src/pin.js';
+import { Scope } from '../src/oauth_scope.js';
 import { SpamError } from '../src/api_common.js';
+import { User } from '../src/user.js';
 
 /**
  * This script is intended primarily for developers who need to create a test copy
@@ -95,14 +100,7 @@ async function main(argv) {
   }
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Board } = await import(`../src/${api_config.version}/board.js`);
-  const { Pin } = await import(`../src/${api_config.version}/pin.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
+  const api_config = new ApiConfig({ verbosity: args.log_level });
 
   // helper function to copy a pin
   const copy_pin = async function(pin, pin_data, target_board_id, { target_section_id }) {
@@ -158,10 +156,10 @@ async function main(argv) {
   let boards;
   let source_board;
   if (args.all_boards) { // copy all boards for the source user
-    const user_me = new User('me', api_config, source_token);
-    const user_me_data = await user_me.get();
+    const user = new User(api_config, source_token);
+    const user_data = await user.get();
     source_board = new Board(null, api_config, source_token); // board_id set in loop below
-    boards = await user_me.get_boards(user_me_data, {});
+    boards = await user.get_boards(user_data, {});
   } else { // copy just the board designated by board_id
     source_board = new Board(args.board_id, api_config, source_token);
     const source_board_data = await source_board.get();

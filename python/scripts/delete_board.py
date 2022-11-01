@@ -9,8 +9,12 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
 from api_config import ApiConfig
 from arguments import common_arguments
+from board import Board
+from oauth_scope import Scope
+from user import User
 from utils import input_one_of
 
 
@@ -35,23 +39,17 @@ def main(argv=[]):
         exit(1)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from board import Board
-    from oauth_scope import Scope
-    from user import User
+    api_config = ApiConfig(verbosity=args.log_level)
 
     # get access token
     access_token = AccessToken(api_config, name=args.access_token)
     access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_BOARDS, Scope.WRITE_BOARDS])
 
     if args.all_boards:  # delete all boards for the user
-        user_me = User("me", api_config, access_token)
-        user_me_data = user_me.get()
-        boards = user_me.get_boards(user_me_data)
-        confirmation = f"Delete all boards for {user_me_data['username']}"
+        user = User(api_config, access_token)
+        user_data = user.get()
+        boards = user.get_boards(user_data)
+        confirmation = f"Delete all boards for {user_data['username']}"
     else:  # copy just the board designated by board_id
         deletion_board = Board(args.board_id, api_config, access_token)
         board_data = deletion_board.get()

@@ -32,30 +32,25 @@ class AnalyticsApiExampleTest(IntegrationMocks):
     def test_analytics_api_example(self, rm):
         # request from AsyncReport.request_report
         rm.post(
-            "https://api.pinterest.com/ads/v4/advertisers/"
-            "adv_2_id/delivery_metrics/async",
-            json={"data": {"token": "test-report-token"}},
+            "https://api.pinterest.com/v5/ad_accounts/" "adv_2_id/reports",
+            json={"report_status": "IN_PROGRESS", "token": "test-report-token"},
         )
 
         # request from User.get
         rm.get(
-            "https://api.pinterest.com/v3/users/me/",
+            "https://api.pinterest.com/v5/user_account",
             json={
-                "data": {
-                    "full_name": "test fullname",
-                    "id": "test_user_id",
-                    "about": "test about",
-                    "profile_url": "test profile url",
-                    "pin_count": "pin count",
-                }
+                "account_type": "BUSINESS",
+                "profile_image": "test_profile_image",
+                "website_url": "test_website_url",
+                "username": "test user name",
             },
         )
         # request from Advertisers.get
         rm.get(
-            "https://api.pinterest.com/ads/v4/advertisers/"
-            "?owner_user_id=test_user_id&include_acl=true",
+            "https://api.pinterest.com/v5/ad_accounts",
             json={
-                "data": [
+                "items": [
                     {"name": "test advertiser 1", "id": "adv_1_id"},
                     {"name": "test advertiser 2", "id": "adv_2_id"},
                     {"name": "test advertiser 3", "id": "adv_3_id"},
@@ -63,32 +58,12 @@ class AnalyticsApiExampleTest(IntegrationMocks):
             },
         )
 
-        # request from DeliveryMetrics.get
-        rm.get(
-            "https://api.pinterest.com/ads/v4/resources/delivery_metrics",
-            json={
-                "data": {
-                    "metrics": [
-                        {
-                            "name": "CLICKTHROUGH_1",
-                            "definition": "clickthrough description",
-                        },
-                        {"name": "metric_3", "definition": "yet another metric"},
-                        {
-                            "name": "IMPRESSION_1",
-                            "definition": "impression description",
-                        },
-                    ]
-                }
-            },
-        )
-
         # request from AsyncReport.poll_report
         rm.get(
-            "https://api.pinterest.com/ads/v4/advertisers/"
-            "adv_2_id/delivery_metrics/async"
+            "https://api.pinterest.com/v5/ad_accounts/"
+            "adv_2_id/reports"
             "?token=test-report-token",
-            json={"data": {"report_status": "FINISHED", "url": self.report_url}},
+            json={"report_status": "FINISHED", "url": self.report_url},
         )
 
         # request from generic_requests.download_file

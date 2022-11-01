@@ -20,7 +20,7 @@ class PagedIterator:
         response = self.api_object.get_response(path_maybe_with_bookmark)
         unpacked = self.api_object.unpack(response)
         # the field with the items container is determined in the iterator constructor
-        self.items = unpacked.get(self.items_field)
+        self.items = unpacked.get("items")
         self.bookmark = unpacked.get("bookmark")
         self.index = 0
 
@@ -30,10 +30,6 @@ class PagedIterator:
         """
         self.api_object = api_object
         self.path = path  # to be used with the bookmark on subsequent requests
-        if api_object.api_config.version == "v3":
-            self.items_field = "data"  # data container has items returned from request
-        else:
-            self.items_field = "items"  # v5 response has a designated items container
         self._get_response(path)  # first time, get response without bookmark
 
     def __iter__(self):
@@ -75,7 +71,7 @@ class ApiObject(ApiCommon):
         )
 
     def request_data(self, path):
-        return self.unpack(self.get_response(path), raw=False)
+        return self.unpack(self.get_response(path))
 
     def put_data(self, path, put_data):
         if self.api_config.verbosity >= 2:
@@ -88,7 +84,7 @@ class ApiObject(ApiCommon):
             headers=self.access_token.header(),
             allow_redirects=False,
         )
-        return self.unpack(response, raw=False)
+        return self.unpack(response)
 
     def post_data(self, path, post_data=None):
         if self.api_config.verbosity >= 2:
@@ -101,7 +97,7 @@ class ApiObject(ApiCommon):
             headers=self.access_token.header(),
             allow_redirects=False,
         )
-        return self.unpack(response, raw=False)
+        return self.unpack(response)
 
     def delete_and_check(self, path):
         if self.api_config.verbosity >= 2:

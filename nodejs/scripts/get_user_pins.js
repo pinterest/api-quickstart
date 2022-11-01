@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 import { ArgumentParser } from 'argparse';
 
+import { AccessToken } from '../src/access_token.js';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
+import { Pin } from '../src/pin.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 
 /**
  *  This script prints summary information for each of the pins in a
@@ -19,13 +23,7 @@ async function main(argv) {
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Pin } = await import(`../src/${api_config.version}/pin.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
+  const api_config = new ApiConfig({ verbosity: args.log_level });
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
@@ -36,14 +34,14 @@ async function main(argv) {
   });
 
   // use the access token to get information about the user
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 
   // get information about all of the pins in the user's profile
-  const pin_iterator = await user_me.get_pins(user_me_data,
+  const pin_iterator = await user.get_pins(user_data,
     { query_parameters: { page_size: args.page_size } });
-  await user_me.print_multiple(args.page_size, 'pin', Pin, pin_iterator);
+  await user.print_multiple(args.page_size, 'pin', Pin, pin_iterator);
 }
 
 if (!process.env.TEST_ENV) {

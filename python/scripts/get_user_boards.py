@@ -5,8 +5,12 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
 from api_config import ApiConfig
 from arguments import common_arguments, positive_integer
+from board import Board
+from oauth_scope import Scope
+from user import User
 
 
 def main(argv=[]):
@@ -44,13 +48,7 @@ def main(argv=[]):
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from board import Board
-    from oauth_scope import Scope
-    from user import User
+    api_config = ApiConfig(verbosity=args.log_level)
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
@@ -58,8 +56,8 @@ def main(argv=[]):
     access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_BOARDS])
 
     # use the access token to get information about the user
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
+    user = User(api_config, access_token)
+    user_data = user.get()
 
     # get information about all of the boards in the user's profile
     query_parameters = {"page_size": args.page_size}
@@ -67,8 +65,8 @@ def main(argv=[]):
         query_parameters["include_empty"] = args.include_empty
     if args.include_archived:
         query_parameters["include_archived"] = args.include_archived
-    board_iterator = user_me.get_boards(user_me_data, query_parameters)
-    user_me.print_multiple(args.page_size, "board", Board, board_iterator)
+    board_iterator = user.get_boards(user_data, query_parameters)
+    user.print_multiple(args.page_size, "board", Board, board_iterator)
 
 
 if __name__ == "__main__":

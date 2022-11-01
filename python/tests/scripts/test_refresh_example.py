@@ -11,12 +11,11 @@ class RefreshExampleTest(IntegrationMocks):
     @mock.patch("builtins.print")
     def test_refresh_example(self, rm, mock_print, mock_sleep):
         # set up 4 different responses to
-        # PUT https://api.pinterest.com/v3/oauth/access_token/
+        # PUT https://api.pinterest.com/v5/oauth/token
         basic_response = {
-            "status": "test-status",
             "scope": "test-scope",
             "access_token": "REPLACE ME",
-            "data": {"refresh_token": "test-refresh-token"},
+            "refresh_token": "test-refresh-token",
         }
         response_1 = dict(basic_response)
         response_1["access_token"] = "test-access-token-1"
@@ -25,20 +24,17 @@ class RefreshExampleTest(IntegrationMocks):
         response_3 = dict(basic_response)
         response_3["access_token"] = "test-access-token-3"
 
-        rm.put(
-            "https://api.pinterest.com/v3/oauth/access_token/",
+        rm.post(
+            "https://api.pinterest.com/v5/oauth/token",
             [{"json": response_1}, {"json": response_2}, {"json": response_3}],
         )
         rm.get(
-            "https://api.pinterest.com/v3/users/me/",
+            "https://api.pinterest.com/v5/user_account",
             json={
-                "data": {
-                    "full_name": "test fullname",
-                    "id": "test user id",
-                    "about": "test about",
-                    "profile_url": "test profile url",
-                    "pin_count": "pin count",
-                }
+                "account_type": "BUSINESS",
+                "profile_image": "test_profile_image",
+                "website_url": "test_website_url",
+                "username": "test user name",
             },
         )
 

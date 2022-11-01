@@ -1,8 +1,12 @@
 #!/usr/bin/env node
+import { AccessToken } from '../src/access_token.js';
+import { Advertisers } from '../src/advertisers.js';
 import { ArgumentParser } from 'argparse';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
 import { Input } from '../src/utils.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 
 /**
  * This script shows how to use the Pinterest API endpoints to download
@@ -115,15 +119,8 @@ async function main(argv) {
   }
 
   const api_config = new ApiConfig({
-    verbosity: args.log_level,
-    version: args.api_version
+    verbosity: args.log_level
   });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Advertisers } = await import(`../src/${api_config.version}/advertisers.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
 
   // Step 1: Fetch an access token and print summary data about the User.
   // Note that the OAuth will fail if your application does not
@@ -136,9 +133,9 @@ async function main(argv) {
   // Sample: Get my user id
   // For a future call we need to know the user id associated with
   // the access token being used.
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 
   // Step 2: Walk the ads entity structure.
   // One of the first challenges many developers run into is that the relationship
@@ -152,7 +149,7 @@ async function main(argv) {
   // This process is also touched on in the API docs:
   //   https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
   const advertisers = new Advertisers(
-    user_me_data.id, api_config, access_token);
+    user_data.id, api_config, access_token);
 
   const ads_entities = [
     { kind: 'Ad Account', parent: 'User', getfn: 'get', id: args.ad_account_id },

@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 import { ArgumentParser } from 'argparse';
 
+import { AccessToken } from '../src/access_token.js';
 import { ApiConfig } from '../src/api_config.js';
+import { Board } from '../src/board.js';
 import { common_arguments } from '../src/arguments.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 
 /**
  *  This script prints summary information for each of the boards in a
@@ -27,13 +31,7 @@ async function main(argv) {
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Board } = await import(`../src/${api_config.version}/board.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
+  const api_config = new ApiConfig({ verbosity: args.log_level });
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
@@ -41,19 +39,19 @@ async function main(argv) {
   await access_token.fetch({ scopes: [Scope.READ_USERS, Scope.READ_BOARDS] });
 
   // use the access token to get information about the user
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 
   // get information about all of the boards in the user's profile
-  const board_iterator = await user_me.get_boards(user_me_data, {
+  const board_iterator = await user.get_boards(user_data, {
     query_parameters: {
       page_size: args.page_size,
       include_empty: args.include_empty,
       include_archived: args.include_archived
     }
   });
-  await user_me.print_multiple(args.page_size, 'board', Board, board_iterator);
+  await user.print_multiple(args.page_size, 'board', Board, board_iterator);
 }
 
 if (!process.env.TEST_ENV) {

@@ -1,4 +1,4 @@
-import { Scope } from './v3/oauth_scope.js';
+import { Scope } from './oauth_scope.js';
 import get_auth_code from './user_auth.js';
 import http from 'http';
 import open from 'open';
@@ -22,7 +22,7 @@ describe('user_auth tests', () => {
 test-oauth-uri/oauth/?consumer_id=test-app-id\
 &redirect_uri=test-redirect-uri\
 &response_type=code&refreshable=true\
-&scope=read_users,read_pins&state=test-uuid';
+&scope=user_accounts:read,pins:read&state=test-uuid';
 
     // Used to verify that the user_auth code cleans the socket properly.
     const mock_socket = jest.fn();

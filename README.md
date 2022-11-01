@@ -4,7 +4,9 @@ Code that makes it easy to get started with the Pinterest API.
 
 ## Purpose
 
-This repository has code that is intended to provide a quick start for working with the [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/), and also supports [Pinterest API v3](https://developers.pinterest.com/docs/redoc/) plus [Pinterest Marketing API v4](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/). Note that all newly-created apps should use [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/) and (when necessary) [Pinterest Marketing API v4](https://developers.pinterest.com/docs/redoc/adtech_ads_v4/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code with essentially the same functionality, and a bash script that demonstrates the OAuth authentication and authorization flow. Over time, we plan to add more demonstrations of API functionality and possibly additional languages -- likely Ruby and maybe Go or PHP.
+This repository has code that is intended to provide a quick start for working with the [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code with essentially the same functionality, and a bash script that demonstrates the OAuth authentication and authorization flow.
+
+This quickstart used to support Pinterest API version v3 and v4, but that code has been removed so that everyone can focus on v5. If you're interested in code that shows the differences between using v3/v4 and v5, see [version 1.1](https://github.com/pinterest/api-quickstart/releases/tag/v1.1) of this repo.
 
 ## Quick Start
 
@@ -47,7 +49,7 @@ This repository has code that is intended to provide a quick start for working w
 
 ## OAuth 2.0 Authorization
 
-Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). To learn about how to use OAuth 2.0 with the Pinterest API, check out the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/). For details regarding OAuth, please refer to our [v5 developer docs](https://developers.pinterest.com/docs/getting-started/authentication/) or [v3 developer docs](https://developers.pinterest.com/docs/redoc/#section/User-Authorization). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
+Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). To learn about how to use OAuth 2.0 with the Pinterest API, check out the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/). For details regarding OAuth, please refer to our [v5 developer docs](https://developers.pinterest.com/docs/getting-started/authentication/). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
 
 An access token is used to authenticate most API calls. In general, access tokens are valid for relatively long periods of time, in order to avoid asking users to go through the OAuth flow too often. When an access token expires, it is possible to refresh the token -- a capability that the code in this repo also demonstrates.
 
@@ -62,9 +64,9 @@ Like users, most developers do not want to have to go through the OAuth flow too
 The precedence order in this repo for obtaining an access token is: environment, file, execute the OAuth 2.0 flow.
 
 Code that implements OAuth is available for each language in this repo. The location of the code is as follows.
-   * One bash script for each version of the Pinterest API provide complete examples: [bash/scripts/v3/get_access_token.sh](bash/scripts/v3/get_access_token.sh) and [bash/scripts/v5/get_access_token.sh](bash/scripts/v5/get_access_token.sh).
-   * In python, the version-independent code in [python/src/user_auth.py](python/src/user_auth.py) opens a browser and handles the redirect to obtain an authorization code. The version-dependent code to exchange the authorization code for an access token is in [python/src/v3/access_token.py](python/src/v3/access_token.py) and [python/src/v5/access_token.py](python/src/v5/access_token.py). These two files also implement access token refresh.
-   * In JavaScript, the version-independent code in [nodejs/src/user_auth.js](nodejs/src/user_auth.js) opens a browser and handles the redirect to obtain an authorization code. The version-dependent code to exchange the authorization code for an access token is in [nodejs/src/v3/access_token.js](nodejs/src/v3/access_token.js) and [nodejs/src/v5/access_token.js](nodejs/src/v5/access_token.js). These two files also implement access token refresh.
+   * A bash script that provides a complete example: [bash/scripts/get_access_token.sh](bash/scripts/get_access_token.sh).
+   * In python, the code in [python/src/user_auth.py](python/src/user_auth.py) opens a browser and handles the redirect to obtain an authorization code. The code to exchange the authorization code for an access token is in [python/src/access_token.py](python/src/access_token.py). This file also implements access token refresh.
+   * In JavaScript, the code in [nodejs/src/user_auth.js](nodejs/src/user_auth.js) opens a browser and handles the redirect to obtain an authorization code. The code to exchange the authorization code for an access token is in [nodejs/src/access_token.js](nodejs/src/access_token.js). This file also implements access token refresh.
 
 ## Security Notes
 
@@ -86,7 +88,6 @@ Code that implements OAuth is available for each language in this repo. The loca
   * `scripts` are executable files that demonstrate one or more use cases.
   * `src` contains code that is used by the scripts and that you can incorporate into your own applications.
   * `tests` contains unit and integration tests.
-* Code that is specific to versions of the Pinterest API is in subdirectories of `src` (in the case of python and nodejs) or `scripts` (in the case of bash). The two versions supported by this quickstart are v3 and v5.
 
 ## Code Conventions
 

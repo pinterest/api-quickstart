@@ -1,9 +1,16 @@
 #!/usr/bin/env node
 import { ArgumentParser } from 'argparse';
+
+import { AccessToken } from '../src/access_token.js';
+import { AdMetricsAsyncReport } from '../src/ad_metrics_async_report.js';
+import { Advertisers } from '../src/advertisers.js';
 import { ApiConfig } from '../src/api_config.js';
+import { DeliveryMetrics } from '../src/delivery_metrics.js';
 import { common_arguments } from '../src/arguments.js';
-import { Input } from '../src/utils.js';
 import { download_file } from '../src/generic_requests.js';
+import { Input } from '../src/utils.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 
 /**
  * This script shows how to use the Pinterest API asynchronous report functionality
@@ -41,17 +48,8 @@ async function main(argv) {
   // Set the API configuration verbosity to 2 to show all of requests
   // and response statuses. To see the complete responses, set verbosity to 3.
   const api_config = new ApiConfig({
-    verbosity: args.log_level,
-    version: args.api_version
+    verbosity: args.log_level
   });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { AdMetricsAsyncReport } = await import(`../src/${api_config.version}/ad_metrics_async_report.js`);
-  const { Advertisers } = await import(`../src/${api_config.version}/advertisers.js`);
-  const { DeliveryMetrics } = await import(`../src/${api_config.version}/delivery_metrics.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
 
   // Step 1: Fetch an access token and print summary data about the User.
   // Note that the OAuth will fail if your application does not
@@ -64,11 +62,11 @@ async function main(argv) {
   // Sample: Get my user id
   // For a future call we need to know the user id associated with
   // the access token being used.
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 
-  const user_id = user_me_data.id;
+  const user_id = user_data.id;
   console.log(`User id: ${user_id}`);
 
   // Step 2: Get Advertiser IDs available to my access token and select one of them.
@@ -112,7 +110,7 @@ async function main(argv) {
     // and clicks my ads got in the last 30 days.
 
     // Step 3: Learn more about the metrics available
-    //   https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_delivery_metrics_handler_GET
+    //   https://developers.pinterest.com/docs/api/v5/#operation/delivery_metrics/get
 
     // the output of delivery_metrics.get() is too long to be printed
     const verbosity = api_config.verbosity;

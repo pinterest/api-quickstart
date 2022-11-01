@@ -5,8 +5,12 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
 from api_config import ApiConfig
 from arguments import common_arguments, positive_integer
+from oauth_scope import Scope
+from pin import Pin
+from user import User
 
 
 def main(argv=[]):
@@ -23,13 +27,7 @@ def main(argv=[]):
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from oauth_scope import Scope
-    from pin import Pin
-    from user import User
+    api_config = ApiConfig(verbosity=args.log_level)
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
@@ -37,14 +35,14 @@ def main(argv=[]):
     access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS])
 
     # use the access token to get information about the user
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
+    user = User(api_config, access_token)
+    user_data = user.get()
 
     # get information about all of the pins in the user's profile
-    pin_iterator = user_me.get_pins(
-        user_me_data, query_parameters={"page_size": args.page_size}
+    pin_iterator = user.get_pins(
+        user_data, query_parameters={"page_size": args.page_size}
     )
-    user_me.print_multiple(args.page_size, "pin", Pin, pin_iterator)
+    user.print_multiple(args.page_size, "pin", Pin, pin_iterator)
 
 
 if __name__ == "__main__":

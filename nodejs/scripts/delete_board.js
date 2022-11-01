@@ -5,9 +5,13 @@
  */
 import { ArgumentParser } from 'argparse';
 
+import { AccessToken } from '../src/access_token.js';
 import { ApiConfig } from '../src/api_config.js';
+import { Board } from '../src/board.js';
 import { common_arguments } from '../src/arguments.js';
 import { Input } from '../src/utils.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 
 /**
  * This script is intended primarily for developers who need to delete boards
@@ -31,13 +35,7 @@ async function main(argv) {
   }
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Board } = await import(`../src/${api_config.version}/board.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
+  const api_config = new ApiConfig({ verbosity: args.log_level });
 
   // get access token
   const access_token = new AccessToken(api_config, { name: args.access_token });
@@ -46,10 +44,10 @@ async function main(argv) {
   let boards;
   let confirmation = null;
   if (args.all_boards) { // delete all boards for the user
-    const user_me = new User('me', api_config, access_token);
-    const user_me_data = await user_me.get();
-    boards = await user_me.get_boards(user_me_data, {});
-    confirmation = `Delete all boards for ${user_me_data.username}`;
+    const user = new User(api_config, access_token);
+    const user_data = await user.get();
+    boards = await user.get_boards(user_data, {});
+    confirmation = `Delete all boards for ${user_data.username}`;
   } else { // copy just the board designated by board_id
     const deletion_board = new Board(args.board_id, api_config, access_token);
     const board_data = await deletion_board.get();

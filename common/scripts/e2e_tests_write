@@ -33,39 +33,36 @@ SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
 #   Delete the pins and boards from the TEST2 account, and then
 #   copy the boards from the TEST1 account to the TEST2 account.
 #   Finally, read the boards and pins from the TEST2 account.
-for VERSION in ${VERSIONS} ; do
-    # Note that the confirmation text in the following printf is not parameterized
-    # in order to avoid deleting all the boards from an account other than
-    # penelopepintridge.
-    printf "Delete all boards for penelopepintridge\nyes\nyes\nyes\n" | \
-        ./scripts/delete_board.${EXT} -a "${TEST2}_${VERSION}" -"${VERSION}" --all-boards
-    ./scripts/copy_board.${EXT} -s "${TEST1}_${VERSION}" -t "${TEST2}_${VERSION}" -"${VERSION}" --all
-    ./scripts/get_user_boards.${EXT} -a "${TEST2}_${VERSION}" -"${VERSION}" --page-size 100
-    ./scripts/get_user_pins.${EXT} -a "${TEST2}_${VERSION}" -"${VERSION}" --page-size 100
-done
 
-# Saving a pin using v3 requires special app configuration, so test just v5.
-SAVE_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2}_v5 -v5 --page-size 100 | grep -B 1 "${SAVE_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
-./scripts/save_pin.${EXT} -a ${TEST2}_v5 -v5 -p ${PIN} -b "${SAVE_BOARD_ID}"
+# Note that the confirmation text in the following printf is not parameterized
+# in order to avoid deleting all the boards from an account other than
+# penelopepintridge.
+printf "Delete all boards for penelopepintridge\nyes\nyes\nyes\n" | \
+./scripts/delete_board.${EXT} -a "${TEST2}" --all-boards
+./scripts/copy_board.${EXT} -s "${TEST1}" -t "${TEST2}" --all
+./scripts/get_user_boards.${EXT} -a "${TEST2}" --page-size 100
+./scripts/get_user_pins.${EXT} -a "${TEST2}" --page-size 100
+
+# Save a pin
+SAVE_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 "${SAVE_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
+./scripts/save_pin.${EXT} -a ${TEST2} -p ${PIN} -b "${SAVE_BOARD_ID}"
 
 # The board used to test saves should have a section.
 # There may be some deduplication logic that prevents this save from happening
 # if it is exactly the same pin as the previous save, so use a different pin ID.
-SAVE_SECTION_ID=$(./scripts/get_board.${EXT} -a ${TEST2}_v5 -b "${SAVE_BOARD_ID}" | grep -m 1 'Section ID' | cut -d ' ' -f 3 )
-./scripts/save_pin.${EXT} -a ${TEST2}_v5 -v5 -p ${PIN2} -b "${SAVE_BOARD_ID}" -s "${SAVE_SECTION_ID}"
+SAVE_SECTION_ID=$(./scripts/get_board.${EXT} -a ${TEST2} -b "${SAVE_BOARD_ID}" | grep -m 1 'Section ID' | cut -d ' ' -f 3 )
+./scripts/save_pin.${EXT} -a ${TEST2} -p ${PIN2} -b "${SAVE_BOARD_ID}" -s "${SAVE_SECTION_ID}"
 
 # The video file is required for this part of the test.
 if [ -r "${VIDEO_FILE}" ] ; then
-    # use v5 to get the board with the pin to copy
-    VIDEO_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2}_v5 -v5 --page-size 100 | grep -B 1 "${VIDEO_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
+    # get the board with the pin to copy
+    VIDEO_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 "${VIDEO_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
 
-    # use v5 to get a single pin to copy
-    VIDEO_PIN_ID=$(./scripts/get_user_pins.${EXT} -a ${TEST2}_v5 -v5 --page-size 100 | grep -B 1 -m 1 "${VIDEO_PIN_DESCRIPTION}" | grep "Pin ID" | cut -d ' ' -f 3)
+    # get a single pin to copy
+    VIDEO_PIN_ID=$(./scripts/get_user_pins.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 -m 1 "${VIDEO_PIN_DESCRIPTION}" | grep "Pin ID" | cut -d ' ' -f 3)
 
-    for VERSION in ${VERSIONS} ; do
-        # copy the pin, adding the video
-        ./scripts/copy_pin.${EXT} -a "${TEST2}_${VERSION}" -"${VERSION}" -p "$VIDEO_PIN_ID" -b "$VIDEO_BOARD_ID" -m "${VIDEO_FILE}"
-    done
+    # copy the pin, adding the video
+    ./scripts/copy_pin.${EXT} -a "${TEST2}" -p "$VIDEO_PIN_ID" -b "$VIDEO_BOARD_ID" -m "${VIDEO_FILE}"
 else
     echo Skipping video pin creation test.
     echo To enable this test, put a video file here: "${VIDEO_FILE}"

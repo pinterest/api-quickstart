@@ -32,12 +32,10 @@
 #      /g replaces globally, i.e. as many times as it can
 #      /x uses extended regular expressions
 #    (?<=\<\!--gen--\>\n```\n) means preceded by the <!--gen--> tag, a newline, three backquotes and a newline"
-#    ^(\$\s(\.\/scripts\/[a-z_]+\.(js|py)\s+(--help|-v\s*[0-9]+\s+--scopes\s+help))\n\n)
+#    ^(\$\s(\.\/scripts\/[a-z_]+\.(js|py)\s+(--help|--scopes\s+help))\n\n)
 #       is a long regular expression that accepts commands from a line that looks like one of these:
 #          $ ./scripts/name_of_script.js --help
-#          $ ./scripts/name_of_script.js -v 3 --scopes help
-#          $ ./scripts/name_of_script.py --help
-#          $ ./scripts/name_of_script.py -v 5 --scopes help
+#          $ ./scripts/name_of_script.py --scopes help
 #       This regular expression is not very forgiving, because executing commands from
 #       a script has security risks.
 #    (?^s:.*?) changes the behaviour of . to match newlines as well, so it matches (frugally because of the *?)
@@ -55,7 +53,7 @@ perl -0777 -p -i -e 's/
     (?<=\<\!--gen--\>\n```\n)
 
     # capture reference command
-    ^(\$\s(\.\/scripts\/[a-z_]+\.(js|py)\s+(--help|-v\s*[0-9]+\s+--scopes\s+help))\n\n)
+    ^(\$\s(\.\/scripts\/[a-z_]+\.(js|py)\s+(--help|--scopes\s+help))\n\n)
 
     # match the rest of the code-block
     (?^s:.*?)

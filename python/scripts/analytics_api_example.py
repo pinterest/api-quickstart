@@ -5,9 +5,15 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
+from ad_metrics_async_report import AdMetricsAsyncReport
+from advertisers import Advertisers
 from api_config import ApiConfig
 from arguments import common_arguments
+from delivery_metrics import DeliveryMetrics
 from generic_requests import download_file
+from oauth_scope import Scope
+from user import User
 from utils import input_number, input_path_for_write
 
 
@@ -46,15 +52,7 @@ def main(argv=[]):
     Set the API configuration verbosity to 2 to show all of requests
     and response statuses. To see the complete responses, set verbosity to 3.
     """
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from ad_metrics_async_report import AdMetricsAsyncReport
-    from advertisers import Advertisers
-    from delivery_metrics import DeliveryMetrics
-    from oauth_scope import Scope
-    from user import User
+    api_config = ApiConfig(verbosity=args.log_level)
 
     """
     Step 1: Fetch an access token and print summary data about the User.
@@ -69,13 +67,13 @@ def main(argv=[]):
     """
     Sample: Get my user id
     For a future call we need to know the user id associated with
-    the access token being used (for API version v4).
+    the access token being used.
     """
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user = User(api_config, access_token)
+    user_data = user.get()
+    user.print_summary(user_data)
 
-    user_id = user_me_data.get("id")
+    user_id = user_data.get("id")
     print(f"User id: {user_id}")
 
     """
@@ -114,7 +112,7 @@ def main(argv=[]):
 
     """
     Step 3: Learn more about the metrics available
-      https://developers.pinterest.com/docs/redoc/combined_reporting/#operation/ads_v3_get_delivery_metrics_handler_GET
+      https://developers.pinterest.com/docs/api/v5/#operation/delivery_metrics/get
     """  # noqa: E501 because the long URL is okay
 
     # the output of delivery_metrics.get() is too long to be printed

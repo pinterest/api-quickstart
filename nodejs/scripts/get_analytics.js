@@ -1,16 +1,19 @@
 #!/usr/bin/env node
 import fs from 'fs';
 
-import { ArgumentParser } from 'argparse';
+import { AccessToken } from '../src/access_token.js';
+import { Advertisers } from '../src/advertisers.js';
 import { ApiConfig } from '../src/api_config.js';
+import { ArgumentParser } from 'argparse';
 import { common_arguments } from '../src/arguments.js';
 import { Input } from '../src/utils.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
+import { UserAnalytics, PinAnalytics, AdAnalytics } from '../src/analytics.js';
 
 /**
  * This script shows how to use the Pinterest API synchronous analytics endpoints
- * to download reports for a User, Ad Account, Campaign, Ad Group, or Ad. The
- * analytics_api_example script shows how to use Pinterest API v3 to retrieve
- * similar metrics using asynchronous reporting functionality.
+ * to download reports for a User, Ad Account, Campaign, Ad Group, or Ad.
  *
  * This script fetches user analytics by default, which just requires an
  * access token with READ_USERS scope.
@@ -140,35 +143,12 @@ async function main(argv) {
   }
 
   const api_config = new ApiConfig({
-    verbosity: args.log_level,
-    version: args.api_version
+    verbosity: args.log_level
   });
-
-  // imports that depend on the version of the API
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Advertisers } = await import(`../src/${api_config.version}/advertisers.js`);
-  const { UserAnalytics, PinAnalytics, AdAnalytics } = await import(`../src/${api_config.version}/analytics.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
-
-  // This API edge case is best handled up right after API set-up...
-  if (api_config.version < 'v5' && args.analytics_object === 'pin') {
-    console.log('Pin analytics are supported by Pinterest API v5, but not v3 or v4.');
-    console.log('Try using -v5 or an analytics object besides pin.');
-    process.exit(1);
-  }
 
   // Requesting pin analytics requires a pin_id.
   if (args.analytics_object === 'pin' && !args.pin_id) {
     console.log('Pin analytics require a pin identifier.');
-    process.exit(1);
-  }
-
-  // This API edge case is best handled up right after API set-up...
-  if (api_config.version < 'v5' && args.analytics_object === 'ad_account_user') {
-    console.log('User account analytics for shared accounts are');
-    console.log('supported by Pinterest API v5, but not v3 or v4.');
-    console.log('Try using -v5 or an analytics object besides ad_account_user.');
     process.exit(1);
   }
 
@@ -182,9 +162,9 @@ async function main(argv) {
 
   // Get the user record. Some versions of the Pinterest API require the
   // user id associated with the access token.
-  const user_me = new User('me', api_config, access_token);
-  const user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 
   let results;
   const input = new Input();
@@ -192,7 +172,7 @@ async function main(argv) {
     if (args.analytics_object === 'user') {
       // Get analytics for the user account associated with the access token.
       const analytics = new UserAnalytics(
-        user_me_data.id, api_config, access_token)
+        user_data.id, api_config, access_token)
         .last_30_days()
         .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);
 
@@ -208,11 +188,11 @@ async function main(argv) {
     } else if (args.analytics_object === 'ad_account_user') {
       // Get analytics for the user account associated with an ad account.
       const analytics = new UserAnalytics(
-        user_me_data.id, api_config, access_token)
+        user_data.id, api_config, access_token)
         .last_30_days()
         .metrics(['IMPRESSION', 'PIN_CLICK_RATE']);
 
-      const advertisers = new Advertisers(user_me_data.id, api_config, access_token);
+      const advertisers = new Advertisers(user_data.id, api_config, access_token);
       // When using find_and_get_analytics, analytics.get() will be called with
       // an ad_account_id argument.
       const finder = new FindAndGetAnalytics(
@@ -227,7 +207,7 @@ async function main(argv) {
         .metrics(['SPEND_IN_DOLLAR', 'TOTAL_CLICKTHROUGH'])
         .granularity('DAY');
 
-      const advertisers = new Advertisers(user_me_data.id, api_config, access_token);
+      const advertisers = new Advertisers(user_data.id, api_config, access_token);
       const finder = new FindAndGetAnalytics(
         advertisers, analytics, args.analytics_object, input, [
           new AdsEntity(

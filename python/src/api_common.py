@@ -45,21 +45,13 @@ class ApiCommon:
         if self.api_config.verbosity >= 3:
             print("x-pinterest-rid:", response.headers.get("x-pinterest-rid"))
 
-    def unpack(self, response, raw=True):
+    def unpack(self, response):
         """
         Check for errors, retrieve the response, and respond appropriately.
 
         The response argument is the return value of a REST transaction
         executed by the requests module.
-
-        The raw argument is used to modify the data that is returned by this function,
-        so that the same ApiObject class can handle responses from both v3 and v5.
-        - When raw is True, the return value is just the deserialized JSON response.
-        - When raw is False, the return value for v5 is the same (the deserialized JSON
-          response) but for v3 includes only the "cooked" data container inside
-          the response.
         """
-
         self._check(response)
 
         # Save a human-readable status for output and error handling.
@@ -99,8 +91,4 @@ class ApiCommon:
             print("x-pinterest-rid:", response.headers.get("x-pinterest-rid"))
             print(unpacked)
 
-        if raw or self.api_config.version == "v5":
-            return unpacked
-
-        # API version v3 uses a data container that is useful to unpack
-        return unpacked.get("data")
+        return unpacked

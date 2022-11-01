@@ -6,8 +6,7 @@
 # to run this script.
 #
 # For each of the required tokens:
-# 1. verify if the v5 token can be refreshed. if not, prompt to login and get a new token.
-# 2. verify if the v3 token can be refreshed. if not, prompt to login if necessary and get a new token.
+#    verify if the token can be refreshed. if not, prompt to login and get a new token.
 #
 
 # get the location of this script
@@ -19,43 +18,21 @@ SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
 . "${SCRIPT_DIR}"/e2e_tests_preamble
 
 LOGIN_MESSAGE="Log into the ${TEST1} (pins/boards read test) account in your web browser and hit any key to continue..."
-if (! ./scripts/refresh_access_token.${EXT} -a ${TEST1}_v5 -v5) ; then
-    LOGIN_ACCOUNT=${TEST1}
+if (! ./scripts/refresh_access_token.${EXT} -a ${TEST1}) ; then
     read -r -s -n 1 -p "${LOGIN_MESSAGE}"
-    echo "authorizing v5 token for ${TEST1}"
-    ./scripts/get_access_token.${EXT} -a ${TEST1}_v5 -w -s pins:read,boards:read,user_accounts:read
-fi
-if (! ./scripts/refresh_access_token.${EXT} -a ${TEST1}_v3 -v3) ; then
-    if [ "${LOGIN_ACCOUNT}" != "${TEST1}" ] ; then
-        read -r -s -n 1 -p "${LOGIN_MESSAGE}"
-    fi
-    echo "authorizing v3 token for ${TEST1}"
-    ./scripts/get_access_token.${EXT} -a ${TEST1}_v3 -v3 -w -s read_pins,read_boards,read_users
+    echo "authorizing token for ${TEST1}"
+    ./scripts/get_access_token.${EXT} -a ${TEST1} -w -s pins:read,boards:read,user_accounts:read
 fi
 
 LOGIN_MESSAGE="Log into the ${TEST2} (pins/boards write test) account in your web browser and hit any key to continue..."
-if (! ./scripts/refresh_access_token.${EXT} -a ${TEST2}_v5 -v5) ; then
-    LOGIN_ACCOUNT=${TEST2}
+if (! ./scripts/refresh_access_token.${EXT} -a ${TEST2}) ; then
     read -r -s -n 1 -p "${LOGIN_MESSAGE}"
     echo "authorizing v5 token for ${TEST2}"
-    ./scripts/get_access_token.${EXT} -a ${TEST2}_v5 -w -s pins:read,pins:write,boards:read,boards:write,user_accounts:read
-fi
-if (! ./scripts/refresh_access_token.${EXT} -a ${TEST2}_v3 -v3) ; then
-    if [ "${LOGIN_ACCOUNT}" != "${TEST2}" ] ; then
-        read -r -s -n 1 -p "${LOGIN_MESSAGE}"
-    fi
-    echo "authorizing v3 token for ${TEST2}"
-    ./scripts/get_access_token.${EXT} -a ${TEST2}_v3 -v3 -w -s read_pins,write_pins,read_boards,write_boards,read_users
+    ./scripts/get_access_token.${EXT} -a ${TEST2} -w -s pins:read,pins:write,boards:read,boards:write,user_accounts:read
 fi
 
-echo "Ensure that there is a valid v3 access token for the ${TEST3} (ads test) account"
-./scripts/get_access_token.${EXT} -a ${TEST3}_v3 -v3
+echo "Ensure that there is a valid access token for the ${TEST3} (ads test) account"
+./scripts/get_access_token.${EXT} -a ${TEST3}
 
-echo "Ensure that there is a valid v5 access token for the ${TEST3} (ads test) account"
-./scripts/get_access_token.${EXT} -a ${TEST3}_v5 -v5
-
-echo "Ensure that there is a valid v3 access token for the ${TEST4} (ads test) account"
-./scripts/get_access_token.${EXT} -a ${TEST4}_v3 -v3
-
-echo "Ensure that there is a valid v5 access token for the ${TEST4} (ads test) account"
-./scripts/get_access_token.${EXT} -a ${TEST4}_v5 -v5
+echo "Ensure that there is a valid access token for the ${TEST4} (ads test) account"
+./scripts/get_access_token.${EXT} -a ${TEST4}

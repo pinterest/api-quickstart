@@ -28,7 +28,6 @@ describe('ApiConfig test environment', () => {
     expect(api_config.landing_uri).toEqual('https://developers.pinterest.com/apps/test-app-id');
     expect(api_config.oauth_uri).toEqual('https://www.pinterest.com');
     expect(api_config.api_uri).toEqual('https://api.pinterest.com');
-    expect(api_config.version).toEqual('v5');
     expect(console.log.mock.calls[0][0]).toEqual(
       'Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.');
   });
@@ -45,7 +44,6 @@ describe('ApiConfig test environment', () => {
     process.env.REDIRECT_LANDING_URI = 'test-landing-uri';
     process.env.PINTEREST_OAUTH_URI = 'test-oauth-uri';
     process.env.PINTEREST_API_URI = 'test-api-uri';
-    process.env.PINTEREST_API_VERSION = 'test-api-version';
     const api_config = new ApiConfig({});
 
     expect(api_config.app_id).toEqual('test-app-id');
@@ -55,7 +53,6 @@ describe('ApiConfig test environment', () => {
     expect(api_config.landing_uri).toEqual('test-landing-uri');
     expect(api_config.oauth_uri).toEqual('test-oauth-uri');
     expect(api_config.api_uri).toEqual('test-api-uri');
-    expect(api_config.version).toEqual('test-api-version');
     expect(console.log.mock.calls[0][0]).toEqual(
       'Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.');
   });

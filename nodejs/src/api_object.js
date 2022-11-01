@@ -13,12 +13,6 @@ export class ApiObject extends ApiCommon {
     this.access_token = access_token;
   }
 
-  // This method extracts the data container from the v3 response body
-  // and returns the v5 response body without modification.
-  extract(body) {
-    return this.api_config.version === 'v3' ? body.data : body;
-  }
-
   // Code that is common to a simple GET as in response_data()
   // or to a bookmarked GET as in get_iterator().
   async get_response(path) {
@@ -41,8 +35,7 @@ export class ApiObject extends ApiCommon {
 
   // Simple GET transaction.
   async request_data(path) {
-    const response = await this.get_response(path);
-    return this.extract(response);
+    return await this.get_response(path);
   }
 
   // Simple PUT transaction.
@@ -62,7 +55,7 @@ export class ApiObject extends ApiCommon {
         responseType: 'json'
       });
       this.print_response(response);
-      return this.extract(response.body);
+      return response.body;
     } catch (error) {
       this.print_and_throw_error(error);
     }
@@ -85,7 +78,7 @@ export class ApiObject extends ApiCommon {
         responseType: 'json'
       });
       this.print_response(response);
-      return this.extract(response.body);
+      return response.body;
     } catch (error) {
       this.print_and_throw_error(error);
     }
@@ -162,8 +155,7 @@ export class ApiObject extends ApiCommon {
 
         while (true) {
           // send the current response to the function using the iterator
-          const items = response.items || response.data; // items in v5, data in v5
-          for (const value of items) {
+          for (const value of response.items) {
             yield value;
           }
           // continue the loop if the current response has a bookmark, otherwise done

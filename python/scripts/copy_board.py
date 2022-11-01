@@ -13,9 +13,14 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
 from api_common import SpamException
 from api_config import ApiConfig
 from arguments import common_arguments
+from board import Board
+from oauth_scope import Scope
+from pin import Pin
+from user import User
 
 
 def main(argv=[]):
@@ -107,14 +112,7 @@ def main(argv=[]):
         exit(1)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from board import Board
-    from oauth_scope import Scope
-    from pin import Pin
-    from user import User
+    api_config = ApiConfig(verbosity=args.log_level)
 
     # helper function to copy a pin
     def copy_pin(pin, pin_data, target_board_id, target_section_id=None):
@@ -161,9 +159,9 @@ def main(argv=[]):
     target_pin = Pin(None, api_config, target_token)
 
     if args.all_boards:  # copy all boards for the source user
-        user_me = User("me", api_config, source_token)
-        user_me_data = user_me.get()
-        boards = user_me.get_boards(user_me_data)
+        user = User(api_config, source_token)
+        user_data = user.get()
+        boards = user.get_boards(user_data)
         source_board = Board(
             None, api_config, source_token
         )  # board_id set in loop below

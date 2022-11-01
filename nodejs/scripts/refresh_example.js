@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 import { ArgumentParser } from 'argparse';
 
+import { AccessToken } from '../src/access_token.js';
 import { ApiConfig } from '../src/api_config.js';
 import { common_arguments } from '../src/arguments.js';
+import { Scope } from '../src/oauth_scope.js';
+import { User } from '../src/user.js';
 
 /**
  * This script was written primarily as a way for folks at Pinterest to
@@ -20,11 +23,7 @@ async function main(argv) {
   const args = parser.parse_args(argv);
 
   // get configuration from defaults and/or the environment
-  const api_config = new ApiConfig({ verbosity: args.log_level, version: args.api_version });
-
-  const { AccessToken } = await import(`../src/${api_config.version}/access_token.js`);
-  const { Scope } = await import(`../src/${api_config.version}/oauth_scope.js`);
-  const { User } = await import(`../src/${api_config.version}/user.js`);
+  const api_config = new ApiConfig({ verbosity: args.log_level });
 
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
@@ -43,9 +42,9 @@ async function main(argv) {
   }
 
   // use the access token to get information about the user
-  const user_me = new User('me', api_config, access_token);
-  let user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  const user = new User(api_config, access_token);
+  let user_data = await user.get();
+  user.print_summary(user_data);
 
   // refresh the access_token
   // Note that the AccessToken encapsulates the credentials,
@@ -63,8 +62,8 @@ async function main(argv) {
   console.log('hashed access token:', hashed);
 
   console.log('accessing with refreshed access_token...');
-  user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  user_data = await user.get();
+  user.print_summary(user_data);
 
   // Doing refreshes too quickly can result in the same access_token being generated.
   // In practice, this isn't a problem because tokens should be refreshed after
@@ -83,8 +82,8 @@ async function main(argv) {
     process.exit(2);
   }
   console.log('accessing with second refreshed access_token...');
-  user_me_data = await user_me.get();
-  user_me.print_summary(user_me_data);
+  user_data = await user.get();
+  user.print_summary(user_data);
 }
 
 if (!process.env.TEST_ENV) {

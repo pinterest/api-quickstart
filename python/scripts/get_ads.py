@@ -5,8 +5,12 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+from access_token import AccessToken
+from advertisers import Advertisers
 from api_config import ApiConfig
 from arguments import common_arguments
+from oauth_scope import Scope
+from user import User
 from utils import input_number
 
 
@@ -69,13 +73,7 @@ def main(argv=[]):
     common_arguments(parser)
     args = parser.parse_args(argv)
 
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from advertisers import Advertisers
-    from oauth_scope import Scope
-    from user import User
+    api_config = ApiConfig(verbosity=args.log_level)
 
     """
     Step 1: Fetch an access token and print summary data about the User.
@@ -92,9 +90,9 @@ def main(argv=[]):
     For a future call we need to know the user id associated with
     the access token being used.
     """
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user = User(api_config, access_token)
+    user_data = user.get()
+    user.print_summary(user_data)
 
     """
     Step 2: Get Ad Accounts available to my access token and select one of them.
@@ -109,7 +107,7 @@ def main(argv=[]):
     This process is also touched on in the API docs:
       https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
     """  # noqa: E501 because the long URL is okay
-    advertisers = Advertisers(user_me_data.get("id"), api_config, access_token)
+    advertisers = Advertisers(user_data.get("id"), api_config, access_token)
 
     ads_entities = [
         {"kind": "Ad Account", "parent": "User", "get": advertisers.get},

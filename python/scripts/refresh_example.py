@@ -6,8 +6,11 @@ from os.path import abspath, dirname, join
 
 sys.path.append(abspath(join(dirname(__file__), "..", "src")))
 
+
+from access_token import AccessToken
 from api_config import ApiConfig
 from arguments import common_arguments
+from user import User
 
 
 def main(argv=[]):
@@ -26,11 +29,7 @@ def main(argv=[]):
     args = parser.parse_args(argv)
 
     # get configuration from defaults and/or the environment
-    api_config = ApiConfig(verbosity=args.log_level, version=args.api_version)
-
-    # imports that depend on the version of the API
-    from access_token import AccessToken
-    from user import User
+    api_config = ApiConfig(verbosity=args.log_level)
 
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
@@ -43,9 +42,9 @@ def main(argv=[]):
     print("hashed refresh token: " + access_token.hashed_refresh_token())
 
     # use the access token to get information about the user
-    user_me = User("me", api_config, access_token)
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user = User(api_config, access_token)
+    user_data = user.get()
+    user.print_summary(user_data)
 
     # Doing refreshes too quickly can result in the same access_token being generated.
     # In practice, this isn't a problem because tokens should be refreshed after
@@ -66,8 +65,8 @@ def main(argv=[]):
     print("hashed access token: " + hashed)
 
     print("accessing with refreshed access_token...")
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user_data = user.get()
+    user.print_summary(user_data)
 
     print("wait a second to avoid getting the same token on the second refresh...")
     time.sleep(1)
@@ -82,8 +81,8 @@ def main(argv=[]):
     print("hashed access token: " + hashed)
 
     print("accessing with second refreshed access_token...")
-    user_me_data = user_me.get()
-    user_me.print_summary(user_me_data)
+    user_data = user.get()
+    user.print_summary(user_data)
 
 
 if __name__ == "__main__":
