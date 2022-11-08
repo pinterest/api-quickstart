@@ -57,6 +57,16 @@ class AnalyticsApiExampleTest(IntegrationMocks):
                 ]
             },
         )
+        # request from DeliveryMetrics.get
+        rm.get(
+            "https://api.pinterest.com/v5/resources/delivery_metrics",
+            json={
+                "items": [
+                    {"name": "metric1", "definition": "description 1"},
+                    {"name": "metric2", "definition": "description 2"},
+                ]
+            },
+        )
 
         # request from AsyncReport.poll_report
         rm.get(
