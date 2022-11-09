@@ -129,6 +129,7 @@ async function main(argv) {
         delivery_metrics.print(metric);
       }
     }
+    api_config.verbosity = verbosity; // restore verbosity
 
     // To print the long list of all metrics, uncomment the next line.
     // delivery_metrics.print_all(metrics);
