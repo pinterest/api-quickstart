@@ -119,27 +119,20 @@ async function main(argv) {
     // Get the full list of all delivery metrics.
     // This call is not used much in day-to-day API code, but is a useful endpoint
     // for learning about the metrics.
-    try {
-      const delivery_metrics = new DeliveryMetrics(api_config, access_token);
-      const metrics = await delivery_metrics.get();
+    const delivery_metrics = new DeliveryMetrics(api_config, access_token);
+    const metrics = await delivery_metrics.get();
 
-      console.log('Here are a couple of interesting metrics...');
-      for (const metric of metrics) {
-        if (metric.name === 'CLICKTHROUGH_1' ||
-            metric.name === 'IMPRESSION_1') {
-          delivery_metrics.print(metric);
-        }
+    console.log('Here are a couple of interesting metrics...');
+    for (const metric of metrics) {
+      if (metric.name === 'CLICKTHROUGH_1' ||
+          metric.name === 'IMPRESSION_1') {
+        delivery_metrics.print(metric);
       }
-
-      // To print the long list of all metrics, uncomment the next line.
-      // delivery_metrics.print_all(metrics);
-    } catch (error) {
-      // This endpoint is not essential, and is not supported by all API versions.
-      // So, just print the error and move along.
-      console.log(error.message);
-    } finally {
-      api_config.verbosity = verbosity; // restore verbosity
     }
+    api_config.verbosity = verbosity; // restore verbosity
+
+    // To print the long list of all metrics, uncomment the next line.
+    // delivery_metrics.print_all(metrics);
 
     // Step 4: Configure the options for the report
     // For documentation on async reports, see:

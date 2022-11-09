@@ -119,26 +119,22 @@ def main(argv=[]):
     verbosity = api_config.verbosity
     api_config.verbosity = min(verbosity, 2)
 
-    try:
-        # Get the full list of all delivery metrics.
-        # This call is not used much in day-to-day API code, but is a useful endpoint
-        # for learning about the metrics.
-        delivery_metrics = DeliveryMetrics(api_config, access_token)
-        metrics = delivery_metrics.get()
+    # Get the full list of all delivery metrics.
+    # This call is not used much in day-to-day API code, but is a useful endpoint
+    # for learning about the metrics.
+    delivery_metrics = DeliveryMetrics(api_config, access_token)
+    metrics = delivery_metrics.get()
 
-        print("Here are a couple of interesting metrics...")
-        for metric in metrics:
-            if metric["name"] == "CLICKTHROUGH_1" or metric["name"] == "IMPRESSION_1":
-                delivery_metrics.print(metric)
+    print("Here are a couple of interesting metrics...")
+    for metric in metrics:
+        if metric["name"] == "CLICKTHROUGH_1" or metric["name"] == "IMPRESSION_1":
+            delivery_metrics.print(metric)
 
-        """
-        To print the long list of all metrics, uncomment the next line.
-        delivery_metrics.print_all(metrics)
-        """
-    except RuntimeError as error:
-        print(error)
-    finally:
-        api_config.verbosity = verbosity  # restore verbosity
+    """
+    To print the long list of all metrics, uncomment the next line.
+    delivery_metrics.print_all(metrics)
+    """
+    api_config.verbosity = verbosity  # restore verbosity
 
     """
     Step 4: Configure the options for the report
