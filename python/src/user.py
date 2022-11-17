@@ -1,6 +1,7 @@
 from api_object import ApiObject
 from board import Board
 
+from openapi_client.apis.tags import user_account_api
 
 class UserPinIterator:
     """
@@ -33,10 +34,17 @@ class UserPinIterator:
 class User(ApiObject):
     def __init__(self, api_config, access_token):
         super().__init__(api_config, access_token)
+        self.api_instance = user_account_api.UserAccountApi(api_config.api_client)
+        # TODO: The openapi client conflates api and access token configuration.
+        # Need to understand how to change the quickstart to support multiple access tokens,
+        # probably by creating multiple api_configs.
+        api_config.configuration.access_token = access_token.access_token
 
     # https://developers.pinterest.com/docs/api/v5/#tag/user_account
     def get(self):
-        return self.request_data("/v5/user_account")
+        # Example of call to openapi client.
+        # TODO: Need to understand logging better.
+        return self.api_instance.user_account_get().body
 
     def print_summary(self, user_data):
         print("--- User Summary ---")

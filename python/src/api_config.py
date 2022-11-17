@@ -1,5 +1,7 @@
 import os  # for environment variables
 
+import openapi_client
+
 # Construct the redirect_uri for the OAuth process. The REDIRECT_URI must
 # be literally the same as configured at https://developers.pinterest.com/apps/.
 # The port is fixed for now. It would be better to configure a selection
@@ -37,6 +39,15 @@ class ApiConfig:
         # swizzle oauth and api hosts, based on environment
         self.oauth_uri = os.environ.get("PINTEREST_OAUTH_URI") or DEFAULT_OAUTH_URI
         self.api_uri = os.environ.get("PINTEREST_API_URI") or DEFAULT_API_URI
+
+        # TODO: CLEAN UP OpenAPI code
+        self.configuration = openapi_client.Configuration(host = self.api_uri + '/v5')
+        if (verbosity > 2):
+            self.configuration.debug = True
+        self.configuration.username = self.app_id
+        self.configuration.password = self.app_secret
+        self.api_client = openapi_client.ApiClient(self.configuration)
+
 
     def get_application_id(self):
         """
