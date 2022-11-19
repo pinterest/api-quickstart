@@ -55,6 +55,49 @@ class PagedIterator:
         return retval
 
 
+class OpenApiPagedIterator:
+    """
+    This class implements paging on top of the bookmark functionality provided
+    by the Pinterest API class. It hides the paging mechanism behind an iterator.
+    """
+
+    def _get_response(self):
+        """
+        Run api_function. Then, look for bookmark in response.
+        """
+        response = self.api_function(query_params=self.query_params)
+        unpacked = response.body
+        # the field with the items container is determined in the iterator constructor
+        self.items = unpacked.get("items")
+        self.query_params["bookmark"] = unpacked.get("bookmark")
+        self.index = 0
+
+    def __init__(self, api_instance, api_name, query_params):
+        """
+        Save the api_function for future iterations
+        """
+        self.api_function = getattr(api_instance, api_name)
+        self.query_params = dict(query_params or {})
+        self._get_response()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index >= len(self.items):
+            # need to fetch more data, if there is a bookmark
+            if self.query_params.get("bookmark"):
+                self._get_response()
+                if not self.items:  # in case there is some sort of error
+                    raise StopIteration
+            else:
+                raise StopIteration  # no bookmark => all done
+
+        retval = self.items[self.index]  # get the current element
+        self.index += 1  # increment the index for the next time
+        return retval
+
+
 class ApiObject(ApiCommon):
     def __init__(self, api_config, access_token):
         super().__init__(api_config)
@@ -137,6 +180,9 @@ class ApiObject(ApiCommon):
 
     def get_iterator(self, path, query_parameters=None):
         return PagedIterator(self, self.add_query(path, query_parameters))
+
+    def get_openapi_iterator(self, api_instance, api_name, query_params):
+        return OpenApiPagedIterator(api_instance, api_name, query_params)
 
     @classmethod
     def print_multiple(cls, page_size, object_name, object_class, paged_iterator):

@@ -5,14 +5,16 @@ import os
 import pathlib
 
 import requests
+from openapi_client.apis.tags import oauth_api
+from openapi_client.model.oauth_access_token_request_code import (
+    OauthAccessTokenRequestCode,
+    OauthAccessTokenRequestRefresh,
+)
 
 from api_common import ApiCommon
 from oauth_scope import Scope
 from user_auth import get_auth_code
 
-from openapi_client.apis.tags import oauth_api
-from openapi_client.model.oauth_access_token_request_code import OauthAccessTokenRequestCode
-from openapi_client.model.oauth_access_token_request_code import OauthAccessTokenRequestRefresh
 
 class AccessToken(ApiCommon):
     def __init__(self, api_config, name=None):
@@ -165,11 +167,13 @@ class AccessToken(ApiCommon):
             if self.api_config.verbosity >= 3:
                 self.api_config.credentials_warning()
                 print(post_data)
-        response = self.api_instance.oauth_token(body=OauthAccessTokenRequestCode(
-            code=auth_code,
-            redirect_uri=self.api_config.redirect_uri,
-            grant_type="authorization_code",
-        ))
+        response = self.api_instance.oauth_token(
+            body=OauthAccessTokenRequestCode(
+                code=auth_code,
+                redirect_uri=self.api_config.redirect_uri,
+                grant_type="authorization_code",
+            )
+        )
         unpacked = response.body
 
         print("scope: " + unpacked["scope"])
@@ -190,9 +194,11 @@ class AccessToken(ApiCommon):
             headers=self.auth_headers,
             data=post_data,
         )
-        response = self.api_instance.oauth_token(body=OauthAccessTokenRequestRefresh(
-            refresh_token=self.refresh_token,
-            grant_type="refresh_token",
-        ))
+        response = self.api_instance.oauth_token(
+            body=OauthAccessTokenRequestRefresh(
+                refresh_token=self.refresh_token,
+                grant_type="refresh_token",
+            )
+        )
         unpacked = response.body
         self.access_token = unpacked["access_token"]

@@ -41,13 +41,12 @@ class ApiConfig:
         self.api_uri = os.environ.get("PINTEREST_API_URI") or DEFAULT_API_URI
 
         # TODO: CLEAN UP OpenAPI code
-        self.configuration = openapi_client.Configuration(host = self.api_uri + '/v5')
-        if (verbosity > 2):
+        self.configuration = openapi_client.Configuration(host=self.api_uri + "/v5")
+        if verbosity > 2:
             self.configuration.debug = True
         self.configuration.username = self.app_id
         self.configuration.password = self.app_secret
         self.api_client = openapi_client.ApiClient(self.configuration)
-
 
     def get_application_id(self):
         """
