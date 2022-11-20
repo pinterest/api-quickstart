@@ -72,11 +72,11 @@ class OpenApiPagedIterator:
         self.query_params["bookmark"] = unpacked.get("bookmark")
         self.index = 0
 
-    def __init__(self, api_instance, api_name, query_params):
+    def __init__(self, api_function, query_params):
         """
         Save the api_function for future iterations
         """
-        self.api_function = getattr(api_instance, api_name)
+        self.api_function = api_function
         self.query_params = dict(query_params or {})
         self._get_response()
 
@@ -181,8 +181,8 @@ class ApiObject(ApiCommon):
     def get_iterator(self, path, query_parameters=None):
         return PagedIterator(self, self.add_query(path, query_parameters))
 
-    def get_openapi_iterator(self, api_instance, api_name, query_params):
-        return OpenApiPagedIterator(api_instance, api_name, query_params)
+    def get_openapi_iterator(self, api_function, query_params):
+        return OpenApiPagedIterator(api_function, query_params)
 
     @classmethod
     def print_multiple(cls, page_size, object_name, object_class, paged_iterator):
