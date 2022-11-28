@@ -27,11 +27,6 @@ class AccessToken(ApiCommon):
         self.api_instance = oauth_api.OauthApi(self.api_config.api_client)
         self.path = pathlib.Path(api_config.oauth_token_dir) / (self.name + ".json")
 
-        # use the recommended authorization approach
-        auth = api_config.app_id + ":" + api_config.app_secret
-        b64auth = base64.b64encode(auth.encode("ascii")).decode("ascii")
-        self.auth_headers = {"Authorization": "Basic " + b64auth}
-
     def fetch(self, scopes=None, refreshable=True):
         """
         This method tries to make it as easy as possible for a developer
@@ -157,16 +152,6 @@ class AccessToken(ApiCommon):
         a redirect from the browser) for the access_token and (if requested)
         refresh_token.
         """
-        post_data = {
-            "code": auth_code,
-            "redirect_uri": self.api_config.redirect_uri,
-            "grant_type": "authorization_code",
-        }
-        if self.api_config.verbosity >= 2:
-            print("POST", self.api_config.api_uri + "/v5/oauth/token")
-            if self.api_config.verbosity >= 3:
-                self.api_config.credentials_warning()
-                print(post_data)
         response = self.api_instance.oauth_token(
             body=OauthAccessTokenRequestCode(
                 code=auth_code,
@@ -183,17 +168,6 @@ class AccessToken(ApiCommon):
 
     def refresh(self):
         print(f"refreshing {self.name}...")
-        post_data = {"grant_type": "refresh_token", "refresh_token": self.refresh_token}
-        if self.api_config.verbosity >= 2:
-            print("POST", self.api_config.api_uri + "/v5/oauth/token")
-            if self.api_config.verbosity >= 3:
-                self.api_config.credentials_warning()
-                print(post_data)
-        response = requests.post(
-            self.api_config.api_uri + "/v5/oauth/token",
-            headers=self.auth_headers,
-            data=post_data,
-        )
         response = self.api_instance.oauth_token(
             body=OauthAccessTokenRequestRefresh(
                 refresh_token=self.refresh_token,

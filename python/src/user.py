@@ -44,8 +44,6 @@ class User(ApiObject):
 
     # https://developers.pinterest.com/docs/api/v5/#tag/user_account
     def get(self):
-        # Example of call to openapi client.
-        # TODO: Need to understand logging better.
         return self.user_api.user_account_get().body
 
     def print_summary(self, user_data):

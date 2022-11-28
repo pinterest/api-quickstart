@@ -44,6 +44,7 @@ class ApiConfig:
         self.configuration = openapi_client.Configuration(host=self.api_uri + "/v5")
         if verbosity > 2:
             self.configuration.debug = True
+            self.credentials_warning()
         self.configuration.username = self.app_id
         self.configuration.password = self.app_secret
         self.api_client = openapi_client.ApiClient(self.configuration)
