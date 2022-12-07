@@ -1,3 +1,5 @@
+from openapi_client.apis.tags import boards_api
+
 from api_object import ApiObject
 
 
@@ -5,12 +7,19 @@ class Board(ApiObject):
     def __init__(self, board_id, api_config, access_token):
         super().__init__(api_config, access_token)
         self.board_id = board_id
+        self.boards_api = boards_api.BoardsApi(api_config.api_client)
+        # TODO: The openapi client conflates api and access token configuration.
+        # Need to understand how to change the quickstart to support
+        # multiple access tokens, probably by creating multiple api_configs.
+        api_config.configuration.access_token = access_token.access_token
 
     # https://developers.pinterest.com/docs/api/v5/#operation/boards/get
     def get(self):
         if not self.board_id:
             raise ValueError("board_id must be set to get a board")
-        return self.request_data(f"/v5/boards/{self.board_id}")
+        return self.boards_api.boards_get(path_params={
+            "board_id": self.board_id
+        }).body
 
     # provides a human-readable identifier for a board
     @classmethod
