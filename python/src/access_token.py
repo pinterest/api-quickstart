@@ -1,10 +1,8 @@
-import base64
 import hashlib
 import json
 import os
 import pathlib
 
-import requests
 from openapi_client.apis.tags import oauth_api
 from openapi_client.model.oauth_access_token_request_code import (
     OauthAccessTokenRequestCode,
@@ -56,6 +54,12 @@ class AccessToken(ApiCommon):
 
         self.oauth(scopes=scopes, refreshable=refreshable)
 
+    def configure_openapi(self):
+        """
+        Save the access token in the configuration of the OpenAPI client.
+        """
+        self.api_config.configuration.access_token = self.access_token
+
     def from_environment(self):
         """
         Easiest path for using an access token: get it from the
@@ -64,6 +68,7 @@ class AccessToken(ApiCommon):
         """
         self.access_token = os.environ[self.name.upper()]
         self.refresh_token = None
+        self.configure_openapi()
 
     def read(self):
         """
@@ -75,6 +80,7 @@ class AccessToken(ApiCommon):
             self.access_token = data["access_token"]
             self.refresh_token = data.get("refresh_token")
             self.scopes = data.get("scopes")
+        self.configure_openapi()
         print(f"read {self.name} from {self.path}")
 
     def write(self):
@@ -165,6 +171,7 @@ class AccessToken(ApiCommon):
         self.access_token = unpacked["access_token"]
         self.refresh_token = unpacked["refresh_token"]
         self.scopes = unpacked["scope"]
+        self.configure_openapi()
 
     def refresh(self):
         print(f"refreshing {self.name}...")
@@ -176,3 +183,4 @@ class AccessToken(ApiCommon):
         )
         unpacked = response.body
         self.access_token = unpacked["access_token"]
+        self.configure_openapi()

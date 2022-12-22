@@ -37,10 +37,6 @@ class User(ApiObject):
         super().__init__(api_config, access_token)
         self.user_api = user_account_api.UserAccountApi(api_config.api_client)
         self.boards_api = boards_api.BoardsApi(api_config.api_client)
-        # TODO: The openapi client conflates api and access token configuration.
-        # Need to understand how to change the quickstart to support
-        # multiple access tokens, probably by creating multiple api_configs.
-        api_config.configuration.access_token = access_token.access_token
 
     # https://developers.pinterest.com/docs/api/v5/#tag/user_account
     def get(self):
