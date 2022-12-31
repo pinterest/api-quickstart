@@ -65,19 +65,24 @@ class OpenApiPagedIterator:
         """
         Run api_function. Then, look for bookmark in response.
         """
-        response = self.api_function(query_params=self.query_params)
+        print('-->openapipagediterator query_params:', self.query_params)
+        if self.path_params:
+            response = self.api_function(path_params=self.path_params, query_params=self.query_params)
+        else:
+            response = self.api_function(query_params=self.query_params)
         unpacked = response.body
         # the field with the items container is determined in the iterator constructor
         self.items = unpacked.get("items")
         self.query_params["bookmark"] = unpacked.get("bookmark")
         self.index = 0
 
-    def __init__(self, api_function, query_params):
+    def __init__(self, api_function, query_params=None, path_params=None):
         """
         Save the api_function for future iterations
         """
         self.api_function = api_function
         self.query_params = dict(query_params or {})
+        self.path_params = dict(path_params or   {})
         self._get_response()
 
     def __iter__(self):
@@ -181,8 +186,8 @@ class ApiObject(ApiCommon):
     def get_iterator(self, path, query_parameters=None):
         return PagedIterator(self, self.add_query(path, query_parameters))
 
-    def get_openapi_iterator(self, api_function, query_params):
-        return OpenApiPagedIterator(api_function, query_params)
+    def get_openapi_iterator(self, api_function, query_params, path_params=None):
+        return OpenApiPagedIterator(api_function, query_params=query_params, path_params=path_params)
 
     @classmethod
     def print_multiple(cls, page_size, object_name, object_class, paged_iterator):

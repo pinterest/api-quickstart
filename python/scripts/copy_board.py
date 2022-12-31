@@ -167,7 +167,7 @@ def main(argv=[]):
         )  # board_id set in loop below
     else:  # copy just the board designated by board_id
         source_board = Board(args.board_id, api_config, source_token)
-        source_board_data = source_board.get()
+        source_board_data = dict(source_board.get())
         boards = [source_board_data]
 
     for source_board_data in boards:

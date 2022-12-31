@@ -13,9 +13,7 @@ class Board(ApiObject):
     def get(self):
         if not self.board_id:
             raise ValueError("board_id must be set to get a board")
-        return self.boards_api.boards_get(path_params={
-            "board_id": self.board_id
-        }).body
+        return self.boards_api.boards_get(path_params={"board_id": self.board_id}).body
 
     # provides a human-readable identifier for a board
     @classmethod
@@ -49,22 +47,29 @@ class Board(ApiObject):
             if value:
                 create_data[key] = value
 
-        board_data = self.post_data("/v5/boards", create_data)
+        board_data = self.boards_api.boards_create(body=create_data).body
         self.board_id = board_data["id"]
         return board_data
 
     # https://developers.pinterest.com/docs/api/v5/#operation/boards/delete
     def delete(self):
-        self.delete_and_check(f"/v5/boards/{self.board_id}")
+        self.boards_api.boards_delete(path_params={"board_id": self.board_id})
 
     # https://developers.pinterest.com/docs/api/v5/#operation/boards/list_pins
     def get_pins(self, query_parameters=None):
-        return self.get_iterator(f"/v5/boards/{self.board_id}/pins", query_parameters)
+        print('--->board.get_pins query parameters:', query_parameters)
+        return self.get_openapi_iterator(
+            self.boards_api.boards_list_pins,
+            query_params=query_parameters,
+            path_params={"board_id": self.board_id}
+        )
 
     # https://developers.pinterest.com/docs/api/v5/#operation/board_sections/list
     def get_sections(self, query_parameters=None):
-        return self.get_iterator(
-            f"/v5/boards/{self.board_id}/sections", query_parameters
+        return self.get_openapi_iterator(
+            self.boards_api.board_sections_list,
+            query_params=query_parameters,
+            path_params={"board_id": self.board_id}
         )
 
     @classmethod
@@ -79,10 +84,18 @@ class Board(ApiObject):
         create_data = {
             "name": section_data["name"],
         }
-        return self.post_data(f"/v5/boards/{self.board_id}/sections", create_data)
+        return self.boards_api.board_sections_create(
+            path_params={"board_id": self.board_id},
+            body=create_data
+        ).body
 
     # https://developers.pinterest.com/docs/api/v5/#operation/board_sections/list_pins
     def get_section_pins(self, section_id, query_parameters=None):
-        return self.get_iterator(
-            f"/v5/boards/{self.board_id}/sections/{section_id}/pins", query_parameters
+        return self.get_openapi_iterator(
+            self.boards_api.board_sections_list_pins,
+            query_params=query_parameters,
+            path_params={
+                "board_id": self.board_id,
+                "section_id": section_id,
+            }
         )
