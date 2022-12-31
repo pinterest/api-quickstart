@@ -40,8 +40,12 @@ class ApiConfig:
         self.oauth_uri = os.environ.get("PINTEREST_OAUTH_URI") or DEFAULT_OAUTH_URI
         self.api_uri = os.environ.get("PINTEREST_API_URI") or DEFAULT_API_URI
 
-        # TODO: CLEAN UP OpenAPI code
-        self.configuration = openapi_client.Configuration(host=self.api_uri + "/v5")
+        # Configure and create the OpenAPI client used by this API config.
+        # Disable maxLength check because there are some pins with a description more
+        # than 500 characters.
+        self.configuration = openapi_client.Configuration(
+            host=self.api_uri + "/v5", disabled_client_side_validations="maxLength"
+        )
         if verbosity > 2:
             self.configuration.debug = True
             self.credentials_warning()
