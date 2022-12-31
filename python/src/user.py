@@ -53,7 +53,9 @@ class User(ApiObject):
     # https://developers.pinterest.com/docs/api/v5/#operation/boards/list
     def get_boards(self, user_data, query_parameters=None):
         # the returned iterator handles API paging
-        return self.get_openapi_iterator(self.boards_api.boards_list, query_params=query_parameters)
+        return self.get_openapi_iterator(
+            self.boards_api.boards_list, query_params=query_parameters
+        )
 
     # getting all of a user's pins is not supported, so iterate through boards
     def get_pins(self, user_data, query_parameters=None):

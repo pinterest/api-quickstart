@@ -57,11 +57,10 @@ class Board(ApiObject):
 
     # https://developers.pinterest.com/docs/api/v5/#operation/boards/list_pins
     def get_pins(self, query_parameters=None):
-        print('--->board.get_pins query parameters:', query_parameters)
         return self.get_openapi_iterator(
             self.boards_api.boards_list_pins,
             query_params=query_parameters,
-            path_params={"board_id": self.board_id}
+            path_params={"board_id": self.board_id},
         )
 
     # https://developers.pinterest.com/docs/api/v5/#operation/board_sections/list
@@ -69,7 +68,7 @@ class Board(ApiObject):
         return self.get_openapi_iterator(
             self.boards_api.board_sections_list,
             query_params=query_parameters,
-            path_params={"board_id": self.board_id}
+            path_params={"board_id": self.board_id},
         )
 
     @classmethod
@@ -85,8 +84,7 @@ class Board(ApiObject):
             "name": section_data["name"],
         }
         return self.boards_api.board_sections_create(
-            path_params={"board_id": self.board_id},
-            body=create_data
+            path_params={"board_id": self.board_id}, body=create_data
         ).body
 
     # https://developers.pinterest.com/docs/api/v5/#operation/board_sections/list_pins
@@ -97,5 +95,5 @@ class Board(ApiObject):
             path_params={
                 "board_id": self.board_id,
                 "section_id": section_id,
-            }
+            },
         )
