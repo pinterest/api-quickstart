@@ -17,6 +17,7 @@ export class Pin extends ApiMediaObject {
   static print_summary(pin_data) {
     console.log('--- Pin Summary ---');
     console.log('Pin ID:', pin_data.id);
+    console.log('Title:', pin_data.title);
     console.log('Description:', pin_data.description);
     console.log('Link:', pin_data.link);
     console.log('Domain:', pin_data.domain);

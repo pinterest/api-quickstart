@@ -14,6 +14,7 @@ class Pin(ApiMediaObject):
     def print_summary(cls, pin_data):
         print("--- Pin Summary ---")
         print("Pin ID:", pin_data["id"])
+        print("Title:", pin_data["title"])
         print("Description:", pin_data["description"])
         print("Link:", pin_data["link"])
         print("Section ID:", pin_data["board_section_id"])
