@@ -15,7 +15,7 @@ lint:
 	DEBUG=eslint:cli-engine yarn run eslint src scripts
 
 lint-fix:
-	yarn run eslint --fix src scripts
+	yarn run eslint --fix --format summary-chart src scripts
 
 # Run this command after changing the help text for a script,
 # so that the usage.md file is updated.

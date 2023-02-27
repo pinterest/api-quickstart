@@ -18,6 +18,7 @@
     "babel-jest": "^27.0.1",
     "eslint": "^7.31.0",
     "eslint-config-standard": "^16.0.3",
+    "eslint-formatter-summary-chart": "^0.3.0",
     "eslint-plugin-import": "^2.23.4",
     "eslint-plugin-jest": "^24.4.0",
     "eslint-plugin-node": "^11.1.0",
