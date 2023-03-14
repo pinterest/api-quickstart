@@ -1,5 +1,7 @@
 from api_object import ApiObject
 
+from pinterest.ads.campaigns import Campaign
+
 
 class Advertisers(ApiObject):
     def __init__(self, _user_id, api_config, access_token):
@@ -17,9 +19,14 @@ class Advertisers(ApiObject):
         """
         Return a string with a summary of an element returned by this module.
         """
-        summary = f"{kind} ID: {element['id']} | Name: {element['name']}"
-        if element.get("status"):
-            summary += f" ({element['status']})"
+        if isinstance(element, dict):
+            summary = f"{kind} ID: {element['id']} | Name: {element['name']}"
+            if element.get("status"):
+                summary += f" ({element['status']})"
+        else:
+            summary = f"{kind} ID: {element.id} | Name: {element.name}"
+            if element.status:
+                summary += f" ({element.status})"
         return summary
 
     @classmethod
@@ -44,9 +51,14 @@ class Advertisers(ApiObject):
         """
         Get the campaigns associated with an Ad Account.
         """
+        """
         return self.get_iterator(
             f"/v5/ad_accounts/{ad_account_id}/campaigns", query_parameters
         )
+        """
+        qp = dict(query_parameters or {})
+        qp["ad_account_id"] = ad_account_id
+        return self.get_sdk_iterator(Campaign.get_all, qp)
 
     # https://developers.pinterest.com/docs/api/v5/#operation/ad_groups/listp
     def get_ad_groups(self, ad_account_id, campaign_id, query_parameters=None):

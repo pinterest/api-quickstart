@@ -6,6 +6,7 @@ import requests
 from api_common import ApiCommon
 from utils import input_one_of
 
+import pdb
 
 class PagedIterator:
     """
@@ -45,6 +46,50 @@ class PagedIterator:
                 delimiter = "&" if "?" in self.path else "?"
                 path_with_bookmark = self.path + delimiter + "bookmark=" + self.bookmark
                 self._get_response(path_with_bookmark)
+                if not self.items:  # in case there is some sort of error
+                    raise StopIteration
+            else:
+                raise StopIteration  # no bookmark => all done
+
+        retval = self.items[self.index]  # get the current element
+        self.index += 1  # increment the index for the next time
+        return retval
+
+class SDKPagedIterator:
+    """
+    This class implements paging on top of the bookmark functionality provided
+    by the Pinterest SDK. It hides the paging mechanism behind an iterator.
+    """
+
+    def _get_response(self):
+        """
+        Use SDK function to run HTTP GET. Then, look for bookmark in response.
+        """
+        if self.bookmark:
+            self.query_parameters["bookmark"] = bookmark
+        pdb.set_trace()
+        (self.items, self.bookmark) = self.sdk_function(**self.query_parameters)
+        pdb.set_trace()
+        self.index = 0
+
+    def __init__(self, api_object, sdk_function, query_parameters):
+        """
+        Save the api_object and path for subsequent pages of information.
+        """
+        self.api_object = api_object
+        self.sdk_function = sdk_function
+        self.query_parameters = dict(query_parameters)
+        self.bookmark = None
+        self._get_response()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index >= len(self.items):
+            # need to fetch more data, if there is a bookmark
+            if self.bookmark:
+                self._get_response()
                 if not self.items:  # in case there is some sort of error
                     raise StopIteration
             else:
@@ -137,6 +182,9 @@ class ApiObject(ApiCommon):
 
     def get_iterator(self, path, query_parameters=None):
         return PagedIterator(self, self.add_query(path, query_parameters))
+
+    def get_sdk_iterator(self, sdk_function, query_parameters):
+        return SDKPagedIterator(self, sdk_function, query_parameters)
 
     @classmethod
     def print_multiple(cls, page_size, object_name, object_class, paged_iterator):

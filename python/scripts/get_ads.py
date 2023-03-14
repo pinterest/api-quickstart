@@ -45,7 +45,11 @@ def fetch_and_print(advertisers, all_ads, ads_entities, get_args, level):
         entity_range = range(index - 1, index)
 
     for idx in entity_range:
-        entity_id = entity_list[idx]["id"]
+        entity = entity_list[idx]
+        if isinstance(entity, dict):
+            entity_id = entity_list[idx]["id"]
+        else:
+            entity_id = entity_list[idx].id
         if all_ads or level == len(ads_entities):
             summary = f"{indent}{advertisers.summary(entity_list[idx], kind)}"
             print(summary)
