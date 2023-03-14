@@ -6,7 +6,7 @@ import requests
 from api_common import ApiCommon
 from utils import input_one_of
 
-import pdb
+# import pdb
 
 class PagedIterator:
     """
@@ -67,9 +67,11 @@ class SDKPagedIterator:
         """
         if self.bookmark:
             self.query_parameters["bookmark"] = bookmark
-        pdb.set_trace()
-        (self.items, self.bookmark) = self.sdk_function(**self.query_parameters)
-        pdb.set_trace()
+        # pdb.set_trace()
+        (items, bookmark) = self.sdk_function(**self.query_parameters)
+        self.items = items
+        self.bookmark = bookmark
+        # pdb.set_trace()
         self.index = 0
 
     def __init__(self, api_object, sdk_function, query_parameters):

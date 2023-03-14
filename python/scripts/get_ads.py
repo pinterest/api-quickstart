@@ -13,6 +13,7 @@ from oauth_scope import Scope
 from user import User
 from utils import input_number
 
+import pdb
 
 def fetch_and_print(advertisers, all_ads, ads_entities, get_args, level):
     """
@@ -22,6 +23,7 @@ def fetch_and_print(advertisers, all_ads, ads_entities, get_args, level):
     entity = ads_entities[level]
     kind = entity["kind"]
     entity_list = list(entity["get"](*get_args))
+    # pdb.set_trace()
     n_entities = len(entity_list)
 
     if all_ads:
