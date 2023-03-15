@@ -6,6 +6,8 @@ import pathlib
 
 import requests
 
+from pinterest.client import PinterestSDKClient
+
 from api_common import ApiCommon
 from oauth_scope import Scope
 from user_auth import get_auth_code
@@ -25,6 +27,16 @@ class AccessToken(ApiCommon):
         auth = api_config.app_id + ":" + api_config.app_secret
         b64auth = base64.b64encode(auth.encode("ascii")).decode("ascii")
         self.auth_headers = {"Authorization": "Basic " + b64auth}
+
+    def _create_sdk_client(self):
+        """
+        Create and store a client to be used with Pinterest SDK calls.
+        TODO: Exclusively use the client and remove the non-SDK
+        authentication code.
+        """
+        self.sdk_client = PinterestSDKClient.create_client_with_token(
+            access_token=self.access_token
+        )
 
     def fetch(self, scopes=None, refreshable=True):
         """
@@ -63,6 +75,7 @@ class AccessToken(ApiCommon):
         """
         self.access_token = os.environ[self.name.upper()]
         self.refresh_token = None
+        self._create_sdk_client()
 
     def read(self):
         """
@@ -75,6 +88,7 @@ class AccessToken(ApiCommon):
             self.refresh_token = data.get("refresh_token")
             self.scopes = data.get("scopes")
         print(f"read {self.name} from {self.path}")
+        self._create_sdk_client()
 
     def write(self):
         """
@@ -144,6 +158,7 @@ class AccessToken(ApiCommon):
         )
         print(f"exchanging auth_code for {self.name}...")
         self.exchange_auth_code(auth_code)
+        self._create_sdk_client()
 
     def exchange_auth_code(self, auth_code):
         """
@@ -188,3 +203,4 @@ class AccessToken(ApiCommon):
         )
         unpacked = self.unpack(response)
         self.access_token = unpacked["access_token"]
+        self._create_sdk_client()

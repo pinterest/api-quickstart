@@ -81,6 +81,7 @@ class SDKPagedIterator:
         self.api_object = api_object
         self.sdk_function = sdk_function
         self.query_parameters = dict(query_parameters)
+        self.query_parameters['client'] = self.api_object.access_token.sdk_client
         self.bookmark = None
         self._get_response()
 
