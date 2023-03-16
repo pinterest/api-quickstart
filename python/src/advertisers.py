@@ -1,6 +1,8 @@
 from api_object import ApiObject
 
 from pinterest.ads.campaigns import Campaign
+from pinterest.ads.ad_groups import AdGroup
+from pinterest.ads.ads import Ad
 
 
 class Advertisers(ApiObject):
@@ -65,18 +67,31 @@ class Advertisers(ApiObject):
         """
         Get the ad groups associated with an Ad Account and Campaign.
         """
+        """
         return self.get_iterator(
             f"/v5/ad_accounts/{ad_account_id}/ad_groups?campaign_ids={campaign_id}",
             query_parameters,
         )
+        """
+        qp = dict(query_parameters or {})
+        qp["ad_account_id"] = ad_account_id
+        qp["campaign_ids"] = [campaign_id]
+        return self.get_sdk_iterator(AdGroup.get_all, qp)
 
     # https://developers.pinterest.com/docs/api/v5/#operation/ads/list
     def get_ads(self, ad_account_id, campaign_id, ad_group_id, query_parameters=None):
         """
         Get the ads associated with an Ad Account, Campaign, and Ad Group.
         """
+        """
         return self.get_iterator(
             f"/v5/ad_accounts/{ad_account_id}/ads"
             f"?campaign_ids={campaign_id}&ad_group_ids={ad_group_id}",
             query_parameters,
         )
+        """
+        qp = dict(query_parameters or {})
+        qp["ad_account_id"] = ad_account_id
+        qp["campaign_ids"] = [campaign_id]
+        qp["ad_group_ids"] = [ad_group_id]
+        return self.get_sdk_iterator(Ad.get_all, qp)
