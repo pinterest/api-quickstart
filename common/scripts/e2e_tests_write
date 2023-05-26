@@ -37,7 +37,7 @@ SCRIPT_DIR=$(cd "$(dirname "$0")"; pwd)
 # Note that the confirmation text in the following printf is not parameterized
 # in order to avoid deleting all the boards from an account other than
 # penelopepintridge.
-printf "Delete all boards for penelopepintridge\nyes\nyes\nyes\n" | \
+printf "Delete all boards for penelopepintridge\nyes\nyes\nyes\nyes\n" | \
 ./scripts/delete_board.${EXT} -a "${TEST2}" --all-boards
 ./scripts/copy_board.${EXT} -s "${TEST1}" -t "${TEST2}" --all
 ./scripts/get_user_boards.${EXT} -a "${TEST2}" --page-size 100
@@ -59,7 +59,7 @@ if [ -r "${VIDEO_FILE}" ] ; then
     VIDEO_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 "${VIDEO_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
 
     # get a single pin to copy
-    VIDEO_PIN_ID=$(./scripts/get_user_pins.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 -m 1 "${VIDEO_PIN_DESCRIPTION}" | grep "Pin ID" | cut -d ' ' -f 3)
+    VIDEO_PIN_ID=$(./scripts/get_user_pins.${EXT} -a ${TEST2} --page-size 100 | grep -B 2 -m 1 "${VIDEO_PIN_DESCRIPTION}" | grep "Pin ID" | cut -d ' ' -f 3)
 
     # copy the pin, adding the video
     ./scripts/copy_pin.${EXT} -a "${TEST2}" -p "$VIDEO_PIN_ID" -b "$VIDEO_BOARD_ID" -m "${VIDEO_FILE}"
