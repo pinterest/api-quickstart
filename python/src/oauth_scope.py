@@ -5,8 +5,11 @@ from enum import Enum
 # For details, see: https://developers.pinterest.com/docs/getting-started/scopes/
 class Scope(Enum):
     READ_ADS = "ads:read"
+    WRITE_ADS = "ads:write"
     READ_BOARDS = "boards:read"
     WRITE_BOARDS = "boards:write"
+    READ_CATALOGS = "catalogs:read"
+    WRITE_CATALOGS = "catalogs:write"
     READ_PINS = "pins:read"
     WRITE_PINS = "pins:write"
     READ_USERS = "user_accounts:read"

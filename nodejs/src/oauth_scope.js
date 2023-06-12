@@ -5,8 +5,11 @@ import Enum from 'enum';
 export const Scope = new Enum({
   // scopes names that are compatible across different API versions
   READ_ADS: 'ads:read',
+  WRITE_ADS: 'ads:write',
   READ_BOARDS: 'boards:read',
   WRITE_BOARDS: 'boards:write',
+  READ_CATALOGS: 'catalogs:read',
+  WRITE_CATALOGS: 'catalogs:write',
   READ_PINS: 'pins:read',
   WRITE_PINS: 'pins:write',
   READ_USERS: 'user_accounts:read',
