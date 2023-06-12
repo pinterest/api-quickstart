@@ -60,7 +60,7 @@ usage: get_access_token.py [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN] [-l LOG
 
 Get Pinterest OAuth token
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -w, --write           write access token to file
   -ct, --cleartext      print the token in clear text
@@ -80,11 +80,15 @@ $ ./scripts/get_access_token.py --scopes help
 Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.
 Valid OAuth 2.0 scopes for Pinterest API version v5:
   ads:read            Read access to advertising data
+  ads:write           Write access to advertising data
 
   boards:read         Read access to boards
   boards:read_secret  Read access to secret boards
   boards:write        Write access to create, update, or delete boards
   boards:write_secret Write access to create, update, or delete secret boards
+
+  catalogs:read       Read access to catalog information
+  catalogs:write      Create or update catalog contents
 
   pins:read           Read access to Pins
   pins:read_secret    Read access to secret Pins
@@ -108,7 +112,7 @@ usage: refresh_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Refresh Pinterest OAuth token
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
                         access token name
@@ -125,7 +129,7 @@ usage: refresh_access_token.py [-h] [-ct] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Refresh Pinterest OAuth token
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -ct, --cleartext      print the token in clear text
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
@@ -144,7 +148,7 @@ usage: get_pin.py [-h] -p PIN_ID [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get a Pin
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -p PIN_ID, --pin-id PIN_ID
                         pin identifier
@@ -164,7 +168,7 @@ usage: get_board.py [-h] -b BOARD_ID [--pins] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get a Board
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -b BOARD_ID, --board-id BOARD_ID
                         board identifier
@@ -185,7 +189,7 @@ usage: get_user_pins.py [-h] [-ps PAGE_SIZE] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get A User's Pins
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -ps PAGE_SIZE, --page-size PAGE_SIZE
                         Pins per page
@@ -201,12 +205,12 @@ Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://
 ```
 $ ./scripts/get_user_boards.py --help
 
-usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived] [--no-include-archived]
-                          [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived]
+                          [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get A User's Boards
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -ps PAGE_SIZE, --page-size PAGE_SIZE
                         Boards per page
@@ -230,7 +234,7 @@ usage: copy_pin.py [-h] -p PIN_ID [-m MEDIA] -b BOARD_ID [-s SECTION] [-a ACCESS
 
 Copy a Pin
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -p PIN_ID, --pin-id PIN_ID
                         source pin identifier
@@ -252,12 +256,12 @@ optional arguments:
 ```
 $ ./scripts/copy_board.py --help
 
-usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run] [-a ACCESS_TOKEN]
-                     [-l LOG_LEVEL]
+usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all]
+                     [--dry-run] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Copy one Board or all Boards
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -b BOARD_ID, --board-id BOARD_ID
                         source board identifier
@@ -284,7 +288,7 @@ usage: get_ads.py [-h] [--all-ads] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Advertisers API Example
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --all-ads             print all ads information
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
@@ -300,12 +304,12 @@ optional arguments:
 $ ./scripts/get_analytics.py --help
 
 usage: get_analytics.py [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID]
-                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
-                        [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID]
+                        [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get Analytics
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}, --analytics-object {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}
                         kind of object used to fetch analytics
@@ -334,7 +338,7 @@ usage: analytics_api_example.py [-h] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Analytics API Example
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
                         access token name

@@ -81,11 +81,15 @@ $ ./scripts/get_access_token.js --scopes help
 Using application ID and secret from PINTEREST_APP_ID and PINTEREST_APP_SECRET.
 Valid OAuth 2.0 scopes for Pinterest API version v5:
   ads:read            Read access to advertising data
+  ads:write           Write access to advertising data
 
   boards:read         Read access to boards
   boards:read_secret  Read access to secret boards
   boards:write        Write access to create, update, or delete boards
   boards:write_secret Write access to create, update, or delete secret boards
+
+  catalogs:read       Read access to catalog information
+  catalogs:write      Create or update catalog contents
 
   pins:read           Read access to Pins
   pins:read_secret    Read access to secret Pins
@@ -208,8 +212,8 @@ Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://
 ```
 $ ./scripts/get_user_boards.js --help
 
-usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived] [--no-include-archived]
-                          [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived]
+                          [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get A User's Boards
 
@@ -261,8 +265,8 @@ Demonstration of how to use the `POST /v5/boards` [endpoint](https://developers.
 ```
 $ ./scripts/copy_board.js --help
 
-usage: copy_board.js [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run] [-a ACCESS_TOKEN]
-                     [-l LOG_LEVEL]
+usage: copy_board.js [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all]
+                     [--dry-run] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Copy one Board or all Boards
 
@@ -290,8 +294,8 @@ Reads information about advertiser accounts, campaigns, ad groups, and ads. By d
 ```
 $ ./scripts/get_ads.js --help
 
-usage: get_ads.js [-h] [--all-ads] [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
-                  [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_ads.js [-h] [--all-ads] [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID]
+                  [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Advertisers API Example
 
@@ -319,8 +323,8 @@ Demonstrates how to use the API to retrieve analytics metrics with synchronous r
 $ ./scripts/get_analytics.js --help
 
 usage: get_analytics.js [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID]
-                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
-                        [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID]
+                        [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get Analytics
 
