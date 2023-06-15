@@ -5,8 +5,11 @@ import Enum from 'enum';
 export const Scope = new Enum({
   // scopes names that are compatible across different API versions
   READ_ADS: 'ads:read',
+  WRITE_ADS: 'ads:write',
   READ_BOARDS: 'boards:read',
   WRITE_BOARDS: 'boards:write',
+  READ_CATALOGS: 'catalogs:read',
+  WRITE_CATALOGS: 'catalogs:write',
   READ_PINS: 'pins:read',
   WRITE_PINS: 'pins:write',
   READ_USERS: 'user_accounts:read',
@@ -35,11 +38,15 @@ export function print_scopes() {
   console.log(`\
 Valid OAuth 2.0 scopes for Pinterest API version v5:
   ads:read            Read access to advertising data
+  ads:write           Write access to advertising data
 
   boards:read         Read access to boards
   boards:read_secret  Read access to secret boards
   boards:write        Write access to create, update, or delete boards
   boards:write_secret Write access to create, update, or delete secret boards
+
+  catalogs:read       Read access to catalog information
+  catalogs:write      Create or update catalog contents
 
   pins:read           Read access to Pins
   pins:read_secret    Read access to secret Pins
