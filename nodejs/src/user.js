@@ -1,5 +1,4 @@
 import { ApiObject } from './api_object.js';
-import { Board } from './board.js';
 
 export class User extends ApiObject {
   // https://developers.pinterest.com/docs/api/v5/#tag/user_account
@@ -24,18 +23,6 @@ export class User extends ApiObject {
 
   // getting all of a user's pins is not supported, so iterate through boards
   async get_pins(user_data, query_parameters = {}) {
-    const user = this;
-    const board_iterator = await this.get_boards(user_data, query_parameters);
-    return {
-      [Symbol.asyncIterator]: async function * () {
-        for await (const board_data of board_iterator) {
-          const board = new Board(board_data.id, user.api_config, user.access_token);
-          const pin_iterator = await board.get_pins(query_parameters);
-          for await (const pin_data of pin_iterator) {
-            yield pin_data;
-          }
-        }
-      }
-    };
+    return this.get_iterator('/v5/pins', query_parameters);
   }
 }
