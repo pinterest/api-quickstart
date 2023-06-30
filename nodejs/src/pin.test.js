@@ -26,7 +26,12 @@ describe('v5 pin tests', () => {
       title: 'My Test Pin',
       alt_text: 'This is what a test pin looks like',
       ignore: 'ignored',
-      media: { images: { originals: { url: 'test_pin_image_url' } } }
+      media: {
+        images: {
+          test1: { width: 200, height: 100, url: 'test1://domain/path1/path2/image.jpg' },
+          test2: { width: 400, height: 200, url: 'test2://domain/path1/path2/image.jpg' }
+        }
+      }
     };
 
     // create pin without a section
@@ -39,7 +44,7 @@ describe('v5 pin tests', () => {
       board_id: 'test_board_id',
       media_source: {
         source_type: 'image_url',
-        url: 'test_pin_image_url'
+        url: 'test2://domain/path1/path2/image.jpg'
       },
       link: 'test_pin_link',
       title: 'My Test Pin',
@@ -126,7 +131,12 @@ describe('v5 pin tests', () => {
       alt_text: 'This is what a test pin looks like',
       description: 'test description',
       link: 'test_pin_link',
-      media: { images: { originals: { url: 'test_image_url' } } }
+      media: {
+        images: {
+          test1: { width: 200, height: 100, url: 'test1://domain/path1/path2/image.jpg' },
+          test2: { width: 100, height: 50, url: 'test2://domain/path1/path2/image.jpg' }
+        }
+      }
     };
 
     // first call to create video pin
@@ -139,7 +149,7 @@ describe('v5 pin tests', () => {
       board_id: 'test_board_id',
       media_source: {
         source_type: 'video_id',
-        cover_image_url: 'test_image_url',
+        cover_image_url: 'test1://domain/path1/path2/image.jpg',
         media_id: 'test_media_id'
       },
       link: 'test_pin_link',

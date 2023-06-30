@@ -33,6 +33,19 @@ class Pin(ApiMediaObject):
 
         return self.post_data(f"/v5/pins/{self.pin_id}/save", save_data)
 
+    @classmethod
+    def max_resolution_image_url(cls, pin_data):
+        max_res = 0
+        url = None
+        for image in pin_data["media"]["images"].values():
+            if image["width"] > max_res:
+                max_res = image["width"]
+                url = image["url"]
+            if image["height"] > max_res:
+                max_res = image["height"]
+                url = image["url"]
+        return url
+
     # https://developers.pinterest.com/docs/api/v5/#operation/pins/create
     def create(self, pin_data, board_id, section=None, media=None):
         """
@@ -55,7 +68,7 @@ class Pin(ApiMediaObject):
         # https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
         media_id = self.media_to_media_id(media)
 
-        image_url = pin_data["media"]["images"]["originals"]["url"]
+        image_url = self.max_resolution_image_url(pin_data)
         if media_id:
             self.check_media_id(media_id)
             create_data["media_source"] = {
