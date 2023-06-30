@@ -28,7 +28,7 @@ def main(argv=[]):
     # Note: It's possible to use the same API configuration with
     # multiple access tokens, so these objects are kept separate.
     access_token = AccessToken(api_config, name=args.access_token)
-    access_token.fetch(scopes=[Scope.READ_PINS])
+    access_token.fetch(scopes=[Scope.READ_PINS, Scope.READ_BOARDS])
 
     pin = Pin(args.pin_id, api_config, access_token)
     pin_data = pin.get()
