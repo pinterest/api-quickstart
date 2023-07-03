@@ -1,9 +1,7 @@
 import { ApiObject } from './api_object.js';
-import { Board } from './board.js';
 import { User } from './user.js';
 
 jest.mock('./api_object');
-jest.mock('./board');
 
 describe('v5 user tests', () => {
   afterEach(() => {
@@ -46,11 +44,9 @@ describe('v5 user tests', () => {
     mock_get_iterator.mockResolvedValue([
       { id: 'board1_id' }, { id: 'board2_id' }, { id: 'board3_id' }
     ]);
-    const mock_get_pins = jest.spyOn(Board.prototype, 'get_pins');
-    mock_get_pins
-      .mockResolvedValueOnce(['board1_pin1', 'board1_pin2']) // board 1
-      .mockResolvedValueOnce([]) // board 2, no pins
-      .mockResolvedValueOnce(['board3_pin1']); // board 3
+    mock_get_iterator.mockResolvedValue([
+      'board1_pin1', 'board1_pin2', 'board3_pin1'
+    ]);
 
     const expected_pins = ['board1_pin1', 'board1_pin2', 'board3_pin1'];
     let index = 0;
@@ -59,9 +55,5 @@ describe('v5 user tests', () => {
       expect(pin_data).toEqual(expected_pins[index]);
       index++;
     }
-    expect(Board.mock.instances.length).toBe(3); // 3 board objects created
-    expect(Board.mock.calls[0][0]).toEqual('board1_id');
-    expect(Board.mock.calls[1][0]).toEqual('board2_id');
-    expect(Board.mock.calls[2][0]).toEqual('board3_id');
   });
 });

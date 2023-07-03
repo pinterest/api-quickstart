@@ -137,7 +137,7 @@ async function main(argv) {
     console.log('Campaign identifier must be specified when using ad group identifier');
     process.exit(1);
   }
-  if (args.ad_id && !args.ad_ad_group_id) {
+  if (args.ad_id && !args.ad_group_id) {
     console.log('Ad group identifier must be specified when using ad identifier');
     process.exit(1);
   }

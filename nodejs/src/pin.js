@@ -37,6 +37,23 @@ export class Pin extends ApiMediaObject {
     return this.post_data(`/v5/pins/${this.pin_id}/save`, save_data);
   }
 
+  max_resolution_image_url(pin_data) {
+    let max_res = 0; // maximum resolution of either dimension
+    let url = null; // url for the max resolution image
+
+    for (const image of Object.values(pin_data.media.images)) {
+      if (image.width > max_res) {
+        max_res = image.width;
+        url = image.url;
+      }
+      if (image.height > max_res) {
+        max_res = image.height;
+        url = image.url;
+      }
+    }
+    return url;
+  }
+
   // https://developers.pinterest.com/docs/api/v5/#operation/pins/create
   async create(pin_data, board_id, { section, media }) {
     const OPTIONAL_ATTRIBUTES = [
@@ -52,7 +69,7 @@ export class Pin extends ApiMediaObject {
     // https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
     const media_id = await this.media_to_media_id(media);
 
-    const image_url = pin_data.media.images.originals.url;
+    const image_url = this.max_resolution_image_url(pin_data);
     if (media_id) {
       await this.check_media_id(media_id);
       create_data.media_source = {

@@ -25,7 +25,7 @@ async function main(argv) {
   // Note: It's possible to use the same API configuration with
   // multiple access tokens, so these objects are kept separate.
   const access_token = new AccessToken(api_config, { name: args.access_token });
-  await access_token.fetch({ scopes: [Scope.READ_PINS] });
+  await access_token.fetch({ scopes: [Scope.READ_PINS, Scope.READ_BOARDS] });
 
   const pin = new Pin(args.pin_id, api_config, access_token);
   const pin_data = await pin.get();

@@ -40,14 +40,25 @@ class PinTest(unittest.TestCase):
             "description": "test description",
             "link": "test://domain/path1/path2/webpage.html",
             "media": {
-                "images": {"originals": {"url": "test://domain/path1/path2/image.jpg"}}
+                "images": {
+                    "test1": {
+                        "width": 200,
+                        "height": 100,
+                        "url": "test1://domain/path1/path2/image.jpg",
+                    },
+                    "test2": {
+                        "width": 400,
+                        "height": 200,
+                        "url": "test2://domain/path1/path2/image.jpg",
+                    },
+                }
             },
         }
         expected_post_data = {
             "board_id": "test_board_id",
             "media_source": {
                 "source_type": "image_url",
-                "url": new_pin_data["media"]["images"]["originals"]["url"],
+                "url": new_pin_data["media"]["images"]["test2"]["url"],
             },
             "link": new_pin_data["link"],
             "alt_text": new_pin_data["alt_text"],
@@ -133,14 +144,25 @@ class PinTest(unittest.TestCase):
             "description": "test description",
             "link": "test://domain/path1/path2/webpage.html",
             "media": {
-                "images": {"originals": {"url": "test://domain/path1/path2/image.jpg"}}
+                "images": {
+                    "test1": {
+                        "width": 200,
+                        "height": 100,
+                        "url": "test1://domain/path1/path2/image.jpg",
+                    },
+                    "test2": {
+                        "width": 100,
+                        "height": 50,
+                        "url": "test2://domain/path1/path2/image.jpg",
+                    },
+                }
             },
         }
         expected_post_data = {
             "board_id": "test_board_id",
             "media_source": {
                 "source_type": "video_id",
-                "cover_image_url": new_pin_data["media"]["images"]["originals"]["url"],
+                "cover_image_url": new_pin_data["media"]["images"]["test1"]["url"],
                 "media_id": "test_media_id",
             },
             "link": new_pin_data["link"],

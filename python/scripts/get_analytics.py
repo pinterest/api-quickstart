@@ -109,7 +109,7 @@ def main(argv=[]):
     if args.ad_group_id and not args.campaign_id:
         print("Campaign identifier must be specified when using ad group identifier")
         exit(1)
-    if args.ad_id and not args.ad_ad_group_id:
+    if args.ad_id and not args.ad_group_id:
         print("Ad group identifier must be specified when using ad identifier")
         exit(1)
 
