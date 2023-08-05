@@ -58,8 +58,8 @@ if [ -r "${VIDEO_FILE}" ] ; then
     # get the board with the pin to copy
     VIDEO_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 "${VIDEO_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
 
-    # get a single pin to copy
-    VIDEO_PIN_ID=$(./scripts/get_user_pins.${EXT} -a ${TEST2} --page-size 100 | grep -B 2 -m 1 "${VIDEO_PIN_DESCRIPTION}" | grep "Pin ID" | cut -d ' ' -f 3)
+    # get a single pin to copy. match 1 on second grep prevents EPIPE error in get_user_pins script.
+    VIDEO_PIN_ID=$(./scripts/get_user_pins.${EXT} -a ${TEST2} --page-size 100 | grep -B 2 "${VIDEO_PIN_DESCRIPTION}" | grep -m 1 "Pin ID" | cut -d ' ' -f 3)
 
     # copy the pin, adding the video
     ./scripts/copy_pin.${EXT} -a "${TEST2}" -p "$VIDEO_PIN_ID" -b "$VIDEO_BOARD_ID" -m "${VIDEO_FILE}"
