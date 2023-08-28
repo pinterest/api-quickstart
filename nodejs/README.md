@@ -388,7 +388,7 @@ As of 2022-01-11, the `Browserslist: caniuse-lite is outdated` message appears t
 
 ## Code Conventions
 
-The code conventions are captured in a set of [rules](.eslintrc.cjs) for [eslint](https://eslint.org/). The configuration is the standard set of rules, with the following modifications:
+The code conventions are captured in a set of [rules](.eslintrc.cjs) for [eslint](https://eslint.org/). `make lint` runs eslint in check mode; `make lint-fix` runs eslint in autocorrect mode. Either way, you'll need to install yarn with something like `npm install --global yarn`. The configuration is the standard set of rules, with the following modifications:
   * Variables are snake_case instead of camelCase in order to facilitate the task of maintaining parity between the python and nodejs code.
   * The Jest checker emits errors when tests are disabled, per the internal Pinterest standard.
   * Semicolons are used to terminate statements. This convention is debatable but the primary author prefers semicolon syntax for C-like languages.
