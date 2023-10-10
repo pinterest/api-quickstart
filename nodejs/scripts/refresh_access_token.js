@@ -13,6 +13,7 @@ import { common_arguments } from '../src/arguments.js';
 async function main(argv) {
   const parser = new ArgumentParser({ description: 'Refresh Pinterest OAuth token' });
   parser.add_argument('-ct', '--cleartext', { action: 'store_true', help: 'print the token in clear text' });
+  parser.add_argument('-e', '--everlasting', { action: 'store_true', help: 'everlasting refresh token' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
 
@@ -21,7 +22,7 @@ async function main(argv) {
 
   const access_token = new AccessToken(api_config, { name: args.access_token });
   access_token.read();
-  await access_token.refresh();
+  await access_token.refresh({ everlasting: args.everlasting });
 
   // Note: It is best practice not to print credentials in clear text.
   // Pinterest engineers asked for this capability to make it easier to support partners.
@@ -30,6 +31,7 @@ async function main(argv) {
     console.log('clear text access token after refresh:', access_token.access_token);
   }
   console.log('hashed access token after refresh:', access_token.hashed());
+  console.log('hashed refresh token after refresh:', access_token.hashed_refresh_token());
 
   console.log('writing access token');
   access_token.write();

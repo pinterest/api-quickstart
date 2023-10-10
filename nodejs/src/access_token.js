@@ -186,7 +186,7 @@ export class AccessToken extends ApiCommon {
     }
   }
 
-  async refresh() {
+  async refresh({ everlasting = false }) {
     // There should be a refresh_token, but it is best to check.
     if (!this.refresh_token) {
       throw new Error('AccessToken does not have a refresh token');
@@ -199,6 +199,9 @@ export class AccessToken extends ApiCommon {
         grant_type: 'refresh_token',
         refresh_token: this.refresh_token
       };
+      if (everlasting) {
+        post_data.refresh_on = true;
+      }
       if (this.api_config.verbosity >= 2) {
         console.log('POST', `${this.api_uri}/v5/oauth/token`);
         if (this.api_config.verbosity >= 3) {
@@ -213,6 +216,10 @@ export class AccessToken extends ApiCommon {
       });
       this.print_response(response);
       this.access_token = response.body.access_token;
+      if (response.body.refresh_token) {
+        console.log('received refresh token');
+        this.refresh_token = response.body.refresh_token;
+      }
     } catch (error) {
       this.print_and_throw_error(error);
     }

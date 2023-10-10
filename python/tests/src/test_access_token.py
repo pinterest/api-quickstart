@@ -139,15 +139,51 @@ class AccessTokenTest(unittest.TestCase):
         )
 
         # verify that refresh works by using the sha256 of 'pina_new-access-token'
-        access_token.refresh()
+        access_token.refresh(everlasting=True)
         # echo -n pina_new-access-token | shasum -a 256
         self.assertEqual(
             access_token.hashed(),
             "4e9a163e7e33428d50c6eda1305fa8f316aa9779578944ca5db4748acd22e8d2",
         )
+        # echo -n pinr_new-refresh-token | shasum -a 256
+        self.assertEqual(
+            access_token.hashed_refresh_token(),
+            "116fdd06bbb73795e1b8e9d2fb9bdefea81c7c402c7d147b67f95c93f1fb4f20",
+        )
         self.assertEqual(
             rm.last_request.text,
-            "grant_type=refresh_token" + "&refresh_token=test-refresh-token",
+            "grant_type=refresh_token"
+            + "&refresh_token=test-refresh-token"
+            + "&refresh_on=True",
+        )
+
+        # verify that the refresh token is not updated when it is not returned
+        rm.post(
+            "https://test-api-uri/v5/oauth/token",
+            request_headers={
+                "Authorization": "Basic dGVzdC1hcHAtaWQ6dGVzdC1hcHAtc2VjcmV0"
+            },
+            headers={"x-pinterest-rid": "mock-request-id"},
+            json={
+                "access_token": "pina_new-access-token-2",
+                "scope": "users:read,pins:read,boards:read",
+            },
+        )
+
+        access_token.refresh()
+        # echo -n pina_new-access-token-2 | shasum -a 256
+        self.assertEqual(
+            access_token.hashed(),
+            "dfdbf3a977c4d1b978b46995215f49c53acffbc5f7b693b4aedfede82a91c57b",  # new
+        )
+        # echo -n pinr_new-refresh-token | shasum -a 256
+        self.assertEqual(
+            access_token.hashed_refresh_token(),
+            "116fdd06bbb73795e1b8e9d2fb9bdefea81c7c402c7d147b67f95c93f1fb4f20",  # same
+        )
+        self.assertEqual(
+            rm.last_request.text,
+            "grant_type=refresh_token" + "&refresh_token=pinr_new-refresh-token",
         )
 
         # verify behavior with non-default arguments:

@@ -125,13 +125,14 @@ options:
 ```
 $ ./scripts/refresh_access_token.py --help
 
-usage: refresh_access_token.py [-h] [-ct] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: refresh_access_token.py [-h] [-ct] [-e] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Refresh Pinterest OAuth token
 
 options:
   -h, --help            show this help message and exit
   -ct, --cleartext      print the token in clear text
+  -e, --everlasting     everlasting refresh token
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL

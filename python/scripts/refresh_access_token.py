@@ -21,6 +21,9 @@ def main(argv=[]):
     parser.add_argument(
         "-ct", "--cleartext", action="store_true", help="print the token in clear text"
     )
+    parser.add_argument(
+        "-e", "--everlasting", action="store_true", help="everlasting refresh token"
+    )
     common_arguments(parser)
     args = parser.parse_args(argv)
 
@@ -29,7 +32,7 @@ def main(argv=[]):
 
     access_token = AccessToken(api_config, name=args.access_token)
     access_token.read()
-    access_token.refresh()
+    access_token.refresh(everlasting=args.everlasting)
 
     # Note: It is best practice not to print credentials in clear text.
     # Pinterest engineers asked for this capability to make it easier
@@ -38,6 +41,7 @@ def main(argv=[]):
         print("Please keep clear text tokens secure!")
         print("clear text access token after refresh: " + access_token.access_token)
     print("hashed access token after refresh: " + access_token.hashed())
+    print("hashed refresh token after refresh: " + access_token.hashed_refresh_token())
 
     # Use the access token to get information about the user. The purpose of this
     # call is to verify that the access token is working.

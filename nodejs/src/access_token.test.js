@@ -13,7 +13,7 @@ describe('v5 access_token tests', () => {
   const SAVED_ENV = process.env;
 
   beforeEach(() => {
-    jest.resetModules();
+    jest.clearAllMocks();
     process.env = {};
   });
 
@@ -84,7 +84,7 @@ describe('v5 access_token tests', () => {
     ]);
   });
 
-  test('v5 api_object request_data', async() => {
+  test('v5 access_token oauth', async() => {
     const mock_api_config = jest.fn();
     mock_api_config.app_id = 'test-app-id';
     mock_api_config.app_secret = 'test-app-secret';
@@ -133,6 +133,119 @@ describe('v5 access_token tests', () => {
       ['POST', 'test-api-uri/v5/oauth/token'],
       ['<Response [42]>'],
       ['scope:', 'test-scope'],
+      ['received refresh token']
+    ]);
+  });
+
+  test('v5 access_token refresh without refresh_token', async() => {
+    const mock_api_config = jest.fn();
+    mock_api_config.app_id = 'test-app-id';
+    mock_api_config.app_secret = 'test-app-secret';
+    mock_api_config.api_uri = 'test-api-uri-refresh';
+    mock_api_config.redirect_uri = 'test-redirect-uri';
+    mock_api_config.oauth_token_dir = 'test-token-dir';
+    mock_api_config.verbosity = 2;
+
+    const access_token_json = JSON.stringify({
+      name: 'access_token_from_file',
+      access_token: 'test access token from json',
+      refresh_token: 'test refresh token from json',
+      scopes: 'test-scope-1,test-scope-2'
+    }, null, 2);
+
+    fs.readFileSync.mockReturnValue(access_token_json);
+    const access_token = new AccessToken(mock_api_config,
+      { name: 'access_token_from_file' });
+    await access_token.fetch({});
+
+    // verify that the refresh token is not updated
+    got.post.mockResolvedValueOnce({
+      statusCode: 200,
+      body: {
+        access_token: 'test-refreshed-access-token-1'
+      }
+    });
+
+    // check output
+    console.log = jest.fn();
+
+    await access_token.refresh({});
+    expect(access_token.access_token).toEqual('test-refreshed-access-token-1'); // new
+    expect(access_token.refresh_token).toEqual('test refresh token from json'); // unchanged
+    expect(got.post.mock.calls[0][0]).toEqual('test-api-uri-refresh/v5/oauth/token');
+    expect(got.post.mock.calls[0][1]).toEqual({
+      headers:
+                                               {
+                                                 Authorization:
+                                                'Basic dGVzdC1hcHAtaWQ6dGVzdC1hcHAtc2VjcmV0'
+                                               },
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: 'test refresh token from json'
+      },
+      responseType: 'json'
+    });
+    expect(console.log.mock.calls).toEqual([
+      ['refreshing access_token...'],
+      ['POST', 'test-api-uri-refresh/v5/oauth/token'],
+      ['<Response [200]>']
+    ]);
+  });
+
+  test('v5 access_token refresh with chained refresh_token', async() => {
+    const mock_api_config = jest.fn();
+    mock_api_config.app_id = 'test-app-id';
+    mock_api_config.app_secret = 'test-app-secret';
+    mock_api_config.api_uri = 'test-api-uri-refresh';
+    mock_api_config.redirect_uri = 'test-redirect-uri';
+    mock_api_config.oauth_token_dir = 'test-token-dir';
+    mock_api_config.verbosity = 2;
+
+    const access_token_json = JSON.stringify({
+      name: 'access_token_from_file',
+      access_token: 'test access token from json',
+      refresh_token: 'test refresh token from json',
+      scopes: 'test-scope-1,test-scope-2'
+    }, null, 2);
+
+    fs.readFileSync.mockReturnValue(access_token_json);
+    const access_token = new AccessToken(mock_api_config,
+      { name: 'access_token_from_file' });
+    await access_token.fetch({});
+
+    // verify that the refresh token is updated when provided by the API
+    got.post.mockResolvedValueOnce({
+      statusCode: 200,
+      body: {
+        access_token: 'test-refreshed-access-token-2',
+        refresh_token: 'test-chained-refresh-token'
+      }
+    });
+
+    // check output
+    console.log = jest.fn();
+
+    await access_token.refresh({ everlasting: true });
+    expect(access_token.access_token).toEqual('test-refreshed-access-token-2'); // new
+    expect(access_token.refresh_token).toEqual('test-chained-refresh-token'); // new
+    expect(got.post.mock.calls[0][0]).toEqual('test-api-uri-refresh/v5/oauth/token');
+    expect(got.post.mock.calls[0][1]).toEqual({
+      headers:
+                                               {
+                                                 Authorization:
+                                                'Basic dGVzdC1hcHAtaWQ6dGVzdC1hcHAtc2VjcmV0'
+                                               },
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: 'test refresh token from json',
+        refresh_on: true
+      },
+      responseType: 'json'
+    });
+    expect(console.log.mock.calls).toEqual([
+      ['refreshing access_token...'],
+      ['POST', 'test-api-uri-refresh/v5/oauth/token'],
+      ['<Response [200]>'],
       ['received refresh token']
     ]);
   });
