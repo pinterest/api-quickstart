@@ -49,7 +49,7 @@ async function main(argv) {
   // refresh the access_token
   // Note that the AccessToken encapsulates the credentials,
   // so there is no need to refresh the User or other objects.
-  await access_token.refresh();
+  await access_token.refresh({});
   hashed = access_token.hashed();
   if (access_token_hashes.has(hashed)) {
     console.log('Access Token is the same after refresh.');
@@ -60,6 +60,7 @@ async function main(argv) {
   // This call demonstrates that the access_token has changed
   // without printing the actual token.
   console.log('hashed access token:', hashed);
+  console.log('hashed refresh token:', access_token.hashed_refresh_token());
 
   console.log('accessing with refreshed access_token...');
   user_data = await user.get();
@@ -72,11 +73,12 @@ async function main(argv) {
   await new Promise(resolve => setTimeout(resolve, 1000));
 
   // refresh the access_token again
-  await access_token.refresh();
+  await access_token.refresh({});
 
   // Verify that the access_token has changed again.
   hashed = access_token.hashed();
   console.log('hashed access token:', hashed);
+  console.log('hashed refresh token:', access_token.hashed_refresh_token());
   if (access_token_hashes.has(hashed)) {
     console.log('Access Token is repeated after the second refresh.');
     process.exit(2);

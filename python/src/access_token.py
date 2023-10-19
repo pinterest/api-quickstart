@@ -173,9 +173,11 @@ class AccessToken(ApiCommon):
         self.refresh_token = unpacked["refresh_token"]
         self.scopes = unpacked["scope"]
 
-    def refresh(self):
+    def refresh(self, everlasting=False):
         print(f"refreshing {self.name}...")
         post_data = {"grant_type": "refresh_token", "refresh_token": self.refresh_token}
+        if everlasting:  # PINDP-2680: refresh_on=false does not work
+            post_data["refresh_on"] = True
         if self.api_config.verbosity >= 2:
             print("POST", self.api_config.api_uri + "/v5/oauth/token")
             if self.api_config.verbosity >= 3:
@@ -188,3 +190,6 @@ class AccessToken(ApiCommon):
         )
         unpacked = self.unpack(response)
         self.access_token = unpacked["access_token"]
+        # save refresh token if it was also refreshed
+        if "refresh_token" in unpacked:
+            self.refresh_token = unpacked["refresh_token"]
