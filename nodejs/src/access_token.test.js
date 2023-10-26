@@ -225,7 +225,7 @@ describe('v5 access_token tests', () => {
     // check output
     console.log = jest.fn();
 
-    await access_token.refresh({ everlasting: true });
+    await access_token.refresh({ continuous: true });
     expect(access_token.access_token).toEqual('test-refreshed-access-token-2'); // new
     expect(access_token.refresh_token).toEqual('test-chained-refresh-token'); // new
     expect(got.post.mock.calls[0][0]).toEqual('test-api-uri-refresh/v5/oauth/token');

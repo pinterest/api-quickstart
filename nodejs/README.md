@@ -57,7 +57,8 @@ Quick start code that demonstrates the OAuth 2.0 flow and tests the authenticati
 ```
 $ ./scripts/get_access_token.js --help
 
-usage: get_access_token.js [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_access_token.js [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN]
+                           [-l LOG_LEVEL]
 
 Get Pinterest OAuth token
 
@@ -128,14 +129,15 @@ Refreshes an access token stored by using `./scripts/get_access_token.js` with t
 ```
 $ ./scripts/refresh_access_token.js --help
 
-usage: refresh_access_token.js [-h] [-ct] [-e] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: refresh_access_token.js [-h] [-ct] [-c] [-a ACCESS_TOKEN]
+                               [-l LOG_LEVEL]
 
 Refresh Pinterest OAuth token
 
 optional arguments:
   -h, --help            show this help message and exit
   -ct, --cleartext      print the token in clear text
-  -e, --everlasting     everlasting refresh token
+  -c, --continuous      continuous refresh token
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
@@ -213,8 +215,10 @@ Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://
 ```
 $ ./scripts/get_user_boards.js --help
 
-usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived]
-                          [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_user_boards.js [-h] [-ps PAGE_SIZE] [--include-empty]
+                          [--no-include-empty] [--include-archived]
+                          [--no-include-archived] [-a ACCESS_TOKEN]
+                          [-l LOG_LEVEL]
 
 Get A User's Boards
 
@@ -239,7 +243,8 @@ Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pi
 ```
 $ ./scripts/copy_pin.js --help
 
-usage: copy_pin.js [-h] -p PIN_ID -b BOARD_ID [-m MEDIA] [-s SECTION] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: copy_pin.js [-h] -p PIN_ID -b BOARD_ID [-m MEDIA] [-s SECTION]
+                   [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Copy A Pin
 
@@ -266,8 +271,9 @@ Demonstration of how to use the `POST /v5/boards` [endpoint](https://developers.
 ```
 $ ./scripts/copy_board.js --help
 
-usage: copy_board.js [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all]
-                     [--dry-run] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: copy_board.js [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN]
+                     [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run]
+                     [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Copy one Board or all Boards
 
@@ -295,8 +301,9 @@ Reads information about advertiser accounts, campaigns, ad groups, and ads. By d
 ```
 $ ./scripts/get_ads.js --help
 
-usage: get_ads.js [-h] [--all-ads] [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID]
-                  [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_ads.js [-h] [--all-ads] [--ad-account-id AD_ACCOUNT_ID]
+                  [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID]
+                  [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Advertisers API Example
 
@@ -323,9 +330,12 @@ Demonstrates how to use the API to retrieve analytics metrics with synchronous r
 ```
 $ ./scripts/get_analytics.js --help
 
-usage: get_analytics.js [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID]
-                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID]
-                        [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_analytics.js [-h]
+                        [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}]
+                        [--pin-id PIN_ID] [--ad-account-id AD_ACCOUNT_ID]
+                        [--campaign-id CAMPAIGN_ID]
+                        [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
+                        [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get Analytics
 

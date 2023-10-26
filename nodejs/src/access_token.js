@@ -186,7 +186,7 @@ export class AccessToken extends ApiCommon {
     }
   }
 
-  async refresh({ everlasting = false }) {
+  async refresh({ continuous = false }) {
     // There should be a refresh_token, but it is best to check.
     if (!this.refresh_token) {
       throw new Error('AccessToken does not have a refresh token');
@@ -199,7 +199,7 @@ export class AccessToken extends ApiCommon {
         grant_type: 'refresh_token',
         refresh_token: this.refresh_token
       };
-      if (everlasting) {
+      if (continuous) {
         post_data.refresh_on = true;
       }
       if (this.api_config.verbosity >= 2) {

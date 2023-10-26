@@ -56,7 +56,8 @@ Below you will find a description of each script along with an example of its he
 ```
 $ ./scripts/get_access_token.py --help
 
-usage: get_access_token.py [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_access_token.py [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN]
+                           [-l LOG_LEVEL]
 
 Get Pinterest OAuth token
 
@@ -125,14 +126,15 @@ options:
 ```
 $ ./scripts/refresh_access_token.py --help
 
-usage: refresh_access_token.py [-h] [-ct] [-e] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: refresh_access_token.py [-h] [-ct] [-c] [-a ACCESS_TOKEN]
+                               [-l LOG_LEVEL]
 
 Refresh Pinterest OAuth token
 
 options:
   -h, --help            show this help message and exit
   -ct, --cleartext      print the token in clear text
-  -e, --everlasting     everlasting refresh token
+  -c, --continuous      continuous refresh token
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
@@ -206,8 +208,10 @@ Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://
 ```
 $ ./scripts/get_user_boards.py --help
 
-usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty] [--no-include-empty] [--include-archived]
-                          [--no-include-archived] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_user_boards.py [-h] [-ps PAGE_SIZE] [--include-empty]
+                          [--no-include-empty] [--include-archived]
+                          [--no-include-archived] [-a ACCESS_TOKEN]
+                          [-l LOG_LEVEL]
 
 Get A User's Boards
 
@@ -231,7 +235,8 @@ Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pi
 ```
 $ ./scripts/copy_pin.py --help
 
-usage: copy_pin.py [-h] -p PIN_ID [-m MEDIA] -b BOARD_ID [-s SECTION] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: copy_pin.py [-h] -p PIN_ID [-m MEDIA] -b BOARD_ID [-s SECTION]
+                   [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Copy a Pin
 
@@ -257,8 +262,9 @@ options:
 ```
 $ ./scripts/copy_board.py --help
 
-usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN] [-t TARGET_ACCESS_TOKEN] [--all]
-                     [--dry-run] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: copy_board.py [-h] [-b BOARD_ID] [-n NAME] [-s SOURCE_ACCESS_TOKEN]
+                     [-t TARGET_ACCESS_TOKEN] [--all] [--dry-run]
+                     [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Copy one Board or all Boards
 
@@ -304,9 +310,12 @@ options:
 ```
 $ ./scripts/get_analytics.py --help
 
-usage: get_analytics.py [-h] [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}] [--pin-id PIN_ID]
-                        [--ad-account-id AD_ACCOUNT_ID] [--campaign-id CAMPAIGN_ID] [--ad-group-id AD_GROUP_ID]
-                        [--ad-id AD_ID] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+usage: get_analytics.py [-h]
+                        [-o {user,pin,ad_account_user,ad_account,campaign,ad_group,ad}]
+                        [--pin-id PIN_ID] [--ad-account-id AD_ACCOUNT_ID]
+                        [--campaign-id CAMPAIGN_ID]
+                        [--ad-group-id AD_GROUP_ID] [--ad-id AD_ID]
+                        [-a ACCESS_TOKEN] [-l LOG_LEVEL]
 
 Get Analytics
 
