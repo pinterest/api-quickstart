@@ -22,7 +22,7 @@ def main(argv=[]):
         "-ct", "--cleartext", action="store_true", help="print the token in clear text"
     )
     parser.add_argument(
-        "-e", "--everlasting", action="store_true", help="everlasting refresh token"
+        "-c", "--continuous", action="store_true", help="continuous refresh token"
     )
     common_arguments(parser)
     args = parser.parse_args(argv)
@@ -32,7 +32,7 @@ def main(argv=[]):
 
     access_token = AccessToken(api_config, name=args.access_token)
     access_token.read()
-    access_token.refresh(everlasting=args.everlasting)
+    access_token.refresh(continuous=args.continuous)
 
     # Note: It is best practice not to print credentials in clear text.
     # Pinterest engineers asked for this capability to make it easier
@@ -40,6 +40,7 @@ def main(argv=[]):
     if args.cleartext:
         print("Please keep clear text tokens secure!")
         print("clear text access token after refresh: " + access_token.access_token)
+        print("clear text refresh token after refresh: " + access_token.refresh_token)
     print("hashed access token after refresh: " + access_token.hashed())
     print("hashed refresh token after refresh: " + access_token.hashed_refresh_token())
 

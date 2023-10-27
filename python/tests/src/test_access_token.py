@@ -139,7 +139,7 @@ class AccessTokenTest(unittest.TestCase):
         )
 
         # verify that refresh works by using the sha256 of 'pina_new-access-token'
-        access_token.refresh(everlasting=True)
+        access_token.refresh(continuous=True)
         # echo -n pina_new-access-token | shasum -a 256
         self.assertEqual(
             access_token.hashed(),
