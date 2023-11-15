@@ -356,6 +356,33 @@ options:
                         level of logging verbosity
 ```
 
+### [get_terms.py](./scripts/get_terms.py)
+Shows how to use the Terms endpoint to view related and suggested terms for ads targeting.
+
+<!--gen-->
+```
+$ ./scripts/get_terms.py --help
+
+usage: get_terms.py [-h] [-r] [-s] [-n LIMIT] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                    terms
+
+Get Related or Suggested Terms
+
+positional arguments:
+  terms                 comma-separated list of terms
+
+options:
+  -h, --help            show this help message and exit
+  -r, --related         get related terms
+  -s, --suggested       get suggested terms
+  -n LIMIT, --limit LIMIT
+                        limit for suggested terms
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+```
+
 ## Proxy Configuration
 
 The quickstart uses the [Python Requests](https://docs.python-requests.org) library, which supports the `HTTPS_PROXY` environment variable. For example, to forward Pinterest API requests through a local proxy at port 8080, run this command in the shell before running any of the above commands:
