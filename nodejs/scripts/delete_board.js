@@ -29,9 +29,7 @@ async function main(argv) {
 
   // Check the arguments: need specify exactly one of board_id and all_boards.
   if (!(Boolean(args.board_id) ^ Boolean(args.all_boards))) {
-    parser.print_usage();
-    console.log('specify exactly one of --board-id or --all-boards');
-    process.exit(1);
+    parser.error('specify exactly one of --board-id or --all-boards');
   }
 
   // get configuration from defaults and/or the environment

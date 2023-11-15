@@ -106,16 +106,13 @@ async function main(argv) {
 
   // Specifying identifier at one level requires specifying identifier at levels above.
   if (args.campaign_id && !args.ad_account_id) {
-    console.log('Ad account identifier must be specified when using campaign identifier');
-    process.exit(1);
+    parser.error('Ad account identifier must be specified when using campaign identifier');
   }
   if (args.ad_group_id && !args.campaign_id) {
-    console.log('Campaign identifier must be specified when using ad group identifier');
-    process.exit(1);
+    parser.error('Campaign identifier must be specified when using ad group identifier');
   }
   if (args.ad_id && !args.ad_group_id) {
-    console.log('Ad group identifier must be specified when using ad identifier');
-    process.exit(1);
+    parser.error('Ad group identifier must be specified when using ad identifier');
   }
 
   const api_config = new ApiConfig({
