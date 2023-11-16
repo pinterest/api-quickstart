@@ -104,21 +104,21 @@ def main(argv=[]):
 
     # Specifying identifier at one level requires specifying identifier at levels above.
     if args.campaign_id and not args.ad_account_id:
-        print("Ad account identifier must be specified when using campaign identifier")
-        exit(1)
+        parser.error(
+            "Ad account identifier must be specified when using campaign identifier"
+        )
     if args.ad_group_id and not args.campaign_id:
-        print("Campaign identifier must be specified when using ad group identifier")
-        exit(1)
+        parser.error(
+            "Campaign identifier must be specified when using ad group identifier"
+        )
     if args.ad_id and not args.ad_group_id:
-        print("Ad group identifier must be specified when using ad identifier")
-        exit(1)
+        parser.error("Ad group identifier must be specified when using ad identifier")
 
     api_config = ApiConfig(verbosity=args.log_level)
 
     # Requesting pin analytics requires a pin_id.
     if args.analytics_object == "pin" and not args.pin_id:
-        print("Pin analytics require a pin identifier.")
-        exit(1)
+        parser.error("Pin analytics require a pin identifier.")
 
     """
     Fetch an access token and print summary data about the User.

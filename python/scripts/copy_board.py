@@ -107,9 +107,7 @@ def main(argv=[]):
     # In case of an argument error, print an appropriate message,
     # usage information, and exit.
     if args_error:
-        print(args_error)
-        parser.print_usage()
-        exit(1)
+        parser.error(args_error)
 
     # get configuration from defaults and/or the environment
     api_config = ApiConfig(verbosity=args.log_level)

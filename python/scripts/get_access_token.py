@@ -76,9 +76,7 @@ def main(argv=[]):
             access_token.fetch()
         except ValueError as err:
             # ValueError indicates that something was wrong with the arguments
-            print(err)
-            parser.print_usage()
-            exit(1)
+            parser.error(err)
 
     # Note: It is best practice not to print credentials in clear text.
     # Pinterest engineers asked for this capability to make it easier

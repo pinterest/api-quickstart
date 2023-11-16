@@ -376,6 +376,33 @@ optional arguments:
                         level of logging verbosity
 ```
 
+### [get_terms.js](./scripts/get_terms.js)
+Shows how to use the Terms endpoint to view related and suggested terms for ads targeting.
+
+<!--gen-->
+```
+$ ./scripts/get_terms.js --help
+
+usage: get_terms.js [-h] [-r] [-s] [-n LIMIT] [-a ACCESS_TOKEN] [-l LOG_LEVEL]
+                    terms
+
+Get Related or Suggested Terms
+
+positional arguments:
+  terms                 Comma-separated list of terms
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -r, --related         Get related terms
+  -s, --suggested       Get suggested terms
+  -n LIMIT, --limit LIMIT
+                        Limit the number of suggested terms
+  -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
+                        access token name
+  -l LOG_LEVEL, --log-level LOG_LEVEL
+                        level of logging verbosity
+```
+
 ## Proxy Configuration
 
 The quickstart uses the [global-agent](https://www.npmjs.com/package/global-agent) package to support proxy configurations. To forward Pinterest API requests through a local proxy at port 8080, run this command in the shell before running any of the above commands:

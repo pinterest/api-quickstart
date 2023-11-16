@@ -34,9 +34,7 @@ def main(argv=[]):
 
     # Check the arguments: need specify exactly one of board_id and all_boards.
     if not (bool(args.board_id) ^ bool(args.all_boards)):
-        parser.print_usage()
-        print("specify exactly one of --board-id and --all-boards")
-        exit(1)
+        parser.error("specify exactly one of --board-id and --all-boards")
 
     # get configuration from defaults and/or the environment
     api_config = ApiConfig(verbosity=args.log_level)

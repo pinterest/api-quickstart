@@ -94,9 +94,7 @@ async function main(argv) {
   }
 
   if (args_error) {
-    console.log(args_error);
-    parser.print_usage();
-    process.exit(1);
+    parser.error(args_error);
   }
 
   // get configuration from defaults and/or the environment

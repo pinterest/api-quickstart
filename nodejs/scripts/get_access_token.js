@@ -68,9 +68,7 @@ async function main(argv) {
     try {
       await access_token.fetch({});
     } catch (error) { // probably because scopes are required
-      console.log(error);
-      parser.print_usage();
-      process.exit(1);
+      parser.error(error);
     }
   }
 
