@@ -25,25 +25,21 @@ async function main(argv) {
 
   // exactly one of --related or --suggested must be specified
   if (!args.related && !args.suggested) {
-    console.log('Please specify --related or --suggested');
-    process.exit(1);
+    parser.error('Please specify --related or --suggested');
   }
 
   if (args.related && args.suggested) {
-    console.log('Please specify only one of --related or --suggested');
-    process.exit(1);
+    parser.error('Please specify only one of --related or --suggested');
   }
 
   // --limit can only be used with --suggested
   if (args.related && args.limit) {
-    console.log('Please do not specify --limit with --related');
-    process.exit(1);
+    parser.error('Please do not specify --limit with --related');
   }
 
   // suggested terms can only take one term
   if (args.suggested && args.terms.includes(',')) {
-    console.log('Please specify only one term with --suggested');
-    process.exit(1);
+    parser.error('Please specify only one term with --suggested');
   }
 
   // get configuration from defaults and/or the environment
