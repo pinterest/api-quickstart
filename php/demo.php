@@ -60,9 +60,14 @@ Here is the user account information fetched from the API in JSON.
           return $result;
     }
 
+    /* Typically, the access token would be stored in a database
+     * indexed by the user's identifier. For this demo, we'll
+     * just get it from the session.
+     */
     session_start();
     $access_token = $_SESSION['access_token'];
 
+    /* The access token is sent in the Authorization header. */
     $headers = array(
         "Authorization:" . 'Bearer ' . $access_token
     );
@@ -83,11 +88,11 @@ Here is the user account information fetched from the API in JSON.
     with PHP.
     </p>
     <p>
-    <?php
-    echo '<img width="150" src="' . $result['profile_image'] . '">' . "\n";
-    echo '<br/><b>Username:</b> ' . $result['username'] . "\n";
-    echo '<br/><b>Identifier:</b> ' . $result['id'] . "\n";
-    ?>
+    <img width="150" src="<?php echo $result['profile_image'] ?>">
+    <br/>
+    <b>Username:</b> <?php echo $result['username'] ?>
+    <br/>
+    <b>Identifier:</b> <?php echo $result['id'] ?>
     </p>
 <h2>Pin</h2>
 <p>
@@ -102,6 +107,7 @@ Here is the first regular (static image) Pin in the user's account in JSON.
     /* format JSON for display */
     $result_pp
         = json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    $image = $result['items'][0]['media']['images']['150x150']['url']
     ?>
     <p>
     <?php echo $result_pp ?>
@@ -110,13 +116,11 @@ Here is the first regular (static image) Pin in the user's account in JSON.
     Here are some of the fields from the Pin information extracted with PHP.
     </p>
     <p>
-    <?php
-    echo '<img src="'
-         . $result['items'][0]['media']['images']['150x150']['url']
-         . '">' . "\n";
-    echo '<br/><b>Identifier:</b> ' . $result['items'][0]['id'] . "\n";
-    echo '<br/><b>Link:</b> ' . $result['items'][0]['link'] . "\n";
-    ?>
+    <img src="<?php echo $image ?>">
+    <br/>
+    <b>Identifier:</b> <?php echo $result['items'][0]['id'] ?>
+    <br/>
+    <b>Link:</b> <?php echo $result['items'][0]['link'] ?>
     </p>
     <h2>The End</h2>
     <p>

@@ -16,6 +16,10 @@ to get user and Pin information from the API.
 <?php
 /**
  * This file demonstrates how to use OAuth 2.0 to get an access token.
+ * It handles both the start of the flow (Initial Page) and the OAuth
+ * callback. It would be a bit cleaner to split these two functions into
+ * different paths, but the two are combined here for compatibility with
+ * the other language examples in this repository.
  *
  * PHP version 8
  *
@@ -53,14 +57,13 @@ if (array_key_exists('code', $_GET)) {
         <?php echo $_GET['code'] ?>
     </p>
     <?php
-    $client_secret = getenv('PINTEREST_APP_SECRET');
-    $auth_url = "https://api.pinterest.com/v5/oauth/token";
-    $authorization = base64_encode($client_id . ':' . $client_secret);
-
+    /* Check to see if the state parameter has the auto direct prefix. */
     if (str_starts_with($_GET['state'], 'auto_redirect_')) {
+        /* Automatic redirect requested. This is the normal application flow. */
         $auto_redirect = true;
         $expected_state = 'auto_redirect_' . $_SESSION['oauth_state'];
     } else {
+        /* No automatic redirect requested. This is for demonstration purposes. */
         $auto_redirect = false;
         $expected_state = $_SESSION['oauth_state'];
     }
@@ -105,17 +108,26 @@ if (array_key_exists('code', $_GET)) {
     to get an access token.
     </p>
     <?php
+    /* https://developers.pinterest.com/docs/api/v5/#tag/oauth */
+    $auth_url = "https://api.pinterest.com/v5/oauth/token";
+
+    /* The client ID and client secret are used to create a
+     * Basic authorization header, which is required to get an access token.
+     */
+    $client_secret = getenv('PINTEREST_APP_SECRET');
+    $authorization = base64_encode($client_id . ':' . $client_secret);
     $headers = array(
             "Authorization:" . 'Basic ' . $authorization
     );
 
+    /* These parameters are required to get an access token. */
     $params = array(
         "grant_type" => "authorization_code",
         "code"        => $_GET['code'],
         "redirect_uri" => $redirect_uri,
     );
 
-    $data = http_build_query($params);
+    $data = http_build_query($params); /* encode URL parameters */
     $curl = curl_init();
     curl_setopt_array(
         $curl, array(
@@ -131,7 +143,7 @@ if (array_key_exists('code', $_GET)) {
         )
     );
 
-    $result_json = curl_exec($curl);
+    $result_json = curl_exec($curl); /* call the Pinterest API */
     /* extract JSON into structure */
     $result = json_decode($result_json, true);
     curl_close($curl);
@@ -151,7 +163,9 @@ if (array_key_exists('code', $_GET)) {
         </p>
         <?php
         if ($auto_redirect) {
-            /* redirect to the app */
+            /* Redirect the browser to the demo. This is a typical
+             * application flow.
+             */
             header('Location: /demo.php');
             exit;
         }
@@ -171,7 +185,7 @@ if (array_key_exists('code', $_GET)) {
         <a href="/"><input class="button" type="Submit" value="Start Over"></a>
         </p>
         <?php
-    } else {
+    } else { /* The API did not return an access token. */
         ?>
         <p>
         There was an error getting the access token.
@@ -203,6 +217,9 @@ if (array_key_exists('code', $_GET)) {
                 . "&scope=user_accounts:read,pins:read,boards:read"
                 . "&state=";
     $url_no_redirect = $url_prefix . $_SESSION['oauth_state'];
+    /* The auto_redirect_ prefix signals the callback page to redirect
+     * automatically to the demo page.
+     */
     $url_with_redirect
         = $url_prefix . "auto_redirect_" . $_SESSION['oauth_state'];
     ?>
