@@ -1,0 +1,50 @@
+/* Colors for the demo stylesheet. */
+:root {
+  --emphasis: #007CFF;
+  --emphasis-hover: #004BA9;
+}
+
+/* Most links are red with a dark red hover. */
+a {
+  color: var(--emphasis);
+}
+a:hover {
+  color: var(--emphasis-hover);
+}
+
+/* Slightly wider line spacing makes the text easier to read. */
+li {
+  margin: 5px 0;
+}
+p {
+  line-height: 125%;
+}
+
+/* Center the demo in a frame with left-aligned text. */
+body {
+  padding: 50px;
+  font: 14px Helvetica, Arial, sans-serif;
+  text-align: left;
+}
+.content_container {
+  display: inline-block;
+  max-width: 720px;
+  text-align: left;
+}
+
+/* White-on-blue button throughout the demo. */
+.button {
+  background-color: var(--emphasis);
+  border: none;
+  color: white;
+  font-size: 16px;
+  display: inline-block;
+  padding: 0.3em 1.2em;
+  margin: 0 auto;
+  border-radius: 2em;
+  transition: all 0.2s;
+  text-align: center;
+}
+.button:hover {
+  background-color: var(--emphasis-hover);
+}
