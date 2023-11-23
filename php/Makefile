@@ -1,5 +1,5 @@
 lint:
-	phpcs *.php
+	phpcs -v *.php
 
 lint-fix:
 	phpcbf *.php
