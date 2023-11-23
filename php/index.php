@@ -106,7 +106,6 @@ if (array_key_exists('code', $_GET)) {
     </p>
     <?php
     $headers = array(
-        // "Content-Type: application/x-www-form-urlencoded",
             "Authorization:" . 'Basic ' . $authorization
     );
 
