@@ -33,7 +33,7 @@ PHP code that demonstrates the basics of how to use the Pinterest API.
 
 * If the demo code that fetches user account information fails, check to make sure that the user account has a profile picture and at least one saved Pin.
 
-## Contributing Code
+## Code Conventions
 
 This PHP code needs to pass the [PHP_CodeSniffer](https://github.com/squizlabs/PHP_CodeSniffer) linter using
 the default PEAR coding standard. To run the linter, first install the PHP_CodeSniffer. For example, on MacOS
