@@ -35,6 +35,18 @@ session_start();
 $client_id = getenv('PINTEREST_APP_ID');
 $redirect_uri = 'http://localhost:8085/';
 
+if (!$client_id) {
+    ?>
+    <p>
+    <b>
+    You must run ". ../common/scripts/api_env" before starting the
+    PHP server to run this demo.
+    </b>
+    </p>
+    <?php
+    exit;
+}
+
 /* If the GET request for this page has a code parameter, then this is the
  * callback from the OAuth 2.0 authorization page. The following code processes
  * the callback.
