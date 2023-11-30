@@ -31,7 +31,7 @@ to get user and Pin information from the API.
  */
 
 /* This code is common to both the initial page and the callback page. */
-session_start();
+session_start(); /* Reminder: this code requires PHP version 8. */
 $client_id = getenv('PINTEREST_APP_ID');
 $redirect_uri = 'http://localhost:8085/';
 

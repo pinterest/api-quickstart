@@ -25,6 +25,8 @@ PHP code that demonstrates the basics of how to use the Pinterest API.
 
 ## Troubleshooting
 
+* If you see the error `Warning: session_start(): Cannot start session when headers already sent`, you're likely using a version of PHP lower than 8. This example requires PHP version 8, so you'll need to install the latest version.
+
 * If the redirect to Pinterest returns a 400 error that says "Oops! You must pass a value for client_id," check to verify that the `api_env` script has been run properly.
    ```
    $ env | grep PINTEREST_APP_ID
