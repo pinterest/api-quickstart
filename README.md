@@ -4,7 +4,7 @@ Code that makes it easy to get started with the Pinterest API.
 
 ## Purpose
 
-This repository has code that is intended to provide a quick start for working with the [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code with essentially the same functionality, and a bash script that demonstrates the OAuth authentication and authorization flow.
+This repository has code that is intended to provide a quick start for working with the [Pinterest API v5](https://developers.pinterest.com/docs/api/v5/). There is currently python code that implements a number of use cases, JavaScript (nodejs) code with essentially the same functionality, a bash script that demonstrates the OAuth authentication and authorization flow, and an example application in PHP.
 
 This quickstart used to support Pinterest API version v3 and v4, but that code has been removed so that everyone can focus on v5. If you're interested in code that shows the differences between using v3/v4 and v5, see [version 1.1](https://github.com/pinterest/api-quickstart/releases/tag/v1.1) of this repo.
 
@@ -33,7 +33,7 @@ This quickstart used to support Pinterest API version v3 and v4, but that code h
      PINTEREST_APP_SECRET=<string>
      ```
 
-2. Pick one of the language directories (currently bash, nodejs and python) and follow the directions in the README file in the directory:
+2. Pick one of the language directories (currently bash, nodejs, php, and python) and follow the directions in the README file in the directory:
    * [NodeJS README](./nodejs/README.md)
      ```
      cd ./nodejs
@@ -45,6 +45,10 @@ This quickstart used to support Pinterest API version v3 and v4, but that code h
    * [Bash README](./bash/README.md)
      ```
      cd ./bash
+     ```
+   * [PHP README](./php/README.md)
+     ```
+     cd ./php
      ```
 
 ## OAuth 2.0 Authorization
@@ -67,6 +71,7 @@ Code that implements OAuth is available for each language in this repo. The loca
    * A bash script that provides a complete example: [bash/scripts/get_access_token.sh](bash/scripts/get_access_token.sh).
    * In python, the code in [python/src/user_auth.py](python/src/user_auth.py) opens a browser and handles the redirect to obtain an authorization code. The code to exchange the authorization code for an access token is in [python/src/access_token.py](python/src/access_token.py). This file also implements access token refresh.
    * In JavaScript, the code in [nodejs/src/user_auth.js](nodejs/src/user_auth.js) opens a browser and handles the redirect to obtain an authorization code. The code to exchange the authorization code for an access token is in [nodejs/src/access_token.js](nodejs/src/access_token.js). This file also implements access token refresh.
+   * In PHP, the code in [php/index.php](php/index.php) provides a complete example.
 
 ## Security Notes
 
@@ -82,9 +87,9 @@ Code that implements OAuth is available for each language in this repo. The loca
 * Each language-specific directory is independent of the others:
   * `bash`: shell scripts
   * `nodejs`: JavaScript code and demonstration scripts intended to be run with Node.js
+  * `php`: PHP example application
   * `python`: structured python code and demonstration scripts. Since the python code is implemented first, python typically has the most functionality.
-  * More languages are on the way. We're considering providing examples in ruby and Java.
-* Each language-specific directory (e.g. `python` or `bash`) has one or more of these subdirectories:
+* Each language-specific directory (e.g. `python` or `bash`) may have one or more of these subdirectories:
   * `scripts` are executable files that demonstrate one or more use cases.
   * `src` contains code that is used by the scripts and that you can incorporate into your own applications.
   * `tests` contains unit and integration tests.
