@@ -5,7 +5,6 @@ from api_config import ApiConfig
 
 
 class ApiConfigTest(unittest.TestCase):
-
     mock_os_environ_minimal = {
         "PINTEREST_APP_ID": "test-app-id",
         "PINTEREST_APP_SECRET": "test-app-secret",

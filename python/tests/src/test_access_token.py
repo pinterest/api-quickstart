@@ -37,7 +37,6 @@ class AccessTokenTest(unittest.TestCase):
     @mock.patch("os.chmod")
     @mock.patch("builtins.open")
     def test_access_token_from_json(self, mock_open, mock_chmod):
-
         mock_api_config = mock.Mock()
         mock_api_config.app_id = "test-app-id"
         mock_api_config.app_secret = "test-app-secret"

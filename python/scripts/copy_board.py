@@ -169,7 +169,6 @@ def main(argv=[]):
         boards = [source_board_data]
 
     for source_board_data in boards:
-
         print("source board:")
         Board.print_summary(source_board_data)
         source_board.board_id = source_board_data["id"]
