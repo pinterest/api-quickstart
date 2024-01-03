@@ -74,7 +74,6 @@ def main(argv=[]):
 
     deletion_board = Board(None, api_config, access_token)  # board_id set in loop below
     for board_data in boards:
-
         # one final check before deletion
         Board.print_summary(board_data)
         if "yes" != input_one_of(

@@ -84,7 +84,6 @@ class UserAuthTest(unittest.TestCase):
     def test_http_server_handler(
         self, mock_super, mock_send_response, mock_send_header, mock_end_headers
     ):
-
         mock_api_config = mock.Mock()
         mock_api_config.landing_uri = "test-landing-uri"
         mock_api_config.verbosity = 2
