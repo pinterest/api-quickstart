@@ -33,7 +33,7 @@ export class AccessToken extends ApiCommon {
    *    3. Execute the OAuth 2.0 request flow using the default browser
    *       and local redirect.
    */
-  async fetch({ scopes = null, refreshable = true }) {
+  async fetch({ scopes = null, client_credentials = false }) {
     try {
       this.from_environment();
       return;
@@ -54,7 +54,7 @@ export class AccessToken extends ApiCommon {
       }
     }
 
-    await this.oauth({ scopes: scopes, refreshable: refreshable });
+    await this.oauth({ scopes, client_credentials });
   }
 
   /**
@@ -129,35 +129,52 @@ export class AccessToken extends ApiCommon {
   }
 
   /**
+   * When requesting an OAuth token for a user, the protocol requires going
+   * through the process of getting an auth_code. This process allows the
+   * user to approve the scopes requested by the application.
+   */
+  async get_user_post_data(scopes) {
+    console.log('getting auth_code...');
+    const auth_code = await get_auth_code(this.api_config, { scopes: scopes });
+
+    console.log('exchanging auth_code for access_token...');
+    return {
+      code: auth_code,
+      redirect_uri: this.api_config.redirect_uri,
+      grant_type: 'authorization_code'
+    };
+  }
+
+  /**
+   * When requesting an OAuth token for the client, no auth_code is required
+   * because the user is the same as the owner of the client.
+   */
+  get_client_post_data(scopes) {
+    console.log('getting access token using client credentials...');
+    return { grant_type: 'client_credentials', scope: scopes.map(s => s.value) };
+  }
+
+  /**
    * Execute the OAuth 2.0 process for obtaining an access token.
    * For more information, see IETF RFC 6749: https://tools.ietf.org/html/rfc6749
    * and https://developers.pinterest.com/docs/api/v5/#tag/oauth
    *
-   * For v5, scopes are required and tokens must be refreshable.
-   *
    * Constructor may not be async, so OAuth must be performed as a separate method.
    */
-  async oauth({ scopes = null, refreshable = true }) {
+  async oauth({ scopes = null, client_credentials = false }) {
     if (!scopes) {
       scopes = [Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS];
-      console.log('v5 requires scopes for OAuth. setting to default: READ_USERS,READ_PINS,READ_BOARDS');
+      console.log('OAuth scopes required. Setting to default: READ_USERS,READ_PINS,READ_BOARDS');
     }
 
-    if (!refreshable) {
-      throw new Error('Pinterest API v5 only provides refreshable OAuth access tokens');
-    }
+    // Construct the POST data for the request and output the relevant console message.
+    // In the case of a user token, getting an auth_code through a manual process
+    // is required.
+    const post_data = client_credentials
+      ? this.get_client_post_data(scopes)
+      : await this.get_user_post_data(scopes);
 
-    console.log('getting auth_code...');
-    const auth_code = await get_auth_code(this.api_config,
-      { scopes: scopes, refreshable: refreshable });
-
-    console.log('exchanging auth_code for access_token...');
     try {
-      const post_data = {
-        code: auth_code,
-        redirect_uri: this.api_config.redirect_uri,
-        grant_type: 'authorization_code'
-      };
       if (this.api_config.verbosity >= 2) {
         console.log('POST', `${this.api_uri}/v5/oauth/token`);
         if (this.api_config.verbosity >= 3) {
