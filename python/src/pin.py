@@ -55,12 +55,12 @@ class Pin(ApiMediaObject):
         a media identifier or the file name of a video file) to create
         a Video Pin.
         """
-        OPTIONAL_ATTRIBUTES = [
-            "link",
-            "title",
-            "description",
-            "alt_text",
-        ]
+        OPTIONAL_ATTRIBUTES = {
+            "link": 2048,
+            "title": 100,
+            "description": 800,
+            "alt_text": 500,
+        }
         create_data = {
             "board_id": board_id,
         }
@@ -82,9 +82,12 @@ class Pin(ApiMediaObject):
         if section:
             create_data["board_section_id"] = section
 
-        for key in OPTIONAL_ATTRIBUTES:
+        for key, limit in OPTIONAL_ATTRIBUTES.items():
             value = pin_data.get(key)
             if value:
+                if len(value) > limit:
+                    print(f"Warning: Truncating Pin {key} to {limit} characters.")
+                    value = value[0:limit]
                 create_data[key] = value
 
         pin_data = self.post_data("/v5/pins", create_data)
