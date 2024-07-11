@@ -78,6 +78,41 @@ describe('v5 pin tests', () => {
         board_section_id: 'test_section_id'
       }
     ]);
+
+    // verify truncation of long fields
+    console.log = jest.fn(); // test output
+    const pin_data_long_fields = {
+      link: '0123456789ABCDEF'.repeat(130),
+      title: 'ABCDEFGHIJ'.repeat(11),
+      alt_text: '0123456789'.repeat(60),
+      description: '9876543210'.repeat(90),
+      ignore: 'ignored',
+      media: {
+        images: {
+          test1: { width: 200, height: 100, url: 'test1://domain/path1/path2/image.jpg' },
+          test2: { width: 400, height: 200, url: 'test2://domain/path1/path2/image.jpg' }
+        }
+      }
+    };
+    await test_pin.create(pin_data_long_fields, 'test_board_id', {});
+    const expected_post_data_long_fields = {
+      board_id: 'test_board_id',
+      media_source: {
+        source_type: 'image_url',
+        url: 'test2://domain/path1/path2/image.jpg'
+      },
+      link: '0123456789ABCDEF'.repeat(128), // 2048
+      title: 'ABCDEFGHIJ'.repeat(10), // 100
+      description: '9876543210'.repeat(80), // 800
+      alt_text: '0123456789'.repeat(50) // 500
+    };
+    expect(mock_post_data.mock.calls[4]).toEqual(['/v5/pins', expected_post_data_long_fields]);
+    expect(console.log.mock.calls).toEqual([
+      ['Warning: Truncating Pin link to 2048 characters.'],
+      ['Warning: Truncating Pin title to 100 characters.'],
+      ['Warning: Truncating Pin description to 800 characters.'],
+      ['Warning: Truncating Pin alt_text to 500 characters.']
+    ]);
   });
 
   test('v5 pin method errors', async() => {

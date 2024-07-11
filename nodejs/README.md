@@ -57,7 +57,7 @@ Quick start code that demonstrates the OAuth 2.0 flow and tests the authenticati
 ```
 $ ./scripts/get_access_token.js --help
 
-usage: get_access_token.js [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN]
+usage: get_access_token.js [-h] [-w] [-ct] [-s SCOPES] [-c] [-a ACCESS_TOKEN]
                            [-l LOG_LEVEL]
 
 Get Pinterest OAuth token
@@ -68,6 +68,8 @@ optional arguments:
   -ct, --cleartext      print the token in clear text
   -s SCOPES, --scopes SCOPES
                         comma separated list of scopes or "help"
+  -c, --client_credentials
+                        use client credentials
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL

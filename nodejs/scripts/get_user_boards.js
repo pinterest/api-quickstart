@@ -38,13 +38,9 @@ async function main(argv) {
   const access_token = new AccessToken(api_config, { name: args.access_token });
   await access_token.fetch({ scopes: [Scope.READ_USERS, Scope.READ_BOARDS] });
 
-  // use the access token to get information about the user
-  const user = new User(api_config, access_token);
-  const user_data = await user.get();
-  user.print_summary(user_data);
-
   // get information about all of the boards in the user's profile
-  const board_iterator = await user.get_boards(user_data, {
+  const user = new User(api_config, access_token);
+  const board_iterator = await user.get_boards({
     query_parameters: {
       page_size: args.page_size,
       include_empty: args.include_empty,

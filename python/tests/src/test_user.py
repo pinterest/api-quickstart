@@ -25,18 +25,17 @@ class UserTest(unittest.TestCase):
 
         mock_api_object_get_iterator.return_value = "test_iterator"
         response = test_user.get_boards(
-            "test_user_data", query_parameters={"param1": "value1", "param2": "value2"}
+            query_parameters={"param1": "value1", "param2": "value2"}
         )
         mock_api_object_get_iterator.assert_called_once_with(
             "/v5/boards", {"param1": "value1", "param2": "value2"}
         )
         self.assertEqual(response, "test_iterator")
 
-        response = test_user.get_boards("test_user_data")
+        response = test_user.get_boards()
         mock_api_object_get_iterator.assert_called_with("/v5/boards", None)
 
         response = test_user.get_boards(
-            "test_user_data",
             query_parameters={
                 "param1": "value1",
             },
@@ -61,7 +60,7 @@ class UserTest(unittest.TestCase):
         expected_pins = ["board1_pin1", "board1_pin2", "board3_pin1"]
         test_user = User(mock_api_config, "test_access_token")
         for index, pin in enumerate(
-            test_user.get_pins("test_user_data", query_parameters={"param1": "value1"})
+            test_user.get_pins(query_parameters={"param1": "value1"})
         ):
             self.assertEqual(expected_pins[index], pin)
 

@@ -56,12 +56,12 @@ export class Pin extends ApiMediaObject {
 
   // https://developers.pinterest.com/docs/api/v5/#operation/pins/create
   async create(pin_data, board_id, { section, media }) {
-    const OPTIONAL_ATTRIBUTES = [
-      'link',
-      'title',
-      'description',
-      'alt_text'
-    ];
+    const OPTIONAL_ATTRIBUTES = {
+      link: 2048,
+      title: 100,
+      description: 800,
+      alt_text: 500
+    };
     const create_data = {
       board_id: board_id
     };
@@ -88,10 +88,15 @@ export class Pin extends ApiMediaObject {
       create_data.board_section_id = section;
     }
 
-    for (const key of OPTIONAL_ATTRIBUTES) {
+    for (const [key, limit] of Object.entries(OPTIONAL_ATTRIBUTES)) {
       const value = pin_data[key];
       if (value) {
-        create_data[key] = value;
+        if (value.length > limit) {
+          console.log(`Warning: Truncating Pin ${key} to ${limit} characters.`);
+          create_data[key] = value.substring(0, limit);
+        } else {
+          create_data[key] = value;
+        }
       }
     }
 

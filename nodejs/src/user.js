@@ -16,13 +16,13 @@ export class User extends ApiObject {
   }
 
   // https://developers.pinterest.com/docs/api/v5/#operation/boards/list
-  async get_boards(user_data, query_parameters = {}) {
+  async get_boards(query_parameters = {}) {
     // iterator that handles API paging
     return this.get_iterator('/v5/boards', query_parameters);
   }
 
   // getting all of a user's pins is not supported, so iterate through boards
-  async get_pins(user_data, query_parameters = {}) {
+  async get_pins(query_parameters = {}) {
     return this.get_iterator('/v5/pins', query_parameters);
   }
 }

@@ -71,6 +71,45 @@ class PinTest(unittest.TestCase):
             "/v5/pins", expected_post_data
         )
 
+        # verify truncation of long fields
+        new_pin_data_long_fields = {
+            "alt_text": "0123456789" * 60,
+            "description": "9876543210" * 90,
+            "link": "0123456789ABCDEF" * 130,
+            "title": "ABCDEFGHIJ" * 11,
+            "media": {
+                "images": {
+                    "test1": {
+                        "width": 200,
+                        "height": 100,
+                        "url": "test1://domain/path1/path2/image.jpg",
+                    },
+                    "test2": {
+                        "width": 400,
+                        "height": 200,
+                        "url": "test2://domain/path1/path2/image.jpg",
+                    },
+                }
+            },
+        }
+        expected_post_data_long_fields = {
+            "board_id": "test_board_id",
+            "media_source": {
+                "source_type": "image_url",
+                "url": new_pin_data["media"]["images"]["test2"]["url"],
+            },
+            "link": "0123456789ABCDEF" * 128,  # 2048
+            "alt_text": "0123456789" * 50,  # 500
+            "title": "ABCDEFGHIJ" * 10,  # 100
+            "description": "9876543210" * 80,  # 800
+        }
+        mock_api_object_post_data.reset_mock()
+        test_pin.create(new_pin_data_long_fields, "test_board_id")
+        self.assertEqual(test_pin.pin_id, "new_pin_id")
+        mock_api_object_post_data.assert_called_once_with(
+            "/v5/pins", expected_post_data_long_fields
+        )
+
     @mock.patch("pin.ApiMediaObject.post_data")
     @mock.patch("pin.ApiMediaObject.__init__")
     def test_pin_save(

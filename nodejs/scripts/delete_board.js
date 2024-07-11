@@ -44,7 +44,7 @@ async function main(argv) {
   if (args.all_boards) { // delete all boards for the user
     const user = new User(api_config, access_token);
     const user_data = await user.get();
-    boards = await user.get_boards(user_data, {});
+    boards = await user.get_boards({});
     confirmation = `Delete all boards for ${user_data.username}`;
   } else { // copy just the board designated by board_id
     const deletion_board = new Board(args.board_id, api_config, access_token);

@@ -33,14 +33,11 @@ async function main(argv) {
       Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS]
   });
 
-  // use the access token to get information about the user
-  const user = new User(api_config, access_token);
-  const user_data = await user.get();
-  user.print_summary(user_data);
-
   // get information about all of the pins in the user's profile
-  const pin_iterator = await user.get_pins(user_data,
-    { query_parameters: { page_size: args.page_size } });
+  const user = new User(api_config, access_token);
+  const pin_iterator = await user.get_pins({
+    query_parameters: { page_size: args.page_size }
+  });
   await user.print_multiple(args.page_size, 'pin', Pin, pin_iterator);
 }
 

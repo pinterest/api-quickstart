@@ -30,7 +30,7 @@ describe('v5 user tests', () => {
 
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');
     mock_get_iterator.mockResolvedValue('test_iterator');
-    const iterator = await test_user.get_boards('test_user_data', 'query_parameters');
+    const iterator = await test_user.get_boards('query_parameters');
     expect('test_iterator').toEqual(iterator);
     expect(mock_get_iterator.mock.calls[0]).toEqual([
       '/v5/boards', 'query_parameters']);
@@ -50,7 +50,7 @@ describe('v5 user tests', () => {
 
     const expected_pins = ['board1_pin1', 'board1_pin2', 'board3_pin1'];
     let index = 0;
-    const pin_iterator = await test_user.get_pins('test_user_data', {});
+    const pin_iterator = await test_user.get_pins({});
     for await (const pin_data of pin_iterator) {
       expect(pin_data).toEqual(expected_pins[index]);
       index++;

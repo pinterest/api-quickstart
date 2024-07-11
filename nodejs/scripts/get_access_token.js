@@ -30,12 +30,17 @@ import { Scope, print_scopes } from '../src/oauth_scope.js';
  *    OAuth scopes, allows experimentation with different sets of scopes. Specifying scopes prevents
  *    the access token from being read from the environment or file system, and forces the use of
  *    the browser-based OAuth process.
+ *  -c / --client-credentials:
+ *    This option is used to request an access token for the user account
+ *    associated with the PINTEREST_APP_ID. Use this option to avoid the need
+ *    to do the manual part of the OAuth process with at web browser.
  */
 async function main(argv) {
   const parser = new ArgumentParser({ description: 'Get Pinterest OAuth token' });
   parser.add_argument('-w', '--write', { action: 'store_true', help: 'write access token to file' });
   parser.add_argument('-ct', '--cleartext', { action: 'store_true', help: 'print the token in clear text' });
   parser.add_argument('-s', '--scopes', { help: 'comma separated list of scopes or "help"' });
+  parser.add_argument('-c', '--client_credentials', { action: 'store_true', help: 'access the application user account' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
 
@@ -61,12 +66,12 @@ async function main(argv) {
       print_scopes();
       process.exit(1);
     });
-    await access_token.oauth({ scopes: scopes });
+    await access_token.oauth({ scopes, client_credentials: args.client_credentials });
   } else {
     // Try the different methods for getting an access token: from the environment,
     // from a file, and from Pinterest via the browser.
     try {
-      await access_token.fetch({});
+      await access_token.fetch({ client_credentials: args.client_credentials });
     } catch (error) { // probably because scopes are required
       parser.error(error);
     }
@@ -94,10 +99,13 @@ async function main(argv) {
     access_token.write();
   }
 
-  // use the access token to get information about the user
-  const user = new User(api_config, access_token);
-  const user_data = await user.get();
-  user.print_summary(user_data);
+  // Remove this conditional when GET /v5/user_account works with client credentials
+  if (!args.client_credentials) {
+    // use the access token to get information about the user
+    const user = new User(api_config, access_token);
+    const user_data = await user.get();
+    user.print_summary(user_data);
+  }
 }
 
 if (!process.env.TEST_ENV) {

@@ -55,17 +55,14 @@ def main(argv=[]):
     access_token = AccessToken(api_config, name=args.access_token)
     access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_BOARDS])
 
-    # use the access token to get information about the user
-    user = User(api_config, access_token)
-    user_data = user.get()
-
     # get information about all of the boards in the user's profile
+    user = User(api_config, access_token)
     query_parameters = {"page_size": args.page_size}
     if args.include_empty:
         query_parameters["include_empty"] = args.include_empty
     if args.include_archived:
         query_parameters["include_archived"] = args.include_archived
-    board_iterator = user.get_boards(user_data, query_parameters)
+    board_iterator = user.get_boards(query_parameters)
     user.print_multiple(args.page_size, "board", Board, board_iterator)
 
 
