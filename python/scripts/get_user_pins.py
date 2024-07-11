@@ -34,14 +34,9 @@ def main(argv=[]):
     access_token = AccessToken(api_config, name=args.access_token)
     access_token.fetch(scopes=[Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS])
 
-    # use the access token to get information about the user
-    user = User(api_config, access_token)
-    user_data = user.get()
-
     # get information about all of the pins in the user's profile
-    pin_iterator = user.get_pins(
-        user_data, query_parameters={"page_size": args.page_size}
-    )
+    user = User(api_config, access_token)
+    pin_iterator = user.get_pins(query_parameters={"page_size": args.page_size})
     user.print_multiple(args.page_size, "pin", Pin, pin_iterator)
 
 

@@ -26,7 +26,7 @@ class AccessToken(ApiCommon):
         b64auth = base64.b64encode(auth.encode("ascii")).decode("ascii")
         self.auth_headers = {"Authorization": "Basic " + b64auth}
 
-    def fetch(self, scopes=None, refreshable=True):
+    def fetch(self, scopes=None, client_credentials=False):
         """
         This method tries to make it as easy as possible for a developer
         to start using an OAuth access token. It fetches the access token
@@ -53,7 +53,7 @@ class AccessToken(ApiCommon):
         except Exception:
             print(f"reading {self.name} failed, trying oauth")
 
-        self.oauth(scopes=scopes, refreshable=refreshable)
+        self.oauth(scopes=scopes, client_credentials=client_credentials)
 
     def from_environment(self):
         """
@@ -118,44 +118,55 @@ class AccessToken(ApiCommon):
             raise RuntimeError("AccessToken does not have a refresh token")
         return hashlib.sha256(self.refresh_token.encode()).hexdigest()
 
-    def oauth(self, scopes=None, refreshable=True):
+    def _get_user_post_data(self, scopes):
         """
-        Execute the OAuth 2.0 process for obtaining an access token.
-        For more information, see IETF RFC 6749: https://tools.ietf.org/html/rfc6749
-        and https://developers.pinterest.com/docs/getting-started/authentication/
-
-        For v5, scopes are required and tokens must be refreshable.
+        When requesting an OAuth token for a user, the protocol requires going
+        through the process of getting an auth_code. This process allows the
+        user to approve the scopes requested by the application.
         """
-        if not scopes:
-            scopes = [Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS]
-            print(
-                "v5 requires scopes for OAuth. setting to default: "
-                f"{','.join(list(map(lambda scope: scope.value, scopes)))}"
-            )
-
-        if not refreshable:
-            raise ValueError(
-                "Pinterest API v5 only provides refreshable OAuth access tokens"
-            )
-
         print("getting auth_code...")
-        auth_code = get_auth_code(
-            self.api_config, scopes=scopes, refreshable=refreshable
-        )
+        auth_code = get_auth_code(self.api_config, scopes=scopes)
         print(f"exchanging auth_code for {self.name}...")
-        self.exchange_auth_code(auth_code)
 
-    def exchange_auth_code(self, auth_code):
-        """
-        Call the Pinterest API to exchange the auth_code (obtained by
-        a redirect from the browser) for the access_token and (if requested)
-        refresh_token.
-        """
-        post_data = {
+        # Generate POST data to exchange the auth_code (obtained by
+        # a redirect from the browser) for the access_token and a
+        # refresh_token.
+        return {
             "code": auth_code,
             "redirect_uri": self.api_config.redirect_uri,
             "grant_type": "authorization_code",
         }
+
+    def _get_client_post_data(self, scopes):
+        """
+        When requesting an OAuth token for the client, no auth_code is required
+        because the user is the same as the owner of the client.
+        """
+        print("getting access token using client credentials...")
+        return {
+            "grant_type": "client_credentials",
+            "scope": ",".join(list(map(lambda scope: scope.value, scopes))),
+        }
+
+    def oauth(self, scopes=None, client_credentials=False):
+        """
+        Execute the OAuth 2.0 process for obtaining an access token.
+        For more information, see IETF RFC 6749: https://tools.ietf.org/html/rfc6749
+        and https://developers.pinterest.com/docs/getting-started/authentication/
+        """
+        if not scopes:
+            scopes = [Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS]
+            print(
+                "OAuth scopes required. Setting to default: "
+                f"{','.join(list(map(lambda scope: scope.value, scopes)))}"
+            )
+
+        post_data = (
+            client_credentials
+            and self._get_client_post_data(scopes)
+            or self._get_user_post_data(scopes)
+        )
+
         if self.api_config.verbosity >= 2:
             print("POST", self.api_config.api_uri + "/v5/oauth/token")
             if self.api_config.verbosity >= 3:
@@ -170,7 +181,7 @@ class AccessToken(ApiCommon):
 
         print("scope: " + unpacked["scope"])
         self.access_token = unpacked["access_token"]
-        self.refresh_token = unpacked["refresh_token"]
+        self.refresh_token = unpacked.get("refresh_token")
         self.scopes = unpacked["scope"]
 
     def refresh(self, continuous=False):

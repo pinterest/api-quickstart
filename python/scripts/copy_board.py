@@ -158,8 +158,7 @@ def main(argv=[]):
 
     if args.all_boards:  # copy all boards for the source user
         user = User(api_config, source_token)
-        user_data = user.get()
-        boards = user.get_boards(user_data)
+        boards = user.get_boards()
         source_board = Board(
             None, api_config, source_token
         )  # board_id set in loop below

@@ -45,6 +45,10 @@ def main(argv=[]):
        allows experimentation with different sets of scopes. Specifying scopes prevents
        the access token from being read from the environment or file system, and forces
        the use of the browser-based OAuth process.
+     -c / --client-credentials:
+       This option is used to request an access token for the user account
+       associated with the PINTEREST_APP_ID. Use this option to avoid the need
+       to do the manual part of the OAuth process with at web browser.
     """
     parser = argparse.ArgumentParser(description="Get Pinterest OAuth token")
     parser.add_argument(
@@ -55,6 +59,12 @@ def main(argv=[]):
     )
     parser.add_argument(
         "-s", "--scopes", help="comma separated list of scopes or 'help'"
+    )
+    parser.add_argument(
+        "-c",
+        "--client-credentials",
+        action="store_true",
+        help="access the application user account",
     )
     common_arguments(parser)
     args = parser.parse_args(argv)
@@ -70,10 +80,10 @@ def main(argv=[]):
         # use the comma-separated list of scopes passed as a command-line argument
         scope_list = args.scopes.split(",")
         scopes = list(map(lookup_scope, scope_list))
-        access_token.oauth(scopes=scopes)
+        access_token.oauth(scopes=scopes, client_credentials=args.client_credentials)
     else:
         try:
-            access_token.fetch()
+            access_token.fetch(client_credentials=args.client_credentials)
         except ValueError as err:
             # ValueError indicates that something was wrong with the arguments
             parser.error(err)
@@ -98,11 +108,13 @@ def main(argv=[]):
         print("writing access token")
         access_token.write()
 
-    # Use the access token to get information about the user. The purpose of this
-    # call is to verify that the access token is working.
-    user = User(api_config, access_token)
-    user_data = user.get()
-    user.print_summary(user_data)
+    # Remove this conditional when GET /v5/user_account works with client credentials
+    if not args.client_credentials:
+        # Use the access token to get information about the user. The purpose of this
+        # call is to verify that the access token is working.
+        user = User(api_config, access_token)
+        user_data = user.get()
+        user.print_summary(user_data)
 
 
 # If this script is being called from the command line, call the main function

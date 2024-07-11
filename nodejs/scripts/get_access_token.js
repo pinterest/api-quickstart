@@ -30,13 +30,17 @@ import { Scope, print_scopes } from '../src/oauth_scope.js';
  *    OAuth scopes, allows experimentation with different sets of scopes. Specifying scopes prevents
  *    the access token from being read from the environment or file system, and forces the use of
  *    the browser-based OAuth process.
+ *  -c / --client-credentials:
+ *    This option is used to request an access token for the user account
+ *    associated with the PINTEREST_APP_ID. Use this option to avoid the need
+ *    to do the manual part of the OAuth process with at web browser.
  */
 async function main(argv) {
   const parser = new ArgumentParser({ description: 'Get Pinterest OAuth token' });
   parser.add_argument('-w', '--write', { action: 'store_true', help: 'write access token to file' });
   parser.add_argument('-ct', '--cleartext', { action: 'store_true', help: 'print the token in clear text' });
   parser.add_argument('-s', '--scopes', { help: 'comma separated list of scopes or "help"' });
-  parser.add_argument('-c', '--client_credentials', { action: 'store_true', help: 'use client credentials' });
+  parser.add_argument('-c', '--client_credentials', { action: 'store_true', help: 'access the application user account' });
   common_arguments(parser);
   const args = parser.parse_args(argv);
 

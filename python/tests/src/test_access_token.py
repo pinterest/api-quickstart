@@ -111,7 +111,7 @@ class AccessTokenTest(unittest.TestCase):
 
         # mock does not figure out enum equality, so need to unpack arguments
         # of get_auth_code in order to check the default value for scopes.
-        self.assertTrue(mock_get_auth_code.mock_calls[0][2]["refreshable"])
+        self.assertNotIn("refreshable", mock_get_auth_code.mock_calls[0][2])
         scopes = mock_get_auth_code.mock_calls[0][2]["scopes"]
         # convert from Scope enum to values
         values = list(map(lambda scope: scope.value, scopes))
@@ -122,6 +122,14 @@ class AccessTokenTest(unittest.TestCase):
             "code=test-auth-code"
             + "&redirect_uri=test-redirect-uri"
             + "&grant_type=authorization_code",
+        )
+
+        # verify OAuth with client credentials
+        access_token.oauth(client_credentials=True)
+        self.assertEqual(
+            rm.last_request.text,
+            "grant_type=client_credentials"
+            + "&scope=user_accounts%3Aread%2Cpins%3Aread%2Cboards%3Aread",
         )
 
         rm.post(
@@ -203,12 +211,7 @@ class AccessTokenTest(unittest.TestCase):
         )
         mock_get_auth_code.reset_mock()
         access_token = AccessToken(mock_api_config)
-        access_token.oauth(scopes=["test-scope-1", "test-scope-2"], refreshable=True)
+        access_token.oauth(scopes=["test-scope-1", "test-scope-2"])
         mock_get_auth_code.assert_called_once_with(
-            mock_api_config, scopes=["test-scope-1", "test-scope-2"], refreshable=True
+            mock_api_config, scopes=["test-scope-1", "test-scope-2"]
         )
-
-        with self.assertRaisesRegex(
-            ValueError, "Pinterest API v5 only provides refreshable OAuth access tokens"
-        ):
-            access_token.oauth(refreshable=False)

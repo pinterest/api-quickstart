@@ -46,7 +46,7 @@ def main(argv=[]):
     if args.all_boards:  # delete all boards for the user
         user = User(api_config, access_token)
         user_data = user.get()
-        boards = user.get_boards(user_data)
+        boards = user.get_boards()
         confirmation = f"Delete all boards for {user_data['username']}"
     else:  # copy just the board designated by board_id
         deletion_board = Board(args.board_id, api_config, access_token)
