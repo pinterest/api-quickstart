@@ -78,13 +78,13 @@ wc "${DOCNAME}"
 
 # get ad group analytics
 DOCNAME=${OUTPUT_PREFIX}_ad_group_analytics.json
-    printf "${DOCNAME}\n" | \
+    printf "1\n${DOCNAME}\n" | \
          ./scripts/get_analytics.${EXT} -a "${TEST3}" -o ad_group --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
     wc "${DOCNAME}"
 
 # get ad analytics
 DOCNAME=${OUTPUT_PREFIX}_ad_analytics.json
-printf "${DOCNAME}\n" | \
+printf "1\n1\n${DOCNAME}\n" | \
     ./scripts/get_analytics.${EXT} -a "${TEST3}" -o ad --ad-account-id ${TEST3_AD_ACCOUNT_ID} --campaign-id ${TEST3_CAMPAIGN_ID}
 wc "${DOCNAME}"
 
