@@ -50,7 +50,7 @@ Here is a list of common arguments that work with all scripts:
 Below you will find a description of each script along with an example of its help documentation.
 
 ### [get_access_token.py](./scripts/get_access_token.py)
- Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v5/user_account` [endpoint](https://developers.pinterest.com/docs/api/v5/#tag/user_account). Running this script with the `-w` parameter (`./scripts/get_access_token.py -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use. Use `-w` parameter in combination with the `-a` (access token name) parameter to store separate access tokens for different purposes. When requesting an access token without specifying scopes, the script will default to `user_accounts:read` `pins:read` and `boards:read`. To see a complete list of scopes, refer to the Enums in [`./src/v5/oauth_scope.py`](./src/v5/oauth_scope.py). You can also run `./scripts/get_access_token.py -s help` to see the scopes.
+ Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v5/user_account` [endpoint](https://developers.pinterest.com/docs/api/v5/#tag/user_account). Running this script with the `-w` parameter (`./scripts/get_access_token.py -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use. Use `-w` parameter in combination with the `-a` (access token name) parameter to store separate access tokens for different purposes. When requesting an access token without specifying scopes, the script will default to `user_accounts:read` `pins:read` and `boards:read`. To see a complete list of scopes, refer to the Enums in [`./src/oauth_scope.py`](./src/oauth_scope.py). You can also run `./scripts/get_access_token.py -s help` to see the scopes.
 
 <!--gen-->
 ```
@@ -99,7 +99,7 @@ Valid OAuth 2.0 scopes for Pinterest API version v5:
   user_accounts:read  Read access to user accounts
 
 For more information, see:
-  https://developers.pinterest.com/docs/getting-started/scopes/
+  https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/#pinterest-scopes
 ```
 
 ### [refresh_example.py](./scripts/refresh_example.py)

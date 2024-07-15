@@ -21,7 +21,7 @@ PHP code that demonstrates the basics of how to use the Pinterest API.
    ```
    $ php -S localhost:8085
    ```
-6. [Click here](http://localhost:8085/) or point your browser at http://localhost:8085.
+6. [Click here](http://localhost:8085/) or point your browser at `http://localhost:8085`.
 
 ## Troubleshooting
 

@@ -27,7 +27,8 @@ echo 'getting auth_code...'
 
 # Specify the scopes for the user to authorize via OAuth.
 # This example requests typical read-only authorization.
-# For more information, see: https://developers.pinterest.com/docs/getting-started/authentication/
+# For more information, see: 
+# https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/#requesting-the-right-scopes-for-your-app
 SCOPE="user_accounts:read"
 
 # This call opens the browser with the oauth information in the URI.

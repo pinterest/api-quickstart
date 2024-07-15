@@ -102,7 +102,7 @@ Valid OAuth 2.0 scopes for Pinterest API version v5:
   user_accounts:read  Read access to user accounts
 
 For more information, see:
-  https://developers.pinterest.com/docs/getting-started/scopes/
+  https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/#pinterest-scopes
 ```
 
 ### [refresh_example.js](./scripts/refresh_example.js)
