@@ -153,7 +153,7 @@ class AccessToken(ApiCommon):
         Execute the OAuth 2.0 process for obtaining an access token.
         For more information, see IETF RFC 6749: https://tools.ietf.org/html/rfc6749
         and https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/
-        """
+        """  # noqa: E501 because the long URL is okay
         if not scopes:
             scopes = [Scope.READ_USERS, Scope.READ_PINS, Scope.READ_BOARDS]
             print(
