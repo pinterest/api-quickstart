@@ -1,9 +1,12 @@
 from enum import Enum
 
 
-# Enumerate the valid OAuth scopes.
-# For details, see: https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/#pinterest-scopes
 class Scope(Enum):
+    """
+    Enumerate the valid OAuth scopes.
+    For details, see: https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/#pinterest-scopes
+    """  # noqa: E501 because the long URL is okay
+
     READ_ADS = "ads:read"
     WRITE_ADS = "ads:write"
     READ_BOARDS = "boards:read"
@@ -61,5 +64,6 @@ Valid OAuth 2.0 scopes for Pinterest API version v5:
   user_accounts:read  Read access to user accounts
 
 For more information, see:
-  https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/#pinterest-scopes"""
+  https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/#pinterest-scopes\
+"""  # noqa: E501 because the long URL is okay
     )
