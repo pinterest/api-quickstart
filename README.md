@@ -1,6 +1,6 @@
 # pinterest/api-quickstart
 
-Code that makes it easy to get started with the Pinterest API.
+Code that makes it easy to get started with the Pinterest API. For full details see the [getting started](https://developers.pinterest.com/docs/overview/welcome/) documentation.
 
 ## Purpose
 
@@ -12,8 +12,8 @@ This quickstart used to support Pinterest API version v3 and v4, but that code h
 
 1. Set up the environment with your credentials (app ID and secret). This configuration works with the code in all of the language-specific directories.
 
-   * Get an application ID and secret by hitting the "Connect app" button at [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/). You may first need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/getting-started/getting-access/) to the Pinterest API. You can also find step-by-step instructions on the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/).
-   * Once your app is connected, hit the Manage button for the app on [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/) to see your App id and App secret key. (Click the Show key button to see the App secret key.)
+   * Get an application ID and secret by hitting the "Connect app" button at the [apps dashboard](https://developers.pinterest.com/apps/). You may first need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/getting-started/getting-access/) to the Pinterest API. You can also find step-by-step instructions on the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/).
+   * Once your app is connected, hit the Manage button for the app on the [apps dashboard](https://developers.pinterest.com/apps/) to see your App id and App secret key. (Click the Show key button to see the App secret key.)
    * Put your App ID and App secret key in an environment script file.
      ```
      $ cd common/scripts
@@ -22,7 +22,7 @@ This quickstart used to support Pinterest API version v3 and v4, but that code h
      $ cd ../..
      ```
    * Configure the OAuth2 redirect URI required by this code.
-     1. Click on the Manage button for your application at [https://developers.pinterest.com/apps/](https://developers.pinterest.com/apps/).
+     1. Click on the Manage button for your application at the [apps dashboard](https://developers.pinterest.com/apps/).
      2. In the box labeled "Redirect link," enter `http://localhost:8085/`.
      3. Hit the return (enter) key or the Add button to save redirect URI (link).
    * Run the environment set-up script and verify the results.
@@ -53,7 +53,7 @@ This quickstart used to support Pinterest API version v3 and v4, but that code h
 
 ## OAuth 2.0 Authorization
 
-Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). To learn about how to use OAuth 2.0 with the Pinterest API, check out the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/). For details regarding OAuth, please refer to our [v5 developer docs](https://developers.pinterest.com/docs/getting-started/authentication/). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
+Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). To learn about how to use OAuth 2.0 with the Pinterest API, check out the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/). For details regarding OAuth, please refer to our [v5 developer docs](https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
 
 An access token is used to authenticate most API calls. In general, access tokens are valid for relatively long periods of time, in order to avoid asking users to go through the OAuth flow too often. When an access token expires, it is possible to refresh the token -- a capability that the code in this repo also demonstrates.
 
