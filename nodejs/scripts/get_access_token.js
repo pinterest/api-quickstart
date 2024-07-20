@@ -99,13 +99,10 @@ async function main(argv) {
     access_token.write();
   }
 
-  // Remove this conditional when GET /v5/user_account works with client credentials
-  if (!args.client_credentials) {
-    // use the access token to get information about the user
-    const user = new User(api_config, access_token);
-    const user_data = await user.get();
-    user.print_summary(user_data);
-  }
+  // use the access token to get information about the user
+  const user = new User(api_config, access_token);
+  const user_data = await user.get();
+  user.print_summary(user_data);
 }
 
 if (!process.env.TEST_ENV) {

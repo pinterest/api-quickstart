@@ -108,13 +108,11 @@ def main(argv=[]):
         print("writing access token")
         access_token.write()
 
-    # Remove this conditional when GET /v5/user_account works with client credentials
-    if not args.client_credentials:
-        # Use the access token to get information about the user. The purpose of this
-        # call is to verify that the access token is working.
-        user = User(api_config, access_token)
-        user_data = user.get()
-        user.print_summary(user_data)
+    # Use the access token to get information about the user. The purpose of this
+    # call is to verify that the access token is working.
+    user = User(api_config, access_token)
+    user_data = user.get()
+    user.print_summary(user_data)
 
 
 # If this script is being called from the command line, call the main function
