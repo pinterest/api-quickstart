@@ -12,7 +12,7 @@ This quickstart used to support Pinterest API version v3 and v4, but that code h
 
 1. Set up the environment with your credentials (app ID and secret). This configuration works with the code in all of the language-specific directories.
 
-   * Get an application ID and secret by hitting the "Connect app" button at the [apps dashboard](https://developers.pinterest.com/apps/). You may first need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/getting-started/getting-access/) to the Pinterest API. You can also find step-by-step instructions on the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/).
+   * Get an application ID and secret by hitting the "Connect app" button at the [apps dashboard](https://developers.pinterest.com/apps/). You may first need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/getting-started/connect-app/) to the Pinterest API. You can also find step-by-step instructions on the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/).
    * Once your app is connected, hit the Manage button for the app on the [apps dashboard](https://developers.pinterest.com/apps/) to see your App id and App secret key. (Click the Show key button to see the App secret key.)
    * Put your App ID and App secret key in an environment script file.
      ```

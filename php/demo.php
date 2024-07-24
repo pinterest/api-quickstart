@@ -72,7 +72,7 @@ Here is the user account information fetched from the API in JSON.
         "Authorization:" . 'Bearer ' . $access_token
     );
 
-    /* https://developers.pinterest.com/docs/api/v5/#tag/user_account */
+    /* https://developers.pinterest.com/docs/api/v5/user_account-get/ */
     $url = "https://api.pinterest.com/v5/user_account";
     $result = Call_Pinterest_api($url, $headers);
 
@@ -99,7 +99,7 @@ Here is the user account information fetched from the API in JSON.
 Here is the first regular (static image) Pin in the user's account in JSON.
 </p>
     <?php
-    /* https://developers.pinterest.com/docs/api/v5/#tag/pins */
+    /* https://developers.pinterest.com/docs/api/v5/pins-list/ */
     $url = "https://api.pinterest.com/v5/pins"
          . "?page_size=1&creative_types=REGULAR";
     $result = Call_Pinterest_api($url, $headers);

@@ -4,7 +4,7 @@ import { AsyncReport } from './async_report.js';
 /**
  * Specifies all of the attributes for the async advertiser
  * metrics report. For more information, see:
- *  https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report
+ *  https://developers.pinterest.com/docs/api/v5/analytics-create_report/
  *
  *
  * The attribute functions are chainable. For example:

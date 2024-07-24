@@ -9,7 +9,7 @@ from async_report import AsyncReport
 class AdMetricsAsyncReport(AdAnalyticsAttributes, AsyncReport):
     """
     For documentation, see:
-    https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report
+    https://developers.pinterest.com/docs/api/v5/analytics-create_report/
 
     The attribute functions are chainable. For example:
     report = DeliveryMetricsAsyncReport(api_config, access_token, advertiser_id) \

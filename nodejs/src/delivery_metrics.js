@@ -6,7 +6,7 @@ export class DeliveryMetrics extends ApiObject {
   // Get the full list of all available delivery metrics.
   // This call is not used much in day-to-day API code, but is a useful endpoint
   // for learning about the metrics.
-  // https://developers.pinterest.com/docs/api/v5/#operation/delivery_metrics/get
+  // https://developers.pinterest.com/docs/api/v5/delivery_metrics-get/
   async get() {
     return (await this.request_data('/v5/resources/delivery_metrics')).items;
   }

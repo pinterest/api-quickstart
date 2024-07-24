@@ -6,7 +6,7 @@ class Pin(ApiMediaObject):
         super().__init__(api_config, access_token)
         self.pin_id = pin_id
 
-    # https://developers.pinterest.com/docs/api/v5/#operation/pins/get
+    # https://developers.pinterest.com/docs/api/v5/pins-get/
     def get(self):
         return self.request_data("/v5/pins/{}".format(self.pin_id))
 
@@ -22,7 +22,7 @@ class Pin(ApiMediaObject):
         # print('Native format type: ' + pin_data['native_format_type'])
         print("--------------------")
 
-    # https://developers.pinterest.com/docs/api/v5/#operation/pins/save
+    # https://developers.pinterest.com/docs/api/v5/pins-save/
     def save(self, board_id, section=None):
         if not self.pin_id:
             raise RuntimeError("pin_id must be set to save a pin")
@@ -46,7 +46,7 @@ class Pin(ApiMediaObject):
                 url = image["url"]
         return url
 
-    # https://developers.pinterest.com/docs/api/v5/#operation/pins/create
+    # https://developers.pinterest.com/docs/api/v5/pins-create/
     def create(self, pin_data, board_id, section=None, media=None):
         """
         Create a pin from a pin_data structure that is returned by GET.
@@ -65,7 +65,7 @@ class Pin(ApiMediaObject):
             "board_id": board_id,
         }
 
-        # https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
+        # https://developers.pinterest.com/docs/api-features/creating-boards-and-pins/#creating-video-pins
         media_id = self.media_to_media_id(media)
 
         image_url = self.max_resolution_image_url(pin_data)
@@ -94,7 +94,7 @@ class Pin(ApiMediaObject):
         self.pin_id = pin_data["id"]
         return pin_data
 
-    # https://developers.pinterest.com/docs/api/v5/#operation/media/create
+    # https://developers.pinterest.com/docs/api/v5/media-create/
     def upload_media(self, media_path):
         """
         Upload a video from the specified path and return a media_id.
@@ -106,7 +106,7 @@ class Pin(ApiMediaObject):
         )
         return media_upload["media_id"]
 
-    # https://developers.pinterest.com/docs/api/v5/#operation/media/get
+    # https://developers.pinterest.com/docs/api/v5/media-get/
     def check_media_id(self, media_id):
         """
         Poll for the status of the media until it is complete.

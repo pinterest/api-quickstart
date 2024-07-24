@@ -13,7 +13,7 @@ export class AsyncReport extends ApiObject {
   }
 
   // For documentation, see:
-  // https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report
+  // https://developers.pinterest.com/docs/api/v5/analytics-get_report/
   async request_report(post_data_attributes) {
     this.token = (await this.post_data(this.path, post_data_attributes)).token;
     return this.token; // so that tests can verify the token

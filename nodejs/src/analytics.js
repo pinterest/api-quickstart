@@ -24,7 +24,7 @@ import { ApiObject } from './api_object.js';
  * to fetch the metrics.
  */
 export class UserAnalytics extends AnalyticsAttributes {
-  // https://developers.pinterest.com/docs/api/v5/#operation/user_account/analytics
+  // https://developers.pinterest.com/docs/api/v5/user_account-analytics/
   constructor(_user_id, api_config, access_token) {
     super();
     this.api_object = new ApiObject(api_config, access_token);
@@ -65,7 +65,7 @@ export class UserAnalytics extends AnalyticsAttributes {
 
   // Get analytics for the user account. If ad_account_id is set, get user
   // analytics associated with the specified Ad Account.
-  // https://developers.pinterest.com/docs/api/v5/#operation/user_account/analytics
+  // https://developers.pinterest.com/docs/api/v5/pins-analytics/
   async get(ad_account_id) {
     if (ad_account_id) {
       this.attrs.ad_account_id = ad_account_id;
@@ -97,7 +97,7 @@ ${this.uri_attributes('metric_types', false)}`);
  * to fetch the metrics.
  */
 export class PinAnalytics extends AnalyticsAttributes {
-  // https://developers.pinterest.com/docs/api/v5/#operation/pins/analytics
+  // https://developers.pinterest.com/docs/api/v5/user_account-analytics/
   constructor(pin_id, api_config, access_token) {
     super();
     this.pin_id = pin_id;
@@ -165,7 +165,7 @@ export class AdAnalytics extends AdAnalyticsAttributes {
     this.api_object = new ApiObject(api_config, access_token);
     this.required_attrs.add('granularity');
     Object.assign(this.enumerated_values, {
-      // https://developers.pinterest.com/docs/api/v5/#operation/ad_account/analytics
+      // https://developers.pinterest.com/docs/api/v5/ad_account-analytics/
       conversion_report_time: ['TIME_OF_AD_ACTION', 'TIME_OF_CONVERSION']
     });
   }
@@ -179,13 +179,13 @@ export class AdAnalytics extends AdAnalyticsAttributes {
   }
 
   // Get analytics for the ad account.
-  // https://developers.pinterest.com/docs/api/v5/#operation/ad_account/analytics
+  // https://developers.pinterest.com/docs/api/v5/ad_account-analytics/
   async get_ad_account(ad_account_id) {
     return await this.request(`/v5/ad_accounts/${ad_account_id}/analytics?`);
   }
 
   // Get analytics for the campaign.
-  // https://developers.pinterest.com/docs/api/v5/#operation/campaigns/analytics
+  // https://developers.pinterest.com/docs/api/v5/campaigns-analytics/
   async get_campaign(ad_account_id, campaign_id) {
     return await this.request(`\
 /v5/ad_accounts/${ad_account_id}/campaigns/analytics\
@@ -193,7 +193,7 @@ export class AdAnalytics extends AdAnalyticsAttributes {
   }
 
   // Get analytics for the ad group.
-  // https://developers.pinterest.com/docs/api/v5/#operation/ad_groups/analytics
+  // https://developers.pinterest.com/docs/api/v5/ad_groups-analytics/
   async get_ad_group(ad_account_id, _campaign_id, ad_group_id) {
     return await this.request(`\
 /v5/ad_accounts/${ad_account_id}/ad_groups/analytics\
@@ -201,7 +201,7 @@ export class AdAnalytics extends AdAnalyticsAttributes {
   }
 
   // Get analytics for the ad.
-  // https://developers.pinterest.com/docs/api/v5/#operation/ads/analytics
+  // https://developers.pinterest.com/docs/api/v5/ads-analytics/
   async get_ad(ad_account_id, _campaign_id, _ad_group_id, ad_id) {
     return await this.request(`\
 /v5/ad_accounts/${ad_account_id}/ads/analytics\

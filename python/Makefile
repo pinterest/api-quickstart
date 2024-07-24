@@ -32,5 +32,7 @@ lint-fix:
 
 # Run this command after changing the help text for a script,
 # so that the usage.md file is updated.
+# Note: The line length of the resulting README file depends
+# on the width of the terminal used to run this command.
 help-doc:
 	../common/scripts/help_doc_generator ./README.md

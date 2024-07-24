@@ -1,7 +1,7 @@
 import { ApiObject } from './api_object.js';
 
 export class User extends ApiObject {
-  // https://developers.pinterest.com/docs/api/v5/#tag/user_account
+  // https://developers.pinterest.com/docs/api/v5/user_account-get/
   async get() {
     return await super.request_data('/v5/user_account');
   }
@@ -15,13 +15,13 @@ export class User extends ApiObject {
     console.log('--------------------');
   }
 
-  // https://developers.pinterest.com/docs/api/v5/#operation/boards/list
+  // https://developers.pinterest.com/docs/api/v5/boards-list/
   async get_boards(query_parameters = {}) {
     // iterator that handles API paging
     return this.get_iterator('/v5/boards', query_parameters);
   }
 
-  // getting all of a user's pins is not supported, so iterate through boards
+  // https://developers.pinterest.com/docs/api/v5/pins-list/
   async get_pins(query_parameters = {}) {
     return this.get_iterator('/v5/pins', query_parameters);
   }

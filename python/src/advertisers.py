@@ -5,7 +5,7 @@ class Advertisers(ApiObject):
     def __init__(self, _user_id, api_config, access_token):
         super().__init__(api_config, access_token)
 
-    # https://developers.pinterest.com/docs/api/v5/#operation/ad_accounts/list
+    # https://developers.pinterest.com/docs/api/v5/ad_accounts-list/
     def get(self, query_parameters=None):
         """
         Get the advertisers shared with the specified user_id.
@@ -39,7 +39,7 @@ class Advertisers(ApiObject):
             summary = f"[{idx+1}] {cls.summary(element, kind)}"
             print(summary)
 
-    # https://developers.pinterest.com/docs/api/v5/#operation/campaigns/list
+    # https://developers.pinterest.com/docs/api/v5/campaigns-list/
     def get_campaigns(self, ad_account_id, query_parameters=None):
         """
         Get the campaigns associated with an Ad Account.
@@ -48,7 +48,7 @@ class Advertisers(ApiObject):
             f"/v5/ad_accounts/{ad_account_id}/campaigns", query_parameters
         )
 
-    # https://developers.pinterest.com/docs/api/v5/#operation/ad_groups/listp
+    # https://developers.pinterest.com/docs/api/v5/ad_groups-list/
     def get_ad_groups(self, ad_account_id, campaign_id, query_parameters=None):
         """
         Get the ad groups associated with an Ad Account and Campaign.
@@ -58,7 +58,7 @@ class Advertisers(ApiObject):
             query_parameters,
         )
 
-    # https://developers.pinterest.com/docs/api/v5/#operation/ads/list
+    # https://developers.pinterest.com/docs/api/v5/ads-list/
     def get_ads(self, ad_account_id, campaign_id, ad_group_id, query_parameters=None):
         """
         Get the ads associated with an Ad Account, Campaign, and Ad Group.
