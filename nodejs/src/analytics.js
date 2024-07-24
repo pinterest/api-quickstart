@@ -65,7 +65,7 @@ export class UserAnalytics extends AnalyticsAttributes {
 
   // Get analytics for the user account. If ad_account_id is set, get user
   // analytics associated with the specified Ad Account.
-  // https://developers.pinterest.com/docs/api/v5/pins-analytics/
+  // https://developers.pinterest.com/docs/api/v5/user_account-analytics/
   async get(ad_account_id) {
     if (ad_account_id) {
       this.attrs.ad_account_id = ad_account_id;
@@ -97,7 +97,7 @@ ${this.uri_attributes('metric_types', false)}`);
  * to fetch the metrics.
  */
 export class PinAnalytics extends AnalyticsAttributes {
-  // https://developers.pinterest.com/docs/api/v5/user_account-analytics/
+  // https://developers.pinterest.com/docs/api/v5/pins-analytics/
   constructor(pin_id, api_config, access_token) {
     super();
     this.pin_id = pin_id;
