@@ -24,7 +24,7 @@ def main(argv=[]):
     from a Pinterest Solutions Engineer that has been useful to advertiser and
     partner engineers who need to fetch a wide range of metrics.
     The documentation for this API is here:
-      https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
+      https://developers.pinterest.com/docs/api-features/analytics-overview/
 
     Synchronous metrics retrieval is demonstrated by the get_analytics script
     in this directory.
@@ -85,9 +85,9 @@ def main(argv=[]):
     We often recommend that they set up a new "developer" Pinterest user,
     and then request that this new account is granted access to the
     advertiser account via:
-      https://help.pinterest.com/en/business/article/add-people-to-your-ad-account
-    This process is also touched on in the API docs:
-      https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
+      https://help.pinterest.com/en/business/article/share-and-manage-access-to-your-ad-accounts
+    This process is also described in the Developer Platform documentation:
+      https://developers.pinterest.com/docs/getting-started/using-business-access/
     """  # noqa: E501 because the long URL is okay
     advertisers = Advertisers(user_id, api_config, access_token)
     advertisers_data = list(advertisers.get())
@@ -112,7 +112,7 @@ def main(argv=[]):
 
     """
     Step 3: Learn more about the metrics available
-      https://developers.pinterest.com/docs/api/v5/#operation/delivery_metrics/get
+      https://developers.pinterest.com/docs/api/v5/delivery_metrics-get/
     """  # noqa: E501 because the long URL is okay
 
     # the output of delivery_metrics.get() is too long to be printed
@@ -139,7 +139,7 @@ def main(argv=[]):
     """
     Step 4: Configure the options for the report
     For documentation on async reports, see:
-      https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/reports
+      https://developers.pinterest.com/docs/api/v5/analytics-create_report
     """
     print(f"Requesting report for advertiser id {advertiser_id}...")
 

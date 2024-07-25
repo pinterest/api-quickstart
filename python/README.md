@@ -50,13 +50,13 @@ Here is a list of common arguments that work with all scripts:
 Below you will find a description of each script along with an example of its help documentation.
 
 ### [get_access_token.py](./scripts/get_access_token.py)
- Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v5/user_account` [endpoint](https://developers.pinterest.com/docs/api/v5/#tag/user_account). Running this script with the `-w` parameter (`./scripts/get_access_token.py -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use. Use `-w` parameter in combination with the `-a` (access token name) parameter to store separate access tokens for different purposes. When requesting an access token without specifying scopes, the script will default to `user_accounts:read` `pins:read` and `boards:read`. To see a complete list of scopes, refer to the Enums in [`./src/oauth_scope.py`](./src/oauth_scope.py). You can also run `./scripts/get_access_token.py -s help` to see the scopes.
+ Quick start code that demonstrates the OAuth 2.0 flow and tests the authentication by reading the user profile using the `/v5/user_account` [endpoint](https://developers.pinterest.com/docs/api/v5/user_account-get/). Running this script with the `-w` parameter (`./scripts/get_access_token.py -w`) stores the access token in `../common/oauth_tokens/access_token.json` for future use. Use `-w` parameter in combination with the `-a` (access token name) parameter to store separate access tokens for different purposes. When requesting an access token without specifying scopes, the script will default to `user_accounts:read` `pins:read` and `boards:read`. To see a complete list of scopes, refer to the Enums in [`./src/oauth_scope.py`](./src/oauth_scope.py). You can also run `./scripts/get_access_token.py -s help` to see the scopes.
 
 <!--gen-->
 ```
 $ ./scripts/get_access_token.py --help
 
-usage: get_access_token.py [-h] [-w] [-ct] [-s SCOPES] [-a ACCESS_TOKEN]
+usage: get_access_token.py [-h] [-w] [-ct] [-s SCOPES] [-c] [-a ACCESS_TOKEN]
                            [-l LOG_LEVEL]
 
 Get Pinterest OAuth token
@@ -67,6 +67,8 @@ options:
   -ct, --cleartext      print the token in clear text
   -s SCOPES, --scopes SCOPES
                         comma separated list of scopes or 'help'
+  -c, --client-credentials
+                        access the application user account
   -a ACCESS_TOKEN, --access-token ACCESS_TOKEN
                         access token name
   -l LOG_LEVEL, --log-level LOG_LEVEL
@@ -142,7 +144,7 @@ options:
 ```
 
 ### [get_pin.py](./scripts/get_pin.py)
- Retrieves the information for a specific board with the `/v5/pins/{pin_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/get).
+ Retrieves the information for a specific board with the `/v5/pins/{pin_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/pins-get/).
 <!--gen-->
 ```
 $ ./scripts/get_pin.py --help
@@ -162,7 +164,7 @@ options:
 ```
 
 ### [get_board.py](./scripts/get_board.py)
- Retrieves the information for a specific board with the `/v5/boards/{board_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/get).
+ Retrieves the information for a specific board with the `/v5/boards/{board_id}` [endpoint](https://developers.pinterest.com/docs/api/v5/boards-get/).
 <!--gen-->
 ```
 $ ./scripts/get_board.py --help
@@ -203,7 +205,7 @@ options:
 ```
 
 ### [get_user_boards.py](./scripts/get_user_boards.py)
-Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/list), using the paging mechanism of the API.
+Retrieves all of the boards for a user with the `/v5/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/boards-list/), using the paging mechanism of the API.
 <!--gen-->
 ```
 $ ./scripts/get_user_boards.py --help
@@ -230,7 +232,7 @@ options:
 ```
 
 ### [copy_pin.py](./scripts/copy_pin.py)
-Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/pins/create) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest. Note that `copy_pin.py` can create a video pin from an image pin by suppling the `-m/--media` argument, which is either a Pinterest media identifier (a number) or the path name of a file that contains a video.
+Demonstration of how to use the `POST /v5/pins` [endpoint](https://developers.pinterest.com/docs/api/v5/pins-create/) to create a pin. Copying a pin can be useful functionality for API developers, but does not represent typical user behavior on Pinterest. Note that `copy_pin.py` can create a video pin from an image pin by suppling the `-m/--media` argument, which is either a Pinterest media identifier (a number) or the path name of a file that contains a video.
 <!--gen-->
 ```
 $ ./scripts/copy_pin.py --help
@@ -257,7 +259,7 @@ options:
 ```
 
 ### [copy_board.py](./scripts/copy_board.py)
- Demonstration of how to use the `POST /v5/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/boards/create) to create a board. Also uses the `POST /boards/{board_id}/sections` [endpoint](https://developers.pinterest.com/docs/api/v5/#operation/board_sections/create) to create board sections. This script accepts source and target access tokens, so that a board can be copied from one account to another. It also provides an `--all` option that copies all of the boards and pins from a source account into a target account. Copying one or multiple boards can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
+ Demonstration of how to use the `POST /v5/boards` [endpoint](https://developers.pinterest.com/docs/api/v5/boards-create/) to create a board. Also uses the `POST /boards/{board_id}/sections` [endpoint](https://developers.pinterest.com/docs/api/v5/board_sections-create/) to create board sections. This script accepts source and target access tokens, so that a board can be copied from one account to another. It also provides an `--all` option that copies all of the boards and pins from a source account into a target account. Copying one or multiple boards can be useful functionality for API developers, but does not represent typical user behavior on Pinterest.
 <!--gen-->
 ```
 $ ./scripts/copy_board.py --help
@@ -338,7 +340,7 @@ options:
 ```
 
 ### [analytics_api_example.py](./scripts/analytics_api_example.py)
-Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/api/v5/#operation/analytics/create_report) and [get](https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report) endpoints.
+Demonstrates how to use the API to generate an asynchronous delivery metrics report using the [create](https://developers.pinterest.com/docs/api/v5/analytics-create_report/) and [get](https://developers.pinterest.com/docs/api/v5/analytics-get_report/) endpoints.
 
 <!--gen-->
 ```

@@ -12,7 +12,7 @@ class DeliveryMetrics(ApiObject):
 
     def get(self):
         """
-        https://developers.pinterest.com/docs/api/v5/#operation/delivery_metrics/get
+        https://developers.pinterest.com/docs/api/v5/delivery_metrics-get/
         Get the full list of all available delivery metrics.
         This call is not used much in day-to-day API code, but is a useful endpoint
         for learning about the metrics.

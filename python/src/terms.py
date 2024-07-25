@@ -5,7 +5,7 @@ class Terms(ApiObject):
     def __init__(self, api_config, access_token):
         super().__init__(api_config, access_token)
 
-    # https://developers.pinterest.com/docs/api/v5/#tag/terms
+    # https://developers.pinterest.com/docs/api/v5/terms_related-list/
 
     def get_related(self, terms):
         path = super().add_query("/v5/terms/related", {"terms": terms})

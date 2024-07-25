@@ -120,7 +120,7 @@ if (array_key_exists('code', $_GET)) {
     to get an access token.
     </p>
     <?php
-    /* https://developers.pinterest.com/docs/api/v5/#tag/oauth */
+    /* https://developers.pinterest.com/docs/api/v5/oauth-token/ */
     $auth_url = "https://api.pinterest.com/v5/oauth/token";
 
     /* The client ID and client secret are used to create a

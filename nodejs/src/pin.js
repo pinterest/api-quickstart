@@ -6,7 +6,7 @@ export class Pin extends ApiMediaObject {
     this.pin_id = pin_id;
   }
 
-  // https://developers.pinterest.com/docs/api/v5/#operation/pins/get
+  // https://developers.pinterest.com/docs/api/v5/pins-get/
   async get() {
     if (!this.pin_id) {
       throw new Error('pin_id must be set to get a pin');
@@ -25,7 +25,7 @@ export class Pin extends ApiMediaObject {
     console.log('--------------------');
   }
 
-  // https://developers.pinterest.com/docs/api/v5/#operation/pins/save
+  // https://developers.pinterest.com/docs/api/v5/pins-save/
   async save(board_id, { section }) {
     if (!this.pin_id) {
       throw new Error('pin_id must be set to save a pin');
@@ -54,7 +54,7 @@ export class Pin extends ApiMediaObject {
     return url;
   }
 
-  // https://developers.pinterest.com/docs/api/v5/#operation/pins/create
+  // https://developers.pinterest.com/docs/api/v5/pins-create/
   async create(pin_data, board_id, { section, media }) {
     const OPTIONAL_ATTRIBUTES = {
       link: 2048,
@@ -66,7 +66,7 @@ export class Pin extends ApiMediaObject {
       board_id: board_id
     };
 
-    // https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
+    // https://developers.pinterest.com/docs/api-features/creating-boards-and-pins/#creating-video-pins
     const media_id = await this.media_to_media_id(media);
 
     const image_url = this.max_resolution_image_url(pin_data);
@@ -107,7 +107,7 @@ export class Pin extends ApiMediaObject {
 
   // Upload a video from the specified path and return a media_id.
   // Called by ApiMediaObject:media_to_media_id().
-  // https://developers.pinterest.com/docs/api/v5/#operation/media/create
+  // https://developers.pinterest.com/docs/api/v5/media-create/
   async upload_media(media_path) {
     const media_upload = await this.post_data('/v5/media', {
       media_type: 'video'
@@ -121,7 +121,7 @@ export class Pin extends ApiMediaObject {
   }
 
   // Poll for the status of the media until it is complete.
-  // https://developers.pinterest.com/docs/api/v5/#operation/media/get
+  // https://developers.pinterest.com/docs/api/v5/media-get/
   async check_media_id(media_id) {
     this.reset_backoff();
     while (true) {

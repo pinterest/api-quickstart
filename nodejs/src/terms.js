@@ -1,7 +1,7 @@
 import { ApiObject } from './api_object.js';
 
 export class Terms extends ApiObject {
-  // https://developers.pinterest.com/docs/api/v5/#tag/terms
+  // https://developers.pinterest.com/docs/api/v5/terms_related-list/
 
   async get_related(terms) {
     const path = super.add_query('/v5/terms/related', { terms: terms });

@@ -27,7 +27,7 @@ class ApiMediaObject(ApiObject):
           media_id    => an existing media identifier
 
         Reference:
-          https://developers.pinterest.com/docs/solutions/content-apps/#creatingvideopins
+          https://developers.pinterest.com/docs/api-features/creating-boards-and-pins/#creating-video-pins
         """  # noqa: E501 because the long URL is okay
         if not media:
             return media

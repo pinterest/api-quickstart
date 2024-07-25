@@ -19,7 +19,7 @@ class AsyncReport(ApiObject):
     def request_report(self):
         """
         For documentation, see:
-          https://developers.pinterest.com/docs/api/v5/#operation/analytics/get_report
+          https://developers.pinterest.com/docs/api/v5/analytics-get_report/
         """
         self.token = self.post_data(self.path, self.post_data_attributes())["token"]
         return self.token

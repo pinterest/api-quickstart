@@ -142,9 +142,9 @@ async function main(argv) {
   // We often recommend that they set up a new "developer" Pinterest user,
   // and then request that this new account is granted access to the
   // advertiser account via:
-  //   https://help.pinterest.com/en/business/article/add-people-to-your-ad-account
-  // This process is also touched on in the API docs:
-  //   https://developers.pinterest.com/docs/redoc/combined_reporting/#tag/Account-Sharing
+  //   https://help.pinterest.com/en/business/article/share-and-manage-access-to-your-ad-accounts
+  // This process is also described in the Developer Platform documentation:
+  //   https://developers.pinterest.com/docs/getting-started/using-business-access/
   const advertisers = new Advertisers(
     user_data.id, api_config, access_token);
 
