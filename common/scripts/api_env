@@ -2,7 +2,7 @@
 # the code in this repo.
 
 # figure out the location of this script, which is a shell-dependent process
-if [ "$0" = '-bash' ] || [ "$0" = '/bin/bash' ] ; then
+if [ "$0" = '-bash' ] || [ "$0" = '/bin/bash' ] || [ "$0" = '/usr/bin/bash' ] ; then
     SCRIPT_NAME="${BASH_SOURCE[0]}"
 else
     SCRIPT_NAME="$0"
