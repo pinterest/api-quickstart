@@ -5,6 +5,7 @@ from unittest.mock import call
 from delivery_metrics import DeliveryMetrics
 
 
+# Verify that delivery metrics are fetched and printed correctly.
 class DeliveryMetricsTest(unittest.TestCase):
     @mock.patch("builtins.print")
     @mock.patch("user.ApiObject.request_data")

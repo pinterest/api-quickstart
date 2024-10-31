@@ -10,6 +10,7 @@ jest.mock('uuid');
 
 describe('user_auth tests', () => {
   test('get_auth_code', async() => {
+    // set up the test API configuration
     const mock_api_config = jest.fn();
     mock_api_config.port = 'test-port';
     mock_api_config.oauth_uri = 'test-oauth-uri';
@@ -53,12 +54,13 @@ ${mock_api_config.redirect_uri}/?code=test-auth-code&state=test-uuid`;
       return mock_http_server;
     });
 
-    // The call to open() simulates the browser transaction by calling the request
+    // This call to open() simulates the browser transaction by calling the request
     // processing function (callback) that was passed as an argument to createServer().
     open.mockImplementation(access_uri => {
       mock_http_server.callback(mock_request, mock_response);
     });
 
+    // Run the test OAuth flow and check that it works end-to-end
     const read_scopes = [Scope.READ_USERS, Scope.READ_PINS];
     const auth_code = await get_auth_code(
       mock_api_config, { scopes: read_scopes, refreshable: true }

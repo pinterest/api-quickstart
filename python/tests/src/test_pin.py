@@ -6,6 +6,7 @@ from pin import Pin
 
 
 class PinTest(unittest.TestCase):
+    # test Pin retrieval
     @mock.patch("pin.ApiMediaObject.request_data")
     @mock.patch("pin.ApiMediaObject.__init__")
     def test_pin_get(self, mock_api_object_init, mock_api_object_request_data):
@@ -33,6 +34,7 @@ class PinTest(unittest.TestCase):
             "test_api_uri", "test_access_token"
         )
 
+        # verify creation of a simple image Pin
         post_data_return_value = {"id": "new_pin_id"}
         mock_api_object_post_data.return_value = post_data_return_value
         new_pin_data = {
@@ -158,6 +160,7 @@ class PinTest(unittest.TestCase):
             "test_api_uri", "test_access_token"
         )
 
+        # simulated responses to upload status
         mock_api_object_request_data.side_effect = [
             # first call to create
             {"status": "succeeded"},
@@ -208,7 +211,7 @@ class PinTest(unittest.TestCase):
             "alt_text": new_pin_data["alt_text"],
             "description": new_pin_data["description"],
         }
-        # first call to create
+        # first call to create video Pin
         response = test_pin.create(new_pin_data, "test_board_id", media="test_media_id")
         self.assertEqual(response, post_data_return_value)
         self.assertEqual(test_pin.pin_id, "new_pin_id")
@@ -242,11 +245,12 @@ class PinTest(unittest.TestCase):
                 call("Media id 2718 status: processing. Waiting 10 seconds..."),
             ]
         )
-        # check calls to time.sleep()
+        # check calls to time.sleep() to verify that backoff algorithm is working
         mock_sleep.assert_has_calls(
             [call(1), call(2), call(4), call(8), call(10), call(10)]
         )
 
+    # verify the logic used to upload a media file
     @mock.patch("pin.ApiMediaObject.upload_file_multipart")
     @mock.patch("pin.ApiMediaObject.post_data")
     @mock.patch("pin.ApiMediaObject.__init__")

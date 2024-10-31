@@ -17,10 +17,13 @@ class AccessTokenTest(unittest.TestCase):
         mock_api_config.app_secret = "test-app-secret"
         mock_api_config.oauth_token_dir = "test-token-dir"
 
+        # test all of the ways that access tokens can be fetched
+
         # The name of the access token is converted to upper case to find
         # it in the process environment.
         access_token = AccessToken(mock_api_config, name="access_token_from_env")
         access_token.fetch()
+        # verify that the hash is the correct SHA256 value
         # echo -n 'access token 42' | shasum -a 256
         self.assertEqual(
             access_token.hashed(),
@@ -58,11 +61,13 @@ class AccessTokenTest(unittest.TestCase):
 
         access_token = AccessToken(mock_api_config, name="access_token_from_file")
         access_token.fetch()
+        # verify that the hash is the correct SHA256 value
         # echo -n 'test access token from json' | shasum -a 256
         self.assertEqual(
             access_token.hashed(),
             "8de299eafa6932d8be18d7ff053d3bc6361c2b66ae1922f55fbf390d42de4cf6",
         )
+        # verify that the hash is the correct SHA256 value
         # echo -n 'test refresh token from json' | shasum -a 256
         self.assertEqual(
             access_token.hashed_refresh_token(),
@@ -81,6 +86,7 @@ class AccessTokenTest(unittest.TestCase):
         mock_chmod.assert_called_once_with(42, 0o600)
         self.assertEqual(json.loads(self.mock_write_text), access_token_dict)
 
+    # Test the OAUTH process for getting an access token
     @requests_mock.Mocker()
     @mock.patch("access_token.get_auth_code")
     def test_access_token(self, rm, mock_get_auth_code):
@@ -126,6 +132,8 @@ class AccessTokenTest(unittest.TestCase):
 
         # verify OAuth with client credentials
         access_token.oauth(client_credentials=True)
+
+        # verify the POST call and the response
         self.assertEqual(
             rm.last_request.text,
             "grant_type=client_credentials"

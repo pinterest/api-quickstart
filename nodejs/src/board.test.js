@@ -8,11 +8,13 @@ describe('v5 board tests', () => {
     jest.clearAllMocks();
   });
 
+  // Verify all of the methods of the Board class.
   test('v5 board methods methods', async() => {
     const test_board = new Board('test_board_id', 'test_api_config', 'test_access_token');
     expect(ApiObject.mock.instances.length).toBe(1);
     expect(ApiObject.mock.calls[0]).toEqual(['test_api_config', 'test_access_token']);
 
+    // see the comment in user.test.js for an explanation of why spyOn is used here
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
     mock_request_data.mockResolvedValue('test_response');
 

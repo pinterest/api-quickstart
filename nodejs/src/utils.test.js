@@ -16,6 +16,7 @@ describe('Input tests', () => {
     // check output
     console.log = jest.fn();
 
+    // mock readline interface
     const mock_rl_interface = jest.fn();
     readline.createInterface.mockReturnValue(mock_rl_interface);
 

@@ -8,6 +8,7 @@ describe('v5 advertisers tests', () => {
     jest.clearAllMocks();
   });
 
+  // Test the various kinds of ad objects that can be retrieved from the API
   test('v5 advertisers', async() => {
     const adv = new Advertisers('test_user', 'test_api_config', 'test_access_token');
     expect(ApiObject.mock.instances.length).toBe(1);

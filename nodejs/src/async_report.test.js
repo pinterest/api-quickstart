@@ -9,6 +9,7 @@ describe('async report tests', () => {
     jest.clearAllMocks();
   });
 
+  // Verify the basic request_report / wait_report process.
   test('async report methods', async() => {
     const mock_constructor = jest.spyOn(ApiObject.prototype, 'constructor');
     const test_report1 = new AsyncReport(
@@ -36,6 +37,7 @@ describe('async report tests', () => {
     ]]);
   });
 
+  // Verify that exponential backoff works when waiting for a report.
   test('async report run', async() => {
     const test_report2_url = '\
 test_report2_url/x-y-z/metrics_report.txt?Very-long-credentials-string';

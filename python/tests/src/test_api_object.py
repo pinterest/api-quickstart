@@ -57,6 +57,7 @@ class ApiObjectTest(unittest.TestCase):
             ),
         )
 
+    # Verify basic object creation and usage.
     @requests_mock.Mocker()
     def test_api_object_v5(self, rm):
         api_config = mock.Mock()
@@ -101,6 +102,7 @@ class ApiObjectTest(unittest.TestCase):
         self.assertEqual(expected_response, response)
         self.assertEqual(None, rm.last_request.text)
 
+    # Verify that generic bookmark functionality works.
     @requests_mock.Mocker()
     def test_api_object_iterator(self, rm):
         api_config = mock.Mock()

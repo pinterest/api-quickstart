@@ -4,6 +4,7 @@ from unittest import mock
 from analytics import AdAnalytics, PinAnalytics, UserAnalytics
 
 
+# Test resquests for synchronous user (organic) reports
 class UserAnalyticsTest(unittest.TestCase):
     @mock.patch("analytics.ApiObject.request_data")
     @mock.patch("analytics.ApiObject.__init__")
@@ -20,6 +21,8 @@ class UserAnalyticsTest(unittest.TestCase):
         mock_init.assert_called_once_with("test_api_config", "test_access_token")
 
         mock_request_data.return_value = "test_response"
+
+        # do the GET request with reference to an ad account
         self.assertEqual(
             "test_response", analytics.get(ad_account_id="test_ad_account")
         )
@@ -85,6 +88,7 @@ class UserAnalyticsTest(unittest.TestCase):
         mock_request_data.reset_mock()
 
 
+# Test requests for synchronous Pin (organic) reports
 class PinAnalyticsTest(unittest.TestCase):
     @mock.patch("analytics.ApiObject.request_data")
     @mock.patch("analytics.ApiObject.__init__")
@@ -160,6 +164,7 @@ class PinAnalyticsTest(unittest.TestCase):
         mock_request_data.reset_mock()
 
 
+# Test requests for synchronous Ad reports on various kinds of ad objects
 class AdAnalyticsTest(unittest.TestCase):
     @mock.patch("analytics.ApiObject.request_data")
     @mock.patch("analytics.ApiObject.__init__")

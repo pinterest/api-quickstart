@@ -1,6 +1,7 @@
 import { ApiCommon, RateLimitError, RequestFailedError, SpamError } from './api_common';
 
 describe('api_common tests', () => {
+  // verify that typical output is correct
   test('print_response', () => {
     // check output
     console.log = jest.fn();
@@ -15,6 +16,7 @@ describe('api_common tests', () => {
     mock_response.body = 'test-response-body';
     api_common.print_response(mock_response);
 
+    // verify request identifier printed at high verbosity
     mock_api_config.verbosity = 3;
     api_common.print_response(mock_response);
 
@@ -26,6 +28,7 @@ describe('api_common tests', () => {
     ]);
   });
 
+  // verify output for different kinds of errors
   test('print_and_throw_error', () => {
     // check output
     console.log = jest.fn();
@@ -85,6 +88,7 @@ describe('api_common tests', () => {
       [error_message]
     ]);
 
+    // test situations where the schema of the response is not as expected
     expect(() => {
       api_common.print_and_throw_error(undefined);
     }).toThrowError(new RequestFailedError('unknown error'));

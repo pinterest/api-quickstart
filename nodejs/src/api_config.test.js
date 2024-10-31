@@ -12,6 +12,9 @@ describe('ApiConfig test environment', () => {
     process.env = SAVED_ENV;
   });
 
+  // Verify the default API configuration and that the configuration
+  // can be set from the environment.
+
   test('API configuration from defaults', () => {
     // check output
     console.log = jest.fn();

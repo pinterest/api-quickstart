@@ -1,3 +1,7 @@
+# Common code for all API calls
+
+
+# Errors to handle Pinterest API use cases
 class RateLimitException(Exception):
     """Raised when API emits a HTTP 429 Too Many Requests Error"""
 

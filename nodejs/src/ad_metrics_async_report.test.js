@@ -8,6 +8,7 @@ describe('ad_metrics_async_report_common tests', () => {
     jest.clearAllMocks();
   });
 
+  // Test all of the common attributes that can be set on an AdMetricsAsyncReport
   test('ad async report attributes', async() => {
     const ad_async_report = new AdMetricsAsyncReport(
       'test_api_config', 'test_access_token', 'test_advertiser_id')
@@ -51,6 +52,7 @@ describe('ad_metrics_async_report_common tests', () => {
     );
   });
 
+  // Make sure that errors in attributes throw the appropriate exceptions
   test('ad metrics async report attribute errors', async() => {
     const ad_async_report = new AdMetricsAsyncReport(
       'test_api_config', 'test_access_token', 'test_advertiser_id')
