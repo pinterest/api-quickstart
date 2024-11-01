@@ -1,8 +1,11 @@
 import { ApiMediaObject } from './api_media_object.js';
 import fs from 'fs';
 
+// Media upload uses the standard fs (file system) methods,
+// so fs needs to be mocked to test this functionality.
 jest.mock('fs');
 
+// Need to mock the standard FormData object to test media upload.
 const mockFormAppend = jest.fn();
 const mockFormSubmit = jest.fn();
 jest.mock('form-data', () => {
@@ -14,23 +17,18 @@ jest.mock('form-data', () => {
   });
 });
 
-/*
- * Tests for the generic ApiObject class that is used for all versions
- * of the Pinterest API.
- *
- * Note: the reset_backoff and wait_backoff functions are tested with
- * the classes that call these functions instead of testing them in
- * this file.
- */
+// Tests for functionality related to media upload.
 describe('api_media_object tests', () => {
   test('upload_media', async() => {
     const api_media_object = new ApiMediaObject(jest.fn(), jest.fn());
 
+    // verify that the object forces upload_media to be overridden
     await expect(async() => {
       await api_media_object.upload_media('test_media');
     }).rejects.toThrowError(new Error('upload_media() must be overridden'));
   });
 
+  // Verify the different kinds of values for media id and related error cases.
   test('media_to_media_id', async() => {
     const api_media_object = new ApiMediaObject(jest.fn(), jest.fn());
 
@@ -72,6 +70,7 @@ describe('api_media_object tests', () => {
     }).rejects.toThrowError(new Error('invalid media: -314159'));
   });
 
+  // Verify that upload calls the standard fs methods as expected.
   test('upload_file_multipart', async() => {
     const api_config = jest.fn();
     api_config.credentials_warning = jest.fn();

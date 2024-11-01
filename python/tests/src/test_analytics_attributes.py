@@ -5,6 +5,7 @@ from unittest import mock
 from analytics import AdAnalyticsAttributes, AnalyticsAttributes
 
 
+# Test all of the different kinds of analytics attributes, including error cases
 class AnalyticsAttributesTest(unittest.TestCase):
     @mock.patch("analytics_attributes.datetime.date", wraps=datetime.date)
     def test_analytics_attributes(self, mock_date):

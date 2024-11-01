@@ -14,9 +14,11 @@ describe('v5 pin tests', () => {
     expect(ApiMediaObject.mock.instances.length).toBe(1);
     expect(ApiMediaObject.mock.calls[0]).toEqual(['test_api_config', 'test_access_token']);
 
+    // see the comment in user.test.js for an explanation of why spyOn is used here
     const mock_request_data = jest.spyOn(ApiMediaObject.prototype, 'request_data');
     mock_request_data.mockResolvedValue('test_response');
 
+    // test Pin retrieval
     let response = await test_pin.get();
     expect(mock_request_data.mock.calls[0][0]).toEqual('/v5/pins/test_pin_id');
     expect(response).toEqual('test_response');
@@ -34,7 +36,7 @@ describe('v5 pin tests', () => {
       }
     };
 
-    // create pin without a section
+    // create Pin without a section
     const mock_post_data = jest.spyOn(ApiMediaObject.prototype, 'post_data');
     const created_data = { id: 'created_pin_id' };
     mock_post_data.mockResolvedValue(created_data);
@@ -198,14 +200,14 @@ describe('v5 pin tests', () => {
     expect(test_pin.pin_id).toEqual('created_pin_id');
 
     await expect(async() => {
-      // second call to create
+      // second call to create results in an exception
       await test_pin.create(pin_data, 'test_board_id', { media: 'file_name' });
     }).rejects.toThrowError(
       new Error('media upload 12345 failed')
     );
 
     await expect(async() => {
-      // third call to create
+      // third call to create results in an exception due to no status
       await test_pin.create(pin_data, 'test_board_id', { media: 'file_name' });
     }).rejects.toThrowError(
       new Error('media upload 314159265 not found')
@@ -248,6 +250,7 @@ describe('v5 pin tests', () => {
     ]);
   });
 
+  // verify the logic used to upload a media file
   test('v5 upload media', async() => {
     const test_pin = new Pin('test_pin_id', 'test_api_config', 'test_access_token');
 

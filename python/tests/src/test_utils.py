@@ -10,6 +10,7 @@ class GenericRequestsTest(unittest.TestCase):
     def test_input_number(self, mock_input, mock_print):
         mock_input.side_effect = ["2", "", "oops", "-4", "42", "5"]
 
+        # test input_number with various parameters
         self.assertEqual(2, input_number("should return 2", -5, 23, 3))
         mock_input.assert_called_once_with("[3] ")
         mock_print.assert_called_once_with("should return 2")
@@ -39,6 +40,7 @@ class GenericRequestsTest(unittest.TestCase):
 
         test_list = ["DOG", "CAT", "BIRD"]
 
+        # test input_one_of with various inputs
         self.assertEqual("CAT", input_one_of("animal?", test_list, "BIRD"))
         mock_input.assert_called_once_with("[BIRD] ")
         mock_print.assert_called_once_with("animal?")
@@ -53,6 +55,7 @@ class GenericRequestsTest(unittest.TestCase):
     @mock.patch("builtins.print")
     @mock.patch("builtins.input")
     def test_input_path_for_write(self, mock_input, mock_print, mock_open, mock_exists):
+        # mock input from the keyboard / stdin
         mock_input.side_effect = [
             "/path/to/file1",  # test case 1
             "/path/to/file2",
@@ -64,8 +67,10 @@ class GenericRequestsTest(unittest.TestCase):
             "",
             "yes",  # test case 4
         ]
+        # mock returns from checks to see if the file exists
         mock_exists.side_effect = [False, True, False, False, True, True]
 
+        # mock the return from open
         mock_file = mock.MagicMock()
         mock_open.side_effect = [
             mock_file,
@@ -75,7 +80,7 @@ class GenericRequestsTest(unittest.TestCase):
             mock_file,
         ]
 
-        # test case 1
+        # test case 1: file does not exist
         self.assertEqual(
             "/path/to/file1", input_path_for_write("test file 1", "/default/file")
         )
@@ -83,21 +88,21 @@ class GenericRequestsTest(unittest.TestCase):
         mock_print.assert_called_once_with("test file 1")
         mock_print.mock_reset()
 
-        # test case 2
+        # test case 2: file exists and is overwritten
         self.assertEqual(
             "/path/to/file2", input_path_for_write("test overwrite", "/default/file")
         )
         mock_print.assert_any_call("Overwrite this file?")
         mock_print.mock_reset()
 
-        # test case 3
+        # test case 3: file is not writable, default file is not overwritten
         self.assertEqual(
             "/path/to/file4", input_path_for_write("test open error", "/default/file")
         )
         mock_print.assert_any_call("Error: can not write to this file.")
         mock_print.mock_reset()
 
-        # test case 4
+        # test case 4: default file is overwritten
         self.assertEqual(
             "/default/file", input_path_for_write("test default", "/default/file")
         )

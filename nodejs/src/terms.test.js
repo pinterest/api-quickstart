@@ -8,6 +8,8 @@ describe('v5 terms tests', () => {
     jest.clearAllMocks();
   });
 
+  // Verify the get and print methods provided for related terms
+
   test('v5 related terms methods', async() => {
     const test_terms = new Terms('test_api_config', 'test_access_token');
     expect(ApiObject.mock.instances.length).toBe(1);

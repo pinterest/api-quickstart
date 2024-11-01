@@ -4,6 +4,7 @@ from unittest import mock
 from terms import Terms
 
 
+# Verify the get and print methods provided for related terms
 class UserTest(unittest.TestCase):
     @mock.patch("user.ApiObject.add_query")
     @mock.patch("user.ApiObject.request_data")

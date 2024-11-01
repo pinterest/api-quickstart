@@ -8,6 +8,7 @@ describe('v5 analytics tests', () => {
     jest.clearAllMocks();
   });
 
+  // Test requests for synchronous user (organic) reports
   test('v5 user analytics', async() => {
     const analytics = new UserAnalytics(
       'test_user_id', 'test_api_config', 'test_access_token')
@@ -24,6 +25,7 @@ describe('v5 analytics tests', () => {
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
     mock_request_data.mockResolvedValue('test_response');
 
+    // do the GET request with reference to an ad account
     expect(await analytics.get('test_ad_account'))
       .toEqual('test_response');
 
@@ -51,6 +53,7 @@ start_date=2021-03-01&end_date=2021-03-31\
 &split_field=PIN_FORMAT');
   });
 
+  // Test requests for synchronous Pin (organic) reports
   test('v5 pin analytics', async() => {
     const analytics = new PinAnalytics(
       'test_pin_id', 'test_api_config', 'test_access_token')
@@ -89,6 +92,7 @@ start_date=2021-03-01&end_date=2021-03-31\
 &app_types=WEB&split_field=NO_SPLIT');
   });
 
+  // Test requests for synchronous Ad reports on various kinds of ad objects
   test('v5 ads analytics', async() => {
     const analytics = new AdAnalytics('test_api_config', 'test_access_token')
       .start_date('2021-03-01')

@@ -1,3 +1,6 @@
+// Common code for all API calls
+
+// Errors to handle Pinterest API use cases
 export class SpamError extends Error {
   constructor(message) {
     super(message);

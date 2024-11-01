@@ -4,6 +4,7 @@ from unittest import mock
 from api_common import ApiCommon, RateLimitException, SpamException
 
 
+# Common code for all API calls
 class ApiCommonTest(unittest.TestCase):
     @mock.patch("builtins.print")
     def test_api_common(self, mock_print):

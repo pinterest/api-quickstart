@@ -13,6 +13,7 @@ class UserTest(unittest.TestCase):
             "test_api_config", "test_access_token"
         )
 
+        # get the user
         mock_api_object_request_data.return_value = "test_response"
         response = test_user.get()
         mock_api_object_request_data.assert_called_once_with("/v5/user_account")
@@ -32,9 +33,11 @@ class UserTest(unittest.TestCase):
         )
         self.assertEqual(response, "test_iterator")
 
+        # verify that getting the user's boards calls the correct endpoint
         response = test_user.get_boards()
         mock_api_object_get_iterator.assert_called_with("/v5/boards", None)
 
+        # verify that query parameters are passed correctly
         response = test_user.get_boards(
             query_parameters={
                 "param1": "value1",
@@ -53,7 +56,7 @@ class UserTest(unittest.TestCase):
 
         mock_api_config = mock.Mock()
         mock_api_config.api_uri = (
-            "test_uri"  # just to make underlying ApiObject init work
+            "test_uri"  # just to make underlying ApiObject init works
         )
 
         # these pins should be returned by the above mock iterator with static data

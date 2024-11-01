@@ -8,6 +8,7 @@ describe('delivery_metrics tests', () => {
     jest.clearAllMocks();
   });
 
+  // Verify that delivery metrics are fetched and printed correctly.
   test('delivery metrics', async() => {
     const test_dm = new DeliveryMetrics('test_api_config', 'test_access_token');
     expect(ApiObject.mock.instances.length).toBe(1);

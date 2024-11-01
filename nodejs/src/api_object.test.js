@@ -56,6 +56,7 @@ describe('api_object tests', () => {
       .toBe('hello?good=bye&cruel=world&and=farewell');
   });
 
+  // Verify basic object creation and usage.
   test('v5 api_object', async() => {
     const mock_api_config = jest.fn();
     mock_api_config.api_uri = 'test_uri';
@@ -78,6 +79,7 @@ describe('api_object tests', () => {
     expect(response).toEqual('test_response_data');
   });
 
+  // Verify that generic bookmark functionality works.
   test('v5 api_object_iterator', async() => {
     const mock_api_config = jest.fn();
     mock_api_config.api_uri = 'test_uri';

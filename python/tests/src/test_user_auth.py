@@ -10,6 +10,7 @@ class UserAuthTest(unittest.TestCase):
     @mock.patch("user_auth.HTTPServer")
     @mock.patch("user_auth.open_new")
     def test_get_auth_code(self, mock_open_new, mock_http_server, mock_token_hex):
+        # Mock the HTTP server required to implement the OAuth process
         class MockHttpServer:
             def __init__(self):
                 self.socket = "test-socket"
@@ -21,6 +22,7 @@ class UserAuthTest(unittest.TestCase):
         mock_http_server.return_value = mock_http_server_instance
         mock_token_hex.return_value = "test-token-hex"
 
+        # set up the test API configuration
         mock_api_config = mock.Mock()
         mock_api_config.port = "test-port"
         mock_api_config.oauth_uri = "test-oauth-uri"
@@ -36,6 +38,7 @@ class UserAuthTest(unittest.TestCase):
             + "&state=test-token-hex"
         )
 
+        # test the part of the OAuth process that gets the authorization code
         auth_code = get_auth_code(mock_api_config)
         mock_open_new.assert_called_once_with(mock_access_uri)
         mock_http_server.assert_called_once_with(("localhost", "test-port"), mock.ANY)
@@ -71,12 +74,14 @@ class UserAuthTest(unittest.TestCase):
             def handle_request(self):
                 raise KeyboardInterrupt
 
+        # test the error when the user interrupts the web server
         mock_http_server.return_value = MockHttpServerInterrupted()
         with self.assertRaisesRegex(
             SystemExit, "\nSorry that the OAuth redirect didn't work out. :-/"
         ):
             auth_code = get_auth_code(mock_api_config)
 
+    # Verify that the OAuth redirect is handled correctly
     @mock.patch("user_auth.BaseHTTPRequestHandler.end_headers")
     @mock.patch("user_auth.BaseHTTPRequestHandler.send_header")
     @mock.patch("user_auth.BaseHTTPRequestHandler.send_response")
@@ -88,6 +93,7 @@ class UserAuthTest(unittest.TestCase):
         mock_api_config.landing_uri = "test-landing-uri"
         mock_api_config.verbosity = 2
 
+        # Instantiate the class to be tested
         http_server_handler = HTTPServerHandler(
             "test-request",
             "test-address",
@@ -101,6 +107,7 @@ class UserAuthTest(unittest.TestCase):
         http_server_handler.server = mock.Mock()
         http_server_handler.server.auth_code = None
 
+        # Test a successful OAuth redirect
         http_server_handler.do_GET()
         mock_send_response.assert_called_once_with(301)
         mock_send_header.assert_called_once_with("Location", "test-landing-uri")

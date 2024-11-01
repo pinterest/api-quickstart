@@ -6,15 +6,18 @@ import requests_mock
 from api_media_object import ApiMediaObject
 
 
+# Tests for functionality related to media upload.
 class ApiMediaObjectTest(unittest.TestCase):
     def test_upload_media(self):
         api_media_object = ApiMediaObject(mock.Mock(), mock.Mock())
 
+        # verify that the object forces upload_media to be overridden
         with self.assertRaisesRegex(
             RuntimeError, r"upload_media\(\) must be overridden"
         ):
             api_media_object.upload_media("test_media_id")
 
+    # Verify the different kinds of values for media id and related error cases.
     @mock.patch("builtins.open")
     def test_media_to_media_id(self, mock_open):
         api_media_object = ApiMediaObject(mock.Mock(), mock.Mock())
@@ -41,6 +44,8 @@ class ApiMediaObjectTest(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "invalid media: oops"):
             api_media_object.media_to_media_id("oops")
 
+    # Verify that a file can be sent via a standard POST request
+    # with form data.
     @requests_mock.Mocker()
     def test_upload_file_multipart(self, rm):
         api_config = mock.Mock()
@@ -58,7 +63,7 @@ class ApiMediaObjectTest(unittest.TestCase):
             api_media_object.upload_file_multipart(test_url, "test_file", test_data)
             mock_open.assert_called_once_with("test_file", "rb")
 
-        # check to verify that the posted form data
+        # check to verify the posted form data
         self.assertRegex(
             rm.last_request.text,
             r"Content-Disposition: form-data; "

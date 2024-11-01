@@ -4,6 +4,7 @@ from unittest import mock
 from board import Board
 
 
+# Verify all of the methods of the Board class.
 class BoardTest(unittest.TestCase):
     @mock.patch("board.ApiObject.request_data")
     @mock.patch("board.ApiObject.__init__")

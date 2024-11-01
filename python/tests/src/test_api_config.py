@@ -4,6 +4,8 @@ from unittest import mock
 from api_config import ApiConfig
 
 
+# Verify the default API configuration and that the configuration
+# can be set from the environment.
 class ApiConfigTest(unittest.TestCase):
     mock_os_environ_minimal = {
         "PINTEREST_APP_ID": "test-app-id",

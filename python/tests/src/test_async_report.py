@@ -5,6 +5,7 @@ from unittest.mock import call
 from async_report import AsyncReport
 
 
+# Verify the basic request_report / wait_report process.
 class AsyncReportTest(unittest.TestCase):
     @mock.patch("async_report.ApiObject.request_data")
     @mock.patch("async_report.ApiObject.post_data")
@@ -58,6 +59,7 @@ class AsyncReportTest(unittest.TestCase):
             "/test/path2?token=test_report2_token"
         )
 
+    # Verify that exponential backoff works when waiting for a report.
     @mock.patch("builtins.print")
     @mock.patch("time.sleep")
     @mock.patch("async_report.ApiObject.request_data")

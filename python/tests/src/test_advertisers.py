@@ -5,6 +5,7 @@ from unittest.mock import call
 from advertisers import Advertisers
 
 
+# Test the various kinds of ad objects that can be retrieved from the API
 class AdvertisersTest(unittest.TestCase):
     @mock.patch("builtins.print")
     @mock.patch("user.ApiObject.get_iterator")

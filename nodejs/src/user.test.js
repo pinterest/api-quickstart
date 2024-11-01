@@ -15,8 +15,8 @@ describe('v5 user tests', () => {
 
     // Mocking the response from request_data in the instantiated copy of ApiObject
     // does not work, because User is a subclass of (extends) ApiObject. This would
-    // work if User contained an ApiObject. (Had a "Has-A relationship" with ApiObject
-    // instead of being a subclass.
+    // work if User contained an ApiObject. (If User Had a "Has-A relationship" with
+    // ApiObject instead of being a subclass.)
     // const mock_request_data = ApiObject.mock.instances[0].request_data;
 
     // Instead of using the mock in the instance, need to use spyOn because User is a
@@ -24,10 +24,12 @@ describe('v5 user tests', () => {
     const mock_request_data = jest.spyOn(ApiObject.prototype, 'request_data');
     mock_request_data.mockResolvedValue('test_response');
 
+    // get the user
     const response = await test_user.get();
     expect(mock_request_data.mock.calls[0][0]).toEqual('/v5/user_account');
     expect(response).toEqual('test_response');
 
+    // verify that getting the user's boards calls the correct endpoint
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');
     mock_get_iterator.mockResolvedValue('test_iterator');
     const iterator = await test_user.get_boards('query_parameters');
@@ -39,6 +41,7 @@ describe('v5 user tests', () => {
   test('v5 user get pins', async() => {
     const test_user = new User('test_api_config', 'test_access_token');
 
+    // get and verify the user's pins
     const mock_get_iterator = jest.spyOn(ApiObject.prototype, 'get_iterator');
     // This value mocks the iterator in the get_boards() call.
     mock_get_iterator.mockResolvedValue([

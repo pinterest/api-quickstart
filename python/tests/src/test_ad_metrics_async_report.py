@@ -7,6 +7,7 @@ from ad_metrics_async_report import AdMetricsAsyncReport
 
 class AdMetricsAsyncReportTest(unittest.TestCase):
     @mock.patch("async_report.AsyncReport.__init__")
+    # Test all of the common attributes that can be set on async report
     def test_am_async_report(self, mock_async_report_init):
         am_async_report = (
             AdMetricsAsyncReport(
@@ -112,6 +113,7 @@ class AdMetricsAsyncReportTest(unittest.TestCase):
             },
         )
 
+    # Make sure that errors in attributes throw the appropriate exceptions
     @mock.patch("async_report.AsyncReport.__init__")
     def test_am_async_report_attributes_2(self, mock_async_report_init):
         am_async_report = (

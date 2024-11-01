@@ -1,5 +1,6 @@
 import { AnalyticsAttributes, AdAnalyticsAttributes } from './analytics_attributes.js';
 
+// Test all of the different kinds of analytics attributes, including error cases
 describe('analytics_attributes tests', () => {
   test('analytics attributes', () => {
     const attributes = new AnalyticsAttributes();
