@@ -64,7 +64,11 @@ if [ -r "${VIDEO_FILE}" ] ; then
 
     if [ "${VIDEO_BOARD_ID}" == "" ] ; then
        echo video board lookup failed, waiting and retrying...
+       date
+       ./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100
        sleep 5
+       date
+       ./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100
        VIDEO_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 "${VIDEO_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
     fi
 
@@ -88,4 +92,4 @@ else
     echo To enable this test, put a video file here: "${VIDEO_FILE}"
 fi
 
-echo === WRITE TEST COMPLETED SUCCESSFULLY ===
+echo "=== WRITE TEST COMPLETED SUCCESSFULLY ==="

@@ -59,4 +59,4 @@ wc ${DOCNAME}
 # delete output files
 rm -f ${OUTPUT_PREFIX}_*.json
 
-echo === READ TEST COMPLETED SUCCESSFULLY ===
+echo "=== READ TEST COMPLETED SUCCESSFULLY ==="
