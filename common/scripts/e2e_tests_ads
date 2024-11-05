@@ -91,3 +91,5 @@ wc "${DOCNAME}"
 # all tests existed successfully: delete output files
 rm -f ${OUTPUT_PREFIX}_*.json
 rm -f ${OUTPUT_PREFIX}_*.csv
+
+echo === ADS READ TEST COMPLETED SUCCESSFULLY ===
