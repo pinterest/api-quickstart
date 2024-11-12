@@ -45,6 +45,10 @@ printf "Delete all boards for penelopepintridge\nyes\nyes\nyes\nyes\n" | \
 
 # Save a pin
 SAVE_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 "${SAVE_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
+if [ "${SAVE_BOARD_ID}" == "" ] ; then
+   echo save board lookup failed, likely due to a read-after-write consistency issue with the API
+   exit 2
+fi
 ./scripts/save_pin.${EXT} -a ${TEST2} -p ${PIN} -b "${SAVE_BOARD_ID}"
 
 # The board used to test saves should have a section.
@@ -58,8 +62,28 @@ if [ -r "${VIDEO_FILE}" ] ; then
     # get the board with the pin to copy
     VIDEO_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 "${VIDEO_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
 
+    if [ "${VIDEO_BOARD_ID}" == "" ] ; then
+       echo video board lookup failed, waiting and retrying...
+       date
+       ./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100
+       sleep 5
+       date
+       ./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100
+       VIDEO_BOARD_ID=$(./scripts/get_user_boards.${EXT} -a ${TEST2} --page-size 100 | grep -B 1 "${VIDEO_BOARD_NAME}" | grep "Board ID" | cut -d ' ' -f 3)
+    fi
+
+    if [ "${VIDEO_BOARD_ID}" == "" ] ; then
+       echo video board lookup failed, likely due to a read-after-write consistency issue with the API
+       exit 3
+    fi
+
     # get a single pin to copy. match 1 on second grep prevents EPIPE error in get_user_pins script.
     VIDEO_PIN_ID=$(./scripts/get_user_pins.${EXT} -a ${TEST2} --page-size 100 | grep -B 2 "${VIDEO_PIN_DESCRIPTION}" | grep -m 1 "Pin ID" | cut -d ' ' -f 3)
+
+    if [ "${VIDEO_PIN_ID}" == "" ] ; then
+       echo video pin id lookup failed, likely due to a read-after-write consistency issue with the API
+       exit 4
+    fi
 
     # copy the pin, adding the video
     ./scripts/copy_pin.${EXT} -a "${TEST2}" -p "$VIDEO_PIN_ID" -b "$VIDEO_BOARD_ID" -m "${VIDEO_FILE}"
@@ -67,3 +91,5 @@ else
     echo Skipping video pin creation test.
     echo To enable this test, put a video file here: "${VIDEO_FILE}"
 fi
+
+echo "=== WRITE TEST COMPLETED SUCCESSFULLY ==="
