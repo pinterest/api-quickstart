@@ -12,7 +12,7 @@ This quickstart used to support Pinterest API version v3 and v4, but that code h
 
 1. Set up the environment with your credentials (app ID and secret). This configuration works with the code in all of the language-specific directories.
 
-   * Get an application ID and secret by hitting the "Connect app" button at the [apps dashboard](https://developers.pinterest.com/apps/). You may first need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/getting-started/connect-app/) to the Pinterest API. You can also find step-by-step instructions on the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/).
+   * Get an application ID and secret by hitting the "Connect app" button at the [apps dashboard](https://developers.pinterest.com/apps/). You may first need to follow the steps required to [request trial access](https://developers.pinterest.com/docs/getting-started/connect-app/) to the Pinterest API.
    * Once your app is connected, hit the Manage button for the app on the [apps dashboard](https://developers.pinterest.com/apps/) to see your App id and App secret key. (Click the Show key button to see the App secret key.)
    * Put your App ID and App secret key in an environment script file.
      ```
@@ -53,7 +53,7 @@ This quickstart used to support Pinterest API version v3 and v4, but that code h
 
 ## OAuth 2.0 Authorization
 
-Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). To learn about how to use OAuth 2.0 with the Pinterest API, check out the [Glitch-based tutorial](https://pinterest-oauth-tutorial.glitch.me/). For details regarding OAuth, please refer to our [v5 developer docs](https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
+Access to Pinterest APIs via User Authorization requires following a flow based on [OAuth 2.0](https://tools.ietf.org/html/rfc6749). For details regarding OAuth, please refer to our [v5 developer docs](https://developers.pinterest.com/docs/getting-started/authentication-and-scopes/). The code in this repo demonstrates how to initiate the flow by starting a browser, and then handling the OAuth redirect to the development machine (localhost). The browser is used to obtain an authorization code, and then the code invoked by the redirect exchanges the authorization code for an access token.
 
 An access token is used to authenticate most API calls. In general, access tokens are valid for relatively long periods of time, in order to avoid asking users to go through the OAuth flow too often. When an access token expires, it is possible to refresh the token -- a capability that the code in this repo also demonstrates.
 
@@ -103,6 +103,5 @@ All shell scripts in this respository are written for bash and are linted with [
 ## Other Resources
 
   * [Pinterest Developers](https://developers.pinterest.com/)
-  * [Pinterest OAuth 2.0 Tutorial](https://pinterest-oauth-tutorial.glitch.me/)
   * [Pinterest Engineering Blog](https://medium.com/pinterest-engineering)
   * The [pinterest/api-description](https://github.com/pinterest/api-description) repo on GitHub contains [OpenAPI](https://www.openapis.org/) descriptions for Pinterest's REST API.
